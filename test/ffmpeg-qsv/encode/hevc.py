@@ -82,6 +82,27 @@ class cbr(HEVC8EncoderTest):
     )
     self.encode()
 
+class cbr_lp(HEVC8EncoderTest):
+  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_qsv_encode)
+  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main']))
+  def test(self, case, gop, slices, bitrate, fps, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      gop     = gop,
+      lowpower= 1,
+      maxrate = bitrate,
+      minrate = bitrate,
+      profile = profile,
+      rcmode  = "cbr",
+      slices  = slices,
+    )
+    self.encode()
+
 class vbr(HEVC8EncoderTest):
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
   @slash.requires(have_ffmpeg_hevc_qsv_encode)
@@ -95,6 +116,29 @@ class vbr(HEVC8EncoderTest):
       case    = case,
       fps     = fps,
       gop     = gop,
+      maxrate = bitrate * 2, # target percentage 50%
+      minrate = bitrate,
+      profile = profile,
+      quality = quality,
+      rcmode  = "vbr",
+      refs    = refs,
+      slices  = slices,
+    )
+    self.encode()
+
+class vbr_lp(HEVC8EncoderTest):
+  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_qsv_encode)
+  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main']))
+  def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      gop     = gop,
+      lowpower= 1,
       maxrate = bitrate * 2, # target percentage 50%
       minrate = bitrate,
       profile = profile,
