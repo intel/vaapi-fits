@@ -1,0 +1,236 @@
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+from datetime import datetime as dt
+import itertools
+from lib.baseline import Baseline
+import lib.system
+import os
+import re
+import slash
+from slash.utils.traceback_utils import get_traceback_string
+import sys
+import xml.etree.cElementTree as et
+
+__SCRIPT_DIR__ = os.path.abspath(os.path.dirname(__file__))
+
+slash.config.root.log.root = os.path.join(__SCRIPT_DIR__, "results")
+slash.config.root.log.last_session_symlink = "session.latest.log"
+slash.config.root.log.last_session_dir_symlink = "session.latest"
+slash.config.root.log.highlights_subpath = "highlights.latest.log"
+slash.config.root.log.colorize = False
+slash.config.root.log.unified_session_log = True
+slash.config.root.log.truncate_console_lines = False
+slash.config.root.run.dump_variation = True
+slash.config.root.run.default_sources = ["test"]
+slash.config.root.log.subpath = os.path.join(
+  "{context.session.id}",
+  "{context.test.__slash__.module_name}",
+  "{context.test.__slash__.function_name}({context.test.__slash__.variation.safe_repr}).log")
+
+def validate_unique_cases(tree):
+  for e in tree.findall(".//testcase"):
+    occurrences = tree.findall(".//testcase[@name='{}'][@classname='{}']".format(
+      e.get("name"), e.get("classname")))
+    if len(occurrences) > 1:
+      slash.logger.warn("{} occurrences of testcase found: {} {}".format(
+        len(occurrences), e.get("classname"), e.get("name")))
+
+def ansi_escape(text):
+  return ansi_escape.prog.sub('', text)
+ansi_escape.prog = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
+
+class MediaPlugin(slash.plugins.PluginInterface):
+  testspec = dict()
+
+  suite = os.path.basename(sys.argv[0])
+  mypath = __SCRIPT_DIR__
+
+  RETENTION_NONE = 0;
+  RETENTION_FAIL = 1;
+  RETENTION_ALL  = 2;
+
+  def get_name(self):
+    return "media"
+
+  def configure_argument_parser(self, parser):
+    parser.add_argument("--rebase", action = "store_true")
+    parser.add_argument("--baseline-file",
+      default = os.path.abspath(os.path.join(self.mypath, "baseline", "default")))
+    parser.add_argument("--artifact-retention", default = self.RETENTION_NONE,
+      type = int,
+      help = "{} = Keep None; {} = Keep Failed; {} = Keep All".format(
+        self.RETENTION_NONE, self.RETENTION_FAIL, self.RETENTION_ALL))
+    parser.add_argument("--call-timeout", default = 300, type = int,
+      help = "call timeout in seconds")
+    parser.add_argument("--parallel-metrics", action = "store_true")
+
+  def configure_from_parsed_args(self, args):
+    self.baseline = Baseline(args.baseline_file, args.rebase)
+    self.retention = args.artifact_retention
+    self.call_timeout = args.call_timeout
+    self.parallel_metrics = args.parallel_metrics
+
+    assert not (args.rebase and slash.config.root.parallel.num_workers > 0), "rebase in parallel mode is not supported"
+
+  def _set_test_details(self, **kwargs):
+    for k, v in kwargs.iteritems():
+      slash.context.result.details.set(k, v)
+      slash.logger.notice("DETAIL: {} = {}".format(k, v))
+
+  def _test_artifact(self, filename):
+    tstfile = os.path.join(slash.context.result.get_log_dir(), filename)
+    slash.context.result.data.setdefault("artifacts", list()).append(tstfile)
+    if os.path.exists(tstfile):
+      os.remove(tstfile)
+    return tstfile
+
+  def _get_test_spec(self, *args):
+    spec = self.testspec
+    for key in args:
+      spec = spec.setdefault(key, dict())
+    return spec.setdefault("--spec--", dict())
+
+  def _get_driver_name(self):
+    # TODO: query vaapi for driver name (i.e. use ctypes to call vaapi)
+    return os.environ.get("LIBVA_DRIVER_NAME", None) or "i965"
+
+  def test_start(self):
+    test = slash.context.test
+    result = slash.context.result
+    variation = test.get_variation().values
+    self._set_test_details(**variation)
+    result.data.update(test_start = dt.now())
+
+    # Begin system capture for test (i.e. dmesg).
+    # NOTE: syscapture is not accurate for parallel runs
+    if slash.config.root.parallel.worker_id is None:
+      self.syscapture.checkpoint()
+
+  def test_end(self):
+    test = slash.context.test
+    result = slash.context.result
+
+    # Cleanup test artifacts?
+    if self.retention != self.RETENTION_ALL:
+      if self.retention == self.RETENTION_FAIL and not result.is_success():
+        pass # Keep failed test artifacts
+      else:
+        for tstfile in result.data.get("artifacts", list()):
+          if os.path.exists(tstfile):
+            os.remove(tstfile)
+
+    # Process system capture result (i.e. dmesg)
+    # NOTE: syscapture is not accurate for parallel runs
+    if slash.config.root.parallel.worker_id is None:
+      capture = self.syscapture.checkpoint()
+      hangmsgs = [
+        "\[.*\] i915 0000:00:02.0: Resetting .* after gpu hang",
+        "\[.*\] i915 0000:00:02.0: Resetting .* for hang on .*",
+      ]
+      for msg in hangmsgs:
+        if re.search(msg, capture, re.MULTILINE) is not None:
+          slash.logger.error("GPU HANG DETECTED!")
+      for line in capture.split('\n'):
+        if len(line):
+          slash.logger.info(line)
+
+    # Finally, calculate test execution time
+    result.data.update(test_end = dt.now())
+    time = (result.data["test_end"] - result.data["test_start"]).total_seconds()
+    result.data.update(time = str(time))
+    self._set_test_details(time = "{} seconds".format(time))
+
+  def session_start(self):
+    self.session_start = dt.now()
+
+    self.syscapture = lib.system.Capture()
+
+    self.metrics_pool = None
+
+    if self.parallel_metrics:
+      import multiprocessing, signal
+      handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
+      self.metrics_pool = multiprocessing.Pool()
+      signal.signal(signal.SIGINT, handler)
+
+  def session_end(self):
+    if self.metrics_pool is not None:
+      self.metrics_pool.close()
+      self.metrics_pool.join()
+
+    if slash.config.root.parallel.worker_id is not None:
+      return
+
+    self.baseline.finalize()
+
+    time = (dt.now() - self.session_start).total_seconds()
+    tests = slash.context.session.results.get_num_results()
+    errors = slash.context.session.results.get_num_errors()
+    failures = slash.context.session.results.get_num_failures()
+    skipped = slash.context.session.results.get_num_skipped()
+
+    suite = et.Element(
+      "testsuite", name = self.suite, disabled = "0", tests = str(tests),
+      errors = str(errors), failures = str(failures), skipped = str(skipped),
+      time = str(time), timestamp = self.session_start.isoformat())
+
+    for result in slash.context.session.results.iter_test_results():
+      suitename, casename = result.test_metadata.address.split(':')
+      classname = suitename.rstrip(".py").replace(os.sep, '.').strip('.')
+      classname = "{}.{}".format(self.suite, classname)
+
+      case = et.SubElement(
+        suite, "testcase", name = casename, classname = classname,
+        time = result.data.get("time") or "0")
+
+      outfile = result.get_log_path()
+      if os.path.exists(outfile):
+        with open(outfile, 'rb', 0) as out:
+          value = "".join(out.readlines())
+          et.SubElement(case, "system-out").text = ansi_escape(value)
+
+      for error in itertools.chain(result.get_errors(), result.get_failures()):
+        exc_type, exc_value, _ = exc_info = sys.exc_info()
+        tag = "failure" if error.is_failure() else "error"
+        et.SubElement(
+          case, tag, message = error.message,
+          type = exc_type.__name__ if exc_type else tag).text = ansi_escape(
+            get_traceback_string(exc_info) if exc_value is not None else "")
+
+      for skip in result.get_skips():
+        case.set("skipped", "1")
+        et.SubElement(case, "skipped", type = skip or '')
+
+      for name, value in result.details.all().items():
+        et.SubElement(case, "detail", name = name, value = str(value))
+
+    tree = et.ElementTree(suite)
+
+    validate_unique_cases(tree)
+
+    filename = os.path.join(
+      slash.context.session.results.global_result.get_log_dir(), "results.xml")
+    tree.write(filename)
+
+media = MediaPlugin()
+slash.plugins.manager.install(media, activate = True, is_internal = True)
+
+# Allow user to override test config file via environment variable.
+# NOTE: It would be nice to use the configure_argument_parser mechanism in our
+# media plugin instead.  However, it does not work since
+# configure_argument_parser does not get called for "slash list"... it only gets
+# invoked for "slash run".  Hence, we use an environment var so that we can
+# always load the config file when slash loads this file.
+config = os.environ.get(
+  "VAAPI_FITS_CONFIG_FILE",
+  os.path.abspath(os.path.join(media.mypath, "config", "default")))
+assert os.path.exists(config)
+execfile(config)
+
+###
+### kate: syntax python;
+###

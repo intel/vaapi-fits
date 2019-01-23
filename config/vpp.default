@@ -1,0 +1,57 @@
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+import copy
+
+inputs = {
+  "QCIF" : dict(
+    source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
+    width = 176, height = 144, format = "NV12", frames = 5,
+    levels = [0, 100],
+    refctx = ["driver"],
+  ),
+  "QVGA" : dict(
+    source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
+    width = 320, height = 240, format = "NV12", frames = 5,
+    levels = [1, 99],
+    refctx = ["driver"],
+  ),
+  "720p" : dict(
+    source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
+    width = 1280, height = 720, format = "NV12", frames = 5,
+    levels = [12, 57],
+    refctx = ["driver"],
+  ),
+  "1080p" : dict(
+    source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
+    width = 1920, height = 1080, format = "NV12", frames = 5,
+    levels = [84],
+    refctx = ["driver"],
+  ),
+}
+
+media._get_test_spec("vpp", "brightness").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "contrast").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "hue").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "saturation").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "csc").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "deinterlace").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "denoise").update(copy.deepcopy(inputs))
+media._get_test_spec("vpp", "sharpen").update(copy.deepcopy(inputs))
+
+# mirroring uses md5 metric and should be same for all drivers
+media._get_test_spec("vpp", "mirroring").update(copy.deepcopy(inputs))
+for v in media._get_test_spec("vpp", "mirroring").values():
+  del v["refctx"]
+
+# rotation uses md5 metric and should be same for all drivers
+media._get_test_spec("vpp", "rotation").update(copy.deepcopy(inputs))
+for v in media._get_test_spec("vpp", "rotation").values():
+  del v["refctx"]
+
+###
+### kate: syntax python;
+###

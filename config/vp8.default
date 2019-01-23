@@ -1,0 +1,78 @@
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+media._get_test_spec("vp8", "decode").update({
+  "QCIF" : dict(
+    source = os.path.join(assets, "vp8", "QCIF.webm"),
+    width = 176, height = 144, format = "NV12", frames = 10,
+    metric = dict(type = "md5"),
+  ),
+  "QVGA" : dict(
+    source = os.path.join(assets, "vp8", "QVGA.webm"),
+    width = 320, height = 240, format = "NV12", frames = 10,
+    metric = dict(type = "md5"),
+  ),
+  "720p" : dict(
+    source = os.path.join(assets, "vp8", "720p.webm"),
+    width = 1280, height = 720, format = "NV12", frames = 10,
+    metric = dict(type = "md5"),
+  ),
+  "1080p" : dict(
+    source = os.path.join(assets, "vp8", "1080p.webm"),
+    width = 1920, height = 1080, format = "NV12", frames = 10,
+    metric = dict(type = "md5"),
+  ),
+})
+
+media._get_test_spec("vp8", "encode").update({
+  "QCIF" : dict(
+    source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
+    width = 176, height = 144, format = "NV12", frames = 300,
+    refctx = ["driver"],
+    cqp = [
+      dict(ipmode = 0, qp = 14, quality = 4, looplvl = 0, loopshp = 0),
+      dict(ipmode = 1, qp = 28, quality = 4, looplvl = 0, loopshp = 0),
+    ],
+    cbr = [dict(bitrate = 250)],
+    vbr = [dict(bitrate = 250)],
+  ),
+  "QVGA" : dict(
+    source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
+    width = 320, height = 240, format = "NV12", frames = 300,
+    refctx = ["driver"],
+    cqp = [
+      dict(ipmode = 1, qp = 14, quality = 4, looplvl = 0, loopshp = 0),
+      dict(ipmode = 0, qp = 28, quality = 4, looplvl = 0, loopshp = 0),
+    ],
+    cbr = [dict(bitrate = 500)],
+    vbr = [dict(bitrate = 500)],
+  ),
+  "720p" : dict(
+    source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
+    width = 1280, height = 720, format = "NV12", frames = 150,
+    refctx = ["driver"],
+    cqp = [
+      dict(ipmode = 0, qp = 28, quality = 4, looplvl = 0, loopshp = 0),
+    ],
+    cbr = [dict(bitrate = 4000)],
+    vbr = [dict(bitrate = 4000)],
+  ),
+  "1080p" : dict(
+    source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
+    width = 1920, height = 1080, format = "NV12", frames = 150,
+    refctx = ["driver"],
+    cqp = [
+      dict(ipmode = 1, qp = 14, quality = 4, looplvl = 0, loopshp = 0),
+      dict(ipmode = 1, qp = 28, quality = 4, looplvl = 0, loopshp = 0),
+    ],
+    cbr = [dict(bitrate = 6000)],
+    vbr = [dict(bitrate = 6000)],
+  ),
+})
+
+###
+### kate: syntax python;
+###

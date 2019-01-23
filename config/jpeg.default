@@ -1,0 +1,59 @@
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+media._get_test_spec("jpeg", "decode").update({
+  "QCIF" : dict(
+    source = os.path.join(assets, "jpeg", "QCIF.mjpg"),
+    reference = os.path.join(assets, "yuv", "QCIF.mjpg_ref.NV12.yuv"),
+    width = 176, height = 144, format = "NV12", frames = 10,
+  ),
+  "QVGA" : dict(
+    source = os.path.join(assets, "jpeg", "QVGA.mjpg"),
+    reference = os.path.join(assets, "yuv", "QVGA.mjpg_ref.NV12.yuv"),
+    width = 320, height = 240, format = "NV12", frames = 10,
+  ),
+  "720p" : dict(
+    source = os.path.join(assets, "jpeg", "720p.mjpg"),
+    reference = os.path.join(assets, "yuv", "720p.mjpg_ref.NV12.yuv"),
+    width = 1280, height = 720, format = "NV12", frames = 10,
+  ),
+  "1080p" : dict(
+    source = os.path.join(assets, "jpeg", "1080p.mjpg"),
+    reference = os.path.join(assets, "yuv", "1080p.mjpg_ref.NV12.yuv"),
+    width = 1920, height = 1080, format = "NV12", frames = 10,
+  ),
+})
+
+media._get_test_spec("jpeg", "encode").update({
+  "QCIF" : dict(
+    source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
+    width = 176, height = 144, format = "NV12", frames = 50,
+    refctx = ["driver"],
+    cqp = [dict(quality = 10), dict(quality = 73)],
+  ),
+  "QVGA" : dict(
+    source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
+    width = 320, height = 240, format = "NV12", frames = 50,
+    refctx = ["driver"],
+    cqp = [dict(quality = 10), dict(quality = 73)],
+  ),
+  "720p" : dict(
+    source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
+    width = 1280, height = 720, format = "NV12", frames = 50,
+    refctx = ["driver"],
+    cqp = [dict(quality = 10), dict(quality = 73)],
+  ),
+  "1080p" : dict(
+    source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
+    width = 1920, height = 1080, format = "NV12", frames = 50,
+    refctx = ["driver"],
+    cqp = [dict(quality = 10), dict(quality = 73)],
+  ),
+})
+
+###
+### kate: syntax python;
+###

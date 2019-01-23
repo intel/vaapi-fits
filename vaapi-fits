@@ -1,0 +1,20 @@
+#!/usr/bin/env python2
+
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+import os
+import sys
+from slash.frontend.main import main_entry_point
+
+__VAAPI_FITS_PATH__ = os.path.abspath(os.path.dirname(__file__))
+
+def main():
+  os.chdir(__VAAPI_FITS_PATH__)
+  return main_entry_point()
+
+if '__main__' == __name__:
+  sys.exit(main())

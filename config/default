@@ -1,0 +1,23 @@
+###
+### Copyright (C) 2018-2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+import fnmatch
+import tarfile
+
+assets = os.path.join(media.mypath, "assets")
+
+if not os.path.exists(assets):
+  print "Extracting assets..."
+  with tarfile.open("{}.tbz2".format(assets), "r:*") as tf:
+    tf.extractall(media.mypath)
+
+for file in os.listdir(os.path.dirname(config)):
+  if fnmatch.fnmatch(file, "*.default"):
+    execfile(os.path.join(os.path.dirname(config), file))
+
+###
+### kate: syntax python;
+###
