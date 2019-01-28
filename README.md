@@ -28,29 +28,29 @@ After Git LFS is installed, you can clone and interact with this repository usin
 
 * Python Slash library.
 
-  `sudo pip install slash==1.5.1`
+  ```sudo pip install slash==1.5.1```
 
 * Python NumPy library.
 
-  `sudo pip install numpy`
+  ```sudo pip install numpy```
 
 * Python scikit-image library.
 
-  `sudo pip install scikit-image`
+  ```sudo pip install scikit-image```
 
 ## Examples
 
-1. Run all available test cases
+* Run all available test cases
 
-  `vaapi-fits run test`
+  ```vaapi-fits run test```
 
-1. Run only test cases that are supported by SKL platform
+* Run only test cases that are supported by SKL platform
 
-  `vaapi-fits run test -k tag:SKL`
+  ```vaapi-fits run test -k tag:SKL```
 
-1. Run only gst-vaapi test cases on iHD driver
+* Run only gst-vaapi test cases on iHD driver
 
-  `LIBVA_DRIVER_NAME=iHD GST_VAAPI_ALL_DRIVERS=1 vaapi-fits run test/gst-vaapi`
+  ```LIBVA_DRIVER_NAME=iHD GST_VAAPI_ALL_DRIVERS=1 vaapi-fits run test/gst-vaapi```
 
 ## Some Useful Options
 
