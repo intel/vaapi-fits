@@ -58,6 +58,10 @@ def killproc(proc):
   return result
 
 def call(command, withSlashLogger = True):
+
+  calls_allowed = get_media()._calls_allowed()
+  assert calls_allowed, "call refused"
+
   if withSlashLogger:
     logger = slash.logger.info
   else:
@@ -107,6 +111,7 @@ def call(command, withSlashLogger = True):
 
   if timeout.triggered:
     error = True
+    get_media()._report_call_timeout()
     message = "CALL TIMEOUT: timeout after {} seconds (pid: {}).".format(
       get_media().call_timeout, proc.pid)
   elif proc.returncode != 0:
