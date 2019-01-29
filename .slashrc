@@ -66,6 +66,10 @@ class MediaPlugin(slash.plugins.PluginInterface):
         self.RETENTION_NONE, self.RETENTION_FAIL, self.RETENTION_ALL))
     parser.add_argument("--call-timeout", default = 300, type = int,
       help = "call timeout in seconds")
+    parser.add_argument("--ctapt", default = -1, type = int,
+      help = "number of call timeouts allowed per test function")
+    parser.add_argument("--ctapr", default = -1, type = int,
+      help = "number of call timeouts allowed per run")
     parser.add_argument("--parallel-metrics", action = "store_true")
 
   def configure_from_parsed_args(self, args):
@@ -73,8 +77,37 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.retention = args.artifact_retention
     self.call_timeout = args.call_timeout
     self.parallel_metrics = args.parallel_metrics
+    self.ctapt = args.ctapt
+    self.ctapr = args.ctapr
 
     assert not (args.rebase and slash.config.root.parallel.num_workers > 0), "rebase in parallel mode is not supported"
+    assert not (args.ctapt != -1 and slash.config.root.parallel.num_workers > 0), "ctapt in parallel mode is not supported"
+    assert not (args.ctapr != -1 and slash.config.root.parallel.num_workers > 0), "ctapr in parallel mode is not supported"
+
+  def _calls_allowed(self):
+    # only enabled during test function execution (see test_start/test_end)
+    if not self.cta_enabled:
+      return True
+
+    meta = slash.context.result.test_metadata
+    ntimeouts = self.num_ctapt.get((meta.file_path, meta.function_name), 0)
+
+    allowed = self.ctapr <= -1 or self.num_ctapr <= self.ctapr
+    allowed = allowed and (self.ctapt <= -1 or ntimeouts <= self.ctapt)
+    if not allowed:
+      slash.logger.notice("Call Timeouts Allowed: limit reached!")
+
+    return allowed
+
+  def _report_call_timeout(self):
+    # only enabled during test function execution
+    if not self.cta_enabled:
+      return
+
+    meta = slash.context.result.test_metadata
+    self.num_ctapr += 1
+    self.num_ctapt.setdefault((meta.file_path, meta.function_name), 0)
+    self.num_ctapt[(meta.file_path, meta.function_name)] += 1
 
   def _set_test_details(self, **kwargs):
     for k, v in kwargs.iteritems():
@@ -110,7 +143,13 @@ class MediaPlugin(slash.plugins.PluginInterface):
     if slash.config.root.parallel.worker_id is None:
       self.syscapture.checkpoint()
 
+    # enable call timeout tracking during test function execution (see test_end)
+    self.cta_enabled = True
+
   def test_end(self):
+    # only enabled during test function execution (see test_start)
+    self.cta_enabled = False
+
     test = slash.context.test
     result = slash.context.result
 
@@ -149,8 +188,13 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
     self.syscapture = lib.system.Capture()
 
-    self.metrics_pool = None
+    # only enabled during test function execution (see test_start/test_end)
+    self.cta_enabled = False
+    self.num_ctapt = dict()
+    self.num_ctapr = 0
 
+    # setup metrics_pool
+    self.metrics_pool = None
     if self.parallel_metrics:
       import multiprocessing, signal
       handler = signal.signal(signal.SIGINT, signal.SIG_IGN)
