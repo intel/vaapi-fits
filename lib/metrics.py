@@ -122,8 +122,8 @@ def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I
     sum(result[2::3]) / nframes,
   )
 
-def check_filesize(filename, width, height, nframes, fourcc):
-  expected = {
+def get_framesize(width, height, fourcc):
+  return {
     "I420" : lambda w,h: w*h*3/2,
     "422H" : lambda w,h: w*h*2,
     "422V" : lambda w,h: w*h*2,
@@ -134,10 +134,11 @@ def check_filesize(filename, width, height, nframes, fourcc):
     "Y800" : lambda w,h: w*h,
     "YUY2" : lambda w,h: w*h*2,
     "AYUV" : lambda w,h: w*h*4,
-  }[fourcc](width, height) * nframes
+  }[fourcc](width, height)
 
+def check_filesize(filename, width, height, nframes, fourcc):
+  expected = get_framesize(width, height, fourcc) * nframes
   actual = os.stat(filename).st_size
-
   assert expected == actual
 
 def check_metric(**params):
