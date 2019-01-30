@@ -12,11 +12,31 @@ import skimage.measure
 from common import get_media
 from framereader import FrameReaders
 
-def md5(filename):
+def md5(filename, chunksize = 4096, numbytes = -1):
+  if numbytes < 0: # calculate checksum on entire file
+    numbytes = os.stat(filename).st_size
+
+  numbytesread = 0
   m = hashlib.md5()
   with open(filename, "rb") as f:
-    for chunk in iter(lambda: f.read(4096), b""):
-      m.update(chunk)
+
+    # read numchunks of size chunksize
+    numchunks = int(numbytes / chunksize)
+    if numchunks > 0:
+      for n, chunk in enumerate(iter(lambda: f.read(chunksize), b""), 1):
+        numbytesread += len(chunk)
+        m.update(chunk)
+        if n == numchunks:
+          break
+
+    # read remainder of bytes < chunksize
+    lastchunk = f.read(numbytes % chunksize)
+    numbytesread += len(lastchunk)
+    m.update(lastchunk)
+
+  # fail if we did not read exactly numbytes
+  assert numbytesread == numbytes, "md5: expected {} bytes, got {}".format(numbytes, numbytesread)
+
   return m.hexdigest()
 
 def __try_read_frame(reader, *args, **kwargs):
@@ -159,8 +179,13 @@ def check_metric(**params):
     assert 1.0 >= ssim[2] >= minv
 
   elif "md5" == type:
+    numbytes = get_framesize(
+      params["width"], params["height"],
+      params.get("format2", params["format"])
+    ) * params["frames"]
+    res = md5(filename = params["decoded"], numbytes = numbytes)
     get_media().baseline.check_md5(
-      md5 = md5(params["decoded"]), context = params.get("refctx", []))
+      md5 = res, context = params.get("refctx", []))
 
   else:
     assert False, "unknown metric"
