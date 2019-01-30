@@ -3730,52 +3730,52 @@
     }
   }, 
   "test/gst-msdk/decode/avc.py:test_default(case=1080p)": {
-    "md5": "6ca29df38b0fb65675b1992db2aa5e15"
+    "md5": "2873526ec49defd754c7853f0658799d"
   }, 
   "test/gst-msdk/decode/avc.py:test_default(case=720p)": {
-    "md5": "19a7e32369a1639ccd8c39605f4e0951"
+    "md5": "e6b24a42be6b698f1bf96b75d1480ade"
   }, 
   "test/gst-msdk/decode/avc.py:test_default(case=QCIF)": {
-    "md5": "2ea1ddb98497562f73f25f46a118f8df"
+    "md5": "61aeb97a3ab5da00a28a962ae9d69a28"
   }, 
   "test/gst-msdk/decode/avc.py:test_default(case=QVGA)": {
-    "md5": "77e3dffe0767c8fd15711369821806b9"
+    "md5": "767f88894d9635691c6e1af82b1a738b"
   }, 
   "test/gst-msdk/decode/hevc.py:test_8bit(case=1080p)": {
-    "md5": "b0e23b886be828646c89b91c482538a5"
+    "md5": "3f66eca6367872ffbe2d53ab0c573852"
   }, 
   "test/gst-msdk/decode/hevc.py:test_8bit(case=720p)": {
-    "md5": "09942c92718fc705bd5fb52401480cde"
+    "md5": "fc0bde09b5befabb0c17593ca51bdb37"
   }, 
   "test/gst-msdk/decode/hevc.py:test_8bit(case=QCIF)": {
-    "md5": "6d3771bb83b9ab128952afedd482edba"
+    "md5": "c6d9e88dcbcec23942344649c0c01bc4"
   }, 
   "test/gst-msdk/decode/hevc.py:test_8bit(case=QVGA)": {
-    "md5": "8adaed1aaddc94aa2f5ddcd5a30adefa"
+    "md5": "f9ea7bcce345d7775c888e71de435721"
   }, 
   "test/gst-msdk/decode/vp8.py:test_default(case=1080p)": {
-    "md5": "0ed59b478c566c90706e655d7d374974"
+    "md5": "02571f75accdd3c04475ca4158692b5a"
   }, 
   "test/gst-msdk/decode/vp8.py:test_default(case=720p)": {
-    "md5": "8951034cd51b65cf5e9fbae79a660a9f"
+    "md5": "6ad352c5fa46789c9ec041b5b40c166f"
   }, 
   "test/gst-msdk/decode/vp8.py:test_default(case=QCIF)": {
-    "md5": "3f8311584d1a5201919a959b26866527"
+    "md5": "85cd30186f09ee9cd0ba62a27e80e0c9"
   }, 
   "test/gst-msdk/decode/vp8.py:test_default(case=QVGA)": {
-    "md5": "39344e13afa7ee6086abd7d5953ba945"
+    "md5": "f3c9ed63ec11f05dc80d4c4e11d466ae"
   }, 
   "test/gst-msdk/decode/vp9.py:test_8bit(case=1080p)": {
-    "md5": "8ffcfedadb4c86316417b51be72506a9"
+    "md5": "6c4e5c87c6f0e28aaf9fd22d76e67502"
   }, 
   "test/gst-msdk/decode/vp9.py:test_8bit(case=720p)": {
-    "md5": "90e9eda788301b9b11ed1654c054ac9e"
+    "md5": "94fa781d49e61edb726bc67745aff937"
   }, 
   "test/gst-msdk/decode/vp9.py:test_8bit(case=QCIF)": {
-    "md5": "03e38396f392916e0e95b5355cfa824f"
+    "md5": "c983151ec2d2b6ebfcff776112a5ae3f"
   }, 
   "test/gst-msdk/decode/vp9.py:test_8bit(case=QVGA)": {
-    "md5": "950d8672c7245697fe8a9eed2262f044"
+    "md5": "e0b3e642609dcd5718bc0c6d7c5b8c3d"
   }, 
   "test/gst-msdk/encode/avc.py:test_cbr(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
     "drv.iHD": {
@@ -5038,52 +5038,52 @@
     }
   }, 
   "test/gst-vaapi/decode/avc.py:test_default(case=1080p)": {
-    "md5": "6ca29df38b0fb65675b1992db2aa5e15"
+    "md5": "2873526ec49defd754c7853f0658799d"
   }, 
   "test/gst-vaapi/decode/avc.py:test_default(case=720p)": {
-    "md5": "19a7e32369a1639ccd8c39605f4e0951"
+    "md5": "e6b24a42be6b698f1bf96b75d1480ade"
   }, 
   "test/gst-vaapi/decode/avc.py:test_default(case=QCIF)": {
-    "md5": "2ea1ddb98497562f73f25f46a118f8df"
+    "md5": "61aeb97a3ab5da00a28a962ae9d69a28"
   }, 
   "test/gst-vaapi/decode/avc.py:test_default(case=QVGA)": {
-    "md5": "77e3dffe0767c8fd15711369821806b9"
+    "md5": "767f88894d9635691c6e1af82b1a738b"
   }, 
   "test/gst-vaapi/decode/hevc.py:test_8bit(case=1080p)": {
-    "md5": "b0e23b886be828646c89b91c482538a5"
+    "md5": "3f66eca6367872ffbe2d53ab0c573852"
   }, 
   "test/gst-vaapi/decode/hevc.py:test_8bit(case=720p)": {
-    "md5": "09942c92718fc705bd5fb52401480cde"
+    "md5": "fc0bde09b5befabb0c17593ca51bdb37"
   }, 
   "test/gst-vaapi/decode/hevc.py:test_8bit(case=QCIF)": {
-    "md5": "6d3771bb83b9ab128952afedd482edba"
+    "md5": "c6d9e88dcbcec23942344649c0c01bc4"
   }, 
   "test/gst-vaapi/decode/hevc.py:test_8bit(case=QVGA)": {
-    "md5": "8adaed1aaddc94aa2f5ddcd5a30adefa"
+    "md5": "f9ea7bcce345d7775c888e71de435721"
   }, 
   "test/gst-vaapi/decode/vp8.py:test_default(case=1080p)": {
-    "md5": "0ed59b478c566c90706e655d7d374974"
+    "md5": "02571f75accdd3c04475ca4158692b5a"
   }, 
   "test/gst-vaapi/decode/vp8.py:test_default(case=720p)": {
-    "md5": "8951034cd51b65cf5e9fbae79a660a9f"
+    "md5": "6ad352c5fa46789c9ec041b5b40c166f"
   }, 
   "test/gst-vaapi/decode/vp8.py:test_default(case=QCIF)": {
-    "md5": "3f8311584d1a5201919a959b26866527"
+    "md5": "85cd30186f09ee9cd0ba62a27e80e0c9"
   }, 
   "test/gst-vaapi/decode/vp8.py:test_default(case=QVGA)": {
-    "md5": "39344e13afa7ee6086abd7d5953ba945"
+    "md5": "f3c9ed63ec11f05dc80d4c4e11d466ae"
   }, 
   "test/gst-vaapi/decode/vp9.py:test_8bit(case=1080p)": {
-    "md5": "8ffcfedadb4c86316417b51be72506a9"
+    "md5": "6c4e5c87c6f0e28aaf9fd22d76e67502"
   }, 
   "test/gst-vaapi/decode/vp9.py:test_8bit(case=720p)": {
-    "md5": "90e9eda788301b9b11ed1654c054ac9e"
+    "md5": "94fa781d49e61edb726bc67745aff937"
   }, 
   "test/gst-vaapi/decode/vp9.py:test_8bit(case=QCIF)": {
-    "md5": "03e38396f392916e0e95b5355cfa824f"
+    "md5": "c983151ec2d2b6ebfcff776112a5ae3f"
   }, 
   "test/gst-vaapi/decode/vp9.py:test_8bit(case=QVGA)": {
-    "md5": "950d8672c7245697fe8a9eed2262f044"
+    "md5": "e0b3e642609dcd5718bc0c6d7c5b8c3d"
   }, 
   "test/gst-vaapi/encode/avc.py:test_cbr(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
     "drv.i965": {
