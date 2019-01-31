@@ -275,6 +275,25 @@ config = os.environ.get(
 assert os.path.exists(config)
 execfile(config)
 
+from slash.core.variation import _PRINTABLE_CHARS
+import numbers
+def validate_spec(spec, context = list()):
+  for k, v in spec.iteritems():
+    if "--spec--" == k:
+      for case in v.keys():
+        _VALID_TYPES = (numbers.Integral, basestring)
+        assert isinstance(case, _VALID_TYPES), (
+          "{}: {}"
+          "\n\tIllegal type for test case name"
+          "\n\tLegal types: {}".format(context, case, _VALID_TYPES))
+        assert _PRINTABLE_CHARS.issuperset(str(case)), (
+          "{}: {}"
+          "\n\tIllegal character in test case name"
+          "\n\tLegal characters: '{}'".format(context, case, ''.join(_PRINTABLE_CHARS)))
+    else:
+      validate_spec(v, context + [k,])
+validate_spec(media.testspec)
+
 ###
 ### kate: syntax python;
 ###
