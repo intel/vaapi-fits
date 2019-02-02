@@ -4,13 +4,13 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib import *
-from ..util import *
-from .decoder import DecoderTest
+from .....lib import *
+from ...util import *
+from ..decoder import DecoderTest
 
-spec = load_test_spec("avc", "decode")
+spec = load_test_spec("vp9", "decode", "10bit")
 
-@platform_tags(AVC_DECODE_PLATFORMS)
+@platform_tags(VP9_DECODE_10BIT_PLATFORMS)
 class default(DecoderTest):
   def before(self):
     # default metric
@@ -22,3 +22,8 @@ class default(DecoderTest):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()
+
+  def check_output(self):
+    m = re.search("No support for codec vp9", self.output, re.MULTILINE)
+    assert m is None, "Failed to use hardware decode"
+    super(default, self).check_output()
