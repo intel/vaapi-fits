@@ -80,9 +80,18 @@ def mapprofile(codec, profile):
     "hevc-10"  : {
       "main10"                : "main10",
     },
+    "jpeg"     : {
+      "baseline"              : "baseline",
+    },
     "mpeg2"    : {
       "main"                  : 4,
       "simple"                : 5,
+    },
+    "vp8"      : {
+      "version0_3"            : "version0_3",
+    },
+    "vp9"      : {
+      "profile0"              : "profile0",
     },
   }.get(codec, {}).get(profile, None)
 
