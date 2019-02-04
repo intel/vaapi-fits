@@ -4,33 +4,33 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib import *
-from ..util import *
-from .encoder import EncoderTest
+from .....lib import *
+from ...util import *
+from ..encoder import EncoderTest
 
 @slash.requires(have_ffmpeg_hevc_vaapi_encode)
-class HEVC8EncoderTest(EncoderTest):
+class HEVC10EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
-      codec   = "hevc-8",
+      codec   = "hevc-10",
       ffenc   = "hevc_vaapi",
-      hwupfmt = "nv12",
+      hwupfmt = "p010le",
     )
-    super(HEVC8EncoderTest, self).before()
+    super(HEVC10EncoderTest, self).before()
 
   def get_file_ext(self):
     return "h265"
 
   def get_vaapi_profile(self):
     return {
-      "main" : "VAProfileHEVCMain",
+      "main10" : "VAProfileHEVCMain10",
     }[self.profile]
 
-spec = load_test_spec("hevc", "encode", "8bit")
+spec = load_test_spec("hevc", "encode", "10bit")
 
-@platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-class cqp(HEVC8EncoderTest):
-  @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
+@platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+class cqp(HEVC10EncoderTest):
+  @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(spec[case].copy())
@@ -38,35 +38,35 @@ class cqp(HEVC8EncoderTest):
       bframes = bframes,
       case    = case,
       gop     = gop,
-      qp      = qp,
       profile = profile,
+      qp      = qp,
       rcmode  = "cqp",
       slices  = slices,
     )
     self.encode()
 
-@platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-class cbr(HEVC8EncoderTest):
-  @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
+@platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+class cbr(HEVC10EncoderTest):
+  @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     vars(self).update(spec[case].copy())
     vars(self).update(
       bframes = bframes,
       bitrate = bitrate,
-      case    = case,
-      fps     = fps,
-      gop     = gop,
-      maxrate = bitrate,
+      case = case,
+      fps = fps,
+      gop = gop,
       minrate = bitrate,
+      maxrate = bitrate,
       profile = profile,
-      rcmode  = "cbr",
-      slices  = slices,
+      rcmode = "cbr",
+      slices = slices,
     )
     self.encode()
 
-@platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-class vbr(HEVC8EncoderTest):
-  @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
+@platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+class vbr(HEVC10EncoderTest):
+  @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(spec[case].copy())
