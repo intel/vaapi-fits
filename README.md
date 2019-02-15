@@ -84,4 +84,4 @@ See [here](http://chris.beams.io/posts/git-commit/) for some more good advice ab
 
 ## Reporting a Security Issue:
 
-Please send email to secure-opensource@intel.com for security issue.
+Please visit http://intel.com/security for security issue report.
