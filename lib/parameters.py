@@ -343,3 +343,18 @@ def gen_vpp_rotation_parameters(spec):
   keys = ("case", "degrees")
   params = gen_vpp_rotation_variants(spec)
   return keys, params
+
+
+def gen_transcode_1to1_variants(spec, codec, mode):
+  for case, params in spec.iteritems():
+    variants = params.get("one_one", None) or []
+    for variant in variants:
+      variant_mode = variant.get("mode", None)
+      variant_codec = variant.get("codec", None)
+      if variant_codec == codec and variant_mode == mode:
+        yield case
+
+def gen_transcode_1to1_parameters(spec, codec, mode):
+  keys = ("case")
+  params = gen_transcode_1to1_variants(spec, codec, mode)
+  return keys, params
