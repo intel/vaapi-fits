@@ -19,16 +19,32 @@ def have_ffmpeg_h264_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep h264_vaapi")
 
 @memoize
+def have_ffmpeg_x264_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep libx264")
+
+@memoize
 def have_ffmpeg_hevc_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep hevc_vaapi")
+
+@memoize
+def have_ffmpeg_x265_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep libx265")
 
 @memoize
 def have_ffmpeg_mjpeg_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mjpeg_vaapi")
 
 @memoize
+def have_ffmpeg_mjpeg_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep mjpeg")
+
+@memoize
 def have_ffmpeg_mpeg2_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mpeg2_vaapi")
+
+@memoize
+def have_ffmpeg_mpeg2_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep mpeg2video")
 
 @memoize
 def have_ffmpeg_vc1_vaapi_encode():
