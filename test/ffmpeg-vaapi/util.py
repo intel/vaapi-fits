@@ -52,9 +52,12 @@ def mapformat(format):
   return {
     "I420"  : "yuv420p",
     "NV12"  : "nv12",
-    "444P"  : "yuv444p",
     "P010"  : "p010le",
     "YUY2"  : "yuyv422",
+    "422H"  : "yuv422p",
+    "422V"  : "yuv440p",
+    "444P"  : "yuv444p",
+    "Y800"  : "gray8",
   }.get(format, None)
 
 @memoize
