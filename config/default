@@ -11,8 +11,12 @@ assets = os.path.join(media.mypath, "assets")
 
 if not os.path.exists(assets):
   print "Extracting assets..."
-  with tarfile.open("{}.tbz2".format(assets), "r:*") as tf:
-    tf.extractall(media.mypath)
+  try:
+    with tarfile.open("{}.tbz2".format(assets), "r:*") as tf:
+      tf.extractall(media.mypath)
+  except tarfile.ReadError, e:
+    assert 0, ("Failed to extract assets.  Did you forget to"
+      " initialize git lfs (see README.md)?")
 
 for file in os.listdir(os.path.dirname(config)):
   if fnmatch.fnmatch(file, "*.default"):
