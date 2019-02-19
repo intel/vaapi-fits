@@ -41,7 +41,10 @@ def check_psnr(params):
 @platform_tags(JPEG_ENCODE_PLATFORMS)
 def test_cqp(case, quality):
   params = spec[case].copy()
-  params.update(quality = quality, mformat = mapformat(params["format"]))
+
+  params.update(
+    quality = quality, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
   params["encoded"] = get_media()._test_artifact(
     "{}-{quality}.jpg".format(case, **params))
   params["decoded"] = get_media()._test_artifact(
@@ -50,7 +53,7 @@ def test_cqp(case, quality):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw,format=NV12"
+    " ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapijpegenc quality={quality} ! jpegparse"
     " ! filesink location={encoded}".format(**params))
 

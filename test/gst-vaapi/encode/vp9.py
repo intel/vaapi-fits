@@ -40,10 +40,12 @@ def check_psnr(params):
 @platform_tags(VP9_ENCODE_8BIT_PLATFORMS)
 def test_8bit_cqp(case, ipmode, qp, quality, refmode, looplvl, loopshp):
   params = spec[case].copy()
+
   params.update(
     ipmode = ipmode, qp = qp, quality = quality, looplvl = looplvl,
     gop = 30 if ipmode != 0 else 1, refmode = refmode,
-    loopshp = loopshp, mformat = mapformat(params["format"]))
+    loopshp = loopshp, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{ipmode}-{qp}-{quality}-{refmode}-{looplvl}-{loopshp}"
@@ -55,7 +57,7 @@ def test_8bit_cqp(case, ipmode, qp, quality, refmode, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw,format=NV12"
+    " ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp9enc rate-control=cqp keyframe-period={gop}"
     " yac-qi={qp} quality-level={quality} ref-pic-mode={refmode}"
     " loop-filter-level={looplvl} sharpness-level={loopshp} ! matroskamux"
@@ -74,10 +76,12 @@ def test_8bit_cqp(case, ipmode, qp, quality, refmode, looplvl, loopshp):
 @platform_tags(VP9_ENCODE_8BIT_PLATFORMS)
 def test_8bit_cbr(case, gop, bitrate, fps, refmode, looplvl, loopshp):
   params = spec[case].copy()
+
   params.update(
     gop = gop, bitrate = bitrate, fps = fps, refmode = refmode,
     looplvl = looplvl, loopshp = loopshp, mformat = mapformat(params["format"]),
-    frames = params.get("brframes", params["frames"]))
+    frames = params.get("brframes", params["frames"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bitrate}-{fps}-{refmode}-{looplvl}-{loopshp}"
@@ -90,7 +94,7 @@ def test_8bit_cbr(case, gop, bitrate, fps, refmode, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp9enc rate-control=cbr keyframe-period={gop} bitrate={bitrate}"
     " ref-pic-mode={refmode} loop-filter-level={looplvl}"
     " sharpness-level={loopshp} ! matroskamux"
@@ -131,7 +135,8 @@ def test_8bit_vbr(case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
     gop = gop, bitrate = bitrate, fps = fps, refmode = refmode,
     quality = quality, looplvl = looplvl, loopshp = loopshp, minrate = minrate,
     maxrate = maxrate, mformat = mapformat(params["format"]),
-    frames = params.get("brframes", params["frames"]))
+    frames = params.get("brframes", params["frames"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bitrate}-{fps}-{refmode}-{quality}-{looplvl}-{loopshp}"
@@ -144,7 +149,7 @@ def test_8bit_vbr(case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp9enc rate-control=vbr keyframe-period={gop} bitrate={maxrate}"
     " ref-pic-mode={refmode} loop-filter-level={looplvl}"
     " sharpness-level={loopshp} quality-level={quality} ! matroskamux"
