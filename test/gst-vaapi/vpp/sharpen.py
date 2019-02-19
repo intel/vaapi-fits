@@ -26,7 +26,8 @@ def test_default(case, level):
 
   params.update(
     level = level, mlevel = mapRange(level, [0, 100], [-1.0, 1.0]),
-    mformat = mapformat(params["format"]))
+    mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
   params["ofile"] = get_media()._test_artifact(
     "{}_sharpen_{level}_{format}_{width}x{height}"
     ".yuv".format(case, **params))
@@ -34,6 +35,7 @@ def test_default(case, level):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
+    " ! videoconvert ! video/x-raw, format={hwup_format}"
     " ! vaapipostproc format={mformat} width={width} height={height}"
     " sharpen={mlevel} ! checksumsink2 file-checksum=false"
     " frame-checksum=false plane-checksum=false dump-output=true"

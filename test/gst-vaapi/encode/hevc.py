@@ -61,7 +61,8 @@ def test_8bit_cqp(case, gop, slices, bframes, qp, quality, profile):
 
   params.update(
     gop = gop, slices = slices, bframes = bframes, qp = qp, quality = quality,
-    profile = mprofile, mformat = mapformat(params["format"]))
+    profile = mprofile, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{slices}-{bframes}-{qp}-{quality}-{profile}"
@@ -73,7 +74,7 @@ def test_8bit_cqp(case, gop, slices, bframes, qp, quality, profile):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw,format=NV12"
+    " ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapih265enc rate-control=cqp init-qp={qp} quality-level={quality}"
     " keyframe-period={gop} num-slices={slices} max-bframes={bframes}"
     " ! video/x-h265,profile={profile} ! h265parse"
@@ -100,7 +101,8 @@ def test_8bit_cbr(case, gop, slices, bframes, bitrate, fps, profile):
 
   params.update(
     gop = gop, slices = slices, bframes = bframes, bitrate = bitrate,
-    profile = mprofile, fps = fps, mformat = mapformat(params["format"]))
+    profile = mprofile, fps = fps, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{slices}-{bframes}-{bitrate}-{profile}-{fps}"
@@ -112,7 +114,7 @@ def test_8bit_cbr(case, gop, slices, bframes, bitrate, fps, profile):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapih265enc rate-control=cbr bitrate={bitrate} keyframe-period={gop}"
     " num-slices={slices} max-bframes={bframes}"
     " ! video/x-h265,profile={profile} ! h265parse"
@@ -157,7 +159,8 @@ def test_8bit_vbr(case, gop, slices, bframes, bitrate, fps, quality, refs, profi
   params.update(
     gop = gop, slices = slices, bframes = bframes, bitrate = bitrate,
     profile = mprofile, fps = fps, quality = quality, refs = refs,
-    minrate = minrate, maxrate = maxrate, mformat = mapformat(params["format"]))
+    minrate = minrate, maxrate = maxrate, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{slices}-{bframes}-{bitrate}-{profile}-{fps}-{quality}-{refs}"
@@ -170,7 +173,7 @@ def test_8bit_vbr(case, gop, slices, bframes, bitrate, fps, quality, refs, profi
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapih265enc rate-control=vbr bitrate={maxrate} keyframe-period={gop}"
     " num-slices={slices} max-bframes={bframes} refs={refs}"
     " quality-level={quality} ! video/x-h265,profile={profile} ! h265parse"

@@ -40,10 +40,12 @@ def check_psnr(params):
 @platform_tags(VP8_ENCODE_PLATFORMS)
 def test_cqp(case, ipmode, qp, quality, looplvl, loopshp):
   params = spec[case].copy()
+
   params.update(
     ipmode = ipmode, qp = qp, quality = quality, looplvl = looplvl,
     gop = 30 if ipmode != 0 else 1,
-    loopshp = loopshp, mformat = mapformat(params["format"]))
+    loopshp = loopshp, mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{ipmode}-{qp}-{quality}-{looplvl}-{loopshp}"
@@ -55,7 +57,7 @@ def test_cqp(case, ipmode, qp, quality, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw,format=NV12"
+    " ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp8enc rate-control=cqp keyframe-period={gop}"
     " yac-qi={qp} quality-level={quality}"
     " loop-filter-level={looplvl} sharpness-level={loopshp} ! matroskamux"
@@ -74,10 +76,12 @@ def test_cqp(case, ipmode, qp, quality, looplvl, loopshp):
 @platform_tags(VP8_ENCODE_PLATFORMS)
 def test_cbr(case, gop, bitrate, fps, looplvl, loopshp):
   params = spec[case].copy()
+
   params.update(
     gop = gop, bitrate = bitrate, fps = fps, looplvl = looplvl,
     loopshp = loopshp, mformat = mapformat(params["format"]),
-    frames = params.get("brframes", params["frames"]))
+    frames = params.get("brframes", params["frames"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bitrate}-{fps}-{looplvl}-{loopshp}"
@@ -89,7 +93,7 @@ def test_cbr(case, gop, bitrate, fps, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp8enc rate-control=cbr bitrate={bitrate} keyframe-period={gop}"
     " loop-filter-level={looplvl} sharpness-level={loopshp} ! matroskamux"
     " ! filesink location={encoded}".format(**params))
@@ -129,7 +133,8 @@ def test_vbr(case, gop, bitrate, fps, quality, looplvl, loopshp):
     gop = gop, bitrate = bitrate, fps = fps, quality = quality,
     looplvl = looplvl, loopshp = loopshp, minrate = minrate,
     maxrate = maxrate, mformat = mapformat(params["format"]),
-    frames = params.get("brframes", params["frames"]))
+    frames = params.get("brframes", params["frames"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bitrate}-{fps}-{quality}-{looplvl}-{loopshp}"
@@ -142,7 +147,7 @@ def test_vbr(case, gop, bitrate, fps, quality, looplvl, loopshp):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " framerate={fps} ! videoconvert ! video/x-raw,format=NV12"
+    " framerate={fps} ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapivp8enc rate-control=vbr bitrate={maxrate} keyframe-period={gop}"
     " loop-filter-level={looplvl} sharpness-level={loopshp}"
     " quality-level={quality} ! matroskamux"

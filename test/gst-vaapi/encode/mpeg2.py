@@ -41,9 +41,11 @@ def check_psnr(params):
 @platform_tags(MPEG2_ENCODE_PLATFORMS)
 def test_cqp(case, gop, bframes, qp, quality, **unused):
   params = spec[case].copy()
+
   params.update(
     gop = gop, bframes = bframes, qp = qp, quality = quality,
-    mformat = mapformat(params["format"]))
+    mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bframes}-{qp}-{quality}"
@@ -55,7 +57,7 @@ def test_cqp(case, gop, bframes, qp, quality, **unused):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw,format=NV12"
+    " ! videoconvert ! video/x-raw,format={hwup_format}"
     " ! vaapimpeg2enc rate-control=cqp quantizer={qp} keyframe-period={gop}"
     " max-bframes={bframes} quality-level={quality}"
     " ! mpegvideoparse ! filesink location={encoded}".format(**params))

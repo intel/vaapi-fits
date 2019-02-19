@@ -19,6 +19,7 @@ def test_default(case, scale_width, scale_height):
   params = spec[case].copy()
   params.update(
     mformat = mapformat(params["format"]),
+    hwup_format = mapformat_hwup(params["format"]),
     scale_width = scale_width, scale_height = scale_height)
 
   params["scaled"] = get_media()._test_artifact(
@@ -28,6 +29,7 @@ def test_default(case, scale_width, scale_height):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
+    " ! videoconvert ! video/x-raw, format={hwup_format}"
     " ! vaapipostproc format={mformat} width={scale_width} height={scale_height}"
     " ! checksumsink2 file-checksum=false frame-checksum=false plane-checksum=false"
     " dump-output=true dump-location={scaled}".format(**params))
