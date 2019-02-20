@@ -179,10 +179,10 @@ def check_metric(**params):
     assert 1.0 >= ssim[2] >= minv
 
   elif "md5" == type:
-    numbytes = get_framesize(
+    numbytes = metric.get("numbytes", get_framesize(
       params["width"], params["height"],
       params.get("format2", params["format"])
-    ) * params["frames"]
+    ) * params["frames"])
     res = md5(filename = params["decoded"], numbytes = numbytes)
     get_media().baseline.check_md5(
       md5 = res, context = params.get("refctx", []))
