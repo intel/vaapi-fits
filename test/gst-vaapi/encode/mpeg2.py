@@ -43,8 +43,9 @@ def test_cqp(case, gop, bframes, qp, quality, **unused):
   params = spec[case].copy()
 
   params.update(
-    gop = gop, bframes = bframes, qp = qp, quality = quality,
-    mformat = mapformat(params["format"]),
+    gop = gop, bframes = bframes, qp = qp,
+    mqp = mapRange(qp, [0, 100], [2, 62]),
+    quality = quality, mformat = mapformat(params["format"]),
     hwup_format = mapformat_hwup(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
@@ -58,7 +59,7 @@ def test_cqp(case, gop, bframes, qp, quality, **unused):
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
     " ! videoconvert ! video/x-raw,format={hwup_format}"
-    " ! vaapimpeg2enc rate-control=cqp quantizer={qp} keyframe-period={gop}"
+    " ! vaapimpeg2enc rate-control=cqp quantizer={mqp} keyframe-period={gop}"
     " max-bframes={bframes} quality-level={quality}"
     " ! mpegvideoparse ! filesink location={encoded}".format(**params))
 
