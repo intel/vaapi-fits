@@ -42,7 +42,8 @@ def test_cqp(case, gop, bframes, qp, quality, profile):
     slash.skip_test("{} profile is not supported".format(profile))
 
   params.update(
-    profile = mprofile, gop = gop, bframes = bframes, qp = qp,
+    profile = mprofile, gop = gop, bframes = bframes,
+    qp = qp, mqp = mapRange(qp, [0, 100], [1, 51]),
     quality = quality, mformat = mapformat(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
@@ -60,7 +61,7 @@ def test_cqp(case, gop, bframes, qp, quality, profile):
     " -v verbose -f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     " -i {source} -vf 'format=nv12,hwupload=extra_hw_frames=64' -an"
     " -c:v mpeg2_qsv -profile:v {profile} -g {gop} -bf {bframes}"
-    " -q {qp} -preset {quality} -vframes {frames}"
+    " -q {mqp} -preset {quality} -vframes {frames}"
     " -y {encoded}".format(**params))
 
   check_psnr(params)

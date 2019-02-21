@@ -41,6 +41,7 @@ class cqp(MPEG2EncoderTest):
       gop     = gop,
       profile = profile,
       qp      = qp,
+      mqp     = mapRange(qp, [0, 100], [1, 31]),
       rcmode  = "cqp",
     )
     self.encode()

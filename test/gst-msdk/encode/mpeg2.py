@@ -48,8 +48,8 @@ def test_cqp(case, gop, bframes, qp, quality, profile):
     slash.skip_test("{} profile is not supported".format(profile))
 
   params.update(
-    gop = gop, bframes = bframes, qp = qp, quality = quality,
-    profile = mprofile, mformat = mapformat(params["format"]))
+    gop = gop, bframes = bframes, qp = qp, mqp = mapRange(qp, [0, 100], [0, 51]),
+    quality = quality, profile = mprofile, mformat = mapformat(params["format"]))
 
   params["encoded"] = get_media()._test_artifact(
     "{}-{gop}-{bframes}-{qp}-{quality}-{profile}"
@@ -62,7 +62,7 @@ def test_cqp(case, gop, bframes, qp, quality, profile):
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
     " ! videoconvert ! video/x-raw,format=NV12"
-    " ! msdkmpeg2enc rate-control=cqp qpi={qp} qpp={qp} qpb={qp}"
+    " ! msdkmpeg2enc rate-control=cqp qpi={mqp} qpp={mqp} qpb={mqp}"
     " gop-size={gop} b-frames={bframes} hardware=true"
     " ! video/mpeg,mpegversion=2,profile={profile}"
     " ! mpegvideoparse ! filesink location={encoded}".format(**params))

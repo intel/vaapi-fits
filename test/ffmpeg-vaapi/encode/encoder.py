@@ -29,8 +29,10 @@ class EncoderTest(slash.Test):
     if vars(self).get("gop", None) is not None:
       opts += " -g {gop}"
     if vars(self).get("qp", None) is not None:
-      if self.codec in ["mpeg2", "vp8", "vp9",]:
+      if self.codec in ["vp8", "vp9",]:
         opts += " -global_quality {qp}"
+      elif self.codec in ["mpeg2"]:
+        opts += " -global_quality {mqp}"
       else:
         opts += " -qp {qp}"
     if vars(self).get("quality", None) is not None:
