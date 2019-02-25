@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+from __future__ import absolute_import
 import os
 
 JPEG_DECODE_PLATFORMS         = []
@@ -80,3 +81,13 @@ def platform_tags(platforms):
       f = slash.tag(platform)(f)
     return f
   return wrap
+
+def info():
+  from lib.common import call
+  import platform
+  return dict(
+    node = str(platform.node()),
+    kernel = str(platform.release()),
+    dist = str(platform.dist()),
+    cpu = call("cpuinfo | egrep ^Brand", False).split(':')[1].strip(),
+  )
