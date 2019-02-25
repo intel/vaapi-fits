@@ -217,10 +217,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
     failures = slash.context.session.results.get_num_failures()
     skipped = slash.context.session.results.get_num_skipped()
 
+    from lib.platform import info
+
     suite = et.Element(
       "testsuite", name = self.suite, disabled = "0", tests = str(tests),
       errors = str(errors), failures = str(failures), skipped = str(skipped),
-      time = str(time), timestamp = self.session_start.isoformat())
+      time = str(time), timestamp = self.session_start.isoformat(), **info())
 
     for result in slash.context.session.results.iter_test_results():
       suitename, casename = result.test_metadata.address.split(':')
