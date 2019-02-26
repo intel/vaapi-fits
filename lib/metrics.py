@@ -59,34 +59,55 @@ def __compare_ssim(planes):
     return 1.0
   return skimage.measure.compare_ssim(a, b, multichannel=True, win_size=3)
 
-def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
+def ssim_list(fd1, fd2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
   reader  = FrameReaders[fourcc]
   reader2 = FrameReaders[fourcc2 or fourcc]
   results = list()
 
-  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in range(nframes):
-      y1, u1, v1 = __try_read_frame(
-        reader, fd1, width, height, debug = (i, nframes, 1))
-      y2, u2, v2 = __try_read_frame(
-        reader2, fd2, width, height, debug = (i, nframes, 2))
+  for i in range(nframes):
+    y1, u1, v1 = __try_read_frame(
+      reader, fd1, width, height, debug = (width, height, i, nframes, 1))
+    y2, u2, v2 = __try_read_frame(
+      reader2, fd2, width, height, debug = (width, height, i, nframes, 2))
 
-      if get_media().metrics_pool is not None:
-        results.append(
-          get_media().metrics_pool.map_async(
-            __compare_ssim, ((y1, y2), (u1, u2), (v1, v2))
-          )
+    if get_media().metrics_pool is not None:
+      results.append(
+        get_media().metrics_pool.map_async(
+          __compare_ssim, ((y1, y2), (u1, u2), (v1, v2))
         )
-      else:
-        results.append(
-          MetricsResult(
-            __compare_ssim((y1, y2)),
-            __compare_ssim((u1, u2)),
-            __compare_ssim((v1, v2))
-          )
+      )
+    else:
+      results.append(
+        MetricsResult(
+          __compare_ssim((y1, y2)),
+          __compare_ssim((u1, u2)),
+          __compare_ssim((v1, v2))
         )
+      )
 
   result = list(itertools.chain(*[r.get() for r in results]))
+  return result
+
+def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
+  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
+    result = ssim_list(fd1, fd2, width, height, nframes, fourcc, fourcc2)
+
+  return (
+    min(result[0::3]),
+    min(result[1::3]),
+    min(result[2::3]),
+    sum(result[0::3]) / nframes,
+    sum(result[1::3]) / nframes,
+    sum(result[2::3]) / nframes,
+  )
+
+def calculate_multi_res_ssim(filename1, filename2, multi_res, nframes, fourcc = "I420", fourcc2 = None):
+  result = list()
+
+  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
+    for i in multi_res:
+      ssim_list_res = ssim_list(fd1, fd2, i[0], i[1], i[2], fourcc, fourcc2)
+      result.extend(ssim_list_res)
 
   return (
     min(result[0::3]),
@@ -169,10 +190,17 @@ def check_metric(**params):
     miny = metric.get("miny", 1.0)
     minu = metric.get("minu", 1.0)
     minv = metric.get("minv", 1.0)
-    ssim = calculate_ssim(
-      params["reference"], params["decoded"],
-      params["width"], params["height"], params["frames"],
-      params["format"], params.get("format2", None))
+    if params.get("multi_res"):
+      ssim = calculate_multi_res_ssim(
+        params["reference"], params["decoded"],
+        params["multi_res"], params["frames"],
+        params["format"], params.get("format2", None))
+    else:
+      ssim = calculate_ssim(
+        params["reference"], params["decoded"],
+        params["width"], params["height"], params["frames"],
+        params["format"], params.get("format2", None))
+
     get_media()._set_test_details(ssim = ssim)
     assert 1.0 >= ssim[0] >= miny
     assert 1.0 >= ssim[1] >= minu
