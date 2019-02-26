@@ -83,11 +83,16 @@ def platform_tags(platforms):
   return wrap
 
 def info():
-  from lib.common import call
   import platform
+  try:
+    import cpuinfo
+    cpu = cpuinfo.get_cpu_info()["brand"]
+  except:
+    cpu = "unknown"
+
   return dict(
     node = str(platform.node()),
     kernel = str(platform.release()),
     dist = str(platform.dist()),
-    cpu = call("cpuinfo | egrep ^Brand", False).split(':')[1].strip(),
+    cpu = cpu,
   )
