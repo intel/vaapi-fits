@@ -182,6 +182,18 @@ def check_filesize(filename, width, height, nframes, fourcc):
   actual = os.stat(filename).st_size
   assert expected == actual
 
+def numbytes_calculate(width, height, fourcc, frames, multi_res = None):
+  numbytes = 0
+
+  if multi_res:
+    for i in multi_res:
+      numbytes_res = get_framesize(i[0], i[1], fourcc) * i[2]
+      numbytes = numbytes + numbytes_res
+  else:
+    numbytes = get_framesize(width, height, fourcc) * frames
+
+  return numbytes
+
 def check_metric(**params):
   metric = params["metric"]
   type = metric["type"]
@@ -207,10 +219,15 @@ def check_metric(**params):
     assert 1.0 >= ssim[2] >= minv
 
   elif "md5" == type:
-    numbytes = metric.get("numbytes", get_framesize(
-      params["width"], params["height"],
-      params.get("format2", params["format"])
-    ) * params["frames"])
+    if params.get("multi_res"):
+      numbytes = metric.get("numbytes", numbytes_calculate(
+        params["width"], params["height"], params.get("format2",
+        params["format"]), params["frames"], params["multi_res"]))
+    else:
+      numbytes = metric.get("numbytes", numbytes_calculate(
+        params["width"], params["height"], params.get("format2",
+        params["format"]), params["frames"]))
+
     res = md5(filename = params["decoded"], numbytes = numbytes)
     get_media().baseline.check_md5(
       md5 = res, context = params.get("refctx", []))
