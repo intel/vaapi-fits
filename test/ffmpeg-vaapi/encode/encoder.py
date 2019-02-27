@@ -26,6 +26,9 @@ class EncoderTest(slash.Test):
     if self.codec not in ["jpeg", "vp8", "vp9",]:
       opts += " -profile:v {mprofile}"
 
+    if self.codec not in ["jpeg",]:
+      opts += " -rc_mode {rcmodeu}"
+
     if vars(self).get("gop", None) is not None:
       opts += " -g {gop}"
     if vars(self).get("qp", None) is not None:
@@ -101,6 +104,8 @@ class EncoderTest(slash.Test):
     self.mformat = mapformat(self.format)
     if self.mformat is None:
       slash.skip_test("{format} format not supported".format(**vars(self)))
+
+    vars(self).update(rcmodeu = self.rcmode.upper())
 
     self.encoded = get_media()._test_artifact(
       "{}.{}".format(self.gen_name(), self.get_file_ext()))
