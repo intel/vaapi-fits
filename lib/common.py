@@ -81,8 +81,14 @@ def call(command, withSlashLogger = True):
   error = False
   message = ""
 
+  # Without "exec", the shell will launch the "command" in a child process and
+  # proc.pid will represent the shell (not the "command").  And therefore, the
+  # "command" will not get killed with proc.terminate() or proc.kill().
+  #
+  # When we use "exec" to run the "command". This will cause the "command" to
+  # inherit the shell process and proc.pid will represent the actual "command".
   proc = subprocess.Popen(
-    command,
+    "exec " + command,
     stdin = subprocess.PIPE,
     stdout = subprocess.PIPE,
     stderr = subprocess.STDOUT,
