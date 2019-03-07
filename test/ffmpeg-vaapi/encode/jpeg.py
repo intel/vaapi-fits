@@ -8,7 +8,6 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-@slash.requires(have_ffmpeg_mjpeg_vaapi_encode)
 class JPEGEncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -27,8 +26,9 @@ class JPEGEncoderTest(EncoderTest):
 
 spec = load_test_spec("jpeg", "encode")
 
-@platform_tags(JPEG_ENCODE_PLATFORMS)
 class cqp(JPEGEncoderTest):
+  @platform_tags(JPEG_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_mjpeg_vaapi_encode)
   @slash.parametrize(*gen_jpeg_cqp_parameters(spec))
   def test(self, case, quality):
     vars(self).update(spec[case].copy())

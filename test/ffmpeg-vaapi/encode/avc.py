@@ -8,7 +8,6 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-@slash.requires(have_ffmpeg_h264_vaapi_encode)
 class AVCEncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -30,8 +29,9 @@ class AVCEncoderTest(EncoderTest):
 
 spec = load_test_spec("avc", "encode")
 
-@platform_tags(AVC_ENCODE_PLATFORMS)
 class cqp(AVCEncoderTest):
+  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_h264_vaapi_encode)
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     vars(self).update(spec[case].copy())
@@ -48,8 +48,9 @@ class cqp(AVCEncoderTest):
     )
     self.encode()
 
-@platform_tags(AVC_ENCODE_LP_PLATFORMS)
 class cqp_lp(AVCEncoderTest):
+  @platform_tags(AVC_ENCODE_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_h264_vaapi_encode)
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, qp, quality, profile):
     vars(self).update(spec[case].copy())
@@ -65,8 +66,9 @@ class cqp_lp(AVCEncoderTest):
     )
     self.encode()
 
-@platform_tags(AVC_ENCODE_PLATFORMS)
 class cbr(AVCEncoderTest):
+  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_h264_vaapi_encode)
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     vars(self).update(spec[case].copy())
@@ -85,8 +87,9 @@ class cbr(AVCEncoderTest):
     )
     self.encode()
 
-@platform_tags(AVC_ENCODE_PLATFORMS)
 class vbr(AVCEncoderTest):
+  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_h264_vaapi_encode)
   @slash.parametrize(*gen_avc_vbr_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     vars(self).update(spec[case].copy())
