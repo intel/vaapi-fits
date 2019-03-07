@@ -10,13 +10,13 @@ from .decoder import DecoderTest
 
 spec = load_test_spec("jpeg", "decode")
 
-@platform_tags(JPEG_DECODE_PLATFORMS)
 class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
     super(default, self).before()
 
+  @platform_tags(JPEG_DECODE_PLATFORMS)
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())

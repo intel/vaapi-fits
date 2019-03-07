@@ -8,7 +8,6 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-@slash.requires(have_ffmpeg_mpeg2_vaapi_encode)
 class MPEG2EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -29,8 +28,9 @@ class MPEG2EncoderTest(EncoderTest):
 
 spec = load_test_spec("mpeg2", "encode")
 
-@platform_tags(MPEG2_ENCODE_PLATFORMS)
 class cqp(MPEG2EncoderTest):
+  @platform_tags(MPEG2_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_mpeg2_vaapi_encode)
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['main', 'simple']))
   def test(self, case, gop, bframes, qp, quality, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
