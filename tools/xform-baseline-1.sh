@@ -2,6 +2,7 @@
 
 set -x
 
+# ffmpeg-vaapi
 sed -i "s/test\/ffmpeg-vaapi\/decode\/avc.py:test_default(/test\/ffmpeg-vaapi\/decode\/avc.py:default.test(/g" $1
 sed -i "s/test\/ffmpeg-vaapi\/decode\/hevc.py:test_8bit(/test\/ffmpeg-vaapi\/decode\/hevc.py:default.test(/g" $1
 sed -i "s/test\/ffmpeg-vaapi\/decode\/hevc.py:test_10bit(/test\/ffmpeg-vaapi\/decode\/10bit\/hevc.py:default.test(/g" $1
@@ -30,3 +31,14 @@ sed -i "s/test\/ffmpeg-vaapi\/encode\/vp8.py:test_vbr(/test\/ffmpeg-vaapi\/encod
 sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_cqp(/test\/ffmpeg-vaapi\/encode\/vp9.py:cqp.test(/g" $1
 sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_cbr(/test\/ffmpeg-vaapi\/encode\/vp9.py:cbr.test(/g" $1
 sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_vbr(/test\/ffmpeg-vaapi\/encode\/vp9.py:vbr.test(/g" $1
+
+# gst-vaapi
+sed -i "s/test\/gst-vaapi\/decode\/avc.py:test_default(/test\/gst-vaapi\/decode\/avc.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/hevc.py:test_8bit(/test\/gst-vaapi\/decode\/hevc.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/hevc.py:test_10bit(/test\/gst-vaapi\/decode\/10bit\/hevc.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/vp9.py:test_8bit(/test\/gst-vaapi\/decode\/vp9.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/vp9.py:test_10bit(/test\/gst-vaapi\/decode\/10bit\/vp9.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/jpeg.py:test_default(/test\/gst-vaapi\/decode\/jpeg.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/mpeg2.py:test_default(/test\/gst-vaapi\/decode\/mpeg2.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/vc1.py:test_default(/test\/gst-vaapi\/decode\/vc1.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/decode\/vp8.py:test_default(/test\/gst-vaapi\/decode\/vp8.py:default.test(/g" $1
