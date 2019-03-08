@@ -4,31 +4,31 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib import *
-from ..util import *
-from .encoder import EncoderTest
+from .....lib import *
+from ...util import *
+from ..encoder import EncoderTest
 
-spec = load_test_spec("hevc", "encode", "8bit")
+spec = load_test_spec("hevc", "encode", "10bit")
 
-class HEVC8EncoderTest(EncoderTest):
+class HEVC10EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
-      codec         = "hevc-8",
+      codec         = "hevc-10",
       gstencoder    = "vaapih265enc",
       gstdecoder    = "h265parse ! vaapih265dec",
       gstmediatype  = "video/x-h265",
       gstparser     = "h265parse",
     )
-    super(HEVC8EncoderTest, self).before()
+    super(HEVC10EncoderTest, self).before()
 
   def get_file_ext(self):
     return "h265"
 
-class cqp(HEVC8EncoderTest):
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+class cqp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
+  @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     vars(self).update(spec[case].copy())
     vars(self).update(
@@ -43,11 +43,11 @@ class cqp(HEVC8EncoderTest):
     )
     self.encode()
 
-class cbr(HEVC8EncoderTest):
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+class cbr(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
+  @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     vars(self).update(spec[case].copy())
     vars(self).update(
@@ -64,11 +64,11 @@ class cbr(HEVC8EncoderTest):
     )
     self.encode()
 
-class vbr(HEVC8EncoderTest):
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+class vbr(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
+  @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main10']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     vars(self).update(spec[case].copy())
     vars(self).update(
