@@ -42,3 +42,22 @@ sed -i "s/test\/gst-vaapi\/decode\/jpeg.py:test_default(/test\/gst-vaapi\/decode
 sed -i "s/test\/gst-vaapi\/decode\/mpeg2.py:test_default(/test\/gst-vaapi\/decode\/mpeg2.py:default.test(/g" $1
 sed -i "s/test\/gst-vaapi\/decode\/vc1.py:test_default(/test\/gst-vaapi\/decode\/vc1.py:default.test(/g" $1
 sed -i "s/test\/gst-vaapi\/decode\/vp8.py:test_default(/test\/gst-vaapi\/decode\/vp8.py:default.test(/g" $1
+
+sed -i "s/test\/gst-vaapi\/encode\/avc.py:test_cqp(/test\/gst-vaapi\/encode\/avc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/avc.py:test_cqp_lp(/test\/gst-vaapi\/encode\/avc.py:cqp_lp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/avc.py:test_cbr(/test\/gst-vaapi\/encode\/avc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/avc.py:test_vbr(/test\/gst-vaapi\/encode\/avc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_8bit_cqp(/test\/gst-vaapi\/encode\/hevc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_8bit_cbr(/test\/gst-vaapi\/encode\/hevc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_8bit_vbr(/test\/gst-vaapi\/encode\/hevc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_10bit_cqp(/test\/gst-vaapi\/encode\/10bit\/hevc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_10bit_cbr(/test\/gst-vaapi\/encode\/10bit\/hevc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/hevc.py:test_10bit_vbr(/test\/gst-vaapi\/encode\/10bit\/hevc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/jpeg.py:test_cqp(/test\/gst-vaapi\/encode\/jpeg.py:cqp.test(/g" $1
+sed -Ei "s/test\/gst-vaapi\/encode\/mpeg2.py:test_cqp\(bframes=(.*),case=(.*),gop=(.*),qp=(.*),quality=(.*)\)/test\/gst-vaapi\/encode\/mpeg2.py:cqp.test\(bframes=\1,case=\2,gop=\3,profile=simple,qp=\4,quality=\5\)/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp8.py:test_cqp(/test\/gst-vaapi\/encode\/vp8.py:cqp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp8.py:test_cbr(/test\/gst-vaapi\/encode\/vp8.py:cbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp8.py:test_vbr(/test\/gst-vaapi\/encode\/vp8.py:vbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cqp(/test\/gst-vaapi\/encode\/vp9.py:cqp.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cbr(/test\/gst-vaapi\/encode\/vp9.py:cbr.test(/g" $1
+sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_vbr(/test\/gst-vaapi\/encode\/vp9.py:vbr.test(/g" $1
