@@ -30,7 +30,7 @@ class TranscoderTest(slash.Test):
     elif  vars(self).get("mode", None) == 'swhw':
       self.output = call(
         "ffmpeg -vaapi_device /dev/dri/renderD128 -v verbose "
-        "-i {source}  -vf 'hwupload,format=nv12' -an -c:v {mcodec}"
+        "-i {source}  -vf 'format=nv12,hwupload' -an -c:v {mcodec}"
         " -vframes {frames} -y {decoded}".format(**vars(self)))
     else:
         assert "non supported transcoding"
