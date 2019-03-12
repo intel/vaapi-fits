@@ -109,6 +109,9 @@ def mapprofile(codec, profile):
       "simple"    : "simple",
       "unknown"   : "unknown"
     },
+    "jpeg"     : {
+      "baseline"  : "baseline",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
