@@ -61,3 +61,14 @@ sed -i "s/test\/gst-vaapi\/encode\/vp8.py:test_vbr(/test\/gst-vaapi\/encode\/vp8
 sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cqp(/test\/gst-vaapi\/encode\/vp9.py:cqp.test(/g" $1
 sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cbr(/test\/gst-vaapi\/encode\/vp9.py:cbr.test(/g" $1
 sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_vbr(/test\/gst-vaapi\/encode\/vp9.py:vbr.test(/g" $1
+
+# ffmpeg-qsv
+sed -i "s/test\/ffmpeg-qsv\/decode\/avc.py:test_default(/test\/ffmpeg-qsv\/decode\/avc.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/hevc.py:test_8bit(/test\/ffmpeg-qsv\/decode\/hevc.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/hevc.py:test_10bit(/test\/ffmpeg-qsv\/decode\/10bit\/hevc.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/vp9.py:test_8bit(/test\/ffmpeg-qsv\/decode\/vp9.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/vp9.py:test_10bit(/test\/ffmpeg-qsv\/decode\/10bit\/vp9.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/jpeg.py:test_default(/test\/ffmpeg-qsv\/decode\/jpeg.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/mpeg2.py:test_default(/test\/ffmpeg-qsv\/decode\/mpeg2.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/vc1.py:test_default(/test\/ffmpeg-qsv\/decode\/vc1.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/decode\/vp8.py:test_default(/test\/ffmpeg-qsv\/decode\/vp8.py:default.test(/g" $1

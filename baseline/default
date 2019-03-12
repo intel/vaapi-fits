@@ -1,50 +1,50 @@
 {
-  "test/ffmpeg-qsv/decode/avc.py:test_default(case=1080p)": {
+  "test/ffmpeg-qsv/decode/avc.py:default.test(case=1080p)": {
     "md5": "2873526ec49defd754c7853f0658799d"
   }, 
-  "test/ffmpeg-qsv/decode/avc.py:test_default(case=720p)": {
+  "test/ffmpeg-qsv/decode/avc.py:default.test(case=720p)": {
     "md5": "e6b24a42be6b698f1bf96b75d1480ade"
   }, 
-  "test/ffmpeg-qsv/decode/avc.py:test_default(case=QCIF)": {
+  "test/ffmpeg-qsv/decode/avc.py:default.test(case=QCIF)": {
     "md5": "61aeb97a3ab5da00a28a962ae9d69a28"
   }, 
-  "test/ffmpeg-qsv/decode/avc.py:test_default(case=QVGA)": {
+  "test/ffmpeg-qsv/decode/avc.py:default.test(case=QVGA)": {
     "md5": "767f88894d9635691c6e1af82b1a738b"
   }, 
-  "test/ffmpeg-qsv/decode/hevc.py:test_8bit(case=1080p)": {
+  "test/ffmpeg-qsv/decode/hevc.py:default.test(case=1080p)": {
     "md5": "3f66eca6367872ffbe2d53ab0c573852"
   }, 
-  "test/ffmpeg-qsv/decode/hevc.py:test_8bit(case=720p)": {
+  "test/ffmpeg-qsv/decode/hevc.py:default.test(case=720p)": {
     "md5": "fc0bde09b5befabb0c17593ca51bdb37"
   }, 
-  "test/ffmpeg-qsv/decode/hevc.py:test_8bit(case=QCIF)": {
+  "test/ffmpeg-qsv/decode/hevc.py:default.test(case=QCIF)": {
     "md5": "c6d9e88dcbcec23942344649c0c01bc4"
   }, 
-  "test/ffmpeg-qsv/decode/hevc.py:test_8bit(case=QVGA)": {
+  "test/ffmpeg-qsv/decode/hevc.py:default.test(case=QVGA)": {
     "md5": "f9ea7bcce345d7775c888e71de435721"
   }, 
-  "test/ffmpeg-qsv/decode/vp8.py:test_default(case=1080p)": {
+  "test/ffmpeg-qsv/decode/vp8.py:default.test(case=1080p)": {
     "md5": "02571f75accdd3c04475ca4158692b5a"
   }, 
-  "test/ffmpeg-qsv/decode/vp8.py:test_default(case=720p)": {
+  "test/ffmpeg-qsv/decode/vp8.py:default.test(case=720p)": {
     "md5": "6ad352c5fa46789c9ec041b5b40c166f"
   }, 
-  "test/ffmpeg-qsv/decode/vp8.py:test_default(case=QCIF)": {
+  "test/ffmpeg-qsv/decode/vp8.py:default.test(case=QCIF)": {
     "md5": "85cd30186f09ee9cd0ba62a27e80e0c9"
   }, 
-  "test/ffmpeg-qsv/decode/vp8.py:test_default(case=QVGA)": {
+  "test/ffmpeg-qsv/decode/vp8.py:default.test(case=QVGA)": {
     "md5": "f3c9ed63ec11f05dc80d4c4e11d466ae"
   }, 
-  "test/ffmpeg-qsv/decode/vp9.py:test_8bit(case=1080p)": {
+  "test/ffmpeg-qsv/decode/vp9.py:default.test(case=1080p)": {
     "md5": "6c4e5c87c6f0e28aaf9fd22d76e67502"
   }, 
-  "test/ffmpeg-qsv/decode/vp9.py:test_8bit(case=720p)": {
+  "test/ffmpeg-qsv/decode/vp9.py:default.test(case=720p)": {
     "md5": "94fa781d49e61edb726bc67745aff937"
   }, 
-  "test/ffmpeg-qsv/decode/vp9.py:test_8bit(case=QCIF)": {
+  "test/ffmpeg-qsv/decode/vp9.py:default.test(case=QCIF)": {
     "md5": "c983151ec2d2b6ebfcff776112a5ae3f"
   }, 
-  "test/ffmpeg-qsv/decode/vp9.py:test_8bit(case=QVGA)": {
+  "test/ffmpeg-qsv/decode/vp9.py:default.test(case=QVGA)": {
     "md5": "e0b3e642609dcd5718bc0c6d7c5b8c3d"
   }, 
   "test/ffmpeg-qsv/encode/avc.py:test_cbr(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {

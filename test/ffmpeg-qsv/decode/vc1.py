@@ -6,37 +6,24 @@
 
 from ....lib import *
 from ..util import *
+from .decoder import DecoderTest
 
 spec = load_test_spec("vc1", "decode")
 
-@slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
-@slash.requires(have_ffmpeg_vc1_qsv_decode)
-@slash.requires(using_compatible_driver)
-@slash.parametrize(("case"), sorted(spec.keys()))
-@platform_tags(VC1_DECODE_PLATFORMS)
-def test_default(case):
-  params = spec[case].copy()
+class default(DecoderTest):
+  def before(self):
+    # default metric
+    self.metric = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
+    super(default, self).before()
 
-  params.update(mformat = mapformat(params["format"]))
-  if params["mformat"] is None:
-    slash.skip_test("{format} format not supported".format(**params))
-
-  params["decoded"] = get_media()._test_artifact(
-    "{}_{width}x{height}_{format}.yuv".format(case, **params))
-
-  output = call(
-    "ffmpeg -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -v verbose"
-    " -c:v vc1_qsv -i {source} -vf 'hwdownload,format=nv12'"
-    " -pix_fmt {mformat} -f rawvideo -vsync passthrough"
-    " -vframes {frames} -y {decoded}".format(**params))
-
-  m = re.search("not supported for hardware decode", output, re.MULTILINE)
-  assert m is None, "Failed to use hardware decode"
-
-  m = re.search("Initialize MFX session", output, re.MULTILINE)
-  assert m is not None, "It appears that the QSV plugin did not load"
-
-  params.setdefault(
-    "metric", dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99))
-  check_metric(**params)
+  @platform_tags(VC1_DECODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_vc1_qsv_decode)
+  @slash.parametrize(("case"), sorted(spec.keys()))
+  def test(self, case):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case      = case,
+      ffdecoder = "vc1_qsv",
+      hwformat  = "nv12",
+    )
+    self.decode()
