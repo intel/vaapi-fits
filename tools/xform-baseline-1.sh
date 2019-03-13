@@ -85,3 +85,14 @@ sed -i "s/test\/ffmpeg-qsv\/encode\/hevc.py:test_10bit_cbr(/test\/ffmpeg-qsv\/en
 sed -i "s/test\/ffmpeg-qsv\/encode\/hevc.py:test_10bit_vbr(/test\/ffmpeg-qsv\/encode\/10bit\/hevc.py:vbr.test(/g" $1
 sed -i "s/test\/ffmpeg-qsv\/encode\/jpeg.py:test_cqp(/test\/ffmpeg-qsv\/encode\/jpeg.py:cqp.test(/g" $1
 sed -i "s/test\/ffmpeg-qsv\/encode\/mpeg2.py:test_cqp(/test\/ffmpeg-qsv\/encode\/mpeg2.py:cqp.test(/g" $1
+
+# gst-msdk
+sed -i "s/test\/gst-msdk\/decode\/avc.py:test_default(/test\/gst-msdk\/decode\/avc.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/hevc.py:test_8bit(/test\/gst-msdk\/decode\/hevc.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/hevc.py:test_10bit(/test\/gst-msdk\/decode\/10bit\/hevc.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/vp9.py:test_8bit(/test\/gst-msdk\/decode\/vp9.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/vp9.py:test_10bit(/test\/gst-msdk\/decode\/10bit\/vp9.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/jpeg.py:test_default(/test\/gst-msdk\/decode\/jpeg.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/mpeg2.py:test_default(/test\/gst-msdk\/decode\/mpeg2.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/vc1.py:test_default(/test\/gst-msdk\/decode\/vc1.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/decode\/vp8.py:test_default(/test\/gst-msdk\/decode\/vp8.py:default.test(/g" $1

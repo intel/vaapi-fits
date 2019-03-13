@@ -6,35 +6,23 @@
 
 from ....lib import *
 from ..util import *
+from .decoder import DecoderTest
 
 spec = load_test_spec("jpeg", "decode")
 
-@slash.requires(have_gst)
-@slash.requires(have_gst_msdk)
-@slash.requires(have_gst_msdkmjpegdec)
-@slash.requires(*have_gst_element("checksumsink2"))
-@slash.requires(using_compatible_driver)
-@slash.parametrize(("case"), sorted(spec.keys()))
-@platform_tags(JPEG_DECODE_PLATFORMS)
-def test_default(case):
-  params = spec[case].copy()
+class default(DecoderTest):
+  def before(self):
+    # default metric
+    self.metric = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
+    super(default, self).before()
 
-  params.update(mformatu = mapformatu(params["format"]))
-
-  if params["mformatu"] is None:
-    slash.skip_test("{format} format not supported".format(**params))
-
-  params["decoded"] = get_media()._test_artifact(
-    "{}_{width}x{height}_{format}.yuv".format(case, **params))
-
-  call(
-    "gst-launch-1.0 -vf filesrc location={source}"
-    " ! jpegparse ! msdkmjpegdec"
-    " ! videoconvert ! video/x-raw,format={mformatu}"
-    " ! checksumsink2 file-checksum=false frame-checksum=false"
-    " plane-checksum=false dump-output=true qos=false"
-    " dump-location={decoded}".format(**params))
-
-  params.setdefault(
-    "metric", dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99))
-  check_metric(**params)
+  @platform_tags(JPEG_DECODE_PLATFORMS)
+  @slash.requires(*have_gst_element("msdkmjpegdec"))
+  @slash.parametrize(("case"), sorted(spec.keys()))
+  def test(self, case):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "jpegparse ! msdkmjpegdec",
+    )
+    self.decode()
