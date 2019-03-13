@@ -6,40 +6,28 @@
 
 from ....lib import *
 from ..util import *
+from .decoder import DecoderTest
 
 spec = load_test_spec("vp8", "decode")
 
-@slash.requires(have_gst)
-@slash.requires(have_gst_msdk)
-@slash.requires(have_gst_msdkvp8dec)
-@slash.requires(*have_gst_element("checksumsink2"))
-@slash.requires(using_compatible_driver)
-@slash.parametrize(("case"), sorted(spec.keys()))
-@platform_tags(VP8_DECODE_PLATFORMS)
-def test_default(case):
-  params = spec[case].copy()
+class default(DecoderTest):
+  def before(self):
+    # default metric
+    self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    super(default, self).before()
 
-  params.update(mformatu = mapformatu(params["format"]))
+  @platform_tags(VP8_DECODE_PLATFORMS)
+  @slash.requires(*have_gst_element("msdkvp8dec"))
+  @slash.parametrize(("case"), sorted(spec.keys()))
+  def test(self, case):
+    vars(self).update(spec[case].copy())
 
-  if params["mformatu"] is None:
-    slash.skip_test("{format} format not supported".format(**params))
+    dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux"}
+    ext = os.path.splitext(self.source)[1]
+    assert ext in dxmap.keys(), "Unrecognized source file extension {}".format(ext)
 
-  params["decoded"] = get_media()._test_artifact(
-    "{}_{width}x{height}_{format}.yuv".format(case, **params))
-
-  dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux"}
-  ext = os.path.splitext(params["source"])[1]
-  assert ext in dxmap.keys(), "Unrecognized source file extension {}".format(ext)
-  params["demux"] = dxmap[ext]
-
-  call(
-    "gst-launch-1.0 -vf filesrc location={source}"
-    " ! {demux} ! msdkvp8dec"
-    " ! videoconvert ! video/x-raw,format={mformatu}"
-    " ! checksumsink2 file-checksum=false frame-checksum=false"
-    " plane-checksum=false dump-output=true qos=false"
-    " dump-location={decoded}".format(**params))
-
-  params.setdefault(
-    "metric", dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0))
-  check_metric(**params)
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "{} ! msdkvp8dec".format(dxmap[ext]),
+    )
+    self.decode()
