@@ -23,10 +23,16 @@ class DecoderTest(slash.Test):
     self.decoded = get_media()._test_artifact(
       "{case}_{width}x{height}_{format}.yuv".format(**vars(self)))
 
+    self.gstscaler = ""
+    if vars(self).get("scale_output", False):
+      self.gstscaler = (
+        " ! videoscale"
+        " ! video/x-raw,width={width},height={height}".format(**vars(self)))
+
     call(
       "gst-launch-1.0 -vf filesrc location={source}"
       " ! {gstdecoder} ! videoconvert ! video/x-raw,format={mformatu}"
-      " ! checksumsink2 file-checksum=false qos=false"
+      " {gstscaler} ! checksumsink2 file-checksum=false qos=false"
       " frame-checksum=false plane-checksum=false dump-output=true"
       " dump-location={decoded}".format(**vars(self)))
 
