@@ -154,6 +154,7 @@ def get_framesize(width, height, fourcc):
     "Y800" : lambda w,h: w*h,
     "YUY2" : lambda w,h: w*h*2,
     "AYUV" : lambda w,h: w*h*4,
+    "ARGB" : lambda w,h: w*h*4,
   }[fourcc](width, height)
 
 def check_filesize(filename, width, height, nframes, fourcc):
