@@ -30,11 +30,16 @@ def test_default(case, csc):
     " frame-checksum=false plane-checksum=false dump-output=true"
     " dump-location={ofile}".format(**params))
 
-  ssim = calculate_ssim(
-    params["source"], params["ofile"],
-    params["width"], params["height"], params["frames"],
-    params["format"], params["csc"])
-
-  get_media()._set_test_details(ssim = ssim)
-
-  assert sum(ssim) == 6.0, "Y, U and V values should not be changed by CSC"
+  check_metric(
+    # if user specified metric, then use it.  Otherwise, use ssim metric with perfect score
+    metric = params.get("metric", dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)),
+    # If user specified reference, use it.  Otherwise, assume source is the reference.
+    reference = format_value(params["reference"], case = case, **params)
+      if params.get("reference") else params["source"],
+    decoded = params["ofile"],
+    # if user specified reference, then assume it's format is the same as csc output format.
+    # Otherwise, the format is the source format
+    format = params["format"] if params.get("reference", None) is None else params["csc"],
+    format2 = params["csc"],
+    width = params["width"], height = params["height"], frames = params["frames"],
+  )
