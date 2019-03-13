@@ -99,6 +99,7 @@ def mapformat(format):
     "P010"  : "p010-10le",
     "AYUV"  : "ayuv",
     "YUY2"  : "yuy2",
+    "ARGB"  : "argb",
   }.get(format, None)
 
 @memoize
@@ -110,6 +111,7 @@ def mapformatu(format):
     "P010"  : "P010_10LE",
     "AYUV"  : "AYUV",
     "YUY2"  : "YUY2",
+    "ARGB"  : "ARGB",
   }.get(format, None)
 
 

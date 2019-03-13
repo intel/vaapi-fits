@@ -105,6 +105,17 @@ def read_frame_YUY2(fd, width, height):
 
   return y, u, v
 
+def read_frame_ARGB(fd, width, height):
+  size = width * height * 4
+
+  argb = numpy.fromfile(fd, dtype=numpy.uint8, count=size)
+  a = argb[0::4].reshape((height, width))
+  r = argb[1::4].reshape((height, width))
+  g = argb[2::4].reshape((height, width))
+  b = argb[3::4].reshape((height, width))
+
+  return r, g, b
+
 FrameReaders = {
   "I420" : read_frame_I420,
   "422H" : read_frame_422H,
@@ -116,4 +127,5 @@ FrameReaders = {
   "Y800" : read_frame_Y800,
   "YUY2" : read_frame_YUY2,
   "AYUV" : read_frame_AYUV,
+  "ARGB" : read_frame_ARGB,
 }
