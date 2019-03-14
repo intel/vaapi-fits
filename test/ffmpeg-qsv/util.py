@@ -22,8 +22,16 @@ def have_ffmpeg_h264_qsv_decode():
   return try_call("ffmpeg -hide_banner -decoders | grep h264_qsv")
 
 @memoize
+def have_ffmpeg_h264_decode():
+  return try_call("ffmpeg -hide_banner -decoders | awk '{print $2}' | grep -w h264")
+
+@memoize
 def have_ffmpeg_hevc_qsv_decode():
   return try_call("ffmpeg -hide_banner -decoders | grep hevc_qsv")
+
+@memoize
+def have_ffmpeg_hevc_decode():
+  return try_call("ffmpeg -hide_banner -decoders | awk '{print $2}' | grep -w hevc")
 
 @memoize
 def have_ffmpeg_mjpeg_qsv_decode():
@@ -50,16 +58,32 @@ def have_ffmpeg_h264_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep h264_qsv")
 
 @memoize
+def have_ffmpeg_x264_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep libx264")
+
+@memoize
 def have_ffmpeg_hevc_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep hevc_qsv")
+
+@memoize
+def have_ffmpeg_x265_encode():
+  return try_call("ffmpeg -hide_banner -encoders | grep libx265")
 
 @memoize
 def have_ffmpeg_mjpeg_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mjpeg_qsv")
 
 @memoize
+def have_ffmpeg_mjpeg_encode():
+  return try_call("ffmpeg -hide_banner -encoders | awk '{print $2}' | grep -w mjpeg")
+
+@memoize
 def have_ffmpeg_mpeg2_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mpeg2_qsv")
+
+@memoize
+def have_ffmpeg_mpeg2_encode():
+  return try_call("ffmpeg -hide_banner -encoders | awk '{print $2}' | grep -w mpeg2video")
 
 @memoize
 def have_ffmpeg_filter(name):
