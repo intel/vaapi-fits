@@ -22,7 +22,7 @@ class default(DecoderTest):
   def test(self, case):
     vars(self).update(spec[case].copy())
 
-    dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux"}
+    dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux", ".mkv" : "matroskademux"}
     ext = os.path.splitext(self.source)[1]
     assert ext in dxmap.keys(), "Unrecognized source file extension {}".format(ext)
 
