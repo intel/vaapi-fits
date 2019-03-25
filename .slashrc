@@ -64,7 +64,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
       type = int,
       help = "{} = Keep None; {} = Keep Failed; {} = Keep All".format(
         self.RETENTION_NONE, self.RETENTION_FAIL, self.RETENTION_ALL))
-    parser.add_argument("--call-timeout", default = 300, type = int,
+    parser.add_argument("--call-timeout", default = 720, type = int,
       help = "call timeout in seconds")
     parser.add_argument("--ctapt", default = -1, type = int,
       help = "number of call timeouts allowed per test function")
