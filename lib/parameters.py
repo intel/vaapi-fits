@@ -115,6 +115,7 @@ def gen_avc_cqp_lp_parameters(spec, profiles):
   return keys, params
 
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
+gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
 
