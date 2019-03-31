@@ -42,6 +42,25 @@ class cqp(HEVC8EncoderTest):
     )
     self.encode()
 
+class cqp_lp(HEVC8EncoderTest):
+  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_qsv_encode)
+  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main']))
+  def test(self, case, gop, slices, qp, quality, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case     = case,
+      gop      = gop,
+      lowpower = 1,
+      qp       = qp,
+      quality  = quality,
+      profile  = profile,
+      rcmode   = "cqp",
+      slices   = slices,
+    )
+    self.encode()
+
 class cbr(HEVC8EncoderTest):
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
   @slash.requires(have_ffmpeg_hevc_qsv_encode)
