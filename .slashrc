@@ -29,6 +29,7 @@ slash.config.root.run.default_sources = ["test"]
 slash.config.root.log.subpath = os.path.join(
   "{context.session.id}",
   "{context.test.__slash__.module_name}",
+  "{context.test.__slash__.class_name}",
   "{context.test.__slash__.function_name}({context.test.__slash__.variation.safe_repr}).log")
 
 def validate_unique_cases(tree):
