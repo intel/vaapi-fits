@@ -21,6 +21,8 @@ class DecoderTest(slash.Test):
     self.decoded = get_media()._test_artifact(
       "{case}_{width}x{height}_{format}.yuv".format(**vars(self)))
 
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
+
     self.output = call(
       "ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -v verbose"
       " -i {source} -pix_fmt {mformat} -f rawvideo -vsync passthrough"

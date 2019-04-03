@@ -23,6 +23,8 @@ class TranscoderTest(slash.Test):
     else:
       self.mjpeg_quality = ""
 
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
+
     if vars(self).get("mode", None) == 'hwhw':
       self.output = call(
         "ffmpeg -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -v verbose"

@@ -132,10 +132,17 @@ class MediaPlugin(slash.plugins.PluginInterface):
     # TODO: query vaapi for driver name (i.e. use ctypes to call vaapi)
     return os.environ.get("LIBVA_DRIVER_NAME", None) or "i965"
 
+  def _get_call_timeout(self):
+    if self.test_call_timeout > 0:
+       return self.test_call_timeout
+    else:
+       return self.call_timeout
+
   def test_start(self):
     test = slash.context.test
     result = slash.context.result
     variation = test.get_variation().values
+    self.test_call_timeout = 0
     self._set_test_details(**variation)
     result.data.update(test_start = dt.now())
 
@@ -193,6 +200,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.cta_enabled = False
     self.num_ctapt = dict()
     self.num_ctapr = 0
+    self.test_call_timeout = 0
 
     # setup metrics_pool
     self.metrics_pool = None

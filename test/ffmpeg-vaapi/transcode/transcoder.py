@@ -17,6 +17,7 @@ class TranscoderTest(slash.Test):
   def transcode_1to1(self):
     self.decoded = get_media()._test_artifact(
       "{case}_{width}x{height}_{mode}.{dstextension}".format(**vars(self)))
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
     if vars(self).get("mode", None) == 'hwhw':
       self.output = call(
         "ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -v verbose"

@@ -18,6 +18,7 @@ class TranscoderTest(slash.Test):
   def transcode_1to1(self):
     self.transcoded = get_media()._test_artifact(
       "{case}_{width}x{height}_{mode}.{dstextension}".format(**vars(self)))
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
     call("gst-launch-1.0 -vf filesrc location={source} ! {gsttrans}"
       " ! filesink location={transcoded}".format(**vars(self)))
 
