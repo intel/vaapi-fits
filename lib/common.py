@@ -97,8 +97,7 @@ def call(command, withSlashLogger = True):
   logger("CALL: {} (pid: {})".format(command, proc.pid))
 
   reader = threading.Thread(target = readproc, args = [proc])
-  timer = threading.Timer(get_media().call_timeout, timeout, [proc])
-
+  timer = threading.Timer(get_media()._get_call_timeout(), timeout, [proc])
   reader.daemon = True
   timer.daemon = True
   reader.start()
@@ -119,7 +118,7 @@ def call(command, withSlashLogger = True):
     error = True
     get_media()._report_call_timeout()
     message = "CALL TIMEOUT: timeout after {} seconds (pid: {}).".format(
-      get_media().call_timeout, proc.pid)
+      timer.interval, proc.pid)
   elif proc.returncode != 0:
     error = True
     message = "CALL ERROR: failed with exitcode {} (pid: {})".format(proc.returncode, proc.pid)
