@@ -359,3 +359,14 @@ def gen_transcode_1to1_parameters(spec, codec, mode):
   keys = ("case")
   params = gen_transcode_1to1_variants(spec, codec, mode)
   return keys, params
+
+def gen_vpp_transpose_variants(spec):
+  for case, params in spec.iteritems():
+    variants = params.get("transpose", None) or []
+    for degrees, method in variants:
+      yield [case, degrees, method]
+
+def gen_vpp_transpose_parameters(spec):
+  keys = ("case", "degrees", "method")
+  params = gen_vpp_transpose_variants(spec)
+  return keys, params
