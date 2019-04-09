@@ -52,7 +52,7 @@ class Baseline:
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"
       assert all(map(lambda r,a: a+0.2 > r, ref[3:], actual[3:]))
-    self.check_result(compare, context, psnr = psnr)
+    self.check_result(compare, context, psnr = map(lambda v: round(v, 4), psnr))
 
   def check_md5(self, md5, context = []):
     def compare(k, ref, actual):
@@ -64,5 +64,8 @@ class Baseline:
       if not os.path.exists(os.path.dirname(self.filename)):
         os.makedirs(os.path.dirname(self.filename))
       with open(self.filename, "wb+") as fd:
+        rep = json.encoder.FLOAT_REPR
+        json.encoder.FLOAT_REPR = lambda f: "{:.4f}".format(f)
         json.dump(self.references, fd, indent = 2, sort_keys = True)
+        json.encoder.FLOAT_REPR = rep
 
