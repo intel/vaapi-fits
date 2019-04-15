@@ -18,7 +18,7 @@ spec = load_test_spec("vpp", "csc")
 def test_default(case, csc):
   params = spec[case].copy()
   params.update(
-    csc = csc, mcsc = mapformat(csc), mformat = mapformat(params["format"]))
+    csc = csc, mcscu = mapformatu(csc), mformat = mapformat(params["format"]))
   params["ofile"] = get_media()._test_artifact(
     "{}_{format}_csc_{csc}_{width}x{height}"
     ".yuv".format(case, **params))
@@ -26,9 +26,9 @@ def test_default(case, csc):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! vaapipostproc format={mcsc} ! checksumsink2 file-checksum=false"
-    " frame-checksum=false plane-checksum=false dump-output=true"
-    " dump-location={ofile}".format(**params))
+    " ! vaapipostproc ! video/x-raw format={mcscu} ! checksumsink2"
+    " file-checksum=false frame-checksum=false plane-checksum=false"
+    " dump-output=true dump-location={ofile}".format(**params))
 
   check_metric(
     # if user specified metric, then use it.  Otherwise, use ssim metric with perfect score
