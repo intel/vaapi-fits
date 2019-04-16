@@ -75,6 +75,8 @@ def mapformat(format):
     "444P"  : "yuv444p",
     "Y800"  : "gray8",
     "ARGB"  : "rgb32",
+    "P210"  : "yuv422p10le",
+    "P410"  : "yuv444p10le",
   }.get(format, None)
 
 @memoize
