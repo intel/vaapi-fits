@@ -155,6 +155,8 @@ def get_framesize(width, height, fourcc):
     "YUY2" : lambda w,h: w*h*2,
     "AYUV" : lambda w,h: w*h*4,
     "ARGB" : lambda w,h: w*h*4,
+    "P210" : lambda w,h: w*h*4,
+    "P410" : lambda w,h: w*h*6,
   }[fourcc](width, height)
 
 def check_filesize(filename, width, height, nframes, fourcc):

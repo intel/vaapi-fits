@@ -116,6 +116,26 @@ def read_frame_ARGB(fd, width, height):
 
   return r, g, b
 
+def read_frame_P210(fd, width, height):
+  width2 = width/2
+  size = width * height
+  size2 = width2 * height
+
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height,width))
+  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height,width2))
+  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height,width2))
+
+  return y, u, v
+
+def read_frame_P410(fd, width, height):
+  size = width * height
+
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height,width))
+  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height,width))
+  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height,width))
+
+  return y, u, v
+
 FrameReaders = {
   "I420" : read_frame_I420,
   "422H" : read_frame_422H,
@@ -128,4 +148,6 @@ FrameReaders = {
   "YUY2" : read_frame_YUY2,
   "AYUV" : read_frame_AYUV,
   "ARGB" : read_frame_ARGB,
+  "P210" : read_frame_P210,
+  "P410" : read_frame_P410,
 }

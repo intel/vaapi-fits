@@ -18,8 +18,30 @@ class default(DecoderTest):
 
   @platform_tags(HEVC_DECODE_10BIT_PLATFORMS)
   @slash.requires(*have_gst_element("msdkh265dec"))
-  @slash.parametrize(("case"), sorted(spec.keys()))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P010"]]))
   def test(self, case):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "h265parse ! msdkh265dec",
+    )
+    self.decode()
+
+  @platform_tags(set(HEVC_DECODE_10BIT_PLATFORMS) & set(DECODE_10BIT_422_PLATFORMS))
+  @slash.requires(*have_gst_element("msdkh265dec"))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P210"]]))
+  def test_422(self, case):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "h265parse ! msdkh265dec",
+    )
+    self.decode()
+
+  @platform_tags(set(HEVC_DECODE_10BIT_PLATFORMS) & set(DECODE_10BIT_444_PLATFORMS))
+  @slash.requires(*have_gst_element("msdkh265dec"))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P410"]]))
+  def test_444(self, case):
     vars(self).update(spec[case].copy())
     vars(self).update(
       case        = case,
