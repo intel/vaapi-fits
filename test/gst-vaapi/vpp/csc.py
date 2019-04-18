@@ -26,7 +26,7 @@ def test_default(case, csc):
   call(
     "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
     " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! vaapipostproc ! video/x-raw format={mcscu} ! checksumsink2"
+    " ! vaapipostproc ! video/x-raw,format={mcscu} ! checksumsink2"
     " file-checksum=false frame-checksum=false plane-checksum=false"
     " dump-output=true dump-location={ofile}".format(**params))
 
