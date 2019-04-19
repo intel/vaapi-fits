@@ -19,32 +19,15 @@ def have_ffmpeg_h264_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep h264_vaapi")
 
 @memoize
-def have_ffmpeg_x264_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep libx264")
-
-@memoize
 def have_ffmpeg_hevc_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep hevc_vaapi")
 
-@memoize
-def have_ffmpeg_x265_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep libx265")
-
-@memoize
 def have_ffmpeg_mjpeg_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mjpeg_vaapi")
 
 @memoize
-def have_ffmpeg_mjpeg_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep mjpeg")
-
-@memoize
 def have_ffmpeg_mpeg2_vaapi_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mpeg2_vaapi")
-
-@memoize
-def have_ffmpeg_mpeg2_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep mpeg2video")
 
 @memoize
 def have_ffmpeg_vc1_vaapi_encode():
@@ -62,6 +45,16 @@ def have_ffmpeg_vp9_vaapi_encode():
 def have_ffmpeg_filter(name):
   result = try_call("ffmpeg -hide_banner -filters | grep {}".format(name))
   return result, name
+
+@memoize
+def have_ffmpeg_encoder(encoder):
+  result = try_call("ffmpeg -hide_banner -encoders | awk '{{print $2}}' | grep -w {}".format(encoder))
+  return result, encoder
+
+@memoize
+def have_ffmpeg_decoder(decoder):
+  result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
+  return result, decoder
 
 @memoize
 def mapformat(format):

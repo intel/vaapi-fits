@@ -122,6 +122,17 @@ class MediaPlugin(slash.plugins.PluginInterface):
       os.remove(tstfile)
     return tstfile
 
+  def _purge_test_artifact(self, filename):
+    result = slash.context.result
+
+    if self.retention != self.RETENTION_ALL:
+      if self.retention == self.RETENTION_FAIL and not result.is_success():
+        pass # Keep failed test artifacts
+      else:
+        if filename in result.data.get("artifacts", list()):
+          if os.path.exists(filename):
+            os.remove(filename)
+
   def _get_test_spec(self, *args):
     spec = self.testspec
     for key in args:
