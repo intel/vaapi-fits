@@ -22,16 +22,8 @@ def have_ffmpeg_h264_qsv_decode():
   return try_call("ffmpeg -hide_banner -decoders | grep h264_qsv")
 
 @memoize
-def have_ffmpeg_h264_decode():
-  return try_call("ffmpeg -hide_banner -decoders | awk '{print $2}' | grep -w h264")
-
-@memoize
 def have_ffmpeg_hevc_qsv_decode():
   return try_call("ffmpeg -hide_banner -decoders | grep hevc_qsv")
-
-@memoize
-def have_ffmpeg_hevc_decode():
-  return try_call("ffmpeg -hide_banner -decoders | awk '{print $2}' | grep -w hevc")
 
 @memoize
 def have_ffmpeg_mjpeg_qsv_decode():
@@ -74,21 +66,23 @@ def have_ffmpeg_mjpeg_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mjpeg_qsv")
 
 @memoize
-def have_ffmpeg_mjpeg_encode():
-  return try_call("ffmpeg -hide_banner -encoders | awk '{print $2}' | grep -w mjpeg")
-
-@memoize
 def have_ffmpeg_mpeg2_qsv_encode():
   return try_call("ffmpeg -hide_banner -encoders | grep mpeg2_qsv")
-
-@memoize
-def have_ffmpeg_mpeg2_encode():
-  return try_call("ffmpeg -hide_banner -encoders | awk '{print $2}' | grep -w mpeg2video")
 
 @memoize
 def have_ffmpeg_filter(name):
   result = try_call("ffmpeg -hide_banner -filters | grep {}".format(name))
   return result, name
+
+@memoize
+def have_ffmpeg_encoder(encoder):
+  result = try_call("ffmpeg -hide_banner -encoders | awk '{{print $2}}' | grep -w {}".format(encoder))
+  return result, encoder
+
+@memoize
+def have_ffmpeg_decoder(decoder):
+  result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
+  return result, decoder
 
 @memoize
 def mapformat(format):
