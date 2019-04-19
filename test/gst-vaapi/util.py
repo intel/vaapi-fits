@@ -83,6 +83,15 @@ def map_deinterlace_method(method):
   }.get(method, None)
 
 @memoize
+def map_vpp_mirroring(method):
+  return {
+    "identity"    : "identity",
+    "none"        : "identity",
+    "horizontal"  : "horiz",
+    "vertical"    : "vert",
+  }.get(method, None)
+
+@memoize
 def mapprofile(codec, profile):
   return {
     "avc"      : {

@@ -39,6 +39,7 @@ VP9_ENCODE_10BIT_PLATFORMS     = []
 DECODE_10BIT_422_PLATFORMS     = []
 DECODE_10BIT_444_PLATFORMS     = []
 VPP_PLATFORMS                  = []
+VPP_TRANSFORM_PLATFORMS        = []
 
 driver = os.environ.get("LIBVA_DRIVER_NAME", None) or "i965"
 
@@ -90,6 +91,7 @@ elif "iHD" == driver:
   DECODE_10BIT_422_PLATFORMS     = [                                                                            "ICL"]
   DECODE_10BIT_444_PLATFORMS     = [                                                                            "ICL"]
   VPP_PLATFORMS                  = [                    "BDW",        "SKL", "APL", "KBL",        "CFL", "WHL", "ICL"]
+  VPP_TRANSFORM_PLATFORMS        = VPP_PLATFORMS
 
 def platform_tags(platforms):
   def wrap(f):
