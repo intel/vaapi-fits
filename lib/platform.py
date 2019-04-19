@@ -7,6 +7,11 @@
 from __future__ import absolute_import
 import os
 
+ALL_PLATFORMS                  = [
+  "IVB", "BYT", "HSW", "BDW",
+  "BSW", "SKL", "APL", "KBL",
+  "GLK", "CFL", "WHL", "ICL",
+]
 JPEG_DECODE_PLATFORMS          = []
 JPEG_ENCODE_PLATFORMS          = []
 MPEG2_DECODE_PLATFORMS         = []

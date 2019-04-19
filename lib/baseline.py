@@ -26,8 +26,8 @@ class Baseline:
 
   def __get_reference(self, addr, context = []):
     reference = self.references.setdefault(addr, dict())
-    for c in sorted(context):
-      c = c.strip().lower()
+    for c in context:
+      c = str(c).strip().lower()
       if "driver" == c:
         c = "drv.{}".format(get_media()._get_driver_name())
       reference = reference.setdefault(c, dict())

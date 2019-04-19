@@ -380,7 +380,6 @@ def gen_vpp_rotation_parameters(spec):
   params = gen_vpp_rotation_variants(spec)
   return keys, params
 
-
 def gen_transcode_1to1_variants(spec, codec, mode):
   for case, params in spec.iteritems():
     variants = params.get("one_one", None) or []
