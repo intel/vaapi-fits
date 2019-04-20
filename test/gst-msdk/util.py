@@ -67,6 +67,19 @@ def have_gst_element(element):
   return result, element
 
 @memoize
+def mapformat_hwup(format):
+  from ...lib import get_media
+  fmt = {
+    "iHD" : {
+      "I420"  : "NV12",
+      "AYUV"  : "NV12",
+      "YUY2"  : "NV12",
+    },
+  }.get(get_media()._get_driver_name(), {}).get(format, format)
+
+  return mapformatu(fmt)
+
+@memoize
 def mapformat(format):
   return {
     "I420"  : "i420",
@@ -123,10 +136,16 @@ def mapprofile(codec,profile):
     "hevc-10" : {
       "main10"                : "main-10",
     },
+    "jpeg"     : {
+      "baseline"              : "baseline",
+    },
     "mpeg2"   : {
       "high"                  : "high",
       "main"                  : "main",
       "simple"                : "simple",
+    },
+    "vp8"      : {
+      "version0_3"            : "version0_3",
     },
   }.get(codec, {}).get(profile, None)
 

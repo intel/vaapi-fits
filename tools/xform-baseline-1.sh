@@ -96,3 +96,16 @@ sed -i "s/test\/gst-msdk\/decode\/jpeg.py:test_default(/test\/gst-msdk\/decode\/
 sed -i "s/test\/gst-msdk\/decode\/mpeg2.py:test_default(/test\/gst-msdk\/decode\/mpeg2.py:default.test(/g" $1
 sed -i "s/test\/gst-msdk\/decode\/vc1.py:test_default(/test\/gst-msdk\/decode\/vc1.py:default.test(/g" $1
 sed -i "s/test\/gst-msdk\/decode\/vp8.py:test_default(/test\/gst-msdk\/decode\/vp8.py:default.test(/g" $1
+
+sed -i "s/test\/gst-msdk\/encode\/avc.py:test_cqp(/test\/gst-msdk\/encode\/avc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/avc.py:test_cqp_lp(/test\/gst-msdk\/encode\/avc.py:cqp_lp.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/avc.py:test_cbr(/test\/gst-msdk\/encode\/avc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/avc.py:test_vbr(/test\/gst-msdk\/encode\/avc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_8bit_cqp(/test\/gst-msdk\/encode\/hevc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_8bit_cbr(/test\/gst-msdk\/encode\/hevc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_8bit_vbr(/test\/gst-msdk\/encode\/hevc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_10bit_cqp(/test\/gst-msdk\/encode\/10bit\/hevc.py:cqp.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_10bit_cbr(/test\/gst-msdk\/encode\/10bit\/hevc.py:cbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_10bit_vbr(/test\/gst-msdk\/encode\/10bit\/hevc.py:vbr.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/jpeg.py:test_cqp(/test\/gst-msdk\/encode\/jpeg.py:cqp.test(/g" $1
+sed -i "s/test\/gst-msdk\/encode\/mpeg2.py:test_cqp(/test\/gst-msdk\/encode\/mpeg2.py:cqp.test(/g" $1
