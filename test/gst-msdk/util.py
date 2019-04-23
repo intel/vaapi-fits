@@ -67,6 +67,15 @@ def have_gst_element(element):
   return result, element
 
 @memoize
+def mapsubsampling(format_subsampling):
+  return {
+    "FORMATS_400" : ["Y800"],
+    "FORMATS_420" : ["I420", "NV12", "YV12"],
+    "FORMATS_422" : ["422H", "422V", "YUY2"],
+    "FORMATS_444" : ["444P", "AYUV"],
+  }.get(format_subsampling, [])
+
+@memoize
 def mapformat_hwup(format):
   from ...lib import get_media
   fmt = {
@@ -89,6 +98,8 @@ def mapformat(format):
     "AYUV"  : "ayuv",
     "YUY2"  : "yuy2",
     "ARGB"  : "argb",
+    "422H"  : "y42b",
+    "444P"  : "y444",
     "P210"  : "i422_10le",
     "P410"  : "y444_10le",
   }.get(format, None)
@@ -103,6 +114,8 @@ def mapformatu(format):
     "AYUV"  : "AYUV",
     "YUY2"  : "YUY2",
     "ARGB"  : "ARGB",
+    "422H"  : "Y42B",
+    "444P"  : "Y444",
     "P210"  : "I422_10LE",
     "P410"  : "Y444_10LE",
   }.get(format, None)
