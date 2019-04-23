@@ -17,15 +17,31 @@ class default(DecoderTest):
     super(default, self).before()
 
   @platform_tags(HEVC_DECODE_8BIT_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] <= 4096 and v["height"] <= 4096]))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] <= 4096
+    and v["height"] <= 4096 and v["format"] in mapsubsampling("FORMATS_420")]))
   def test(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()
 
   @platform_tags(HEVC_DECODE_8BIT_8K_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] > 4096 or v["height"] > 4096]))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if (v["width"] > 4096
+    or v["height"] > 4096) and v["format"] in mapsubsampling("FORMATS_420")]))
   def test_highres(self, case):
+    vars(self).update(spec[case].copy())
+    self.case = case
+    self.decode()
+
+  @platform_tags(HEVC_DECODE_8BIT_422_PLATFORMS)
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in mapsubsampling("FORMATS_422")]))
+  def test_422(self, case):
+    vars(self).update(spec[case].copy())
+    self.case = case
+    self.decode()
+
+  @platform_tags(HEVC_DECODE_8BIT_444_PLATFORMS)
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in mapsubsampling("FORMATS_444")]))
+  def test_444(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()
