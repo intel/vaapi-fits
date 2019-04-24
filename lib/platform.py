@@ -73,7 +73,7 @@ elif "iHD" == driver:
   HEVC_ENCODE_10BIT_PLATFORMS    = [                                                "KBL",        "CFL", "WHL", "ICL"]
   HEVC_ENCODE_10BIT_LP_PLATFORMS = [                                                                            "ICL"]
   VP8_DECODE_PLATFORMS           = [                    "BDW",        "SKL", "APL", "KBL",        "CFL", "WHL", "ICL"]
-  VP8_ENCODE_PLATFORMS           = [                                                                            "ICL"]
+  VP8_ENCODE_PLATFORMS           = [                                                "KBL",        "CFL", "WHL", "ICL"]
   VP9_DECODE_8BIT_PLATFORMS      = [                                         "APL", "KBL",        "CFL", "WHL", "ICL"]
   VP9_ENCODE_8BIT_PLATFORMS      = [                                                                            "ICL"]
   VP9_DECODE_10BIT_PLATFORMS     = [                                                "KBL",        "CFL", "WHL", "ICL"]
