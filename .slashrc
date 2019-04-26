@@ -110,6 +110,13 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.num_ctapt.setdefault((meta.file_path, meta.function_name), 0)
     self.num_ctapt[(meta.file_path, meta.function_name)] += 1
 
+  def _expand_context(self, context):
+    for c in context:
+      sc = str(c).strip().lower()
+      if "driver" == sc:
+        sc = "drv.{}".format(self._get_driver_name())
+      yield sc
+
   def _set_test_details(self, **kwargs):
     for k, v in kwargs.iteritems():
       slash.context.result.details.set(k, v)

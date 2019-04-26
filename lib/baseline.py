@@ -26,10 +26,7 @@ class Baseline:
 
   def __get_reference(self, addr, context = []):
     reference = self.references.setdefault(addr, dict())
-    for c in context:
-      c = str(c).strip().lower()
-      if "driver" == c:
-        c = "drv.{}".format(get_media()._get_driver_name())
+    for c in get_media()._expand_context(context):
       reference = reference.setdefault(c, dict())
     return reference
 
@@ -42,10 +39,13 @@ class Baseline:
     if self.rebase:
       reference.update(**kwargs)
 
+    econtext = list(get_media()._expand_context(context))
+
     for key, val in kwargs.iteritems():
       refval = reference.get(key, None)
-      get_media()._set_test_details(**{key:val})
-      get_media()._set_test_details(**{"ref_{}".format(key):refval})
+      strkey = '.'.join(econtext + [key])
+      get_media()._set_test_details(**{"{}:expect".format(strkey):refval})
+      get_media()._set_test_details(**{"{}:actual".format(strkey):val})
       compare(key, refval, val)
 
   def check_psnr(self, psnr, context = []):
