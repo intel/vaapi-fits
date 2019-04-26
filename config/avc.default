@@ -103,6 +103,45 @@ if media._get_driver_name() == "iHD": # iHD driver supports LP with multi-slice
   for v in media._get_test_spec("avc", "encode").values():
     v["cqp_lp"].append(dict(gop = 30, slices = 4, qp = 14, quality = 4))
 
+media._get_test_spec("avc", "transcode").update({
+  "H_H-AVC_QCIF" : dict(
+    source = os.path.join(assets, "avc", "QCIF.h264"),
+    width = 176, height = 144, format = "NV12", frames = 10, mode = "hw",
+    outputs = [dict(codec = "avc", mode = "hw")],
+  ),
+  "S_H-AVC_QCIF" : dict(
+    source = os.path.join(assets, "avc", "QCIF.h264"),
+    width = 176, height = 144, format = "NV12", frames = 10, mode = "sw",
+    outputs = [dict(codec = "avc", mode = "hw")],
+  ),
+  "H_H-AVC-8X_QCIF" : dict(
+    source = os.path.join(assets, "avc", "QCIF.h264"),
+    width = 176, height = 144, format = "NV12", frames = 10, mode = "hw",
+    outputs = [dict(codec = "avc", mode = "hw", channels = 8)],
+  ),
+  "H_H-AVC-2X_H-HEVC_H-MJPEG-2X_H-MPEG2_720p" : dict(
+    source = os.path.join(assets, "avc", "720p.h264"),
+    width = 1280, height = 720, format = "NV12", frames = 10, mode = "hw",
+    outputs = [
+      dict(codec = "avc", mode = "hw", channels = 2),
+      dict(codec = "hevc", mode = "hw"),
+      dict(codec = "mjpeg", mode = "hw", channels = 2),
+      dict(codec = "mpeg2", mode = "hw"),
+    ],
+  ),
+  "H_H-HEVC_S-MJPEG_1080p" : dict(
+    source = os.path.join(assets, "avc", "1080p.h264"),
+    width = 1920, height = 1080, format = "NV12", frames = 10, mode = "hw",
+    outputs = [
+      dict(codec = "hevc", mode = "hw"),
+      dict(codec = "mjpeg", mode = "sw"),
+    ],
+  ),
+})
+
+for v in media._get_test_spec("avc", "transcode").values():
+  v["refctx"] = ["driver"]
+
 ###
 ### kate: syntax python;
 ###
