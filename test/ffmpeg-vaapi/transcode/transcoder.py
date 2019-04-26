@@ -27,6 +27,9 @@ class TranscoderTest(slash.Test):
       "mpeg2" : dict(
         hw = (MPEG2_DECODE_PLATFORMS, (True, True), None),
       ),
+      "mjpeg" : dict(
+        hw = (JPEG_DECODE_PLATFORMS, (True, True), None),
+      ),
       "vc1" : dict(
         hw = (VC1_DECODE_PLATFORMS, (True, True), None),
       ),
@@ -48,7 +51,13 @@ class TranscoderTest(slash.Test):
         sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), ("mjpeg", "mjpeg")),
         hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_vaapi"), ("mjpeg_vaapi", "mjpeg")),
       ),
-    }
+    },
+    vpp = {
+      "scale" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_filter("scale"), "scale"),
+        hw = (VPP_PLATFORMS, have_ffmpeg_filter("scale_vaapi"), "scale_vaapi"),
+      ),
+    },
   )
 
   # hevc implies hevc 8 bit
@@ -76,10 +85,18 @@ class TranscoderTest(slash.Test):
     for output in self.outputs:
       codec = output["codec"]
       mode  = output["mode"]
+      width = output.get("width", 0)
+      height  = output.get("height", 0)
       assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
       oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
       platforms &= set(oplats)
       requires.append(oreq)
+
+      if width > 0 and height > 0:
+        vppplats, vppreq, _ = self.get_requirements_data("vpp", "scale", mode)
+        platforms &= set(vppplats)
+        requires.append(vppreq)
+
 
     # create matchers based on command-line filters
     matchers = [Matcher(s) for s in slash.config.root.run.filter_strings]
@@ -119,7 +136,8 @@ class TranscoderTest(slash.Test):
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
       mode = output["mode"]
-
+      width = output.get("width", 0)
+      height = output.get("height", 0)
       _, _, ffparms = self.get_requirements_data("encode", codec, mode)
       assert ffparms is not None, "failed to find a suitable encoder"
 
@@ -127,13 +145,21 @@ class TranscoderTest(slash.Test):
 
       for channel in xrange(output.get("channels", 1)):
         if "sw" == mode and "hw" == self.mode:
-          opts += " -vf 'hwdownload,format=nv12'"
+          if width > 0 and height > 0:
+            opts += " -vf 'hwdownload,format=nv12,scale=w={}:h={}'".format(width, height)
+          else:
+            opts += " -vf 'hwdownload,format=nv12'"
         elif "hw" == mode and "sw" == self.mode:
-          opts += " -vf 'format=nv12,hwupload'"
+          if width > 0 and height > 0:
+            opts += " -vf 'format=nv12|vaapi,hwupload,scale_vaapi=w={}:h={}'".format(width, height)
+          else:
+            opts += " -vf 'format=nv12,hwupload'"
+        else:
+          if width > 0 and height > 0:
+            opts += " -vf 'scale_vaapi=w={}:h={}'".format(width, height)
 
         opts += " -c:v {}".format(ffcodec)
         opts += " -vframes {frames}"
-
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         opts += " -y {}".format(ofile)
@@ -150,6 +176,23 @@ class TranscoderTest(slash.Test):
     m = re.search(
       "hwaccel initialisation returned error", self.output, re.MULTILINE)
     assert m is None, "Failed to use hardware decode"
+
+  # convert scaled test stream to yuv with source width and height
+  def scale_to_yuv(self, yuv, encoded, codec, mode):
+    opts =  " -init_hw_device vaapi=foo:/dev/dri/renderD128"
+
+    if "hw" == mode:
+      opts += " -hwaccel vaapi"
+
+    opts += " -i {} -an".format(encoded)
+
+    if "sw" == mode:
+      opts += " -vf 'scale=w={}:h={}'".format(self.width, self.height)
+    else:
+      opts += " -filter_hw_device foo -vf 'format=nv12,hwupload,scale_vaapi=w={}:h={},hwdownload,format=nv12'".format(self.width, self.height)
+
+    opts += " -pix_fmt yuv420p -vframes {}".format(self.frames)
+    call("ffmpeg -v verbose {} -y {}".format(opts, yuv))
 
   def transcode(self):
     self.validate_spec()
@@ -170,14 +213,20 @@ class TranscoderTest(slash.Test):
 
     for n, output in enumerate(self.outputs):
       for channel in xrange(output.get("channels", 1)):
+        width = output.get("width", 0)
+        height = output.get("height", 0)
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
-        call(
-          "ffmpeg -i {} -pix_fmt yuv420p -vframes {}"
-          " -y {}".format(encoded, self.frames, yuv))
+        if width > 0 and height > 0:
+          self.scale_to_yuv(yuv, encoded, output["codec"], output["mode"])
+        else:
+          call(
+            "ffmpeg -i {} -pix_fmt yuv420p -vframes {}"
+            " -y {}".format(encoded, self.frames, yuv))
         self.check_metrics(yuv, refctx = [(n, channel)])
-        # delete yuv file after each iteration
+        # delete encoded and yuv file after each iteration
+        get_media()._purge_test_artifact(encoded)
         get_media()._purge_test_artifact(yuv)
 
   def check_metrics(self, yuv, refctx):

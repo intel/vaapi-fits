@@ -79,7 +79,14 @@ class TranscoderTest(slash.Test):
     for output in self.outputs:
       codec = output["codec"]
       mode  = output["mode"]
+      width = self.outputs[0].get("width", 0)
+      height = self.outputs[0].get("height", 0)
       assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
+
+      #TBD - remove this error after adding transcode 1toN scale tests
+      if width > 0 and height > 0:
+        slash.skip_test("gstreamer transcode scaling validation not implemented")
+
       oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
       platforms &= set(oplats)
       requires.append(oreq)
