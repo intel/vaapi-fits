@@ -51,14 +51,15 @@ class cqp_lp(HEVC8EncoderTest):
   def test(self, case, gop, slices, qp, quality, profile):
     vars(self).update(spec[case].copy())
     vars(self).update(
-      case    = case,
-      gop     = gop,
-      qp      = qp,
-      lowpower= True,
-      quality = quality,
-      profile = profile,
-      rcmode  = "cqp",
-      slices  = slices,
+      case         = case,
+      gop          = gop,
+      qp           = qp,
+      lowpower     = True,
+      lowdelayb    = 1,
+      quality      = quality,
+      profile      = profile,
+      rcmode       = "cqp",
+      slices       = slices,
     )
     self.encode()
 
