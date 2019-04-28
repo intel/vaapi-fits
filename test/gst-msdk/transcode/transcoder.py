@@ -7,6 +7,7 @@
 from ....lib import *
 from ..util import *
 import os
+import string
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("msdk"))
@@ -69,8 +70,6 @@ class TranscoderTest(slash.Test):
     from slash.utils.pattern_matching import Matcher
 
     assert len(self.outputs), "Invalid test case specification, outputs data empty"
-    if len(self.outputs) > 1 or self.outputs[0].get("channels", 1) > 1:
-      slash.skip_test("transcode 1ton tests not supported")
     assert self.mode in ["sw", "hw"], "Invalid test case specification as mode type not valid"
 
     # generate platform list based on test runtime parameters
@@ -78,12 +77,13 @@ class TranscoderTest(slash.Test):
     platforms = set(iplats)
     requires = [ireq,]
 
-    codec = self.outputs[0]["codec"]
-    mode  = self.outputs[0]["mode"]
-    assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
-    oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
-    platforms &= set(oplats)
-    requires.append(oreq)
+    for output in self.outputs:
+      codec = output["codec"]
+      mode  = output["mode"]
+      assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
+      oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
+      platforms &= set(oplats)
+      requires.append(oreq)
 
     # create matchers based on command-line filters
     matchers = [Matcher(s) for s in slash.config.root.run.filter_strings]
@@ -110,17 +110,25 @@ class TranscoderTest(slash.Test):
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
-    opts = ""
-    codec = self.outputs[0]["codec"]
-    mode  = self.outputs[0]["mode"]
-    _, _, ffencparms = self.get_requirements_data("encode", codec, mode)
-    assert ffencparms is not None, "failed to find a suitable encoder"
-    ffencoder, ext = ffencparms
-    opts += " ! {}".format(ffencoder)
-    self.ofile = get_media()._test_artifact(
-      "{}.{}".format(self.case, ext))
-    opts += " ! filesink location={ofile}"
+    self.goutputs = dict()
+    opts = " ! tee name=transcoder"
 
+    for n, output in enumerate(self.outputs):
+      codec = output["codec"]
+      mode  = output["mode"]
+      _, _, ffencparms = self.get_requirements_data("encode", codec, mode)
+      assert ffencparms is not None, "failed to find a suitable encoder"
+      ffencoder, ext = ffencparms
+
+      for channel in xrange(output.get("channels", 1)):
+        opts += " ! queue ! {}".format(ffencoder)
+        ofile = get_media()._test_artifact(
+          "{}_{}_{}.{}".format(self.case, n, channel, ext))
+        opts += " ! filesink location={} transcoder.".format(ofile)
+
+        self.goutputs.setdefault(n, list()).append(ofile)
+
+    opts = opts.rstrip(string.punctuation).rstrip('transcoder')
     return opts.format(**vars(self))
 
   def gen_refyuv_decode_commands(self, codec, mode):
@@ -161,23 +169,27 @@ class TranscoderTest(slash.Test):
       " frame-checksum=false plane-checksum=false dump-output=true"
       " dump-location={srcyuv}".format(**vars(self)))
 
-    yuv = get_media()._test_artifact(
-      "{}.yuv".format(self.case))
-    refyuv_decode_arg = self.gen_refyuv_decode_commands(self.outputs[0]["codec"], "hw")
-    call(
-      "gst-launch-1.0 -vf filesrc location={}"
-      " ! {}"
-      " ! videoconvert ! video/x-raw,format=I420"
-      " ! checksumsink2 file-checksum=false qos=false"
-      " frame-checksum=false plane-checksum=false dump-output=true"
-      " dump-location={}".format(self.ofile, refyuv_decode_arg, yuv))
-    self.check_metrics(yuv)
+    for n, output in enumerate(self.outputs):
+      for channel in xrange(output.get("channels", 1)):
+        encoded = self.goutputs[n][channel]
+        yuv = get_media()._test_artifact(
+          "{}_{}_{}.yuv".format(self.case, n, channel))
+        refyuv_decode_arg = self.gen_refyuv_decode_commands(output["codec"], "hw")
+        call(
+          "gst-launch-1.0 -vf filesrc location={}"
+          " ! {}"
+          " ! videoconvert ! video/x-raw,format=I420"
+          " ! checksumsink2 file-checksum=false qos=false"
+          " frame-checksum=false plane-checksum=false dump-output=true"
+          " dump-location={}".format(encoded, refyuv_decode_arg, yuv))
+        self.check_metrics(yuv, refctx = [(n, channel)])
+        get_media()._purge_test_artifact(yuv)
 
-  def check_metrics(self, yuv):
+  def check_metrics(self, yuv, refctx):
     get_media().baseline.check_psnr(
       psnr = calculate_psnr(
         self.srcyuv, yuv,
         self.width, self.height,
         self.frames),
-      context = self.refctx,
+      context = self.refctx + refctx,
     )
