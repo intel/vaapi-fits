@@ -27,6 +27,10 @@ class TranscoderTest(slash.Test):
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
         hw = (MPEG2_DECODE_PLATFORMS, (True, True), None),
       ),
+      "mjpeg" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mjpeg"), "mjpeg"),
+        hw = (JPEG_DECODE_PLATFORMS, (True, True), None),
+      ),
       "vc1" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("vc1"), "vc1"),
         hw = (VC1_DECODE_PLATFORMS, (True, True), None),
