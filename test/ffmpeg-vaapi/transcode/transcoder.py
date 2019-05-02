@@ -13,21 +13,22 @@ import os
 @platform_tags(ALL_PLATFORMS)
 class TranscoderTest(slash.Test):
   requirements = dict(
+    # ffmpeg-vaapi HW decoders are built-in
     decode = {
       "avc" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("h264"), "h264"),
-        # for ffmpeg-vaapi HW decoders are built-in and can't be validated
         hw = (AVC_DECODE_PLATFORMS, (True, True), None),
       ),
       "hevc-8" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("hevc"), "hevc"),
-        # for ffmpeg-vaapi HW decoders are built-in and can't be validated
         hw = (HEVC_DECODE_8BIT_PLATFORMS, (True, True), None),
       ),
       "mpeg2" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
         hw = (MPEG2_DECODE_PLATFORMS, (True, True), None),
       ),
       "vc1" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("vc1"), "vc1"),
         hw = (VC1_DECODE_PLATFORMS, (True, True), None),
       ),
     },
