@@ -40,20 +40,20 @@ class TranscoderTest(slash.Test):
     },
     encode = {
       "avc" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("x264enc"), ("x264enc ! video/x-h264,profile=main ! h264parse", "h264")),
-        hw = (AVC_ENCODE_PLATFORMS, have_gst_element("vaapih264enc"), ("vaapih264enc ! video/x-h264,profile=main ! h264parse", "h264")),
+        sw = (ALL_PLATFORMS, have_gst_element("x264enc"), "x264enc ! video/x-h264,profile=main ! h264parse"),
+        hw = (AVC_ENCODE_PLATFORMS, have_gst_element("vaapih264enc"), "vaapih264enc ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("x265enc"), ("x265enc ! video/x-h265,profile=main ! h265parse", "h265")),
-        hw = (HEVC_ENCODE_8BIT_PLATFORMS, have_gst_element("vaapih265enc"), ("vaapih265enc ! video/x-h265,profile=main ! h265parse", "h265")),
+        sw = (ALL_PLATFORMS, have_gst_element("x265enc"), "x265enc ! video/x-h265,profile=main ! h265parse"),
+        hw = (HEVC_ENCODE_8BIT_PLATFORMS, have_gst_element("vaapih265enc"), "vaapih265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("avenc_mpeg2video"), ("avenc_mpeg2video ! mpegvideoparse", "m2v")),
-        hw = (MPEG2_ENCODE_PLATFORMS, have_gst_element("vaapimpeg2enc"), ("vaapimpeg2enc ! mpegvideoparse", "m2v")),
+        sw = (ALL_PLATFORMS, have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
+        hw = (MPEG2_ENCODE_PLATFORMS, have_gst_element("vaapimpeg2enc"), "vaapimpeg2enc ! mpegvideoparse"),
       ),
       "mjpeg" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("jpegenc"), ("jpegenc ! jpegparse", "mjpeg")),
-        hw = (JPEG_ENCODE_PLATFORMS, have_gst_element("vaapijpegenc"), ("vaapijpegenc ! jpegparse", "mjpeg")),
+        sw = (ALL_PLATFORMS, have_gst_element("jpegenc"), "jpegenc ! jpegparse"),
+        hw = (JPEG_ENCODE_PLATFORMS, have_gst_element("vaapijpegenc"), "vaapijpegenc ! jpegparse"),
       ),
     }
   )
@@ -64,11 +64,20 @@ class TranscoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
-  
+
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(
       codec, {}).get(
         mode, ([], (False, "{}:{}:{}".format(ttype, codec, mode)), None))
+
+  def get_file_ext(self, codec):
+    return {
+      "avc"     : "h264",
+      "hevc"    : "h265",
+      "hevc-8"  : "h265",
+      "mpeg2"   : "m2v",
+      "mjpeg"   : "mjpeg",
+    }.get(codec, "???")
 
   def validate_spec(self):
     from slash.utils.pattern_matching import Matcher
@@ -121,9 +130,10 @@ class TranscoderTest(slash.Test):
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
       mode  = output["mode"]
-      _, _, ffencparms = self.get_requirements_data("encode", codec, mode)
-      assert ffencparms is not None, "failed to find a suitable encoder"
-      ffencoder, ext = ffencparms
+      _, _, ffencoder = self.get_requirements_data("encode", codec, mode)
+      assert ffencoder is not None, "failed to find a suitable encoder"
+
+      ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
         opts += " ! queue ! {}".format(ffencoder)
