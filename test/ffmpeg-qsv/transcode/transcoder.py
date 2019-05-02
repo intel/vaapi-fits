@@ -124,13 +124,11 @@ class TranscoderTest(slash.Test):
           str([m for t,m in requires if not t])))
 
   def gen_input_opts(self):
-    decoder = self.get_decoder(self.codec, self.mode)
-
+    opts = "-init_hw_device qsv=hw:/dev/dri/renderD128 -filter_hw_device hw"
+    opts += " -hwaccel_output_format qsv"
     if "hw" == self.mode:
-      opts = " -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -init_hw_device qsv=hw -c:v {} ".format(decoder)
-    else:
-      opts = " -hwaccel qsv -init_hw_device qsv=hw -filter_hw_device hw -c:v {} ".format(decoder)
-
+      opts += " -hwaccel qsv"
+    opts += " -c:v {}".format(self.get_decoder(self.codec, self.mode))
     opts += " -i {source}"
 
     return opts.format(**vars(self))
@@ -147,10 +145,13 @@ class TranscoderTest(slash.Test):
       ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
-        if "hw" == mode and "sw" == self.mode:
-          opts += " -vf hwupload=extra_hw_frames=64,format=qsv"
-        elif "sw" == mode and "hw" == self.mode:
-          opts += " -vf hwdownload,format=nv12"
+        tmode = (self.mode, mode)
+        if ("hw", "sw") == tmode:   # HW to SW transcode
+          opts += " -vf 'hwdownload,format=nv12'"
+        elif ("sw", "hw") == tmode: # SW to HW transcode
+          opts += " -vf 'format=nv12,hwupload=extra_hw_frames=64'"
+        elif ("hw", "hw") == tmode: # HW to HW transcode
+          opts += " -vf 'hwupload=extra_hw_frames=64'"
 
         opts += " -c:v {}".format(encoder)
 
