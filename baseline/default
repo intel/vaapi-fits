@@ -737,6 +737,30 @@
       }
     }
   }, 
+  "test/ffmpeg-qsv/transcode/avc.py:default.test(case=H_H-HEVC_S-MJPEG_1080p)": {
+    "drv.iHD": {
+      "(0, 0)": {
+        "psnr": [
+          23.7650, 
+          41.9198, 
+          43.0755, 
+          24.5266, 
+          42.0352, 
+          43.1906
+        ]
+      }, 
+      "(1, 0)": {
+        "psnr": [
+          31.7690, 
+          45.7891, 
+          47.8356, 
+          36.5144, 
+          51.3516, 
+          52.7087
+        ]
+      }
+    }
+  }, 
   "test/ffmpeg-qsv/transcode/avc.py:default.test(case=S_H-AVC_QCIF)": {
     "drv.iHD": {
       "(0, 0)": {

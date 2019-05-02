@@ -129,6 +129,8 @@ class TranscoderTest(slash.Test):
       for channel in xrange(output.get("channels", 1)):
         if "hw" == mode and "sw" == self.mode:
           opts += " -vf hwupload=extra_hw_frames=64,format=qsv"
+        elif "sw" == mode and "hw" == self.mode:
+          opts += " -vf hwdownload,format=nv12"
 
         opts += " -c:v {}".format(ffcodec)
 
