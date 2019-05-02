@@ -17,23 +17,23 @@ class TranscoderTest(slash.Test):
     decode = {
       "avc" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("h264"), "h264"),
-        hw = (AVC_DECODE_PLATFORMS, (True, True), None),
+        hw = (AVC_DECODE_PLATFORMS, have_ffmpeg_decoder("h264"), "h264"),
       ),
       "hevc-8" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("hevc"), "hevc"),
-        hw = (HEVC_DECODE_8BIT_PLATFORMS, (True, True), None),
+        hw = (HEVC_DECODE_8BIT_PLATFORMS, have_ffmpeg_decoder("hevc"), "hevc"),
       ),
       "mpeg2" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
-        hw = (MPEG2_DECODE_PLATFORMS, (True, True), None),
+        hw = (MPEG2_DECODE_PLATFORMS, have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
       ),
       "mjpeg" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mjpeg"), "mjpeg"),
-        hw = (JPEG_DECODE_PLATFORMS, (True, True), None),
+        hw = (JPEG_DECODE_PLATFORMS, have_ffmpeg_decoder("mjpeg"), "mjpeg"),
       ),
       "vc1" : dict(
         sw = (ALL_PLATFORMS, have_ffmpeg_decoder("vc1"), "vc1"),
-        hw = (VC1_DECODE_PLATFORMS, (True, True), None),
+        hw = (VC1_DECODE_PLATFORMS, have_ffmpeg_decoder("vc1"), "vc1"),
       ),
     },
     encode = {
@@ -124,14 +124,11 @@ class TranscoderTest(slash.Test):
           str([m for t,m in requires if not t])))
 
   def gen_input_opts(self):
-    opts = ""
-
+    opts = "-init_hw_device vaapi=hw:/dev/dri/renderD128 -filter_hw_device hw"
+    opts += " -hwaccel_output_format vaapi"
     if "hw" == self.mode:
-      opts += " -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -hwaccel_output_format vaapi"
-    else:
-      decoder = self.get_decoder(self.codec, self.mode)
-      opts += " -vaapi_device /dev/dri/renderD128 -c:v {}".format(decoder)
-
+      opts += " -hwaccel vaapi"
+    opts += " -c:v {}".format(self.get_decoder(self.codec, self.mode))
     opts += " -i {source}"
 
     return opts.format(**vars(self))
@@ -148,10 +145,13 @@ class TranscoderTest(slash.Test):
       ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
-        if "sw" == mode and "hw" == self.mode:
+        tmode = (self.mode, mode)
+        if ("hw", "sw") == tmode:   # HW to SW transcode
           opts += " -vf 'hwdownload,format=nv12'"
-        elif "hw" == mode and "sw" == self.mode:
+        elif ("sw", "hw") == tmode: # SW to HW transcode
           opts += " -vf 'format=nv12,hwupload'"
+        elif ("hw", "hw") == tmode: # HW to HW transcode
+          opts += " -vf 'hwupload'"
 
         opts += " -c:v {}".format(encoder)
         opts += " -vframes {frames}"
