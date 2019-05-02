@@ -24,9 +24,11 @@ class TranscoderTest(slash.Test):
         hw = (HEVC_DECODE_8BIT_PLATFORMS, have_ffmpeg_decoder("hevc_qsv"), "hevc_qsv"),
       ),
       "mpeg2" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
         hw = (MPEG2_DECODE_PLATFORMS, have_ffmpeg_decoder("mpeg2_qsv"), "mpeg2_qsv"),
       ),
       "vc1" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("vc1"), "vc1"),
         hw = (VC1_DECODE_PLATFORMS, have_ffmpeg_decoder("vc1_qsv"), "vc1_qsv"),
       ),
     },

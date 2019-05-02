@@ -24,12 +24,19 @@ class TranscoderTest(slash.Test):
         hw = (HEVC_DECODE_8BIT_PLATFORMS, have_gst_element("vaapih265dec"), "h265parse ! vaapih265dec"),
       ),
       "mpeg2" : dict(
+        sw = (ALL_PLATFORMS, have_gst_element("avdec_mpeg2video"), "mpegvideoparse ! avdec_mpeg2video"),
         hw = (MPEG2_DECODE_PLATFORMS, have_gst_element("vaapimpeg2dec"), "mpegvideoparse ! vaapimpeg2dec"),
       ),
       "mjpeg" : dict(
+        sw = (ALL_PLATFORMS, have_gst_element("jpegdec"), "jpegparse ! jpegdec"),
         hw = (JPEG_DECODE_PLATFORMS, have_gst_element("vaapijpegdec"), "jpegparse ! vaapijpegdec"),
       ),
       "vc1" : dict(
+        sw = (
+          ALL_PLATFORMS, have_gst_element("avdec_vc1"),
+          "'video/x-wmv,profile=(string)advanced'"
+          ",width={width},height={height},framerate=14/1 ! avdec_vc1"
+        ),
         hw = (
           VC1_DECODE_PLATFORMS, have_gst_element("vaapivc1dec"),
           "'video/x-wmv,profile=(string)advanced'"
