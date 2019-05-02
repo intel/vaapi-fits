@@ -151,22 +151,14 @@ class TranscoderTest(slash.Test):
     opts = opts.rstrip(string.punctuation).rstrip('transcoder')
     return opts.format(**vars(self))
 
-  def check_output(self):
-    m = re.search(
-      "not supported for hardware decode", self.output, re.MULTILINE)
-    assert m is None, "Failed to use hardware decode"
-
-    m = re.search(
-      "hwaccel initialisation returned error", self.output, re.MULTILINE)
-    assert m is None, "Failed to use hardware decode"
-
   def transcode(self):
     self.validate_spec()
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
-    self.output = call("gst-launch-1.0 -vf {} {}".format(iopts, oopts))
+
+    call("gst-launch-1.0 -vf {} {}".format(iopts, oopts))
 
     # source file to yuv
     self.srcyuv = get_media()._test_artifact(
