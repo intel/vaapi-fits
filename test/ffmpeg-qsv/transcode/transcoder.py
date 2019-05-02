@@ -16,18 +16,18 @@ class TranscoderTest(slash.Test):
   requirements = dict(
     decode = {
       "avc" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("h264"), ("h264", None)),
-        hw = (AVC_DECODE_PLATFORMS, have_ffmpeg_decoder("h264_qsv"), ("h264_qsv", None)),
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("h264"), "h264"),
+        hw = (AVC_DECODE_PLATFORMS, have_ffmpeg_decoder("h264_qsv"), "h264_qsv"),
       ),
       "hevc-8" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("hevc"), ("hevc", None)),
-        hw = (HEVC_DECODE_8BIT_PLATFORMS, have_ffmpeg_decoder("hevc_qsv"), ("hevc_qsv", None)),
+        sw = (ALL_PLATFORMS, have_ffmpeg_decoder("hevc"), "hevc"),
+        hw = (HEVC_DECODE_8BIT_PLATFORMS, have_ffmpeg_decoder("hevc_qsv"), "hevc_qsv"),
       ),
       "mpeg2" : dict(
-        hw = (MPEG2_DECODE_PLATFORMS, have_ffmpeg_decoder("mpeg2_qsv"), ("mpeg2_qsv", None)),
+        hw = (MPEG2_DECODE_PLATFORMS, have_ffmpeg_decoder("mpeg2_qsv"), "mpeg2_qsv"),
       ),
       "vc1" : dict(
-        hw = (VC1_DECODE_PLATFORMS, have_ffmpeg_decoder("vc1_qsv"), ("vc1_qsv", None)),
+        hw = (VC1_DECODE_PLATFORMS, have_ffmpeg_decoder("vc1_qsv"), "vc1_qsv"),
       ),
     },
     encode = {
@@ -100,11 +100,9 @@ class TranscoderTest(slash.Test):
 
   def gen_input_opts(self):
     opts = ""
-     
-    _, _, ffparms = self.get_requirements_data("decode", self.codec, self.mode)
-    assert ffparms is not None, "decode parameters are empty"
 
-    ffcodec, _ = ffparms
+    _, _, ffcodec = self.get_requirements_data("decode", self.codec, self.mode)
+    assert ffcodec is not None, "decode parameters are empty"
 
     if "hw" == self.mode:
       opts += " -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -init_hw_device qsv=hw -c:v {} ".format(ffcodec)
