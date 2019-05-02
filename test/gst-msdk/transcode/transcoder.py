@@ -63,8 +63,9 @@ class TranscoderTest(slash.Test):
     self.refctx = []
   
   def get_requirements_data(self, ttype, codec, mode):
-    return self.requirements[ttype].get(
-      codec, {}).get(mode, ([], (False, False), None))
+    return  self.requirements[ttype].get(
+      codec, {}).get(
+        mode, ([], (False, "{}:{}:{}".format(ttype, codec, mode)), None))
 
   def validate_spec(self):
     from slash.utils.pattern_matching import Matcher
@@ -98,7 +99,9 @@ class TranscoderTest(slash.Test):
 
     # check required
     if not all([t for t,m in requires]):
-      slash.skip_test("One or more software requirements not met")
+      slash.skip_test(
+        "One or more software requirements not met: {}".format(
+          str([m for t,m in requires if not t])))
 
   def gen_input_opts(self):
     opts = " -vf filesrc location={source}"
