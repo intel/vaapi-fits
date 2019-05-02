@@ -33,20 +33,20 @@ class TranscoderTest(slash.Test):
     },
     encode = {
       "avc" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("libx264"), ("libx264", "h264")),
-        hw = (AVC_ENCODE_PLATFORMS, have_ffmpeg_encoder("h264_vaapi"), ("h264_vaapi", "h264")),
+        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("libx264"), "libx264"),
+        hw = (AVC_ENCODE_PLATFORMS, have_ffmpeg_encoder("h264_vaapi"), "h264_vaapi"),
       ),
       "hevc-8" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("libx265"), ("libx265", "h265")),
-        hw = (HEVC_ENCODE_8BIT_PLATFORMS, have_ffmpeg_encoder("hevc_vaapi"), ("hevc_vaapi", "h265")),
+        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("libx265"), "libx265"),
+        hw = (HEVC_ENCODE_8BIT_PLATFORMS, have_ffmpeg_encoder("hevc_vaapi"), "hevc_vaapi"),
       ),
       "mpeg2" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mpeg2video"), ("mpeg2video", "m2v")),
-        hw = (MPEG2_ENCODE_PLATFORMS, have_ffmpeg_encoder("mpeg2_vaapi"), ("mpeg2_vaapi", "m2v")),
+        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mpeg2video"), "mpeg2video"),
+        hw = (MPEG2_ENCODE_PLATFORMS, have_ffmpeg_encoder("mpeg2_vaapi"), "mpeg2_vaapi"),
       ),
       "mjpeg" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), ("mjpeg", "mjpeg")),
-        hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_vaapi"), ("mjpeg_vaapi", "mjpeg")),
+        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), "mjpeg"),
+        hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_vaapi"), "mjpeg_vaapi"),
       ),
     }
   )
@@ -62,6 +62,15 @@ class TranscoderTest(slash.Test):
     return  self.requirements[ttype].get(
       codec, {}).get(
         mode, ([], (False, "{}:{}:{}".format(ttype, codec, mode)), None))
+
+  def get_file_ext(self, codec):
+    return {
+      "avc"     : "h264",
+      "hevc"    : "h265",
+      "hevc-8"  : "h265",
+      "mpeg2"   : "m2v",
+      "mjpeg"   : "mjpeg",
+    }.get(codec, "???")
 
   def validate_spec(self):
     from slash.utils.pattern_matching import Matcher
@@ -122,10 +131,10 @@ class TranscoderTest(slash.Test):
       codec = output["codec"]
       mode = output["mode"]
 
-      _, _, ffparms = self.get_requirements_data("encode", codec, mode)
-      assert ffparms is not None, "failed to find a suitable encoder"
+      _, _, ffcodec = self.get_requirements_data("encode", codec, mode)
+      assert ffcodec is not None, "failed to find a suitable encoder"
 
-      ffcodec, ext = ffparms
+      ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
         if "sw" == mode and "hw" == self.mode:
