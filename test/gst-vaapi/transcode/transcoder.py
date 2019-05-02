@@ -17,21 +17,25 @@ class TranscoderTest(slash.Test):
   requirements = dict(
     decode = {
       "avc" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("avdec_h264"), ("h264parse ! avdec_h264", None)),
-        hw = (AVC_DECODE_PLATFORMS, have_gst_element("vaapih264dec"), ("h264parse ! vaapih264dec", None)),
+        sw = (ALL_PLATFORMS, have_gst_element("avdec_h264"), "h264parse ! avdec_h264"),
+        hw = (AVC_DECODE_PLATFORMS, have_gst_element("vaapih264dec"), "h264parse ! vaapih264dec"),
       ),
       "hevc-8" : dict(
-        sw = (ALL_PLATFORMS, have_gst_element("avdec_h265"), ("h265parse ! avdec_h265", None)),
-        hw = (HEVC_DECODE_8BIT_PLATFORMS, have_gst_element("vaapih265dec"), ("h265parse ! vaapih265dec", None)),
+        sw = (ALL_PLATFORMS, have_gst_element("avdec_h265"), "h265parse ! avdec_h265"),
+        hw = (HEVC_DECODE_8BIT_PLATFORMS, have_gst_element("vaapih265dec"), "h265parse ! vaapih265dec"),
       ),
       "mpeg2" : dict(
-        hw = (MPEG2_DECODE_PLATFORMS, have_gst_element("vaapimpeg2dec"), ("mpegvideoparse ! vaapimpeg2dec", None)),
+        hw = (MPEG2_DECODE_PLATFORMS, have_gst_element("vaapimpeg2dec"), "mpegvideoparse ! vaapimpeg2dec"),
       ),
       "mjpeg" : dict(
-        hw = (JPEG_DECODE_PLATFORMS, have_gst_element("vaapijpegdec"), ("jpegparse ! vaapijpegdec", None)),
+        hw = (JPEG_DECODE_PLATFORMS, have_gst_element("vaapijpegdec"), "jpegparse ! vaapijpegdec"),
       ),
       "vc1" : dict(
-        hw = (VC1_DECODE_PLATFORMS, have_gst_element("vaapivc1dec"), ("'video/x-wmv,profile=(string)advanced',width={width},height={height},framerate=14/1 ! vaapivc1dec", None)),
+        hw = (
+          VC1_DECODE_PLATFORMS, have_gst_element("vaapivc1dec"),
+          "'video/x-wmv,profile=(string)advanced'"
+          ",width={width},height={height},framerate=14/1 ! vaapivc1dec"
+        ),
       ),
     },
     encode = {
@@ -104,9 +108,8 @@ class TranscoderTest(slash.Test):
 
   def gen_input_opts(self):
     opts = " -vf filesrc location={source}"
-    _, _, ffdecparms = self.get_requirements_data("decode", self.codec, self.mode)
-    assert ffdecparms is not None, "decode parameters are empty"
-    ffdecoder, _ = ffdecparms
+    _, _, ffdecoder = self.get_requirements_data("decode", self.codec, self.mode)
+    assert ffdecoder is not None, "decode parameters are empty"
     opts += " ! {}".format(ffdecoder)
 
     return opts.format(**vars(self))
@@ -135,8 +138,7 @@ class TranscoderTest(slash.Test):
 
   def gen_refyuv_decode_commands(self, codec, mode):
     refyuv_cmnd = ""
-    _, _, ffdecparms = self.get_requirements_data("decode", codec, mode)
-    ffdecoder, _ = ffdecparms
+    _, _, ffdecoder = self.get_requirements_data("decode", codec, mode)
     refyuv_cmnd = " {}".format(ffdecoder)
 
     return refyuv_cmnd.format(**vars(self))
