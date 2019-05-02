@@ -7,7 +7,6 @@
 from ....lib import *
 from ..util import *
 import os
-import string
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("msdk"))
@@ -149,7 +148,14 @@ class TranscoderTest(slash.Test):
 
         self.goutputs.setdefault(n, list()).append(ofile)
 
-    opts = opts.rstrip(string.punctuation).rstrip('transcoder')
+    # dump decoded source to yuv for reference comparison
+    self.srcyuv = get_media()._test_artifact(
+      "src_{case}.yuv".format(**vars(self)))
+    opts += " ! queue ! videoconvert ! video/x-raw,format=I420"
+    opts += " ! checksumsink2 file-checksum=false qos=false"
+    opts += " frame-checksum=false plane-checksum=false dump-output=true"
+    opts += " dump-location={srcyuv}"
+
     return opts.format(**vars(self))
 
   def transcode(self):
@@ -160,19 +166,6 @@ class TranscoderTest(slash.Test):
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
     call("gst-launch-1.0 -vf {} {}".format(iopts, oopts))
-
-    # source file to yuv
-    self.srcyuv = get_media()._test_artifact(
-      "src_{case}.yuv".format(**vars(self)))
-    # reference yuv generated using HW codec irrespective of mode passed from user-spec
-    self.refyuv_decode_arg = self.get_decoder(self.codec, "hw")
-    call(
-      "gst-launch-1.0 -vf filesrc location={source}"
-      " ! {refyuv_decode_arg}"
-      " ! videoconvert ! video/x-raw,format=I420"
-      " ! checksumsink2 file-checksum=false qos=false"
-      " frame-checksum=false plane-checksum=false dump-output=true"
-      " dump-location={srcyuv}".format(**vars(self)))
 
     for n, output in enumerate(self.outputs):
       for channel in xrange(output.get("channels", 1)):
