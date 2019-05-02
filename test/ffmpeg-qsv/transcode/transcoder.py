@@ -159,6 +159,14 @@ class TranscoderTest(slash.Test):
 
         self.goutputs.setdefault(n, list()).append(ofile)
 
+    # dump decoded source to yuv for reference comparison
+    self.srcyuv = get_media()._test_artifact(
+      "src_{case}.yuv".format(**vars(self)))
+    if "hw" == self.mode:
+      opts += " -vf 'hwdownload,format=nv12'"
+    opts += " -pix_fmt yuv420p -f rawvideo"
+    opts += " -vframes {frames} -y {srcyuv}"
+
     return opts.format(**vars(self))
 
   def check_output(self):
@@ -179,13 +187,6 @@ class TranscoderTest(slash.Test):
     self.output = call("ffmpeg -v verbose {} {}".format(iopts, oopts))
 
     self.check_output()
-
-    # source file to yuv
-    self.srcyuv = get_media()._test_artifact(
-      "src_{case}.yuv".format(**vars(self)))
-    call(
-      "ffmpeg -i {source} -pix_fmt yuv420p"
-      " -vframes {frames} -y {srcyuv}".format(**vars(self)))
 
     for n, output in enumerate(self.outputs):
       for channel in xrange(output.get("channels", 1)):
