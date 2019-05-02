@@ -63,6 +63,16 @@ class TranscoderTest(slash.Test):
       codec, {}).get(
         mode, ([], (False, "{}:{}:{}".format(ttype, codec, mode)), None))
 
+  def get_decoder(self, codec, mode):
+    _, _, decoder = self.get_requirements_data("decode", codec, mode)
+    assert decoder is not None, "failed to find a suitable decoder: {}:{}".format(codec, mode)
+    return decoder.format(**vars(self))
+
+  def get_encoder(self, codec, mode):
+    _, _, encoder = self.get_requirements_data("encode", codec, mode)
+    assert encoder is not None, "failed to find a suitable encoder: {}:{}".format(codec, mode)
+    return encoder.format(**vars(self))
+
   def get_file_ext(self, codec):
     return {
       "avc"     : "h264",
@@ -114,9 +124,8 @@ class TranscoderTest(slash.Test):
     if "hw" == self.mode:
       opts += " -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -hwaccel_output_format vaapi"
     else:
-      _, _, ffcodec = self.get_requirements_data("decode", self.codec, self.mode)
-      assert ffcodec is not None, "decode parameters are empty"
-      opts += " -vaapi_device /dev/dri/renderD128 -c:v {}".format(ffcodec)
+      decoder = self.get_decoder(self.codec, self.mode)
+      opts += " -vaapi_device /dev/dri/renderD128 -c:v {}".format(decoder)
 
     opts += " -i {source}"
 
@@ -130,10 +139,7 @@ class TranscoderTest(slash.Test):
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
       mode = output["mode"]
-
-      _, _, ffcodec = self.get_requirements_data("encode", codec, mode)
-      assert ffcodec is not None, "failed to find a suitable encoder"
-
+      encoder = self.get_encoder(codec, mode)
       ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
@@ -142,7 +148,7 @@ class TranscoderTest(slash.Test):
         elif "hw" == mode and "sw" == self.mode:
           opts += " -vf 'format=nv12,hwupload'"
 
-        opts += " -c:v {}".format(ffcodec)
+        opts += " -c:v {}".format(encoder)
         opts += " -vframes {frames}"
 
         ofile = get_media()._test_artifact(

@@ -70,6 +70,16 @@ class TranscoderTest(slash.Test):
       codec, {}).get(
         mode, ([], (False, "{}:{}:{}".format(ttype, codec, mode)), None))
 
+  def get_decoder(self, codec, mode):
+    _, _, decoder = self.get_requirements_data("decode", codec, mode)
+    assert decoder is not None, "failed to find a suitable decoder: {}:{}".format(codec, mode)
+    return decoder.format(**vars(self))
+
+  def get_encoder(self, codec, mode):
+    _, _, encoder = self.get_requirements_data("encode", codec, mode)
+    assert encoder is not None, "failed to find a suitable encoder: {}:{}".format(codec, mode)
+    return encoder.format(**vars(self))
+
   def get_file_ext(self, codec):
     return {
       "avc"     : "h264",
@@ -116,27 +126,22 @@ class TranscoderTest(slash.Test):
           str([m for t,m in requires if not t])))
 
   def gen_input_opts(self):
-    opts = " -vf filesrc location={source}"
-    _, _, ffdecoder = self.get_requirements_data("decode", self.codec, self.mode)
-    assert ffdecoder is not None, "decode parameters are empty"
-    opts += " ! {}".format(ffdecoder)
-
+    opts = "filesrc location={source}"
+    opts += " ! " + self.get_decoder(self.codec, self.mode)
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
     self.goutputs = dict()
-    opts = " ! tee name=transcoder"
+    opts = "! tee name=transcoder"
 
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
       mode  = output["mode"]
-      _, _, ffencoder = self.get_requirements_data("encode", codec, mode)
-      assert ffencoder is not None, "failed to find a suitable encoder"
-
+      encoder = self.get_encoder(codec, mode)
       ext = self.get_file_ext(codec)
 
       for channel in xrange(output.get("channels", 1)):
-        opts += " ! queue ! {}".format(ffencoder)
+        opts += " ! queue ! {}".format(encoder)
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         opts += " ! filesink location={} transcoder.".format(ofile)
@@ -146,13 +151,6 @@ class TranscoderTest(slash.Test):
     opts = opts.rstrip(string.punctuation).rstrip('transcoder')
     return opts.format(**vars(self))
 
-  def gen_refyuv_decode_commands(self, codec, mode):
-    refyuv_cmnd = ""
-    _, _, ffdecoder = self.get_requirements_data("decode", codec, mode)
-    refyuv_cmnd = " {}".format(ffdecoder)
-
-    return refyuv_cmnd.format(**vars(self))
-    
   def check_output(self):
     m = re.search(
       "not supported for hardware decode", self.output, re.MULTILINE)
@@ -174,7 +172,7 @@ class TranscoderTest(slash.Test):
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
     # reference yuv generated using HW codec irrespective of mode passed from user-spec
-    self.refyuv_decode_arg = self.gen_refyuv_decode_commands(self.codec, "hw")
+    self.refyuv_decode_arg = self.get_decoder(self.codec, "hw")
     call(
       "gst-launch-1.0 -vf filesrc location={source}"
       " ! {refyuv_decode_arg}"
@@ -188,14 +186,14 @@ class TranscoderTest(slash.Test):
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
-        refyuv_decode_arg = self.gen_refyuv_decode_commands(output["codec"], "hw")
         call(
           "gst-launch-1.0 -vf filesrc location={}"
           " ! {}"
           " ! videoconvert ! video/x-raw,format=I420"
           " ! checksumsink2 file-checksum=false qos=false"
           " frame-checksum=false plane-checksum=false dump-output=true"
-          " dump-location={}".format(encoded, refyuv_decode_arg, yuv))
+          " dump-location={}".format(
+            encoded, self.get_decoder(output["codec"], "hw"), yuv))
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)
 
