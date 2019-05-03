@@ -43,7 +43,7 @@ def have_ffmpeg_vp9_vaapi_encode():
 
 @memoize
 def have_ffmpeg_filter(name):
-  result = try_call("ffmpeg -hide_banner -filters | grep {}".format(name))
+  result = try_call("ffmpeg -hide_banner -filters | awk '{{print $2}}' | grep -w {}".format(name))
   return result, name
 
 @memoize
