@@ -50,8 +50,8 @@ class TranscoderTest(slash.Test):
         hw = (MPEG2_ENCODE_PLATFORMS, have_ffmpeg_encoder("mpeg2_qsv"), "mpeg2_qsv"),
       ),
       "mjpeg" : dict(
-        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), "mjpeg"),
-        hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_qsv"), "mjpeg_qsv"),
+        sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), "mjpeg -global_quality 60"),
+        hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_qsv"), "mjpeg_qsv -global_quality 60"),
       ),
     },
     vpp = {
@@ -186,8 +186,6 @@ class TranscoderTest(slash.Test):
         if len(filters):
           opts += " -vf '{}'".format(','.join(filters))
         opts += " -c:v {}".format(encoder)
-        if "mjpeg" == codec:
-          opts += " -global_quality 60"
         opts += " -vframes {frames}"
         opts += " -y {}".format(ofile)
 
