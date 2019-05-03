@@ -61,7 +61,13 @@ class TranscoderTest(slash.Test):
         sw = (ALL_PLATFORMS, have_gst_element("jpegenc"), "jpegenc ! jpegparse"),
         hw = (JPEG_ENCODE_PLATFORMS, have_gst_element("vaapijpegenc"), "vaapijpegenc ! jpegparse"),
       ),
-    }
+    },
+    vpp = {
+      "scale" : dict(
+        sw = (ALL_PLATFORMS, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
+        hw = (VPP_PLATFORMS, have_gst_element("vaapipostproc"), "vaapipostproc ! video/x-raw,width={width},height={height}"),
+      ),
+    },
   )
 
   # hevc implies hevc 8 bit
@@ -85,6 +91,13 @@ class TranscoderTest(slash.Test):
     _, _, encoder = self.get_requirements_data("encode", codec, mode)
     assert encoder is not None, "failed to find a suitable encoder: {}:{}".format(codec, mode)
     return encoder.format(**vars(self))
+
+  def get_vpp_scale(self, width, height, mode):
+    if width is None and height is None:
+      return None
+    _, _, scale = self.get_requirements_data("vpp", "scale", mode)
+    assert scale is not None, "failed to find a suitable vpp scaler: {}".format(mode)
+    return scale.format(width = width or self.width, height = height or self.height)
 
   def get_file_ext(self, codec):
     return {
@@ -113,6 +126,11 @@ class TranscoderTest(slash.Test):
       oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
       platforms &= set(oplats)
       requires.append(oreq)
+
+      if output.get("width", None) is not None or output.get("height", None) is not None:
+        oplats, oreq, _ = self.get_requirements_data("vpp", "scale", mode)
+        platforms &= set(oplats)
+        requires.append(oreq)
 
     # create matchers based on command-line filters
     matchers = [Matcher(s) for s in slash.config.root.run.filter_strings]
@@ -146,13 +164,19 @@ class TranscoderTest(slash.Test):
       encoder = self.get_encoder(codec, mode)
       ext = self.get_file_ext(codec)
 
+      vppscale = self.get_vpp_scale(
+        output.get("width", None), output.get("height", None), mode)
+
       for channel in xrange(output.get("channels", 1)):
-        opts += " ! queue ! {}".format(encoder)
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
-        opts += " ! filesink location={} transcoder.".format(ofile)
-
         self.goutputs.setdefault(n, list()).append(ofile)
+
+        opts += " ! queue"
+        if vppscale is not None:
+          opts += " ! {}".format(vppscale)
+        opts += " ! {}".format(encoder)
+        opts += " ! filesink location={} transcoder.".format(ofile)
 
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
@@ -178,14 +202,15 @@ class TranscoderTest(slash.Test):
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
+        vppscale = self.get_vpp_scale(self.width, self.height, "hw")
         call(
           "gst-launch-1.0 -vf filesrc location={}"
-          " ! {}"
+          " ! {} ! {}"
           " ! videoconvert ! video/x-raw,format=I420"
           " ! checksumsink2 file-checksum=false qos=false"
           " frame-checksum=false plane-checksum=false dump-output=true"
           " dump-location={}".format(
-            encoded, self.get_decoder(output["codec"], "hw"), yuv))
+            encoded, self.get_decoder(output["codec"], "hw"), vppscale, yuv))
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)
 
