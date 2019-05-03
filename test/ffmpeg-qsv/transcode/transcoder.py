@@ -53,7 +53,13 @@ class TranscoderTest(slash.Test):
         sw = (ALL_PLATFORMS, have_ffmpeg_encoder("mjpeg"), "mjpeg"),
         hw = (JPEG_ENCODE_PLATFORMS, have_ffmpeg_encoder("mjpeg_qsv"), "mjpeg_qsv"),
       ),
-    }
+    },
+    vpp = {
+      "scale" : dict(
+        sw = (ALL_PLATFORMS, have_ffmpeg_filter("scale"), "scale=w={width}:h={height}"),
+        hw = (VPP_PLATFORMS, have_ffmpeg_filter("vpp_qsv"), "vpp_qsv=w={width}:h={height}"),
+      ),
+    },
   )
 
   # hevc implies hevc 8 bit
@@ -77,6 +83,13 @@ class TranscoderTest(slash.Test):
     _, _, encoder = self.get_requirements_data("encode", codec, mode)
     assert encoder is not None, "failed to find a suitable encoder: {}:{}".format(codec, mode)
     return encoder.format(**vars(self))
+
+  def get_vpp_scale(self, width, height, mode):
+    if width is None and height is None:
+      return None
+    _, _, scale = self.get_requirements_data("vpp", "scale", mode)
+    assert scale is not None, "failed to find a suitable vpp scaler: {}".format(mode)
+    return scale.format(width = width or self.width, height = height or self.height)
 
   def get_file_ext(self, codec):
     return {
@@ -105,6 +118,11 @@ class TranscoderTest(slash.Test):
       oplats, oreq, _ = self.get_requirements_data("encode", codec, mode)
       platforms &= set(oplats)
       requires.append(oreq)
+
+      if output.get("width", None) is not None or output.get("height", None) is not None:
+        oplats, oreq, _ = self.get_requirements_data("vpp", "scale", mode)
+        platforms &= set(oplats)
+        requires.append(oreq)
 
     # create matchers based on command-line filters
     matchers = [Matcher(s) for s in slash.config.root.run.filter_strings]
@@ -144,27 +162,34 @@ class TranscoderTest(slash.Test):
       encoder = self.get_encoder(codec, mode)
       ext = self.get_file_ext(codec)
 
+      filters = []
+      tmode = (self.mode, mode)
+
+      if ("hw", "sw") == tmode:   # HW to SW transcode
+        filters.extend(["hwdownload", "format=nv12"])
+      elif ("sw", "hw") == tmode: # SW to HW transcode
+        filters.append("format=nv12")
+
+      if "hw" == mode:            # SW/HW to HW transcode
+        filters.append("hwupload=extra_hw_frames=64")
+
+      vppscale = self.get_vpp_scale(
+        output.get("width", None), output.get("height", None), mode)
+      if vppscale is not None:
+        filters.append(vppscale)
+
       for channel in xrange(output.get("channels", 1)):
-        tmode = (self.mode, mode)
-        if ("hw", "sw") == tmode:   # HW to SW transcode
-          opts += " -vf 'hwdownload,format=nv12'"
-        elif ("sw", "hw") == tmode: # SW to HW transcode
-          opts += " -vf 'format=nv12,hwupload=extra_hw_frames=64'"
-        elif ("hw", "hw") == tmode: # HW to HW transcode
-          opts += " -vf 'hwupload=extra_hw_frames=64'"
-
-        opts += " -c:v {}".format(encoder)
-
-        if "mjpeg" == codec:
-          opts += " -global_quality 60"
-
-        opts += " -vframes {frames}"
-
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
-        opts += " -y {}".format(ofile)
-
         self.goutputs.setdefault(n, list()).append(ofile)
+
+        if len(filters):
+          opts += " -vf '{}'".format(','.join(filters))
+        opts += " -c:v {}".format(encoder)
+        if "mjpeg" == codec:
+          opts += " -global_quality 60"
+        opts += " -vframes {frames}"
+        opts += " -y {}".format(ofile)
 
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
@@ -200,9 +225,11 @@ class TranscoderTest(slash.Test):
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
+        vppscale = self.get_vpp_scale(self.width, self.height, "sw")
         call(
-          "ffmpeg -i {} -pix_fmt yuv420p -vframes {}"
-          " -y {}".format(encoded, self.frames, yuv))
+          "ffmpeg -v verbose -i {} -vf '{}' -pix_fmt yuv420p -f rawvideo"
+          " -vframes {} -y {}".format(
+            encoded, vppscale, self.frames, yuv))
         self.check_metrics(yuv, refctx = [(n, channel)])
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
