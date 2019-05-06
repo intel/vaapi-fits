@@ -45,6 +45,24 @@ class cqp(HEVC10EncoderTest):
     )
     self.encode()
 
+class cqp_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, qp, quality, profile):
+    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case    = case,
+      gop     = gop,
+      lowpower= 1,
+      profile = profile,
+      qp      = qp,
+      rcmode  = "cqp",
+      slices  = slices,
+    )
+    self.encode()
+
 class cbr(HEVC10EncoderTest):
   @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
   @slash.requires(have_ffmpeg_hevc_vaapi_encode)
@@ -57,6 +75,26 @@ class cbr(HEVC10EncoderTest):
       case = case,
       fps = fps,
       gop = gop,
+      minrate = bitrate,
+      maxrate = bitrate,
+      profile = profile,
+      rcmode = "cbr",
+      slices = slices,
+    )
+    self.encode()
+
+class cbr_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bitrate, fps, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case = case,
+      fps = fps,
+      gop = gop,
+      lowpower= 1,
       minrate = bitrate,
       maxrate = bitrate,
       profile = profile,
@@ -78,6 +116,28 @@ class vbr(HEVC10EncoderTest):
       case = case,
       fps = fps,
       gop = gop,
+      maxrate = bitrate * 2, # target percentage 50%
+      minrate = bitrate,
+      profile = profile,
+      rcmode = "vbr",
+      refs = refs,
+      slices = slices,
+    )
+    self.encode()
+
+class vbr_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
+    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case = case,
+      fps = fps,
+      gop = gop,
+      lowpower= 1,
       maxrate = bitrate * 2, # target percentage 50%
       minrate = bitrate,
       profile = profile,
