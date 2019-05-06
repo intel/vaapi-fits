@@ -43,6 +43,25 @@ class cqp(HEVC10EncoderTest):
     )
     self.encode()
 
+class cqp_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_gst_msdkh265enc)
+  @slash.requires(have_gst_msdkh265dec)
+  @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, qp, quality, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case     = case,
+      gop      = gop,
+      qp       = qp,
+      lowpower = True,
+      quality  = quality,
+      profile  = profile,
+      rcmode   = "cqp",
+      slices   = slices,
+    )
+    self.encode()
+
 class cbr(HEVC10EncoderTest):
   @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
   @slash.requires(have_gst_msdkh265enc)
@@ -61,6 +80,27 @@ class cbr(HEVC10EncoderTest):
       profile = profile,
       rcmode  = "cbr",
       slices  = slices,
+    )
+    self.encode()
+
+class cbr_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_gst_msdkh265enc)
+  @slash.requires(have_gst_msdkh265dec)
+  @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bitrate, fps, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate  = bitrate,
+      case     = case,
+      fps      = fps,
+      gop      = gop,
+      lowpower = True,
+      maxrate  = bitrate,
+      minrate  = bitrate,
+      profile  = profile,
+      rcmode   = "cbr",
+      slices   = slices,
     )
     self.encode()
 
@@ -85,5 +125,29 @@ class vbr(HEVC10EncoderTest):
       rcmode  = "vbr",
       refs    = refs,
       slices  = slices,
+    )
+    self.encode()
+
+class vbr_lp(HEVC10EncoderTest):
+  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(have_gst_msdkh265enc)
+  @slash.requires(have_gst_msdkh265dec)
+  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate  = bitrate,
+      case     = case,
+      fps      = fps,
+      gop      = gop,
+      lowpower = True,
+      # target percentage 50%
+      maxrate  = bitrate * 2,
+      minrate  = bitrate,
+      profile  = profile,
+      quality  = quality,
+      rcmode   = "vbr",
+      refs     = refs,
+      slices   = slices,
     )
     self.encode()
