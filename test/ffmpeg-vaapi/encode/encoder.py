@@ -18,7 +18,7 @@ class EncoderTest(slash.Test):
 
     opts += " -i {source}"
 
-    return opts.format(**vars(self))
+    return opts
 
   def gen_output_opts(self):
     opts = "-vf 'format={hwupfmt},hwupload' -c:v {ffenc}"
@@ -62,7 +62,7 @@ class EncoderTest(slash.Test):
 
     opts += " -vframes {frames} -y {encoded}"
 
-    return opts.format(**vars(self))
+    return opts
 
   def gen_name(self):
     name = "{case}-{rcmode}-{profile}"
@@ -90,11 +90,18 @@ class EncoderTest(slash.Test):
       name += "-{loopshp}"
     if vars(self).get("looplvl", None) is not None:
       name += "-{looplvl}"
+    if vars(self).get("r2r", None) is not None:
+      name += "-r2r"
 
-    return name.format(**vars(self))
+    return name
 
   def before(self):
     self.refctx = []
+
+  def call_ffmpeg(self, iopts, oopts):
+    self.output = call(
+      "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
+      " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
   def encode(self):
     self.mprofile = mapprofile(self.codec, self.profile)
@@ -106,20 +113,35 @@ class EncoderTest(slash.Test):
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
     vars(self).update(rcmodeu = self.rcmode.upper())
-
-    self.encoded = get_media()._test_artifact(
-      "{}.{}".format(self.gen_name(), self.get_file_ext()))
-
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
+    name  = self.gen_name()
 
-    self.output = call(
-      "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
-      " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
+    if vars(self).get("r2r", None) is not None:
+      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+      for i in xrange(self.r2r):
+        self.encoded = get_media()._test_artifact(
+          "{}_{}.{}".format(name.format(**vars(self)), i, self.get_file_ext()))
 
-    self.check_output()
-    self.check_bitrate()
-    self.check_metrics()
+        self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
+        result = md5(self.encoded)
+        get_media()._set_test_details(**{ "md5_{}".format(i) : result})
+
+        if 0 == i:
+          md5ref = result
+          continue
+ 
+        assert result == md5ref, "r2r md5 mismatch"
+        # delete encoded file after each iteration
+        get_media()._purge_test_artifact(self.encoded)
+    else:
+      self.encoded = get_media()._test_artifact(
+        "{}.{}".format(name.format(**vars(self)), self.get_file_ext()))
+
+      self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
+      self.check_output()
+      self.check_bitrate()
+      self.check_metrics()
 
   def check_output(self):
     # profile
