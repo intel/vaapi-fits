@@ -151,3 +151,26 @@ class vbr_lp(AVCEncoderTest):
       slices    = slices,
     )
     self.encode()
+
+class vbr_la(AVCEncoderTest):
+  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_h264_qsv_encode)
+  @slash.requires(have_ffmpeg_h264_qsv_decode)
+  @slash.parametrize(*gen_avc_vbr_la_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      lowpower  = 0,
+      maxrate   = bitrate * 2, # target percentage 50%
+      minrate   = bitrate,
+      profile   = profile,
+      quality   = quality,
+      rcmode    = "vbr",
+      refs      = refs,
+      ladepth   = ladepth,
+    )
+    self.encode()
