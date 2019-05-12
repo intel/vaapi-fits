@@ -125,6 +125,7 @@ def map_vpp_mirroring(method):
   return {
     "horizontal"  : 1,
     "vertical"    : 2,
+    None          : 0,
   }.get(method, None)
 
 @memoize
