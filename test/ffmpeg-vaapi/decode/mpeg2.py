@@ -9,6 +9,7 @@ from ..util import *
 from .decoder import DecoderTest
 
 spec = load_test_spec("mpeg2", "decode")
+spec_r2r = load_test_spec("mpeg2", "decode", "r2r")
 
 class default(DecoderTest):
   def before(self):
@@ -20,5 +21,13 @@ class default(DecoderTest):
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
+    self.case = case
+    self.decode()
+
+  @platform_tags(MPEG2_DECODE_PLATFORMS)
+  @slash.parametrize(("case"), sorted(spec_r2r.keys()))
+  def test_r2r(self, case):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).setdefault("r2r", 5)
     self.case = case
     self.decode()
