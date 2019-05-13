@@ -57,6 +57,8 @@ class EncoderTest(slash.Test):
       opts += " ref-frames={refs}"
     if vars(self).get("lowpower", False):
       opts += " low-power=true"
+    if vars(self).get("ladepth", None) is not None:
+      opts += " rc-lookahead={ladepth}"
 #    if vars(self).get("loopshp", None) is not None:
 #      opts += " sharpness-level={loopshp}"
 #    if vars(self).get("looplvl", None) is not None:
@@ -103,6 +105,8 @@ class EncoderTest(slash.Test):
       name += "-{loopshp}"
     if vars(self).get("looplvl", None) is not None:
       name += "-{looplvl}"
+    if vars(self).get("ladepth", None) is not None:
+      name += "-{ladepth}"
     return name.format(**vars(self))
 
   def before(self):
