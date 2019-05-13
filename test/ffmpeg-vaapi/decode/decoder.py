@@ -13,23 +13,44 @@ class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
-  def decode(self):
-    self.mformat = mapformat(self.format)
-    if self.mformat is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
-
-    self.decoded = get_media()._test_artifact(
-      "{case}_{width}x{height}_{format}.yuv".format(**vars(self)))
-
-    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
-
+  def call_ffmpeg(self):
     self.output = call(
       "ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -v verbose"
       " -i {source} -pix_fmt {mformat} -f rawvideo -vsync passthrough"
       " -vframes {frames} -y {decoded}".format(**vars(self)))
 
-    self.check_output()
-    self.check_metrics()
+  def decode(self):
+    self.mformat = mapformat(self.format)
+
+    if self.mformat is None:
+      slash.skip_test("{format} format not supported".format(**vars(self)))
+
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
+
+    if vars(self).get("r2r", None) is not None:
+      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+      for self.i in xrange(self.r2r):
+        self.decoded = get_media()._test_artifact(
+          "{case}_{width}x{height}_{format}_{i}.yuv".format(**vars(self)))
+
+        self.call_ffmpeg()
+        result = md5(self.decoded)
+        get_media()._set_test_details(**{ "md5_{}".format(self.i) : result})
+
+        if 0 == self.i:
+          md5ref = result
+          continue
+
+        assert result == md5ref, "r2r md5 mismatch"
+        # delete decoded file after each iteration
+        get_media()._purge_test_artifact(self.decoded)
+    else:
+      self.decoded = get_media()._test_artifact(
+        "{case}_{width}x{height}_{format}.yuv".format(**vars(self)))
+
+      self.call_ffmpeg()
+      self.check_output()
+      self.check_metrics()
 
   def check_output(self):
     m = re.search(
