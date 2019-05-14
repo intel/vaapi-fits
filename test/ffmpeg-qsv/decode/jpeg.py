@@ -9,6 +9,7 @@ from ..util import *
 from .decoder import DecoderTest
 
 spec = load_test_spec("jpeg", "decode")
+spec_r2r = load_test_spec("jpeg", "decode", "r2r")
 
 class default(DecoderTest):
   def before(self):
@@ -16,14 +17,25 @@ class default(DecoderTest):
     self.metric = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
     super(default, self).before()
 
-  @platform_tags(JPEG_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mjpeg_qsv_decode)
-  @slash.parametrize(("case"), sorted(spec.keys()))
-  def test(self, case):
-    vars(self).update(spec[case].copy())
+  def init(self, tspec, case):
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
       ffdecoder = "mjpeg_qsv",
       hwformat  = "nv12",
     )
+
+  @platform_tags(JPEG_DECODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_mjpeg_qsv_decode)
+  @slash.parametrize(("case"), sorted(spec.keys()))
+  def test(self, case):
+    self.init(spec, case)
+    self.decode()
+
+  @platform_tags(JPEG_DECODE_PLATFORMS)
+  @slash.requires(have_ffmpeg_mjpeg_qsv_decode)
+  @slash.parametrize(("case"), sorted(spec_r2r.keys()))
+  def test_r2r(self, case):
+    self.init(spec_r2r, case)
+    vars(self).setdefault("r2r", 5)
     self.decode()
