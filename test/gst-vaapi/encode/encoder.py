@@ -20,7 +20,7 @@ class EncoderTest(slash.Test):
 
     opts += " ! videoconvert ! video/x-raw,format={hwformat}"
 
-    return opts.format(**vars(self))
+    return opts
 
   def gen_output_opts(self):
     opts = "{gstencoder}"
@@ -72,7 +72,7 @@ class EncoderTest(slash.Test):
 
     opts += " ! filesink location={encoded}"
 
-    return opts.format(**vars(self))
+    return opts
 
   def gen_name(self):
     name = "{case}-{rcmode}-{profile}"
@@ -102,7 +102,13 @@ class EncoderTest(slash.Test):
       name += "-{loopshp}"
     if vars(self).get("looplvl", None) is not None:
       name += "-{looplvl}"
-    return name.format(**vars(self))
+    return name
+
+  def call_encode(self, iopts, oopts):
+    self.output = call(
+      "gst-launch-1.0 -vf"
+       " {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts)
+    )
 
   def before(self):
     self.refctx = []
@@ -118,23 +124,40 @@ class EncoderTest(slash.Test):
     if self.mformat is None:
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
-    self.encoded = get_media()._test_artifact(
-      "{}.{}".format(self.gen_name(), self.get_file_ext()))
-
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
+    name  = self.gen_name()
 
-    self.output = call(
-      "gst-launch-1.0 -vf"
-      " {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts)
-    )
+    if vars(self).get("r2r", None) is not None:
+      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+      for i in xrange(self.r2r):
+        self.encoded = get_media()._test_artifact(
+          "{}_{}.{}".format(name.format(**vars(self)), i, self.get_file_ext()))
+        self.call_encode(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
-    self.check_bitrate()
-    self.check_metrics()
+        result = md5(self.encoded)
+        get_media()._set_test_details(**{"md5_{}".format(i): result})
+
+        if i == 0:
+          md5ref = result
+          continue
+
+        assert md5ref == result, "r2r md5 mismatch"
+        # delete encoded file after each iteration
+        get_media()._purge_test_artifact(self.encoded)
+
+    else:
+      self.encoded = get_media()._test_artifact(
+          "{}.{}".format(name.format(**vars(self)), self.get_file_ext()))
+
+      self.call_encode(iopts.format(**vars(self)), oopts.format(**vars(self)))
+      self.check_bitrate()
+      self.check_metrics()
 
   def check_metrics(self):
+    name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact(
-      "{}-{width}x{height}-{format}.yuv".format(self.gen_name(), **vars(self)))
+      "{}-{width}x{height}-{format}.yuv".format(name, **vars(self)))
 
     call(
       "gst-launch-1.0 -vf filesrc location={encoded}"
