@@ -9,6 +9,7 @@ from ..util import *
 from .encoder import EncoderTest
 
 spec = load_test_spec("mpeg2", "encode")
+spec_r2r = load_test_spec("mpeg2", "encode", "r2r")
 
 class MPEG2EncoderTest(EncoderTest):
   def before(self):
@@ -25,12 +26,8 @@ class MPEG2EncoderTest(EncoderTest):
     return "mpg"
 
 class cqp(MPEG2EncoderTest):
-  @platform_tags(MPEG2_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkmpeg2enc)
-  @slash.requires(have_gst_msdkmpeg2dec)
-  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['high', 'main', 'simple']))
-  def test(self, case, gop, bframes, qp, quality, profile):
-    vars(self).update(spec[case].copy())
+  def init(self, tspec, case, gop, bframes, qp, quality, profile):
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
       case    = case,
@@ -41,4 +38,19 @@ class cqp(MPEG2EncoderTest):
       quality = quality,
       rcmode  = "cqp",
     )
+
+  @platform_tags(MPEG2_ENCODE_PLATFORMS)
+  @slash.requires(have_gst_msdkmpeg2enc)
+  @slash.requires(have_gst_msdkmpeg2dec)
+  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['high', 'main', 'simple']))
+  def test(self, case, gop, bframes, qp, quality, profile):
+    self.init(spec, case, gop, bframes, qp, quality, profile)
+    self.encode()
+
+  @platform_tags(MPEG2_ENCODE_PLATFORMS)
+  @slash.requires(have_gst_msdkmpeg2enc)
+  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r, ['high', 'main', 'simple']))
+  def test_r2r(self, case, gop, bframes, qp, quality, profile):
+    self.init(spec_r2r, case, gop, bframes, qp, quality, profile)
+    vars(self).setdefault("r2r", 5)
     self.encode()
