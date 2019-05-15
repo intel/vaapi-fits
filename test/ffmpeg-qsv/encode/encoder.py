@@ -146,8 +146,9 @@ class EncoderTest(slash.Test):
       assert m is not None, "It appears that the lookahead did not load"
 
   def check_metrics(self):
+    name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact(
-      "{}-{width}x{height}-{format}.yuv".format(self.gen_name(), **vars(self)))
+      "{}-{width}x{height}-{format}.yuv".format(name, **vars(self)))
 
     call(
       "ffmpeg -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -v verbose"
