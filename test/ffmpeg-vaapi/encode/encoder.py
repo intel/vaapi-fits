@@ -184,8 +184,9 @@ class EncoderTest(slash.Test):
     assert m is not None, "Possible incorrect IPB mode used"
 
   def check_metrics(self):
+    name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact(
-      "{}-{width}x{height}-{format}.yuv".format(self.gen_name(), **vars(self)))
+      "{}-{width}x{height}-{format}.yuv".format(name, **vars(self)))
 
     call(
       "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
