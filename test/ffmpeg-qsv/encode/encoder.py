@@ -108,31 +108,25 @@ class EncoderTest(slash.Test):
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
-    name  = self.gen_name()
+    name  = self.gen_name().format(**vars(self))
+    ext   = self.get_file_ext()
 
+    self.encoded = get_media()._test_artifact("{}.{}".format(name, ext))
+    self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      for i in xrange(self.r2r):
-        self.encoded = get_media()._test_artifact(
-          "{}_{}.{}".format(name.format(**vars(self)), i, self.get_file_ext()))
-
+      md5ref = md5(self.encoded)
+      get_media()._set_test_details(md5_ref = md5ref)
+      for i in xrange(1, self.r2r):
+        self.encoded = get_media()._test_artifact("{}_{}.{}".format(name, i, ext))
         self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
         result = md5(self.encoded)
-        get_media()._set_test_details(**{ "md5_{}".format(i) : result})
-
-        if 0 == i:
-          md5ref = result
-          continue
- 
+        get_media()._set_test_details(**{"md5_{:03}".format(i) : result})
         assert result == md5ref, "r2r md5 mismatch"
         # delete encoded file after each iteration
         get_media()._purge_test_artifact(self.encoded)
     else:
-      self.encoded = get_media()._test_artifact(
-        "{}.{}".format(name.format(**vars(self)), self.get_file_ext()))
-
-      self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
       self.check_output()
       self.check_bitrate()
       self.check_metrics()
@@ -146,15 +140,14 @@ class EncoderTest(slash.Test):
       assert m is not None, "It appears that the lookahead did not load"
 
   def check_metrics(self):
-    name = self.gen_name().format(**vars(self))
-    self.decoded = get_media()._test_artifact(
-      "{}-{width}x{height}-{format}.yuv".format(name, **vars(self)))
+    iopts = "-c:v {ffdecoder} -i {encoded}"
+    oopts = (
+      "-vf 'hwdownload,format={hwformat}' -pix_fmt {mformat} -f rawvideo"
+      " -vsync passthrough -vframes {frames} -y {decoded}")
+    name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
 
-    call(
-      "ffmpeg -hwaccel qsv -hwaccel_device /dev/dri/renderD128 -v verbose"
-      " -c:v {ffdecoder} -i {encoded} -vf 'hwdownload,format={hwformat}'"
-      " -pix_fmt {mformat} -f rawvideo -vsync passthrough -vframes {frames}"
-      " -y {decoded}".format(**vars(self)))
+    self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     get_media().baseline.check_psnr(
       psnr = calculate_psnr(
