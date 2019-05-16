@@ -9,6 +9,7 @@ from ..util import *
 from .decoder import DecoderTest
 
 spec = load_test_spec("jpeg", "decode")
+spec_r2r = load_test_spec("jpeg", "decode", "r2r")
 
 class default(DecoderTest):
   def before(self):
@@ -25,4 +26,16 @@ class default(DecoderTest):
       case        = case,
       gstdecoder  = "jpegparse ! msdkmjpegdec",
     )
+    self.decode()
+
+  @platform_tags(JPEG_DECODE_PLATFORMS)
+  @slash.requires(*have_gst_element("msdkmjpegdec"))
+  @slash.parametrize(("case"), sorted(spec_r2r.keys()))
+  def test_r2r(self, case):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "jpegparse ! msdkmjpegdec",
+    )
+    vars(self).setdefault("r2r", 5)
     self.decode()

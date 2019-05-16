@@ -9,6 +9,7 @@ from ..util import *
 from .decoder import DecoderTest
 
 spec = load_test_spec("mpeg2", "decode")
+spec_r2r = load_test_spec("mpeg2", "decode", "r2r")
 
 class default(DecoderTest):
   def before(self):
@@ -25,4 +26,16 @@ class default(DecoderTest):
       case        = case,
       gstdecoder  = "mpegvideoparse ! msdkmpeg2dec",
     )
+    self.decode()
+
+  @platform_tags(MPEG2_DECODE_PLATFORMS)
+  @slash.requires(*have_gst_element("msdkmpeg2dec"))
+  @slash.parametrize(("case"), sorted(spec_r2r.keys()))
+  def test_r2r(self, case):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "mpegvideoparse ! msdkmpeg2dec",
+    )
+    vars(self).setdefault("r2r", 5)
     self.decode()
