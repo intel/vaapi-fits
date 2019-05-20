@@ -11,7 +11,7 @@ spec = load_test_spec("vpp", "csc")
 
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_vaapi_accel)
-@slash.requires(*have_ffmpeg_filter("colorspace"))
+@slash.requires(*have_ffmpeg_filter("scale_vaapi"))
 @slash.parametrize(*gen_vpp_csc_parameters(spec))
 @platform_tags(VPP_PLATFORMS)
 def test_default(case, csc):
