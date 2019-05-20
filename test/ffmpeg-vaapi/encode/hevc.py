@@ -43,14 +43,14 @@ class cqp(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
@@ -72,14 +72,14 @@ class cqp_lp(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main']))
   def test(self, case, gop, slices, qp, quality, profile):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, qp, quality, profile)
@@ -103,14 +103,14 @@ class cbr(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, profile)
@@ -134,14 +134,14 @@ class cbr_lp(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main']))
   def test(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, profile)
@@ -167,14 +167,14 @@ class vbr(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
@@ -200,14 +200,14 @@ class vbr_lp(HEVC8EncoderTest):
     )
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main']))
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)

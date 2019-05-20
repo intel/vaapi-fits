@@ -44,14 +44,14 @@ class cqp(MPEG2EncoderTest):
     )
 
   @platform_tags(MPEG2_ENCODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mpeg2_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['main', 'simple']))
   def test(self, case, gop, bframes, qp, quality, profile):
     self.init(spec, case, gop, bframes, qp, quality, profile)
     self.encode()
 
   @platform_tags(MPEG2_ENCODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mpeg2_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r, ['main', 'simple']))
   def test_r2r(self, case, gop, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, bframes, qp, quality, profile)

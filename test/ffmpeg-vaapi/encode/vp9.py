@@ -28,7 +28,7 @@ spec = load_test_spec("vp9", "encode", "8bit")
 
 class cqp(VP9EncoderTest):
   @platform_tags(VP9_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_vp9_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
   @slash.parametrize(*gen_vp9_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
@@ -46,7 +46,7 @@ class cqp(VP9EncoderTest):
 
 class cbr(VP9EncoderTest):
   @platform_tags(VP9_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_vp9_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
   @slash.parametrize(*gen_vp9_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
@@ -67,7 +67,7 @@ class cbr(VP9EncoderTest):
 
 class vbr(VP9EncoderTest):
   @platform_tags(VP9_ENCODE_8BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_vp9_vaapi_encode)
+  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
   @slash.parametrize(*gen_vp9_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")

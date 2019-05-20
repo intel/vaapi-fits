@@ -15,33 +15,6 @@ def have_ffmpeg_vaapi_accel():
   return try_call("ffmpeg -hide_banner -hwaccels | grep vaapi")
 
 @memoize
-def have_ffmpeg_h264_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep h264_vaapi")
-
-@memoize
-def have_ffmpeg_hevc_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep hevc_vaapi")
-
-def have_ffmpeg_mjpeg_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep mjpeg_vaapi")
-
-@memoize
-def have_ffmpeg_mpeg2_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep mpeg2_vaapi")
-
-@memoize
-def have_ffmpeg_vc1_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep vc1_vaapi")
-
-@memoize
-def have_ffmpeg_vp8_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep vp8_vaapi")
-
-@memoize
-def have_ffmpeg_vp9_vaapi_encode():
-  return try_call("ffmpeg -hide_banner -encoders | grep vp9_vaapi")
-
-@memoize
 def have_ffmpeg_filter(name):
   result = try_call("ffmpeg -hide_banner -filters | awk '{{print $2}}' | grep -w {}".format(name))
   return result, name
