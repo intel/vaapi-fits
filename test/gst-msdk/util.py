@@ -14,54 +14,6 @@ def have_gst():
   return try_call("which gst-launch-1.0") and try_call("which gst-inspect-1.0")
 
 @memoize
-def have_gst_msdk():
-  return try_call("gst-inspect-1.0 msdk")
-
-@memoize
-def have_gst_msdkh264dec():
-  return try_call("gst-inspect-1.0 msdkh264dec")
-
-@memoize
-def have_gst_msdkh265dec():
-  return try_call("gst-inspect-1.0 msdkh265dec")
-
-@memoize
-def have_gst_msdkmjpegdec():
-  return try_call("gst-inspect-1.0 msdkmjpegdec")
-
-@memoize
-def have_gst_msdkmpeg2dec():
-  return try_call("gst-inspect-1.0 msdkmpeg2dec")
-
-@memoize
-def have_gst_msdkvc1dec():
-  return try_call("gst-inspect-1.0 msdkvc1dec")
-
-@memoize
-def have_gst_msdkvp8dec():
-  return try_call("gst-inspect-1.0 msdkvp8dec")
-
-@memoize
-def have_gst_msdkh264enc():
-  return try_call("gst-inspect-1.0 msdkh264enc")
-
-@memoize
-def have_gst_msdkh265enc():
-  return try_call("gst-inspect-1.0 msdkh265enc")
-
-@memoize
-def have_gst_msdkmjpegenc():
-  return try_call("gst-inspect-1.0 msdkmjpegenc")
-
-@memoize
-def have_gst_msdkmpeg2enc():
-  return try_call("gst-inspect-1.0 msdkmpeg2enc")
-
-@memoize
-def have_gst_msdkvp8enc():
-  return try_call("gst-inspect-1.0 msdkvp8enc")
-
-@memoize
 def have_gst_element(element):
   result = try_call("gst-inspect-1.0 {}".format(element))
   return result, element

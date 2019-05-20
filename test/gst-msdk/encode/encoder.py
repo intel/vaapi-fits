@@ -8,7 +8,7 @@ from ....lib import *
 from ..util import *
 
 @slash.requires(have_gst)
-@slash.requires(have_gst_msdk)
+@slash.requires(*have_gst_element("msdk"))
 @slash.requires(*have_gst_element("checksumsink2"))
 @slash.requires(using_compatible_driver)
 class EncoderTest(slash.Test):

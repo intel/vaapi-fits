@@ -40,15 +40,15 @@ class cqp(MPEG2EncoderTest):
     )
 
   @platform_tags(MPEG2_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkmpeg2enc)
-  @slash.requires(have_gst_msdkmpeg2dec)
+  @slash.requires(*have_gst_element("msdkmpeg2enc"))
+  @slash.requires(*have_gst_element("msdkmpeg2dec"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['high', 'main', 'simple']))
   def test(self, case, gop, bframes, qp, quality, profile):
     self.init(spec, case, gop, bframes, qp, quality, profile)
     self.encode()
 
   @platform_tags(MPEG2_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkmpeg2enc)
+  @slash.requires(*have_gst_element("msdkmpeg2enc"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r, ['high', 'main', 'simple']))
   def test_r2r(self, case, gop, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, bframes, qp, quality, profile)

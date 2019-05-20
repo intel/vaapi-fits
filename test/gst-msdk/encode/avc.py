@@ -42,15 +42,15 @@ class cqp(AVCEncoderTest):
     self.encode()
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
@@ -72,15 +72,15 @@ class cqp_lp(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_CQP_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, qp, quality, profile):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_CQP_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, qp, quality, profile)
@@ -105,15 +105,15 @@ class cbr(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, profile)
@@ -137,15 +137,15 @@ class cbr_lp(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, profile)
@@ -173,15 +173,15 @@ class vbr(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
@@ -208,15 +208,15 @@ class vbr_lp(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
@@ -243,15 +243,15 @@ class vbr_la(AVCEncoderTest):
     )
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
-  @slash.requires(have_gst_msdkh264dec)
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
   @slash.parametrize(*gen_avc_vbr_la_parameters(spec, ['main', 'high', 'constrained-baseline']))
   def test(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
     self.init(spec, case, bframes, bitrate, fps, quality, refs, profile, ladepth)
     self.encode()
 
   @platform_tags(AVC_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkh264enc)
+  @slash.requires(*have_gst_element("msdkh264enc"))
   @slash.parametrize(*gen_avc_vbr_la_parameters(spec_r2r, ['main', 'high', 'constrained-baseline']))
   def test_r2r(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
     self.init(spec_r2r, case, bframes, bitrate, fps, quality, refs, profile, ladepth)
