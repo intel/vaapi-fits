@@ -26,14 +26,14 @@ class default(DecoderTest):
     )
 
   @platform_tags(JPEG_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mjpeg_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("mjpeg_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     self.init(spec, case)
     self.decode()
 
   @platform_tags(JPEG_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mjpeg_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("mjpeg_qsv"))
   @slash.parametrize(("case"), sorted(spec_r2r.keys()))
   def test_r2r(self, case):
     self.init(spec_r2r, case)

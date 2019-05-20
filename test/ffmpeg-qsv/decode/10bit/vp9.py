@@ -17,7 +17,7 @@ class default(DecoderTest):
     super(default, self).before()
 
   @platform_tags(VP9_DECODE_10BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_vp9_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())

@@ -41,7 +41,7 @@ class cqp(JPEGEncoderTest):
     )
 
   @platform_tags(JPEG_ENCODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mjpeg_qsv_encode)
+  @slash.requires(*have_ffmpeg_encoder("mjpeg_qsv"))
   ## NOTE: Temporary Workaround for qsv mjpeg encode test until
   ## a qsv mjpeg decoder is available.
   @slash.requires(have_ffmpeg_vaapi_accel)
@@ -52,7 +52,7 @@ class cqp(JPEGEncoderTest):
     self.encode()
 
   @platform_tags(JPEG_ENCODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_mjpeg_qsv_encode)
+  @slash.requires(*have_ffmpeg_encoder("mjpeg_qsv"))
   ## NOTE: Temporary Workaround for qsv mjpeg encode test until
   ## a qsv mjpeg decoder is available.
   @slash.requires(have_ffmpeg_vaapi_accel)
