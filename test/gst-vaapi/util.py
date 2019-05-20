@@ -11,66 +11,6 @@ def have_gst():
   return try_call("which gst-launch-1.0") and try_call("which gst-inspect-1.0")
 
 @memoize
-def have_gst_vaapi():
-  return try_call("gst-inspect-1.0 vaapi")
-
-@memoize
-def have_gst_vaapih264dec():
-  return try_call("gst-inspect-1.0 vaapih264dec")
-
-@memoize
-def have_gst_vaapih265dec():
-  return try_call("gst-inspect-1.0 vaapih265dec")
-
-@memoize
-def have_gst_vaapijpegdec():
-  return try_call("gst-inspect-1.0 vaapijpegdec")
-
-@memoize
-def have_gst_vaapimpeg2dec():
-  return try_call("gst-inspect-1.0 vaapimpeg2dec")
-
-@memoize
-def have_gst_vaapivc1dec():
-  return try_call("gst-inspect-1.0 vaapivc1dec")
-
-@memoize
-def have_gst_vaapivp8dec():
-  return try_call("gst-inspect-1.0 vaapivp8dec")
-
-@memoize
-def have_gst_vaapivp9dec():
-  return try_call("gst-inspect-1.0 vaapivp9dec")
-
-@memoize
-def have_gst_vaapih264enc():
-  return try_call("gst-inspect-1.0 vaapih264enc")
-
-@memoize
-def have_gst_vaapih265enc():
-  return try_call("gst-inspect-1.0 vaapih265enc")
-
-@memoize
-def have_gst_vaapijpegenc():
-  return try_call("gst-inspect-1.0 vaapijpegenc")
-
-@memoize
-def have_gst_vaapimpeg2enc():
-  return try_call("gst-inspect-1.0 vaapimpeg2enc")
-
-@memoize
-def have_gst_vaapivc1enc():
-  return try_call("gst-inspect-1.0 vaapivc1enc")
-
-@memoize
-def have_gst_vaapivp8enc():
-  return try_call("gst-inspect-1.0 vaapivp8enc")
-
-@memoize
-def have_gst_vaapipostproc():
-  return try_call("gst-inspect-1.0 vaapipostproc")
-
-@memoize
 def have_gst_element(element):
   result = try_call("gst-inspect-1.0 {}".format(element))
   return result, element
