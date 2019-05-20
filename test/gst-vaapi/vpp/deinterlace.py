@@ -6,16 +6,13 @@
 
 from ....lib import *
 from ..util import *
+from .vpp import VppTest
 
 if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "gst-vaapi: vpp deinterlace with raw input is no longer supported")
 
-@slash.requires(have_gst)
-@slash.requires(*have_gst_element("vaapi"))
-@slash.requires(*have_gst_element("vaapipostproc"))
-@slash.requires(*have_gst_element("checksumsink2"))
-class DeinterlaceTest(slash.Test):
+class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
     "weave",
@@ -30,25 +27,22 @@ class DeinterlaceTest(slash.Test):
   def before(self):
     # default metric
     self.metric = dict(type = "md5")
-    self.refctx = []
+    vars(self).update(
+      vpp_element = "deinterlace"
+    )
+    super(DeinterlaceTest, self).before()
 
-  @timefn("gst")
-  def call_gst(self):
-    call(
-      "gst-launch-1.0 -vf filesrc location={source} ! {gstdecoder}"
-      " ! vaapipostproc deinterlace-mode=1 deinterlace-method={mmethod}"
-      " width={width} height={height}"
-      " ! videoconvert ! video/x-raw,format={mformatu}"
-      " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-      " plane-checksum=false dump-output=true dump-location={decoded}"
-      "".format(**vars(self)))
 
-  def get_name_tmpl(self):
-    return "{case}_di_{method}_{rate}_{width}x{height}_{format}"
+  def init(self, tspec, case, method, rate):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(case = case, method = method, rate = rate)
 
   def deinterlace(self):
     self.mformatu = mapformatu(self.format)
     self.mmethod  = map_deinterlace_method(self.method)
+    self.gstdecoder = self.gstdecoder.format(**vars(self))
+    # field rate produces double number of frames
+    self.frames *= 2
 
     # The rate is fixed in vaapipostproc deinterlace.  It always outputs at
     # field rate (one frame of output for each field).
@@ -61,20 +55,15 @@ class DeinterlaceTest(slash.Test):
     if self.mmethod is None:
       slash.skip_test("{method} method not supported".format(**vars(self)))
 
-    name = self.get_name_tmpl().format(**vars(self))
-    self.decoded = get_media()._test_artifact("{}.raw".format(name))
-    # field rate produces double number of frames
-    self.frames *= 2
-    self.gstdecoder = self.gstdecoder.format(**vars(self))
-    self.call_gst()
-    self.check_metrics()
+    self.vpp()
 
   def check_metrics(self):
     if vars(self).get("reference", None) is not None:
       self.reference = format_value(self.reference, **vars(self))
-    check_metric(**vars(self))
+    check_metric(decoded = self.ofile, **vars(self))
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+spec_avc_r2r = load_test_spec("vpp", "deinterlace", "avc", "r2r")
 class avc(DeinterlaceTest):
   def before(self):
     self.gstdecoder = "h264parse ! vaapih264dec"
@@ -86,11 +75,21 @@ class avc(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_avc, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_avc[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_avc, case, method, rate)
+    self.deinterlace()
+
+  @platform_tags(set(AVC_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapih264dec"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_avc_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_avc_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
     self.deinterlace()
 
 spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+spec_mpeg2_r2r = load_test_spec("vpp", "deinterlace", "mpeg2", "r2r")
 class mpeg2(DeinterlaceTest):
   def before(self):
     self.gstdecoder = "mpegvideoparse ! vaapimpeg2dec"
@@ -102,11 +101,21 @@ class mpeg2(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_mpeg2[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_mpeg2, case, method, rate)
+    self.deinterlace()
+
+  @platform_tags(set(MPEG2_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapimpeg2dec"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_mpeg2_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_mpeg2_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
     self.deinterlace()
 
 spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+spec_vc1_r2r = load_test_spec("vpp", "deinterlace", "vc1", "r2r")
 class vc1(DeinterlaceTest):
   def before(self):
     self.gstdecoder  = "'video/x-wmv,profile=(string)advanced',width={width}"
@@ -119,6 +128,15 @@ class vc1(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_vc1, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_vc1[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_vc1, case, method, rate)
+    self.deinterlace()
+
+  @platform_tags(set(VC1_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapivc1dec"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_vc1_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_vc1_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
     self.deinterlace()

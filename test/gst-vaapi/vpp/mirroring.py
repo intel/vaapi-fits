@@ -6,33 +6,26 @@
 
 from ....lib import *
 from ..util import *
+from .vpp import VppTest
 
 spec = load_test_spec("vpp", "mirroring")
 
-@slash.requires(have_gst)
-@slash.requires(*have_gst_element("vaapi"))
-@slash.requires(*have_gst_element("vaapipostproc"))
-@slash.requires(*have_gst_element("checksumsink2"))
-@slash.parametrize(*gen_vpp_mirroring_parameters(spec))
-@platform_tags(VPP_TRANSFORM_PLATFORMS)
-def test_default(case, method):
-  params = spec[case].copy()
-  params.update(
-    method = method, mmethod = map_vpp_mirroring(method),
-    mformat = mapformat(params["format"]),
-    hwup_format = mapformat_hwup(params["format"]))
-  params["ofile"] = get_media()._test_artifact(
-    "{case}_mirroring_{method}_{format}_{width}x{height}"
-    ".yuv".format(case = case, **params))
+class default(VppTest):
+  def before(self):
+    vars(self).update(
+      vpp_element = "mirroring"
+    )
+    super(default, self).before()
 
-  call(
-    "gst-launch-1.0 -vf filesrc location={source} num-buffers={frames}"
-    " ! rawvideoparse format={mformat} width={width} height={height}"
-    " ! videoconvert ! video/x-raw, format={hwup_format}"
-    " ! vaapipostproc format={mformat} width={width} height={height}"
-    " video-direction={mmethod} ! checksumsink2 file-checksum=false"
-    " frame-checksum=false plane-checksum=false dump-output=true"
-    " dump-location={ofile}".format(**params))
+  @slash.parametrize(*gen_vpp_mirroring_parameters(spec))
+  @platform_tags(VPP_TRANSFORM_PLATFORMS)
+  def test(self, case, method):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      method = method, mmethod = map_vpp_mirroring(method),
+      case = case)
+    self.vpp()
 
-  get_media().baseline.check_md5(
-    md5 = md5(params["ofile"]), context = params.get("refctx", []))
+  def check_metrics(self):
+    get_media().baseline.check_md5(
+      md5 = md5(self.ofile), context = vars(self).get("refctx", []))
