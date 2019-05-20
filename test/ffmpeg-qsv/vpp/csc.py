@@ -11,7 +11,7 @@ spec = load_test_spec("vpp", "csc")
 
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_qsv_accel)
-@slash.requires(*have_ffmpeg_filter("vpp_qsv"))
+@slash.requires(*have_ffmpeg_filter("scale_qsv"))
 @slash.requires(using_compatible_driver)
 @slash.parametrize(*gen_vpp_csc_parameters(spec))
 @platform_tags(VPP_PLATFORMS)
