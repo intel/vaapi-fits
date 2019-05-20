@@ -26,14 +26,14 @@ class default(DecoderTest):
     )
 
   @platform_tags(VC1_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_vc1_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("vc1_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     self.init(spec, case)
     self.decode()
 
   @platform_tags(VC1_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_vc1_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("vc1_qsv"))
   @slash.parametrize(("case"), sorted(spec_r2r.keys()))
   def test_r2r(self, case):
     self.init(spec_r2r, case)

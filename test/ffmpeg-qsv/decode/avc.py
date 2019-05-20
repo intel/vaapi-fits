@@ -17,7 +17,7 @@ class default(DecoderTest):
     super(default, self).before()
 
   @platform_tags(AVC_DECODE_PLATFORMS)
-  @slash.requires(have_ffmpeg_h264_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())

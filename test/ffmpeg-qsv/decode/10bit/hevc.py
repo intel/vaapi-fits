@@ -17,7 +17,7 @@ class default(DecoderTest):
     super(default, self).before()
 
   @platform_tags(HEVC_DECODE_10BIT_PLATFORMS)
-  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P010"]]))
   def test(self, case):
     vars(self).update(spec[case].copy())
@@ -29,7 +29,7 @@ class default(DecoderTest):
     self.decode()
 
   @platform_tags(set(HEVC_DECODE_10BIT_PLATFORMS) & set(DECODE_10BIT_422_PLATFORMS))
-  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P210"]]))
   def test_422(self, case):
     vars(self).update(spec[case].copy())
@@ -41,7 +41,7 @@ class default(DecoderTest):
     self.decode()
 
   @platform_tags(set(HEVC_DECODE_10BIT_PLATFORMS) & set(DECODE_10BIT_444_PLATFORMS))
-  @slash.requires(have_ffmpeg_hevc_qsv_decode)
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in ["P410"]]))
   def test_444(self, case):
     vars(self).update(spec[case].copy())
