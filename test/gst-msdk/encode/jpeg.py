@@ -36,15 +36,15 @@ class cqp(JPEGEncoderTest):
     )
 
   @platform_tags(JPEG_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkmjpegenc)
-  @slash.requires(have_gst_msdkmjpegdec)
+  @slash.requires(*have_gst_element("msdkmjpegenc"))
+  @slash.requires(*have_gst_element("msdkmjpegdec"))
   @slash.parametrize(*gen_jpeg_cqp_parameters(spec))
   def test(self, case, quality):
     self.init(spec, case, quality)
     self.encode()
 
   @platform_tags(JPEG_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkmjpegenc)
+  @slash.requires(*have_gst_element("msdkmjpegenc"))
   @slash.parametrize(*gen_jpeg_cqp_parameters(spec_r2r))
   def test_r2r(self, case, quality):
     self.init(spec_r2r, case, quality)

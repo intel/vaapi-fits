@@ -27,8 +27,8 @@ class VP8EncoderTest(EncoderTest):
 
 class cqp(VP8EncoderTest):
   @platform_tags(VP8_ENCODE_PLATFORMS)
-  @slash.requires(have_gst_msdkvp8enc)
-  @slash.requires(have_gst_msdkvp8dec)
+  @slash.requires(*have_gst_element("msdkvp8enc"))
+  @slash.requires(*have_gst_element("msdkvp8dec"))
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     if looplvl != 0 or loopshp != 0:
