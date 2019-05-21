@@ -208,13 +208,13 @@ class vbr_lp(AVCEncoderTest):
   @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.int(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
+    self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
   @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
   @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.int(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
+    self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
