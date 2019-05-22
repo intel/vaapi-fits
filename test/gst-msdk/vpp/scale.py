@@ -9,6 +9,7 @@ from ..util import *
 from .vpp import VppTest
 
 spec = load_test_spec("vpp", "scale")
+spec_r2r = load_test_spec("vpp", "scale", "r2r")
 
 class default(VppTest):
   def before(self):
@@ -27,6 +28,13 @@ class default(VppTest):
   @platform_tags(VPP_PLATFORMS)
   def test(self, case, scale_width, scale_height):
     self.init(spec, case, scale_width, scale_height)
+    self.vpp()
+
+  @slash.parametrize(*gen_vpp_scale_parameters(spec_r2r))
+  @platform_tags(VPP_PLATFORMS)
+  def test_r2r(self, case, scale_width, scale_height):
+    self.init(spec_r2r, case, scale_width, scale_height)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
 
   def check_metrics(self):

@@ -102,6 +102,9 @@ class VppTest(slash.Test):
     elif  self.vpp_element in ["transpose"]:
       name += "_rotation_{degrees}_{method}"
 
+    if vars(self).get("r2r", None) is not None:
+      name += "_r2r"
+
     name += "_{format}"
 
     return name
@@ -119,4 +122,19 @@ class VppTest(slash.Test):
     self.ofile = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
-    self.check_metrics()
+    if vars(self).get("r2r", None) is not None:
+      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+      md5ref = md5(self.ofile)
+      get_media()._set_test_details(md5_ref = md5ref)
+
+      for i in xrange(1, self.r2r):
+        self.ofile = get_media()._test_artifact(
+          "{}_{}.yuv".format(name, i))
+        self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
+        result = md5(self.ofile)
+        get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})
+        assert result == md5ref, "r2r md5 mismatch"
+        #delete output file after each iteration
+        get_media()._purge_test_artifact(self.ofile)
+    else:
+      self.check_metrics()

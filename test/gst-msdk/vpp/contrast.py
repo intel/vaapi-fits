@@ -9,6 +9,7 @@ from ..util import *
 from .vpp import VppTest
 
 spec = load_test_spec("vpp", "contrast")
+spec_r2r = load_test_spec("vpp", "contrast", "r2r")
 
 class default(VppTest):
   def before(self):
@@ -28,6 +29,13 @@ class default(VppTest):
   @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     self.init(spec, case, level)
+    self.vpp()
+
+  @slash.parametrize(*gen_vpp_contrast_parameters(spec_r2r))
+  @platform_tags(VPP_PLATFORMS)
+  def test_r2r(self, case, level):
+    self.init(spec_r2r, case, level)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
 
   def check_metrics(self):
