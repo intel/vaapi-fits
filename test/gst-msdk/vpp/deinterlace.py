@@ -6,17 +6,13 @@
 
 from ....lib import *
 from ..util import *
+from .vpp import VppTest
 
 if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "gst-msdk: vpp deinterlace with raw input is no longer supported")
 
-@slash.requires(have_gst)
-@slash.requires(*have_gst_element("msdk"))
-@slash.requires(*have_gst_element("msdkvpp"))
-@slash.requires(*have_gst_element("checksumsink2"))
-@slash.requires(using_compatible_driver)
-class DeinterlaceTest(slash.Test):
+class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
     "advanced",
@@ -32,25 +28,15 @@ class DeinterlaceTest(slash.Test):
   def before(self):
     # default metric
     self.metric = dict(type = "md5")
-    self.refctx = []
-
-  @timefn("gst")
-  def call_gst(self):
-    call(
-      "gst-launch-1.0 -vf filesrc location={source} ! {gstdecoder}"
-      " ! msdkvpp hardware=true deinterlace-mode=1 deinterlace-method={mmethod}"
-      " ! video/x-raw,format=NV12,width={width},height={height}"
-      " ! videoconvert ! video/x-raw,format={mformatu}"
-      " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-      " plane-checksum=false dump-output=true dump-location={decoded}"
-      "".format(**vars(self)))
-
-  def get_name_tmpl(self):
-    return "{case}_di_{method}_{rate}_{width}x{height}_{format}"
+    vars(self).update(
+      vpp_element = "deinterlace"
+    )
+    super(DeinterlaceTest, self).before()
 
   def deinterlace(self):
     self.mformatu = mapformatu(self.format)
     self.mmethod  = map_deinterlace_method(self.method)
+    self.gstdecoder = self.gstdecoder.format(**vars(self))
 
     # The rate is fixed in msdkvpp deinterlace.  It always outputs at
     # frame rate (one frame of output for each field-pair).
@@ -63,16 +49,12 @@ class DeinterlaceTest(slash.Test):
     if self.mmethod is None:
       slash.skip_test("{method} method not supported".format(**vars(self)))
 
-    name = self.get_name_tmpl().format(**vars(self))
-    self.decoded = get_media()._test_artifact("{}.raw".format(name))
-    self.gstdecoder = self.gstdecoder.format(**vars(self))
-    self.call_gst()
-    self.check_metrics()
+    self.vpp()
 
   def check_metrics(self):
     if vars(self).get("reference", None) is not None:
       self.reference = format_value(self.reference, **vars(self))
-    check_metric(**vars(self))
+    check_metric(decoded = self.ofile, **vars(self))
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
 class avc(DeinterlaceTest):
