@@ -9,7 +9,7 @@ import itertools
 import os
 import skimage.measure
 
-from common import get_media
+from common import get_media, memoize
 from framereader import FrameReaders
 
 def md5(filename, chunksize = 4096, numbytes = -1):
@@ -142,26 +142,34 @@ def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I
     sum(result[2::3]) / nframes,
   )
 
-def get_framesize(width, height, fourcc):
-  return {
-    "I420" : lambda w,h: w*h*3/2,
-    "422H" : lambda w,h: w*h*2,
-    "422V" : lambda w,h: w*h*2,
-    "444P" : lambda w,h: w*h*3,
-    "NV12" : lambda w,h: w*h*3/2,
-    "YV12" : lambda w,h: w*h*3/2,
-    "P010" : lambda w,h: w*h*6/2,
-    "Y800" : lambda w,h: w*h,
-    "YUY2" : lambda w,h: w*h*2,
-    "AYUV" : lambda w,h: w*h*4,
-    "ARGB" : lambda w,h: w*h*4,
-    "P210" : lambda w,h: w*h*4,
-    "P410" : lambda w,h: w*h*6,
-  }[fourcc](width, height)
+@memoize
+def get_framesize(w, h, fourcc):
+  w2  = (w + (w & 1)) >> 1;
+  h2  = (h + (h & 1)) >> 1;
+  szs = {
+    "I420" : lambda: (w * h) + (w2 * h2 * 2),
+    "422H" : lambda: (w * h) + (w2 * h * 2),
+    "422V" : lambda: (w * h) + (w * h2 * 2),
+    "444P" : lambda: w * h * 3,
+    "NV12" : lambda: szs["I420"](),
+    "YV12" : lambda: szs["I420"](),
+    "P010" : lambda: szs["I420"]() * 2,
+    "Y800" : lambda: w * h,
+    "YUY2" : lambda: w * h * 2,
+    "AYUV" : lambda: w * h * 4,
+    "ARGB" : lambda: w * h * 4,
+    "P210" : lambda: szs["422H"]() * 2,
+    "P410" : lambda: w * h * 6,
+  }
+  return szs[fourcc]()
 
 def check_filesize(filename, width, height, nframes, fourcc):
   expected = get_framesize(width, height, fourcc) * nframes
   actual = os.stat(filename).st_size
+
+  get_media()._set_test_details(**{"filesize:expect":expected})
+  get_media()._set_test_details(**{"filesize:actual":actual})
+
   assert expected == actual
 
 def check_metric(**params):
