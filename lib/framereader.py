@@ -7,33 +7,39 @@
 import numpy
 
 def read_frame_422H(fd, width, height):
-  width2 = width/2
-  size = width * height
-  size2 = width2 * height
+  width2  = (width + 1) / 2
+  size    = width * height
+  size2   = width2 * height
+
   y = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height,width))
   u = numpy.fromfile(fd, dtype=numpy.uint8, count=size2).reshape((height,width2))
   v = numpy.fromfile(fd, dtype=numpy.uint8, count=size2).reshape((height,width2))
+
   return y, u, v
 
 def read_frame_422V(fd, width, height):
-  height2 = height/2
-  size = width * height
-  size2 = width * height2
+  height2 = (height + 1) / 2
+  size    = width * height
+  size2   = width * height2
+
   y = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height,width))
   u = numpy.fromfile(fd, dtype=numpy.uint8, count=size2).reshape((height2,width))
   v = numpy.fromfile(fd, dtype=numpy.uint8, count=size2).reshape((height2,width))
+
   return y, u, v
 
 def read_frame_444P(fd, width, height):
   size = width * height
+
   y = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height,width))
   u = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height,width))
   v = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height,width))
+
   return y, u, v
 
 def read_frame_I420(fd, width, height):
-  width2  = width/2
-  height2 = height/2
+  width2  = (width + 1) / 2
+  height2 = (height + 1) / 2
   size    = width * height
   size2   = width2 * height2
 
@@ -51,8 +57,8 @@ def read_frame_Y800(fd, width, height):
   return y, None, None
 
 def read_frame_YV12(fd, width, height):
-  width2  = width/2
-  height2 = height/2
+  width2  = (width + 1) / 2
+  height2 = (height + 1) / 2
   size    = width * height
   size2   = width2 * height2
 
@@ -63,22 +69,24 @@ def read_frame_YV12(fd, width, height):
   return y, u, v
 
 def read_frame_NV12(fd, width, height):
-  width2 = width/2
-  height2 = height/2
-  size = width * height
+  width2  = (width + 1) / 2
+  height2 = (height + 1) / 2
+  size    = width * height
+  size2   = width2 * height2 * 2
 
   y = numpy.fromfile(fd, dtype=numpy.uint8, count=size).reshape((height, width))
-  uv = numpy.fromfile(fd, dtype=numpy.uint8, count=width*height2)
+  uv = numpy.fromfile(fd, dtype=numpy.uint8, count=size2)
 
-  return y, uv[0::2].reshape((height2,width2)), uv[1::2].reshape((height2,width2))
+  return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
 
 def read_frame_P010(fd, width, height):
-  width2 = width/2
-  height2 = height/2
-  size = width * height
+  width2  = (width + 1) / 2
+  height2 = (height + 1) / 2
+  size    = width * height
+  size2   = width2 * height2 * 2
 
   y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width))
-  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=width*height2)
+  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2)
 
   return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
 
@@ -94,16 +102,13 @@ def read_frame_AYUV(fd, width, height):
   return y, u, v
 
 def read_frame_YUY2(fd, width, height):
-  width2 = width/2
-  height2 = height/2
   size = width * height * 2
 
   yuv = numpy.fromfile(fd, dtype=numpy.uint8, count=size)
-  y = yuv[0::2].reshape((height, width))
-  u = yuv[1::4].reshape((height2, width))
-  v = yuv[3::4].reshape((height, width2))
 
-  return y, u, v
+  # frames with odd width and height produce an odd number of bytes
+  # in uv components and therefore cannot be effectively reshaped
+  return yuv[0::2].reshape((height, width)), yuv[1::4], yuv[3::4]
 
 def read_frame_ARGB(fd, width, height):
   size = width * height * 4
@@ -117,9 +122,9 @@ def read_frame_ARGB(fd, width, height):
   return r, g, b
 
 def read_frame_P210(fd, width, height):
-  width2 = width/2
-  size = width * height
-  size2 = width2 * height
+  width2  = (width + 1) / 2
+  size    = width * height
+  size2   = width2 * height
 
   y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height,width))
   u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height,width2))
