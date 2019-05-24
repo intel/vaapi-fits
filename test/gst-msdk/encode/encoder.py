@@ -187,7 +187,7 @@ class EncoderTest(slash.Test):
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif "vbr" == self.rcmode:
+    elif self.rcmode in ["vbr", "la_vbr"]:
       encsize = os.path.getsize(self.encoded)
       bitrate_actual = encsize * 8 * self.fps / 1024.0 / self.frames
 
