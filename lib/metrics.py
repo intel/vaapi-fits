@@ -57,7 +57,7 @@ def __compare_ssim(planes):
   a, b = planes
   if a is None or b is None: # handle Y800 case
     return 1.0
-  return skimage.measure.compare_ssim(a, b, multichannel=True, win_size=3)
+  return skimage.measure.compare_ssim(a, b, win_size = 3)
 
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
   reader  = FrameReaders[fourcc]
