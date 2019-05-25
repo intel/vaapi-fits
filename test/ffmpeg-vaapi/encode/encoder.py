@@ -98,6 +98,7 @@ class EncoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
+  @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
       "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"

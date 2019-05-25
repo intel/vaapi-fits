@@ -92,6 +92,7 @@ class EncoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
+  @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
       "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"

@@ -9,9 +9,10 @@ import itertools
 import os
 import skimage.measure
 
-from common import get_media, memoize
+from common import get_media, memoize, timefn
 from framereader import FrameReaders
 
+@timefn("md5")
 def md5(filename, chunksize = 4096, numbytes = -1):
   if numbytes < 0: # calculate checksum on entire file
     numbytes = os.stat(filename).st_size
@@ -59,6 +60,7 @@ def __compare_ssim(planes):
     return 1.0
   return skimage.measure.compare_ssim(a, b, win_size = 3)
 
+@timefn("ssim")
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
   reader  = FrameReaders[fourcc]
   reader2 = FrameReaders[fourcc2 or fourcc]
@@ -105,6 +107,7 @@ def __compare_psnr(planes):
     return 100
   return skimage.measure.compare_psnr(a, b)
 
+@timefn("psnr")
 def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
   reader  = FrameReaders[fourcc]
   results = list()
