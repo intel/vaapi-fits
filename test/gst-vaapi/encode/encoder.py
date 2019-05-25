@@ -107,6 +107,7 @@ class EncoderTest(slash.Test):
 
     return name
 
+  @timefn("gst")
   def call_gst(self, iopts, oopts):
     self.output = call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(
       iopts = iopts, oopts = oopts))

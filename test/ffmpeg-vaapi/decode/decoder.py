@@ -13,6 +13,7 @@ class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
+  @timefn("ffmpeg")
   def call_ffmpeg(self):
     self.output = call(
       "ffmpeg -hwaccel vaapi -hwaccel_device /dev/dri/renderD128 -v verbose"

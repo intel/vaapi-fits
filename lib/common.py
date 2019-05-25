@@ -4,11 +4,39 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+from datetime import datetime as dt
+import functools
 import os
 import slash
 import subprocess
 import threading
 import time
+
+def timefn(label):
+  def count(function):
+    # Keep track of the number of times this function was called from the
+    # current test context.  This allows us to use a unique label for the
+    # test details.
+    count = get_media()._test_state_value(function, 0)
+    count.value += 1
+    return count.value
+
+  def inner(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+      start = dt.now()
+      try:
+        ret = function(*args, **kwargs)
+      except:
+        raise
+      finally:
+        stotal = (dt.now() - start).total_seconds()
+        kdetail = "time({}:{})".format(label, count(function))
+        get_media()._set_test_details(**{kdetail : "{:.4f}s".format(stotal)})
+      return ret
+    return wrapper
+
+  return inner
 
 class memoize:
   def __init__(self, function):

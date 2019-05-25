@@ -110,6 +110,13 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.num_ctapt.setdefault((meta.file_path, meta.function_name), 0)
     self.num_ctapt[(meta.file_path, meta.function_name)] += 1
 
+  def _test_state_value(self, key, default):
+    data = slash.context.result.data.setdefault("_state_values_", dict())
+    class state_value:
+      def __init__(self, val):
+        self.value = val
+    return data.setdefault(key, state_value(default))
+
   def _expand_context(self, context):
     for c in context:
       sc = str(c).strip().lower()

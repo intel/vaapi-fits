@@ -15,6 +15,7 @@ class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
+  @timefn("gst")
   def call_gst(self):
     self.gstscaler = ""
     if vars(self).get("scale_output", False):
