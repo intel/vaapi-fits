@@ -38,7 +38,8 @@ def test_default(case, csc):
 
   check_metric(
     # if user specified metric, then use it.  Otherwise, use ssim metric with perfect score
-    metric = params.get("metric", dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)),
+    metric = params.get("metric", dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
+      if params.get("reference") else dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)),
     # If user specified reference, use it.  Otherwise, assume source is the reference.
     reference = format_value(params["reference"], case = case, **params)
       if params.get("reference") else params["source"],
