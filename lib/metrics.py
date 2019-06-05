@@ -201,6 +201,14 @@ def check_metric(**params):
     get_media().baseline.check_md5(
       md5 = res, context = params.get("refctx", []))
 
+  elif "psnr" == type:
+    get_media().baseline.check_psnr(
+      psnr = calculate_psnr(
+        params["reference"], params["decoded"],
+        params["width"], params["height"], params["frames"],
+        params["format"]),
+      context = params.get("refctx", []))
+
   else:
     assert False, "unknown metric"
 
