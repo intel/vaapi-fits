@@ -19,6 +19,10 @@ class DeinterlaceTest(slash.Test):
     "motion-compensated",
   ]
 
+  _default_modes_ = [
+    dict(method = m, rate = "field") for m in _default_methods_
+  ]
+
   def before(self):
     # default metric
     self.metric = dict(type = "md5")
@@ -64,6 +68,53 @@ class DeinterlaceTest(slash.Test):
     if vars(self).get("reference", None) is not None:
       self.reference = format_value(self.reference, **vars(self))
     check_metric(**vars(self))
+
+spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+class avc(DeinterlaceTest):
+  @platform_tags(set(AVC_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapih264dec"))
+  @slash.parametrize(*gen_vpp_deinterlace_parameters2(spec_avc, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_avc[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "h264parse ! vaapih264dec",
+      method      = method,
+      rate        = rate,
+    )
+    self.deinterlace()
+
+spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+class mpeg2(DeinterlaceTest):
+  @platform_tags(set(MPEG2_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapimpeg2dec"))
+  @slash.parametrize(*gen_vpp_deinterlace_parameters2(spec_mpeg2, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_mpeg2[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "mpegvideoparse ! vaapimpeg2dec",
+      method      = method,
+      rate        = rate,
+    )
+    self.deinterlace()
+
+spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+class vc1(DeinterlaceTest):
+  @platform_tags(set(VC1_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_gst_element("vaapivc1dec"))
+  @slash.parametrize(*gen_vpp_deinterlace_parameters2(spec_vc1, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_vc1[case].copy())
+    vars(self).update(
+      case        = case,
+      gstdecoder  = "'video/x-wmv,profile=(string)advanced'"
+                    ",width={width},height={height},framerate=14/1"
+                    " ! vaapivc1dec",
+      method      = method,
+      rate        = rate,
+    )
+    self.deinterlace()
 
 spec_raw = load_test_spec("vpp", "deinterlace")
 class raw(DeinterlaceTest):

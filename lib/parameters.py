@@ -353,6 +353,17 @@ def gen_vpp_deinterlace_parameters(spec, methods):
   params = gen_vpp_deinterlace_variants(spec, methods)
   return keys, params
 
+def gen_vpp_deinterlace_variants2(spec, modes):
+  for case, params in spec.iteritems():
+    variants = params.get("modes", modes)
+    for variant in variants:
+      yield [case, variant["method"], variant["rate"]]
+
+def gen_vpp_deinterlace_parameters2(spec, modes):
+  keys = ("case", "method", "rate")
+  params = gen_vpp_deinterlace_variants2(spec, modes)
+  return keys, params
+
 def gen_vpp_csc_variants(spec):
   for case, params in spec.iteritems():
     variants = params.get("colorspaces", None) or ["NV12", "YV12", "I420"]
