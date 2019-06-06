@@ -38,7 +38,6 @@ media._get_test_spec("vpp", "contrast").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "hue").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "saturation").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "csc").update(copy.deepcopy(inputs))
-media._get_test_spec("vpp", "deinterlace").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "denoise").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "sharpen").update(copy.deepcopy(inputs))
 
