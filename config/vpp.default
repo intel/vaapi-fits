@@ -51,6 +51,14 @@ media._get_test_spec("vpp", "rotation").update(copy.deepcopy(inputs))
 for v in media._get_test_spec("vpp", "rotation").values():
   del v["refctx"]
 
+media._get_test_spec("vpp", "deinterlace", "avc").update({
+  "QVGA" : dict(
+    source = os.path.join(assets, "avc", "QVGA_i_tff.h264"),
+    width = 320, height = 240, format = "NV12", frames = 50,
+    refctx = ["driver"],
+  ),
+})
+
 ###
 ### kate: syntax python;
 ###
