@@ -56,12 +56,18 @@ def mapformat(format):
 
 @memoize
 def map_deinterlace_method(method):
+  from ...lib import get_media
   return {
-    "bob"               : "bob",
-    "weave"             : "weave",
-    "motion-adaptive"   : "motion_adaptive",
-    "motion-compensated": "motion_compensated",
-  }.get(method, None)
+    "iHD" : {
+      "bob"               : "bob",
+      "motion-adaptive"   : "motion_adaptive",
+    },
+    "i965" : {
+      "bob"               : "bob",
+      "motion-adaptive"   : "motion_adaptive",
+      "motion-compensated": "motion_compensated",
+    },
+  }.get(get_media()._get_driver_name(), {}).get(method, None)
 
 @memoize
 def map_transpose_direction(degrees, method):
