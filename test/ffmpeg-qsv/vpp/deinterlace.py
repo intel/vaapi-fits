@@ -7,82 +7,113 @@
 from ....lib import *
 from ..util import *
 
-spec = load_test_spec("vpp", "deinterlace")
-spec_r2r = load_test_spec("vpp", "deinterlace", "r2r")
-
-def init(tspec, case, method):
-  tparams = tspec[case].copy()
-  tparams.update(
-    method = map_deinterlace_method(method),
-    mformat = mapformat(tparams["format"]),
-    tff = tparams.get("tff", 1))
-
-  if tparams["method"] is None:
-    slash.skip_test("{} method not supported".format(method))
-
-  if tparams["mformat"] is None:
-    slash.skip_test("{format} format not supported".format(**tparams))
-
-  return tparams
-
-def call_ffmpeg(params):
-  # TODO: how to configure vpp_qsv to use field rate?
-  call(
-    "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-    " -v debug -f rawvideo -pix_fmt {mformat} -s:v {width}x{height} -top {tff}"
-    " -i {source} -vf 'format=nv12,hwupload=extra_hw_frames=16"
-    ",vpp_qsv=deinterlace={method},hwdownload,format=nv12'"
-    " -pix_fmt {mformat} -an -vframes {frames} -y {decoded}".format(**params))
-
-def gen_output(case, params):
-  name = "{case}_deinterlace_{method}_{format}_{width}x{height}".format(case = case, **params)
-
-  if params.get("r2r", None) is not None:
-    name += "_r2r"
-
-  name += ".yuv"
-  params["decoded"] =  get_media()._test_artifact(name)
-
-  call_ffmpeg(params)
+if len(load_test_spec("vpp", "deinterlace")):
+  slash.logger.warn(
+    "ffmpeg-qsv: vpp deinterlace with raw input is no longer supported")
 
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_qsv_accel)
 @slash.requires(*have_ffmpeg_filter("vpp_qsv"))
 @slash.requires(using_compatible_driver)
-@slash.parametrize(*gen_vpp_deinterlace_parameters(spec, ["bob", "advanced"]))
-@platform_tags(VPP_PLATFORMS)
-def test_default(case, method):
-  params = init(spec, case, method)
+class DeinterlaceTest(slash.Test):
+  _default_methods_ = [
+    "bob",
+    "advanced",
+  ]
 
-  gen_output(case, params)
+  _default_modes_ = [
+    dict(method = m, rate = "frame") for m in _default_methods_
+  ]
 
-  params.setdefault("metric", dict(type = "md5"))
-  check_metric(**params)
+  def before(self):
+    # default metric
+    self.metric = dict(type = "md5")
+    self.refctx = []
 
-@slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
-@slash.requires(*have_ffmpeg_filter("vpp_qsv"))
-@slash.requires(using_compatible_driver)
-@slash.parametrize(*gen_vpp_deinterlace_parameters(spec_r2r, ["bob", "advanced"]))
-@platform_tags(VPP_PLATFORMS)
-def test_r2r(case, method):
-  params = init(spec_r2r, case, method)
-  params.setdefault("r2r", 5)
-  assert type(params["r2r"]) is int and params["r2r"] > 1, "invalid r2r value"
+  @timefn("ffmpeg")
+  def call_ffmpeg(self):
+    call(
+      "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
+      " -v verbose -c:v {ffdecoder} -i {source}"
+      " -vf 'format=nv12|qsv,hwupload=extra_hw_frames=16"
+      ",vpp_qsv=deinterlace={method},hwdownload,format=nv12'"
+      " -pix_fmt {mformat} -f rawvideo -vsync passthrough -an -vframes {frames}"
+      " -y {decoded}".format(**vars(self)))
 
-  gen_output(case, params)
+  def get_name_tmpl(self):
+    return "{case}_di_{method}_{rate}_{width}x{height}_{format}"
 
-  md5ref = md5(params["decoded"])
-  get_media()._set_test_details(md5_ref = md5ref)
+  def deinterlace(self):
+    self.mformat = mapformat(self.format)
+    self.mmethod = map_deinterlace_method(self.method)
 
-  for i in xrange(1, params["r2r"]):
-    params["decoded"] = get_media()._test_artifact(
-      "{case}_deinterlace_{method}_{format}_{width}x{height}_{i}"
-      ".yuv".format(case = case, i = i, **params))
+    # The rate is fixed in vpp_qsv deinterlace.  It always outputs at frame
+    # rate (one frame of output for each field-pair).
+    if "frame" != self.rate:
+      slash.skip_test("{rate} rate not supported".format(**vars(self)))
 
-    call_ffmpeg(params)
-    result = md5(params["decoded"])
-    get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})
-    assert result == md5ref, "r2r md5 mismatch"
-    #delete decoded file after each iteration
-    get_media()._purge_test_artifact(params["decoded"])
+    if self.mformat is None:
+      slash.skip_test("{format} format not supported".format(**vars(self)))
+
+    if self.mmethod is None:
+      slash.skip_test("{method} method not supported".format(**vars(self)))
+
+    name = self.get_name_tmpl().format(**vars(self))
+    self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.call_ffmpeg()
+    self.check_metrics()
+
+  def check_metrics(self):
+    check_filesize(
+      self.decoded, self.width, self.height, self.frames, self.format)
+    if vars(self).get("reference", None) is not None:
+      self.reference = format_value(self.reference, **vars(self))
+    check_metric(**vars(self))
+
+spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+class avc(DeinterlaceTest):
+  def before(self):
+    self.ffdecoder = "h264_qsv"
+    super(avc, self).before()
+
+  @platform_tags(set(AVC_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_avc, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_avc[case].copy())
+    vars(self).update(case = case, method = method, rate = rate)
+    self.deinterlace()
+
+spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+class mpeg2(DeinterlaceTest):
+  def before(self):
+    self.ffdecoder = "mpeg2_qsv"
+    super(mpeg2, self).before()
+
+  @platform_tags(set(MPEG2_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_mpeg2, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_mpeg2[case].copy())
+    vars(self).update(case = case, method = method, rate = rate)
+    self.deinterlace()
+
+spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+class vc1(DeinterlaceTest):
+  def before(self):
+    self.ffdecoder = "vc1_qsv"
+    super(vc1, self).before()
+
+  @platform_tags(set(VC1_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*have_ffmpeg_decoder("vc1_qsv"))
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_vc1, DeinterlaceTest._default_modes_))
+  def test(self, case, method, rate):
+    vars(self).update(spec_vc1[case].copy())
+    vars(self).update(case = case, method = method, rate = rate)
+    self.deinterlace()

@@ -342,15 +342,15 @@ gen_vpp_contrast_parameters = gen_vpp_sharpen_parameters
 gen_vpp_hue_parameters = gen_vpp_sharpen_parameters
 gen_vpp_saturation_parameters = gen_vpp_sharpen_parameters
 
-def gen_vpp_deinterlace_variants(spec, methods):
+def gen_vpp_deinterlace_variants(spec, modes):
   for case, params in spec.iteritems():
-    variants = params.get("methods", methods)
-    for variant in set(variants):
-      yield [case, variant]
+    variants = params.get("modes", modes)
+    for variant in variants:
+      yield [case, variant["method"], variant["rate"]]
 
-def gen_vpp_deinterlace_parameters(spec, methods):
-  keys = ("case", "method")
-  params = gen_vpp_deinterlace_variants(spec, methods)
+def gen_vpp_deinterlace_parameters(spec, modes):
+  keys = ("case", "method", "rate")
+  params = gen_vpp_deinterlace_variants(spec, modes)
   return keys, params
 
 def gen_vpp_csc_variants(spec):
