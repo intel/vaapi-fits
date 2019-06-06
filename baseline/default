@@ -7823,6 +7823,16 @@
       ]
     }
   }, 
+  "test/gst-vaapi/vpp/deinterlace.py:avc.test(case=QVGA,method=motion-adaptive,rate=field)": {
+    "drv.i965": {
+      "md5": "9afa9519d24a538a8fb9013c1f8f4d5c"
+    }
+  }, 
+  "test/gst-vaapi/vpp/deinterlace.py:avc.test(case=QVGA,method=motion-compensated,rate=field)": {
+    "drv.i965": {
+      "md5": "adcd71a38ea6747ed4a0c12bef377072"
+    }
+  }, 
   "test/gst-vaapi/vpp/denoise.py:test_default(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
