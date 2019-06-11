@@ -168,10 +168,7 @@ class TranscoderTest(slash.Test):
       if ("hw", "sw") == tmode:   # HW to SW transcode
         filters.extend(["hwdownload", "format=nv12"])
       elif ("sw", "hw") == tmode: # SW to HW transcode
-        filters.append("format=nv12")
-
-      if "hw" == mode:            # SW/HW to HW transcode
-        filters.append("hwupload")
+        filters.append(["format=nv12", "hwupload"])
 
       vppscale = self.get_vpp_scale(
         output.get("width", None), output.get("height", None), mode)
