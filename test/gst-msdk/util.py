@@ -40,6 +40,9 @@ def mapformat_hwup(format):
 
   return mapformatu(fmt)
 
+# alias
+maphwformat = mapformat_hwup
+
 @memoize
 def mapformat(format):
   return {
