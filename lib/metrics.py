@@ -47,12 +47,46 @@ def __try_read_frame(reader, *args, **kwargs):
     e.args += tuple("{}: {}".format(k,v) for k,v in kwargs.items())
     raise
 
-class MetricsResult:
-  def __init__(self, y, u, v):
-    self.result = (y, u, v)
+class YUVMetricAggregator:
+  def __init__(self):
+    self.results = list()
+
+    # 50% of physical memory (i.e. 25% in main process and 25% in async pool)
+    self.async_thresh = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / 4
+    self.async_results = list()
+    self.async_bytes = 0
+
+  def __collect_async(self):
+    self.results.extend([r.get() for r in self.async_results])
+    self.async_bytes = 0
+    self.async_results = list()
+
+  def append(self, func, iterable):
+    if get_media().metrics_pool is not None:
+      self.async_results.append(
+        get_media().metrics_pool.map_async(func, iterable))
+
+      # Update bytes of yuv data that is being held by async_results
+      self.async_bytes += sum([i.nbytes for i in itertools.chain(*iterable) if i is not None])
+
+      # If we are holding onto too much yuv data, then we need to collect and
+      # purge the current async_results to release the data
+      if self.async_bytes >= self.async_thresh:
+        self.__collect_async()
+    else:
+      self.results.append([func(i) for i in iterable])
 
   def get(self):
-    return self.result
+    self.__collect_async()
+    result = list(itertools.chain(*self.results))
+    return (
+      min(result[0::3]),
+      min(result[1::3]),
+      min(result[2::3]),
+      sum(result[0::3]) / len(self.results),
+      sum(result[1::3]) / len(self.results),
+      sum(result[2::3]) / len(self.results),
+    )
 
 def __compare_ssim(planes):
   a, b = planes
@@ -64,40 +98,18 @@ def __compare_ssim(planes):
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
   reader  = FrameReaders[fourcc]
   reader2 = FrameReaders[fourcc2 or fourcc]
-  results = list()
+  aggregator = YUVMetricAggregator()
 
   with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in range(nframes):
+    for i in xrange(nframes):
       y1, u1, v1 = __try_read_frame(
         reader, fd1, width, height, debug = (i, nframes, 1))
       y2, u2, v2 = __try_read_frame(
         reader2, fd2, width, height, debug = (i, nframes, 2))
 
-      if get_media().metrics_pool is not None:
-        results.append(
-          get_media().metrics_pool.map_async(
-            __compare_ssim, ((y1, y2), (u1, u2), (v1, v2))
-          )
-        )
-      else:
-        results.append(
-          MetricsResult(
-            __compare_ssim((y1, y2)),
-            __compare_ssim((u1, u2)),
-            __compare_ssim((v1, v2))
-          )
-        )
+      aggregator.append(__compare_ssim, ((y1, y2), (u1, u2), (v1, v2)))
 
-  result = list(itertools.chain(*[r.get() for r in results]))
-
-  return (
-    min(result[0::3]),
-    min(result[1::3]),
-    min(result[2::3]),
-    sum(result[0::3]) / nframes,
-    sum(result[1::3]) / nframes,
-    sum(result[2::3]) / nframes,
-  )
+  return aggregator.get()
 
 def __compare_psnr(planes):
   a, b = planes
@@ -109,41 +121,19 @@ def __compare_psnr(planes):
 
 @timefn("psnr")
 def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
-  reader  = FrameReaders[fourcc]
-  results = list()
+  reader = FrameReaders[fourcc]
+  aggregator = YUVMetricAggregator()
 
   with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in range(nframes):
+    for i in xrange(nframes):
       y1, u1, v1 = __try_read_frame(
         reader, fd1, width, height, debug = (i, nframes, 1))
       y2, u2, v2 = __try_read_frame(
         reader, fd2, width, height, debug = (i, nframes, 2))
 
-      if get_media().metrics_pool is not None:
-        results.append(
-          get_media().metrics_pool.map_async(
-            __compare_psnr, ((y1, y2), (u1, u2), (v1, v2))
-          )
-        )
-      else:
-        results.append(
-          MetricsResult(
-            __compare_psnr((y1, y2)),
-            __compare_psnr((u1, u2)),
-            __compare_psnr((v1, v2))
-          )
-        )
+      aggregator.append(__compare_psnr, ((y1, y2), (u1, u2), (v1, v2)))
 
-  result = list(itertools.chain(*[r.get() for r in results]))
-
-  return (
-    min(result[0::3]),
-    min(result[1::3]),
-    min(result[2::3]),
-    sum(result[0::3]) / nframes,
-    sum(result[1::3]) / nframes,
-    sum(result[2::3]) / nframes,
-  )
+  return aggregator.get()
 
 @memoize
 def get_framesize(w, h, fourcc):
