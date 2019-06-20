@@ -38,7 +38,6 @@ class cqp(HEVC8EncoderTest):
       rcmode  = "cqp",
       slices  = slices,
     )
-    self.encode()
 
   @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
   @slash.requires(*have_gst_element("msdkh265enc"))
