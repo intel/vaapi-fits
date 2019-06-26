@@ -117,3 +117,13 @@ sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_10bit_cbr(/test\/gst-msdk\/encode
 sed -i "s/test\/gst-msdk\/encode\/hevc.py:test_10bit_vbr(/test\/gst-msdk\/encode\/10bit\/hevc.py:vbr.test(/g" $1
 sed -i "s/test\/gst-msdk\/encode\/jpeg.py:test_cqp(/test\/gst-msdk\/encode\/jpeg.py:cqp.test(/g" $1
 sed -i "s/test\/gst-msdk\/encode\/mpeg2.py:test_cqp(/test\/gst-msdk\/encode\/mpeg2.py:cqp.test(/g" $1
+
+sed -i "s/test\/gst-msdk\/vpp\/brightness.py:test_default(/test\/gst-msdk\/vpp\/brightness.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/contrast.py:test_default(/test\/gst-msdk\/vpp\/contrast.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/hue.py:test_default(/test\/gst-msdk\/vpp\/hue.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/saturation.py:test_default(/test\/gst-msdk\/vpp\/saturation.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/denoise.py:test_default(/test\/gst-msdk\/vpp\/denoise.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/mirroring.py:test_default(/test\/gst-msdk\/vpp\/mirroring.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/rotation.py:test_default(/test\/gst-msdk\/vpp\/rotation.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/sharpen.py:test_default(/test\/gst-msdk\/vpp\/sharpen.py:default.test(/g" $1
+sed -i "s/test\/gst-msdk\/vpp\/transpose.py:test_default(/test\/gst-msdk\/vpp\/transpose.py:default.test(/g" $1
