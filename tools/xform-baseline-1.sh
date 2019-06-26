@@ -62,6 +62,14 @@ sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cqp(/test\/gst-vaapi\/encode
 sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_cbr(/test\/gst-vaapi\/encode\/vp9.py:cbr.test(/g" $1
 sed -i "s/test\/gst-vaapi\/encode\/vp9.py:test_8bit_vbr(/test\/gst-vaapi\/encode\/vp9.py:vbr.test(/g" $1
 
+sed -i "s/test\/gst-vaapi\/vpp\/brightness.py:test_default(/test\/gst-vaapi\/vpp\/brightness.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/contrast.py:test_default(/test\/gst-vaapi\/vpp\/contrast.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/hue.py:test_default(/test\/gst-vaapi\/vpp\/hue.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/saturation.py:test_default(/test\/gst-vaapi\/vpp\/saturation.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/denoise.py:test_default(/test\/gst-vaapi\/vpp\/denoise.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/mirroring.py:test_default(/test\/gst-vaapi\/vpp\/mirroring.py:default.test(/g" $1
+sed -i "s/test\/gst-vaapi\/vpp\/sharpen.py:test_default(/test\/gst-vaapi\/vpp\/sharpen.py:default.test(/g" $1
+
 # ffmpeg-qsv
 sed -i "s/test\/ffmpeg-qsv\/decode\/avc.py:test_default(/test\/ffmpeg-qsv\/decode\/avc.py:default.test(/g" $1
 sed -i "s/test\/ffmpeg-qsv\/decode\/hevc.py:test_8bit(/test\/ffmpeg-qsv\/decode\/hevc.py:default.test(/g" $1
