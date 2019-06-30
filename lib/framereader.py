@@ -121,6 +121,17 @@ def read_frame_ARGB(fd, width, height):
 
   return r, g, b
 
+def read_frame_BGRA(fd, width, height):
+  size = width * height * 4
+
+  argb = numpy.fromfile(fd, dtype=numpy.uint8, count=size)
+  a = argb[3::4].reshape((height, width))
+  r = argb[2::4].reshape((height, width))
+  g = argb[1::4].reshape((height, width))
+  b = argb[0::4].reshape((height, width))
+
+  return r, g, b
+
 def read_frame_P210(fd, width, height):
   width2  = (width + 1) / 2
   size    = width * height
@@ -155,4 +166,5 @@ FrameReaders = {
   "ARGB" : read_frame_ARGB,
   "P210" : read_frame_P210,
   "P410" : read_frame_P410,
+  "BGRA" : read_frame_BGRA,
 }
