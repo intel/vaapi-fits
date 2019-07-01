@@ -7515,7 +7515,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         12.5314, 
@@ -7537,7 +7537,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         12.0616, 
@@ -7559,7 +7559,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         25.2082, 
@@ -7581,7 +7581,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         9.7694, 
@@ -7603,7 +7603,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         9.4388, 
@@ -7625,7 +7625,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         9.9086, 
@@ -7647,7 +7647,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/brightness.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         9.5907, 
@@ -7669,7 +7669,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         7.9805, 
@@ -7691,7 +7691,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         7.8433, 
@@ -7713,7 +7713,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         13.7482, 
@@ -7735,7 +7735,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         5.7905, 
@@ -7757,7 +7757,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         6.6813, 
@@ -7779,7 +7779,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         5.9114, 
@@ -7801,7 +7801,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/contrast.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/contrast.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         6.7121, 
@@ -7833,7 +7833,7 @@
       "md5": "adcd71a38ea6747ed4a0c12bef377072"
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         60.8299, 
@@ -7845,7 +7845,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -7857,7 +7857,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         67.4231, 
@@ -7869,7 +7869,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -7881,7 +7881,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         57.5142, 
@@ -7893,7 +7893,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -7905,7 +7905,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/denoise.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/denoise.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         58.7360, 
@@ -7917,7 +7917,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -7939,7 +7939,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -7961,7 +7961,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -7983,7 +7983,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8005,7 +8005,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8027,7 +8027,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8049,7 +8049,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/hue.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/hue.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8071,31 +8071,31 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=1080p,method=horizontal)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=1080p,method=horizontal)": {
     "md5": "984cc41430b6cc6aa4a2ff1db1529755"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=1080p,method=vertical)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=1080p,method=vertical)": {
     "md5": "d004a9734a04302661e79702556867b6"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=720p,method=horizontal)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=720p,method=horizontal)": {
     "md5": "c8aff5aaa0c259f1bf9846627b027635"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=720p,method=vertical)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=720p,method=vertical)": {
     "md5": "600467fd5c5f136e22327c1b00728464"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=QCIF,method=horizontal)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QCIF,method=horizontal)": {
     "md5": "f32e66954c8f1c9c0772eef0cd63844a"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=QCIF,method=vertical)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QCIF,method=vertical)": {
     "md5": "ff1abeffc1edb617bd917494eeadc662"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=QVGA,method=horizontal)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QVGA,method=horizontal)": {
     "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
   }, 
-  "test/gst-vaapi/vpp/mirroring.py:test_default(case=QVGA,method=vertical)": {
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QVGA,method=vertical)": {
     "md5": "2e75fd8c78e57d96d49c88c9bd4763f5"
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8117,7 +8117,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8139,7 +8139,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8161,7 +8161,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8183,7 +8183,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8205,7 +8205,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8227,7 +8227,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/saturation.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/saturation.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8249,7 +8249,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=1080p,level=84)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         30.8010, 
@@ -8271,7 +8271,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=720p,level=12)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         59.3203, 
@@ -8283,7 +8283,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=720p,level=57)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         34.7478, 
@@ -8295,7 +8295,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=QCIF,level=0)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -8317,7 +8317,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=QCIF,level=100)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         29.9990, 
@@ -8339,7 +8339,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=QVGA,level=1)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         60.5243, 
@@ -8361,7 +8361,7 @@
       ]
     }
   }, 
-  "test/gst-vaapi/vpp/sharpen.py:test_default(case=QVGA,level=99)": {
+  "test/gst-vaapi/vpp/sharpen.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         30.8913, 
