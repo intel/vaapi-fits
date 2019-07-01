@@ -5055,7 +5055,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         12.5314, 
@@ -5067,7 +5067,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         12.0616, 
@@ -5079,7 +5079,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         25.2082, 
@@ -5091,7 +5091,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         9.7694, 
@@ -5103,7 +5103,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         9.4388, 
@@ -5115,7 +5115,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         9.9086, 
@@ -5127,7 +5127,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/brightness.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/brightness.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         9.5907, 
@@ -5139,7 +5139,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         7.7349, 
@@ -5151,7 +5151,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         21.3471, 
@@ -5163,7 +5163,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         8.2282, 
@@ -5175,7 +5175,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         5.7905, 
@@ -5187,7 +5187,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         6.6813, 
@@ -5199,7 +5199,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         6.7214, 
@@ -5211,7 +5211,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/contrast.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/contrast.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         6.7095, 
@@ -5223,7 +5223,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         60.3148, 
@@ -5235,7 +5235,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5247,7 +5247,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         67.4231, 
@@ -5259,7 +5259,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5271,7 +5271,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         57.5142, 
@@ -5283,7 +5283,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5295,7 +5295,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/denoise.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         58.7360, 
@@ -5307,7 +5307,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5319,7 +5319,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5331,7 +5331,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5343,7 +5343,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5355,7 +5355,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5367,7 +5367,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5379,7 +5379,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/hue.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/hue.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5391,67 +5391,67 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/mirroring.py:test_default(case=1080p,method=horizontal)": {
+  "test/gst-msdk/vpp/mirroring.py:default.test(case=1080p,method=horizontal)": {
     "md5": "984cc41430b6cc6aa4a2ff1db1529755"
   }, 
-  "test/gst-msdk/vpp/mirroring.py:test_default(case=720p,method=horizontal)": {
+  "test/gst-msdk/vpp/mirroring.py:default.test(case=720p,method=horizontal)": {
     "md5": "c8aff5aaa0c259f1bf9846627b027635"
   }, 
-  "test/gst-msdk/vpp/mirroring.py:test_default(case=QCIF,method=horizontal)": {
+  "test/gst-msdk/vpp/mirroring.py:default.test(case=QCIF,method=horizontal)": {
     "md5": "f32e66954c8f1c9c0772eef0cd63844a"
   }, 
-  "test/gst-msdk/vpp/mirroring.py:test_default(case=QVGA,method=horizontal)": {
+  "test/gst-msdk/vpp/mirroring.py:default.test(case=QVGA,method=horizontal)": {
     "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=1080p,degrees=0)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=0)": {
     "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=1080p,degrees=180)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=180)": {
     "md5": "aeed2cb06b0d2acbfa181ae38a63ed8a"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=1080p,degrees=270)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=270)": {
     "md5": "47d3008e2cc76bfd971a084777c4b9df"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=1080p,degrees=90)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=90)": {
     "md5": "ac951a6144801875d7d07ed02352ce36"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=720p,degrees=0)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=0)": {
     "md5": "5bcf39edf34433e74b709e89db93a57c"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=720p,degrees=180)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=180)": {
     "md5": "4549b4090d8f948b57513e344a8316f0"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=720p,degrees=270)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=270)": {
     "md5": "d19c95e525acd72a6f4b343dfb9f8988"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=720p,degrees=90)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=90)": {
     "md5": "9db7b428d19e05165c21d0063efc896c"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QCIF,degrees=0)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=0)": {
     "md5": "330966f7c6feba190bf8a97960036cec"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QCIF,degrees=180)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=180)": {
     "md5": "675adb6ad3f66f59aa6965ed35d1c59f"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QCIF,degrees=270)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=270)": {
     "md5": "6d57bf92865c5b19dd6ee99626d10cdd"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QCIF,degrees=90)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=90)": {
     "md5": "160ac05bdfd8e88721bf39ed6325939e"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QVGA,degrees=0)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=0)": {
     "md5": "59110d2b34c2861f3dc23aba84a02ae7"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QVGA,degrees=180)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=180)": {
     "md5": "457abe0232714a8a4e5224f37380fac0"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QVGA,degrees=270)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=270)": {
     "md5": "2aa5086b07048423baae3bcb8458c0ac"
   }, 
-  "test/gst-msdk/vpp/rotation.py:test_default(case=QVGA,degrees=90)": {
+  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=90)": {
     "md5": "48ee162e3ac255ff75e6adc509afcc09"
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5463,7 +5463,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5475,7 +5475,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5487,7 +5487,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5499,7 +5499,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5511,7 +5511,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5523,7 +5523,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/saturation.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/saturation.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5535,7 +5535,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=1080p,level=84)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         31.4556, 
@@ -5547,7 +5547,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=720p,level=12)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         68.5672, 
@@ -5559,7 +5559,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=720p,level=57)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         40.0549, 
@@ -5571,7 +5571,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=QCIF,level=0)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5583,7 +5583,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=QCIF,level=100)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         25.6195, 
@@ -5595,7 +5595,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=QVGA,level=1)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -5607,7 +5607,7 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/sharpen.py:test_default(case=QVGA,level=99)": {
+  "test/gst-msdk/vpp/sharpen.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         27.2692, 
