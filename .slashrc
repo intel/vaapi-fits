@@ -122,7 +122,18 @@ class MediaPlugin(slash.plugins.PluginInterface):
       sc = str(c).strip().lower()
       if "driver" == sc:
         sc = "drv.{}".format(self._get_driver_name())
+      elif sc.startswith("key:"):
+        continue
       yield sc
+
+  def _get_ref_addr(self, context):
+    path, case = slash.context.test.__slash__.address.split(':')
+    keyctx = filter(lambda c: c.startswith("key:"), context)
+    if len(keyctx):
+      key = keyctx[0].lstrip("key:")
+    else:
+      key = os.path.relpath(path, self.mypath)
+    return ':'.join([key, case])
 
   def _set_test_details(self, **kwargs):
     for k, v in kwargs.iteritems():

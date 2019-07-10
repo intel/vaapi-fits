@@ -17,25 +17,22 @@ class Baseline:
   def __init__(self, filename, rebase = False):
     self.filename = filename
     self.references = dict()
-    self.actuals = dict()
     self.rebase = rebase
 
     if self.filename and os.path.exists(self.filename):
       with open(self.filename, "rb") as fd:
         self.references = json.load(fd)
 
-  def __get_reference(self, addr, context = []):
+  def __get_reference(self, context = []):
+    addr = get_media()._get_ref_addr(context)
     reference = self.references.setdefault(addr, dict())
     for c in get_media()._expand_context(context):
       reference = reference.setdefault(c, dict())
     return reference
 
   def check_result(self, compare, context = [], **kwargs):
-    addr = slash.context.test.__slash__.address
-    actual = self.actuals.setdefault(addr, dict())
-    reference = self.__get_reference(addr, context)
+    reference = self.__get_reference(context)
 
-    actual.update(**kwargs)
     if self.rebase:
       reference.update(**kwargs)
 
