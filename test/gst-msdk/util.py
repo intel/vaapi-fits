@@ -35,6 +35,7 @@ def mapformat_hwup(format):
       "I420"  : "NV12",
       "AYUV"  : "NV12",
       "YUY2"  : "NV12",
+      "YV12"  : "NV12",
     },
   }.get(get_media()._get_driver_name(), {}).get(format, format)
 

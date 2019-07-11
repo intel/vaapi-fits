@@ -23,21 +23,16 @@ class VppTest(slash.Test):
       opts =  "filesrc location={source}"
       opts += " ! {gstdecoder}"
     if self.vpp_element not in ["csc", "deinterlace"]:
-      opts += " ! videoconvert ! video/x-raw,format={hwup_format}"
+      opts += " ! videoconvert ! video/x-raw,format={hwformat}"
 
     return opts
 
   def gen_output_opts(self):
     opts = "vaapipostproc"
     if self.vpp_element not in ["csc"]:
-      if self.vpp_element not in ["deinterlace"]:
-        opts += " format={mformat}"
       if self.vpp_element in ["scale"]:
         opts += " width={scale_width} height={scale_height}"
-      else:
-        opts += " width={width} height={height}"
-
-      if self.vpp_element in ["contrast"]:
+      elif self.vpp_element in ["contrast"]:
         opts += " contrast={mlevel}"
       elif self.vpp_element in ["saturation"]:
         opts += " saturation={mlevel}"
@@ -51,13 +46,16 @@ class VppTest(slash.Test):
         opts += " sharpen={mlevel}"
       elif self.vpp_element in ["deinterlace"]:
         opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
+        opts += " width={width} height={height}"
       elif self.vpp_element in ["mirroring"]:
         opts += " video-direction={mmethod}"
-    else:
-        opts += " ! video/x-raw,format={mcscu}"
 
-    if self.vpp_element in ["deinterlace"]:
+      if self.vpp_element not in ["deinterlace"]:
+        opts += " ! video/x-raw,format={hwformat}"
       opts += " ! videoconvert ! video/x-raw,format={mformatu}"
+    else:
+      opts += " ! video/x-raw,format={mcscu}"
+
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
     opts += " plane-checksum=false dump-output=true dump-location={ofile}"
 
@@ -105,11 +103,12 @@ class VppTest(slash.Test):
       iopts = iopts, oopts = oopts))
 
   def vpp(self):
-    self.mformat     = mapformat(self.format)
-    self.hwup_format = mapformat_hwup(self.format)
-    iopts            = self.gen_input_opts()
-    oopts            = self.gen_output_opts()
-    name             = self.gen_name().format(**vars(self))
+    self.mformat  = mapformat(self.format)
+    self.mformatu = mapformatu(self.format)
+    self.hwformat = maphwformat(self.format)
+    iopts         = self.gen_input_opts()
+    oopts         = self.gen_output_opts()
+    name          = self.gen_name().format(**vars(self))
 
     self.ofile = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))

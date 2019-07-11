@@ -23,6 +23,8 @@ class VppTest(slash.Test):
     else:
       opts = "filesrc location={source}"
       opts += " ! {gstdecoder}"
+    if self.vpp_element not in ["csc", "deinterlace"]:
+      opts += " ! videoconvert ! video/x-raw,format={hwformat}"
 
     return opts
 
@@ -52,15 +54,12 @@ class VppTest(slash.Test):
       elif  self.vpp_element in ["transpose"]:
         opts += " rotation={degrees} mirroring={mmethod}"
 
-      if self.vpp_element not in ["scale", "deinterlace"]:
-        opts += " ! video/x-raw,format=NV12"
-        opts += " ! videoconvert ! video/x-raw,format={format}"
-      else:
-        if self.vpp_element in ["deinterlace"]:
-          opts += " ! video/x-raw,format=NV12,width={width},height={height}"
-        else:
-          opts += " ! video/x-raw,format=NV12,width={scale_width},height={scale_height}"
-        opts += " ! videoconvert ! video/x-raw,format={mformatu}"
+      opts += " ! video/x-raw,format={hwformat}"
+      if self.vpp_element in ["scale"]:
+        opts += ",width={scale_width},height={scale_height}"
+      elif self.vpp_element in ["deinterlace"]:
+        opts += ",width={width},height={height}"
+      opts += " ! videoconvert ! video/x-raw,format={mformatu}"
     else:
       opts += " ! video/x-raw,format={mcscu}"
 
@@ -114,10 +113,12 @@ class VppTest(slash.Test):
     call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts))
 
   def vpp(self):
-    self.mformat = mapformat(self.format)
-    iopts        = self.gen_input_opts()
-    oopts        = self.gen_output_opts()
-    name         = self.gen_name().format(**vars(self))
+    self.mformat  = mapformat(self.format)
+    self.mformatu = mapformatu(self.format)
+    self.hwformat = maphwformat(self.format)
+    iopts         = self.gen_input_opts()
+    oopts         = self.gen_output_opts()
+    name          = self.gen_name().format(**vars(self))
 
     self.ofile = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))

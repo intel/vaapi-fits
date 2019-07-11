@@ -21,8 +21,7 @@ class default(VppTest):
   def init(self, tspec, case, scale_width, scale_height):
     vars(self).update(tspec[case].copy())
     vars(self).update(
-      case = case, mformatu = mapformatu(self.format),
-      scale_width = scale_width, scale_height = scale_height)
+      case = case, scale_width = scale_width, scale_height = scale_height)
 
   @slash.parametrize(*gen_vpp_scale_parameters(spec))
   @platform_tags(VPP_PLATFORMS)

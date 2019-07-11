@@ -38,7 +38,6 @@ class DeinterlaceTest(VppTest):
     vars(self).update(case = case, method = method, rate = rate)
 
   def deinterlace(self):
-    self.mformatu = mapformatu(self.format)
     self.mmethod  = map_deinterlace_method(self.method)
     self.gstdecoder = self.gstdecoder.format(**vars(self))
 
@@ -46,9 +45,6 @@ class DeinterlaceTest(VppTest):
     # frame rate (one frame of output for each field-pair).
     if "frame" != self.rate:
       slash.skip_test("{rate} rate not supported".format(**vars(self)))
-
-    if self.mformatu is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
 
     if self.mmethod is None:
       slash.skip_test("{method} method not supported".format(**vars(self)))

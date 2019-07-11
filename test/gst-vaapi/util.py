@@ -31,6 +31,7 @@ def mapformat_hwup(format):
     "iHD" : {
       "I420"  : "NV12",
       "AYUV"  : "NV12",
+      "YV12"  : "NV12",
     },
     "i965" : {
       "AYUV"  : "NV12",
