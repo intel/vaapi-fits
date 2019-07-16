@@ -11,7 +11,8 @@ def format_value(value, **params):
   from common import get_media
 
   augmented = dict(
-    driver = get_media()._get_driver_name()
+    driver = get_media()._get_driver_name(),
+    platform = get_media()._get_platform_name(),
   )
   augmented.update(**params)
 
