@@ -47,6 +47,7 @@ ansi_escape.prog = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -/]*[@-~]')
 class MediaPlugin(slash.plugins.PluginInterface):
   testspec = dict()
 
+  platform = None
   suite = os.path.basename(sys.argv[0])
   mypath = __SCRIPT_DIR__
 
@@ -72,6 +73,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     parser.add_argument("--ctapr", default = -1, type = int,
       help = "number of call timeouts allowed per run")
     parser.add_argument("--parallel-metrics", action = "store_true")
+    parser.add_argument("--platform", default = None, type = str, required = True)
 
   def configure_from_parsed_args(self, args):
     self.baseline = Baseline(args.baseline_file, args.rebase)
@@ -80,6 +82,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.parallel_metrics = args.parallel_metrics
     self.ctapt = args.ctapt
     self.ctapr = args.ctapr
+    self.platform = args.platform
 
     assert not (args.rebase and slash.config.root.parallel.num_workers > 0), "rebase in parallel mode is not supported"
     assert not (args.ctapt != -1 and slash.config.root.parallel.num_workers > 0), "ctapt in parallel mode is not supported"
@@ -167,6 +170,9 @@ class MediaPlugin(slash.plugins.PluginInterface):
   def _get_driver_name(self):
     # TODO: query vaapi for driver name (i.e. use ctypes to call vaapi)
     return os.environ.get("LIBVA_DRIVER_NAME", None) or "i965"
+
+  def _get_platform_name(self):
+    return self.platform
 
   def _get_call_timeout(self):
     if self.test_call_timeout > 0:

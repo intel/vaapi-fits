@@ -1,0 +1,69 @@
+###
+### Copyright (C) 2019 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+###
+### kate: syntax python;
+###
+
+caps = dict(
+  decode  = dict(
+    jpeg    = dict(maxres = res8k, fmts = ["NV12", "411P", "422H", "422V", "444P", "Y800"]),
+    mpeg2   = dict(maxres = res2k, fmts = ["NV12"]),
+    vc1     = dict(maxres = res4k, fmts = ["NV12"]),
+    avc     = dict(maxres = res4k, fmts = ["NV12"]),
+    hevc_8  = dict(maxres = res4k, fmts = ["NV12"]),
+    hevc_10 = dict(maxres = res4k, fmts = ["P010"]),
+    vp8     = dict(maxres = res4k, fmts = ["NV12"]),
+    vp9_8   = dict(maxres = res4k, fmts = ["NV12"]),
+  ),
+  encode  = dict(
+    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+    hevc_8  = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+    vp8     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+  ),
+  vdenc   = dict(
+    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+    jpeg    = dict(maxres = res8k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+  ),
+  vpp    = dict(
+    # brightness, contrast, hue and saturation
+    procamp     = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2"],
+    ),
+    sharpen   = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2"],
+    ),
+    deinterlace = dict(
+      bob             = dict(
+        ifmts = ["NV12", "YV12", "I420", "YUY2"],
+        ofmts = ["NV12", "YV12", "I420", "YUY2"],
+      ),
+      motion_adaptive = dict(
+        ifmts = ["NV12", "YV12", "I420", "YUY2"],
+        ofmts = ["NV12", "YV12", "I420", "YUY2"],
+      ),
+      motion_compensated = dict(
+        ifmts = ["NV12", "YV12", "I420", "YUY2"],
+        ofmts = ["NV12", "YV12", "I420", "YUY2"],
+      ),
+    ),
+    denoise     = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2"],
+    ),
+    scale       = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2"],
+    ),
+    # colorspace conversion
+    csc         = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2", "BGRA"],
+    ),
+  ),
+)
