@@ -33,7 +33,7 @@ def test_default(case, csc):
   call(
     "ffmpeg -init_hw_device qsv=hw -hwaccel qsv -filter_hw_device hw"
     " -v debug -f rawvideo -pix_fmt {mformat} -s:v {width}x{height} -i {source}"
-    " -vf 'format=nv12,hwupload=extra_hw_frames=64"
+    " -vf 'hwupload=extra_hw_frames=64"
     ",scale_qsv=format={mcsc},hwdownload,format={mcsc}'"
     " -f rawvideo -vsync passthrough -vframes {frames}"
     " -y {ofile}".format(**params))

@@ -32,7 +32,7 @@ def test_default(case, csc):
   call(
     "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v debug"
     " -f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
-    " -i {source} -vf 'format=nv12,hwupload,scale_vaapi=format={mcsc}"
+    " -i {source} -vf 'hwupload,scale_vaapi=format={mcsc}"
     ",hwdownload,format={mcsc}' -f rawvideo -vsync passthrough -vframes {frames}"
     " -y {ofile}".format(**params))
 
