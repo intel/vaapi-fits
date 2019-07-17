@@ -15,9 +15,10 @@ class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99)
+    self.caps   = platform.get_caps("decode", "vc1")
     super(default, self).before()
 
-  @platform_tags(VC1_DECODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "vc1"))
   @slash.requires(*have_gst_element("vaapivc1dec"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
@@ -30,7 +31,7 @@ class default(DecoderTest):
     )
     self.decode()
 
-  @platform_tags(VC1_DECODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "vc1"))
   @slash.requires(*have_gst_element("vaapivc1dec"))
   @slash.parametrize(("case"), sorted(spec_r2r.keys()))
   def test_r2r(self, case):
