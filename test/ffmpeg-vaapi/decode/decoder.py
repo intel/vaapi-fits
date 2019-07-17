@@ -7,12 +7,6 @@
 from ....lib import *
 from ..util import *
 
-__scalers__ = {
-  "hw"  : lambda: "-vf 'hwupload,scale_vaapi=w={width}:h={height}:mode=fast,hwdownload,format=nv12'",
-  "sw"  : lambda: "-s:v {width}x{height}",
-  True  : lambda: __scalers__["sw"](),
-}
-
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_vaapi_accel)
 class DecoderTest(slash.Test):
@@ -24,7 +18,7 @@ class DecoderTest(slash.Test):
     self.output = call(
       "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:/dev/dri/renderD128"
       " -filter_hw_device hw -v verbose"
-      " -i {source} {ffscaler} -pix_fmt {mformat} -f rawvideo -vsync"
+      " -i {source} -pix_fmt {mformat} -f rawvideo -vsync"
       " passthrough -vframes {frames} -y {decoded}".format(**vars(self)))
 
   def gen_name(self):
@@ -41,8 +35,6 @@ class DecoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    self.ffscaler = __scalers__.get(
-      vars(self).get("scale_output", False), lambda: "")().format(**vars(self))
     name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.call_ffmpeg()

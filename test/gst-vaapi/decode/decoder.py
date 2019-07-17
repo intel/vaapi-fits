@@ -7,12 +7,6 @@
 from ....lib import *
 from ..util import *
 
-__scalers__ = {
-  "hw"  : lambda: "! vaapipostproc scale-method=fast ! video/x-raw,width={width},height={height},format={hwformat}",
-  "sw"  : lambda: "! videoscale ! video/x-raw,width={width},height={height}",
-  True  : lambda: __scalers__["sw"](),
-}
-
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("vaapi"))
 @slash.requires(*have_gst_element("checksumsink2"))
@@ -24,7 +18,7 @@ class DecoderTest(slash.Test):
   def call_gst(self):
     call(
       "gst-launch-1.0 -vf filesrc location={source}"
-      " ! {gstdecoder} {gstscaler}"
+      " ! {gstdecoder}"
       " ! videoconvert ! video/x-raw,format={mformatu}"
       " ! checksumsink2 file-checksum=false qos=false"
       " frame-checksum=false plane-checksum=false dump-output=true"
@@ -44,8 +38,6 @@ class DecoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    self.gstscaler = __scalers__.get(
-      vars(self).get("scale_output", False), lambda: "")().format(**vars(self))
     name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst()
