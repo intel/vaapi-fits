@@ -14,9 +14,10 @@ class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    self.caps   = platform.get_caps("decode", "vp9_10")
     super(default, self).before()
 
-  @platform_tags(VP9_DECODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "vp9_10"))
   @slash.requires(*have_gst_element("vaapivp9dec"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
