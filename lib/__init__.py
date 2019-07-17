@@ -5,6 +5,7 @@
 ###
 
 from common import *
+from formats import *
 from framereader import *
 from metrics import *
 from parameters import *
