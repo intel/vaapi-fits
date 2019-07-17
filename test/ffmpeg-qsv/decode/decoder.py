@@ -7,13 +7,6 @@
 from ....lib import *
 from ..util import *
 
-__scalers__ = {
-  "hw"  : lambda: "-vf 'hwupload,vpp_qsv=w={width}:h={height},hwdownload,format={hwformat}'",
-  "sw"  : lambda: "-vf 'hwdownload,format={hwformat}' -s:v {width}x{height}",
-  True  : lambda: __scalers__["sw"](),
-  False : lambda: "-vf 'hwdownload,format={hwformat}'",
-}
-
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_qsv_accel)
 @slash.requires(using_compatible_driver)
@@ -25,7 +18,8 @@ class DecoderTest(slash.Test):
   def call_ffmpeg(self):
     self.output = call(
       "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-      " -v verbose -c:v {ffdecoder} -i {source} {ffscaler}"
+      " -v verbose -c:v {ffdecoder} -i {source}"
+      " -vf 'hwdownload,format={hwformat}'"
       " -pix_fmt {mformat} -f rawvideo -vsync passthrough"
       " -vframes {frames} -y {decoded}".format(**vars(self)))
 
@@ -43,8 +37,6 @@ class DecoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    self.ffscaler = __scalers__.get(
-      vars(self).get("scale_output", False), lambda: "")().format(**vars(self))
     name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.call_ffmpeg()
