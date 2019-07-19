@@ -26,11 +26,12 @@ class VP8EncoderTest(EncoderTest):
     return "webm"
 
 class cqp(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_gst_element("vaapivp8enc"))
   @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       case      = case,
@@ -44,11 +45,12 @@ class cqp(VP8EncoderTest):
     self.encode()
 
 class cbr(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_gst_element("vaapivp8enc"))
   @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, looplvl, loopshp):
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -65,11 +67,12 @@ class cbr(VP8EncoderTest):
     self.encode()
 
 class vbr(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_gst_element("vaapivp8enc"))
   @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,

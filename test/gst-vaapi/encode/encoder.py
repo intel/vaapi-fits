@@ -115,16 +115,39 @@ class EncoderTest(slash.Test):
   def before(self):
     self.refctx = []
 
-  def encode(self):
+  def validate_caps(self):
+    self.hwformat = match_best_format(self.format, self.caps["fmts"])
+    if self.hwformat is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{format} not supported", **vars(self)))
+
+    maxw, maxh = self.caps["maxres"]
+    if self.width > maxw or self.height > maxh:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
+
     self.mprofile = mapprofile(self.codec, self.profile)
     if self.mprofile is None:
       slash.skip_test("{profile} profile is not supported".format(**vars(self)))
 
-    self.mformat = mapformat(self.format)
+    self.mformat  = mapformat(self.format)
     self.mformatu = mapformatu(self.format)
-    self.hwformat = mapformat_hwup(self.format)
     if self.mformat is None:
       slash.skip_test("{format} format not supported".format(**vars(self)))
+
+    self.hwformat = mapformatu(self.hwformat)
+
+    # TODO: add multi-slice caps check
+    #       e.g. iHD supports LP multi-slice, but i965 does not.
+
+    # TODO: add rcmode caps check
+    #       e.g. not all rc modes for LP are supported on all platforms/drivers?
+    #       e.g. iHD drivers supports more rc modes than i965.
+
+  def encode(self):
+    self.validate_caps()
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
