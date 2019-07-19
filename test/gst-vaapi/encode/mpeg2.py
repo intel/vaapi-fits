@@ -8,8 +8,8 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-spec = load_test_spec("mpeg2", "encode")
-spec_r2r = load_test_spec("mpeg2", "encode", "r2r")
+spec      = load_test_spec("mpeg2", "encode")
+spec_r2r  = load_test_spec("mpeg2", "encode", "r2r")
 
 class MPEG2EncoderTest(EncoderTest):
   def before(self):
@@ -27,6 +27,7 @@ class MPEG2EncoderTest(EncoderTest):
 
 class cqp(MPEG2EncoderTest):
   def init(self, tspec, case, gop, bframes, qp, quality, profile):
+    self.caps = platform.get_caps("encode", "mpeg2")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -39,7 +40,7 @@ class cqp(MPEG2EncoderTest):
       rcmode  = "cqp",
     )
 
-  @platform_tags(MPEG2_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "mpeg2"))
   @slash.requires(*have_gst_element("vaapimpeg2enc"))
   @slash.requires(*have_gst_element("vaapimpeg2dec"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['simple']))
@@ -47,7 +48,7 @@ class cqp(MPEG2EncoderTest):
     self.init(spec, case, gop, bframes, qp, quality, profile)
     self.encode()
 
-  @platform_tags(MPEG2_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "mpeg2"))
   @slash.requires(*have_gst_element("vaapimpeg2enc"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r, ['simple']))
   def test_r2r(self, case, gop, bframes, qp, quality, profile):

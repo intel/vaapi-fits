@@ -8,8 +8,8 @@ from .....lib import *
 from ...util import *
 from ..encoder import EncoderTest
 
-spec = load_test_spec("hevc", "encode", "10bit")
-spec_r2r = load_test_spec("hevc", "encode", "10bit", "r2r")
+spec      = load_test_spec("hevc", "encode", "10bit")
+spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
 
 class HEVC10EncoderTest(EncoderTest):
   def before(self):
@@ -27,6 +27,7 @@ class HEVC10EncoderTest(EncoderTest):
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -39,7 +40,7 @@ class cqp(HEVC10EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main10']))
@@ -47,7 +48,7 @@ class cqp(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
@@ -57,6 +58,7 @@ class cqp(HEVC10EncoderTest):
 
 class cqp_lp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -70,7 +72,7 @@ class cqp_lp(HEVC10EncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main10']))
@@ -78,7 +80,7 @@ class cqp_lp(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, qp, quality, profile):
@@ -88,6 +90,7 @@ class cqp_lp(HEVC10EncoderTest):
 
 class cbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -102,7 +105,7 @@ class cbr(HEVC10EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main10']))
@@ -110,7 +113,7 @@ class cbr(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
@@ -120,6 +123,7 @@ class cbr(HEVC10EncoderTest):
 
 class cbr_lp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -135,7 +139,7 @@ class cbr_lp(HEVC10EncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main10']))
@@ -143,7 +147,7 @@ class cbr_lp(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
@@ -153,6 +157,7 @@ class cbr_lp(HEVC10EncoderTest):
 
 class vbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -171,7 +176,7 @@ class vbr(HEVC10EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main10']))
@@ -179,7 +184,7 @@ class vbr(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
@@ -189,6 +194,7 @@ class vbr(HEVC10EncoderTest):
 
 class vbr_lp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -208,7 +214,7 @@ class vbr_lp(HEVC10EncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.requires(*have_gst_element("vaapih265dec"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main10']))
@@ -216,7 +222,7 @@ class vbr_lp(HEVC10EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_10BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
   @slash.requires(*have_gst_element("vaapih265enc"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main10']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
