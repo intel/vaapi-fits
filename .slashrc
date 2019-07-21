@@ -128,7 +128,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
   def _get_ref_addr(self, context):
     path, case = slash.context.test.__slash__.address.split(':')
-    keyctx = filter(lambda c: c.startswith("key:"), context)
+    keyctx = filter(lambda c: str(c).startswith("key:"), context)
     if len(keyctx):
       key = keyctx[0].lstrip("key:")
     else:
