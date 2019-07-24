@@ -22,8 +22,10 @@ class VppTest(slash.Test):
     else:
       opts =  "filesrc location={source}"
       opts += " ! {gstdecoder}"
+
     if self.vpp_element not in ["csc", "deinterlace"]:
-      opts += " ! videoconvert ! video/x-raw,format={hwformat}"
+      if self.ifmt != self.ihwformat:
+        opts += " ! videoconvert ! video/x-raw,format={ihwformat}"
 
     return opts
 
@@ -51,10 +53,14 @@ class VppTest(slash.Test):
         opts += " video-direction={mmethod}"
 
       if self.vpp_element not in ["deinterlace"]:
-        opts += " ! video/x-raw,format={hwformat}"
-      opts += " ! videoconvert ! video/x-raw,format={mformatu}"
+        opts += " ! video/x-raw,format={ohwformat}"
+        if self.ofmt != self.ohwformat:
+          opts += " ! videoconvert ! video/x-raw,format={mformatu}"
+      else:
+        opts += " ! videoconvert ! video/x-raw,format={mformatu}"
+
     else:
-      opts += " ! video/x-raw,format={mcscu}"
+      opts += " ! video/x-raw,format={ohwformat}"
 
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
     opts += " plane-checksum=false dump-output=true dump-location={ofile}"
@@ -102,13 +108,49 @@ class VppTest(slash.Test):
     call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(
       iopts = iopts, oopts = oopts))
 
-  def vpp(self):
+  def validate_caps(self):
+    ifmts         = self.caps.get("ifmts", [])
+    ofmts         = self.caps.get("ofmts", [])
+    self.ifmt     = self.format
+    self.ofmt     = self.format if "csc" != self.vpp_element else self.csc
     self.mformat  = mapformat(self.format)
     self.mformatu = mapformatu(self.format)
-    self.hwformat = maphwformat(self.format)
-    iopts         = self.gen_input_opts()
-    oopts         = self.gen_output_opts()
-    name          = self.gen_name().format(**vars(self))
+
+    if self.mformat is None:
+      slash.skip_test("gst-vaapi.{format} unsupported".format(**vars(self)))
+
+    if "deinterlace" != self.vpp_element:
+      if "csc" == self.vpp_element:
+        ihwfmt = self.ifmt if self.ifmt in ifmts else None
+        ohwfmt = self.ofmt if self.ofmt in ofmts else None
+      else:
+        ihwfmt = match_best_format(self.ifmt, ifmts)
+        ohwfmt = match_best_format(self.ofmt, ofmts)
+
+      if ihwfmt is None:
+        slash.skip_test(
+          format_value(
+            "{platform}.{driver}.{ifmt} input unsupported", **vars(self)))
+
+      if ohwfmt is None:
+        slash.skip_test(
+          format_value(
+            "{platform}.{driver}.{ofmt} output unsupported", **vars(self)))
+
+      self.ihwformat = mapformatu(ihwfmt)
+      self.ohwformat = mapformatu(ohwfmt)
+
+      if self.ihwformat is None:
+        slash.skip_test("gst-vaapi.{ifmt} unsupported".format(**vars(self)))
+      if self.ohwformat is None:
+        slash.skip_test("gst-vaapi.{ofmt} unsupported".format(**vars(self)))
+
+  def vpp(self):
+    self.validate_caps()
+
+    iopts = self.gen_input_opts()
+    oopts = self.gen_output_opts()
+    name  = self.gen_name().format(**vars(self))
 
     self.ofile = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))

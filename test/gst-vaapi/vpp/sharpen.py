@@ -13,23 +13,27 @@ spec = load_test_spec("vpp", "sharpen")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_element = "sharpen"
+      caps        = platform.get_caps("vpp", "sharpen"),
+      vpp_element = "sharpen",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "sharpen"))
   @slash.parametrize(*gen_vpp_sharpen_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     vars(self).update(spec[case].copy())
+    vars(self).update(
+      case    = case,
+      level   = level,
+      mlevel  = mapRange(level, [0, 100], [-1.0, 1.0]),
+    )
+
     if self.width == 1280 and self.height == 720:
-      if os.environ.get("LIBVA_DRIVER_NAME", "i965") == "i965":
+      if "i965" == get_media()._get_driver_name():
         slash.add_failure(
           "1280x720 resolution is known to cause GPU HANG with i965 driver")
         return
 
-    vars(self).update(
-      level = level, mlevel = mapRange(level, [0, 100], [-1.0, 1.0]),
-      case = case)
     self.vpp()
 
   def check_metrics(self):
