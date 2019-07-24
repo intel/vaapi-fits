@@ -16,25 +16,6 @@ def have_gst_element(element):
   return result, element
 
 @memoize
-def mapformat_hwup(format):
-  from ...lib import get_media
-  fmt = {
-    "iHD" : {
-      "I420"  : "NV12",
-      "AYUV"  : "NV12",
-      "YV12"  : "NV12",
-    },
-    "i965" : {
-      "AYUV"  : "NV12",
-    },
-  }.get(get_media()._get_driver_name(), {}).get(format, format)
-
-  return mapformatu(fmt)
-
-# alias
-maphwformat = mapformat_hwup
-
-@memoize
 def mapformat(format):
   return {
     "I420"  : "i420",

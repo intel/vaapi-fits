@@ -8,30 +8,33 @@ from ....lib import *
 from ..util import *
 from .vpp import VppTest
 
-spec = load_test_spec("vpp", "brightness")
-spec_r2r = load_test_spec("vpp", "brightness", "r2r")
+spec      = load_test_spec("vpp", "brightness")
+spec_r2r  = load_test_spec("vpp", "brightness", "r2r")
 
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_element = "brightness"
+      caps        = platform.get_caps("vpp", "brightness"),
+      vpp_element = "brightness",
     )
     super(default, self).before()
 
   def init(self, tspec, case, level):
     vars(self).update(tspec[case].copy())
     vars(self).update(
-      level = level, mlevel = mapRange(level, [0, 100], [-1.0, 1.0]),
-      case = case)
+      case    = case,
+      level   = level,
+      mlevel  = mapRange(level, [0, 100], [-1.0, 1.0]),
+    )
 
+  @slash.requires(*platform.have_caps("vpp", "brightness"))
   @slash.parametrize(*gen_vpp_brightness_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
+  @slash.requires(*platform.have_caps("vpp", "brightness"))
   @slash.parametrize(*gen_vpp_brightness_parameters(spec_r2r))
-  @platform_tags(VPP_PLATFORMS)
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)
     vars(self).setdefault("r2r", 5)
