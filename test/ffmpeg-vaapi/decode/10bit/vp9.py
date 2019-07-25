@@ -10,15 +10,24 @@ from ..decoder import DecoderTest
 
 spec = load_test_spec("vp9", "decode", "10bit")
 
-@platform_tags(VP9_DECODE_10BIT_PLATFORMS)
 class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
     super(default, self).before()
 
-  @slash.parametrize(("case"), sorted(spec.keys()))
+  @platform_tags(VP9_DECODE_10BIT_PLATFORMS)
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] <= 4096
+    and v["height"] <= 4096 ]))
   def test(self, case):
+    vars(self).update(spec[case].copy())
+    self.case = case
+    self.decode()
+
+  @platform_tags(VP9_DECODE_10BIT_8K_PLATFORMS)
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if (v["width"] > 4096
+    or v["height"] > 4096) ]))
+  def test_highres(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()

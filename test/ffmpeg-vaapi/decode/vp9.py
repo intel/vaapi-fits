@@ -17,8 +17,17 @@ class default(DecoderTest):
     super(default, self).before()
 
   @platform_tags(VP9_DECODE_8BIT_PLATFORMS)
-  @slash.parametrize(("case"), sorted(spec.keys()))
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] <= 4096
+    and v["height"] <= 4096 and v["format"] in mapsubsampling("FORMATS_420")]))
   def test(self, case):
+    vars(self).update(spec[case].copy())
+    self.case = case
+    self.decode()
+
+  @platform_tags(VP9_DECODE_8BIT_8K_PLATFORMS)
+  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if (v["width"] > 4096
+    or v["height"] > 4096) and v["format"] in mapsubsampling("FORMATS_420")]))
+  def test_highres(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()
