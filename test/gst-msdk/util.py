@@ -123,6 +123,10 @@ def mapprofile(codec,profile):
     "vp8"      : {
       "version0_3"            : "version0_3",
     },
+    "vp9"      : {
+      "profile0"            : "0",
+      "profile2"            : "2",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):

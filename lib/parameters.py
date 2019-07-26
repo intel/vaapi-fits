@@ -325,6 +325,51 @@ def gen_vp9_vbr_parameters(spec):
   params = gen_vp9_vbr_variants(spec)
   return keys, params
 
+def gen_vp9_cqp_lp_variants(spec):
+  for case, params in spec.iteritems():
+    variants = params.get("cqp_lp", None)
+    for variant in variants:
+      yield [
+        case, variant["ipmode"], variant["qp"], variant["quality"], variant["slices"],
+        variant["refmode"], variant["looplvl"], variant["loopshp"]]
+
+def gen_vp9_cqp_lp_parameters(spec):
+  keys = ("case", "ipmode", "qp", "quality", "slices", "refmode", "looplvl", "loopshp")
+  params = gen_vp9_cqp_lp_variants(spec)
+  return keys, params
+
+def gen_vp9_cbr_lp_variants(spec):
+  for case, params in spec.iteritems():
+    for variant in params.get("cbr_lp", []):
+        # Required: bitrate
+        # Optional: gop, fps, refmode, looplvl, loopshp
+        yield [
+          case, variant["gop"], variant["bitrate"], variant.get("fps", 30),
+          variant["slices"], variant.get("refmode", 0),
+          variant.get("looplvl", 0), variant.get("loopshp", 0),
+        ]
+
+def gen_vp9_cbr_lp_parameters(spec):
+  keys = ("case", "gop", "bitrate", "fps", "slices", "refmode", "looplvl", "loopshp")
+  params = gen_vp9_cbr_lp_variants(spec)
+  return keys, params
+
+def gen_vp9_vbr_lp_variants(spec):
+  for case, params in spec.iteritems():
+    for variant in params.get("vbr_lp", []):
+        # Required: bitrate
+        # Optional: gop, fps, refmode, looplvl, loopshp
+        yield [
+          case, variant["gop"], variant["bitrate"], variant.get("fps", 30),
+          variant["slices"], variant["quality"], variant.get("refmode", 0),
+          variant.get("looplvl", 0), variant.get("loopshp", 0),
+        ]
+
+def gen_vp9_vbr_lp_parameters(spec):
+  keys = ("case", "gop", "bitrate", "fps", "slices", "quality", "refmode", "looplvl", "loopshp")
+  params = gen_vp9_vbr_lp_variants(spec)
+  return keys, params
+
 def gen_vpp_sharpen_variants(spec):
   for case, params in spec.iteritems():
     variants = params.get("levels", None) or [0, 1, 20, 50, 59, 99, 100]
