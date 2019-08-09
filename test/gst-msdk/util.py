@@ -93,7 +93,6 @@ def map_deinterlace_method(method):
     "advanced"         : "advanced",
     "advanced-no-ref"  : "advanced-no-ref",
     "advanced-scd"     : "advanced-scd",
-    "weave"            : "field-weave",
     "none"             : "none"
   }.get(method, None)
 
