@@ -21,7 +21,10 @@ class EncoderTest(slash.Test):
     return opts
 
   def gen_output_opts(self):
-    opts = "-vf 'format={hwupfmt},hwupload' -c:v {ffenc}"
+    opts = "-vf 'format={hwformat},hwupload' -c:v {ffenc}"
+
+    # BUG: It appears there's a ffmpeg bug with yuv420p hwupload when using
+    # i965 driver.  Need to report upstream ffmpeg!
 
     if self.codec not in ["jpeg", "vp8", "vp9",]:
       opts += " -profile:v {mprofile}"
@@ -104,7 +107,19 @@ class EncoderTest(slash.Test):
       "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
       " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
-  def encode(self):
+  def validate_caps(self):
+    self.hwformat = match_best_format(self.format, self.caps["fmts"])
+    if self.hwformat is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{format} not supported", **vars(self)))
+
+    maxw, maxh = self.caps["maxres"]
+    if self.width > maxw or self.height > maxh:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
+
     self.mprofile = mapprofile(self.codec, self.profile)
     if self.mprofile is None:
       slash.skip_test("{profile} profile is not supported".format(**vars(self)))
@@ -113,7 +128,19 @@ class EncoderTest(slash.Test):
     if self.mformat is None:
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
+    self.hwformat = mapformat(self.hwformat)
+
     vars(self).update(rcmodeu = self.rcmode.upper())
+
+    # TODO: add multi-slice caps check
+    #       e.g. iHD supports LP multi-slice, but i965 does not.
+
+    # TODO: add rcmode caps check
+    #       e.g. not all rc modes for LP are supported on all platforms/drivers?
+    #       e.g. iHD drivers supports more rc modes than i965.
+
+  def encode(self):
+    self.validate_caps()
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
