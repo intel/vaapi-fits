@@ -8,12 +8,13 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
+spec = load_test_spec("vp8", "encode")
+
 class VP8EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
       codec   = "vp8",
       ffenc   = "vp8_vaapi",
-      hwupfmt = "nv12",
       profile = "version0_3",
     )
     super(VP8EncoderTest, self).before()
@@ -24,14 +25,13 @@ class VP8EncoderTest(EncoderTest):
   def get_vaapi_profile(self):
     return "VAProfileVP8Version0_3"
 
-spec = load_test_spec("vp8", "encode")
-
 class cqp(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       case      = case,
@@ -44,10 +44,11 @@ class cqp(VP8EncoderTest):
     self.encode()
 
 class cbr(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, looplvl, loopshp):
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -64,11 +65,12 @@ class cbr(VP8EncoderTest):
     self.encode()
 
 class vbr(VP8EncoderTest):
-  @platform_tags(VP8_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "vp8"))
   @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
