@@ -14,34 +14,12 @@ class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    self.caps   = platform.get_caps("decode", "hevc_8")
     super(default, self).before()
 
-  @platform_tags(HEVC_DECODE_8BIT_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["width"] <= 4096
-    and v["height"] <= 4096 and v["format"] in mapsubsampling("FORMATS_420")]))
+  @slash.requires(*platform.have_caps("decode", "hevc_8"))
+  @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
-    vars(self).update(spec[case].copy())
-    self.case = case
-    self.decode()
-
-  @platform_tags(HEVC_DECODE_8BIT_8K_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if (v["width"] > 4096
-    or v["height"] > 4096) and v["format"] in mapsubsampling("FORMATS_420")]))
-  def test_highres(self, case):
-    vars(self).update(spec[case].copy())
-    self.case = case
-    self.decode()
-
-  @platform_tags(HEVC_DECODE_8BIT_422_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in mapsubsampling("FORMATS_422")]))
-  def test_422(self, case):
-    vars(self).update(spec[case].copy())
-    self.case = case
-    self.decode()
-
-  @platform_tags(HEVC_DECODE_8BIT_444_PLATFORMS)
-  @slash.parametrize(("case"), sorted([k for k,v in spec.items() if v["format"] in mapsubsampling("FORMATS_444")]))
-  def test_444(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
     self.decode()

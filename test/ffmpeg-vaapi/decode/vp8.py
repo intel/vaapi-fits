@@ -14,9 +14,10 @@ class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    self.caps   = platform.get_caps("decode", "vp8")
     super(default, self).before()
 
-  @platform_tags(VP8_DECODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "vp8"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())

@@ -14,9 +14,10 @@ class default(DecoderTest):
   def before(self):
     # default metric
     self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    self.caps   = platform.get_caps("decode", "avc")
     super(default, self).before()
 
-  @platform_tags(AVC_DECODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "avc"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
