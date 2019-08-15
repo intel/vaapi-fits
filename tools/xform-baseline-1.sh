@@ -32,6 +32,16 @@ sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_cqp(/test\/ffmpeg-vaapi\/
 sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_cbr(/test\/ffmpeg-vaapi\/encode\/vp9.py:cbr.test(/g" $1
 sed -i "s/test\/ffmpeg-vaapi\/encode\/vp9.py:test_8bit_vbr(/test\/ffmpeg-vaapi\/encode\/vp9.py:vbr.test(/g" $1
 
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/brightness.py:test_default(/test\/ffmpeg-vaapi\/vpp\/brightness.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/contrast.py:test_default(/test\/ffmpeg-vaapi\/vpp\/contrast.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/hue.py:test_default(/test\/ffmpeg-vaapi\/vpp\/hue.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/saturation.py:test_default(/test\/ffmpeg-vaapi\/vpp\/saturation.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/denoise.py:test_default(/test\/ffmpeg-vaapi\/vpp\/denoise.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/mirroring.py:test_default(/test\/ffmpeg-vaapi\/vpp\/mirroring.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/rotation.py:test_default(/test\/ffmpeg-vaapi\/vpp\/rotation.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/sharpen.py:test_default(/test\/ffmpeg-vaapi\/vpp\/sharpen.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-vaapi\/vpp\/transpose.py:test_default(/test\/ffmpeg-vaapi\/vpp\/transpose.py:default.test(/g" $1
+
 # gst-vaapi
 sed -i "s/test\/gst-vaapi\/decode\/avc.py:test_default(/test\/gst-vaapi\/decode\/avc.py:default.test(/g" $1
 sed -i "s/test\/gst-vaapi\/decode\/hevc.py:test_8bit(/test\/gst-vaapi\/decode\/hevc.py:default.test(/g" $1
