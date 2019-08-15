@@ -55,6 +55,19 @@ def mapformat(format):
   }.get(format, None)
 
 @memoize
+def maphwformat(format):
+  from ...lib import get_media
+  fmt = {
+    "iHD" : {
+      "I420"  : "NV12",
+    },
+    "i965" : {
+    },
+  }.get(get_media()._get_driver_name(), {}).get(format, format)
+
+  return mapformat(fmt)
+
+@memoize
 def map_deinterlace_method(method):
   from ...lib import get_media
   return {
