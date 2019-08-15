@@ -6,48 +6,38 @@
 
 from ....lib import *
 from ..util import *
+from .vpp import VppTest
 
 spec = load_test_spec("vpp", "csc")
 
-@slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
-@slash.requires(*have_ffmpeg_filter("scale_qsv"))
-@slash.requires(using_compatible_driver)
-@slash.parametrize(*gen_vpp_csc_parameters(spec))
-@platform_tags(VPP_PLATFORMS)
-def test_default(case, csc):
-  params = spec[case].copy()
-  params.update(
-    csc = csc,mcsc = mapformat(csc),mformat = mapformat(params["format"]))
+class default(VppTest):
+  def before(self):
+    vars(self).update(
+      vpp_op = "csc",
+    )
+    super(default, self).before()
 
-  params["ofile"] = get_media()._test_artifact(
-    "{}_{format}_csc_{csc}_{width}x{height}"
-    ".yuv".format(case, **params))
+  @slash.parametrize(*gen_vpp_csc_parameters(spec))
+  @platform_tags(VPP_PLATFORMS)
+  def test(self, case, csc):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case  = case,
+      csc   = csc,
+    )
+    self.vpp()
 
-  if params["mformat"] is None:
-    slash.skip_test("{format} format not supported".format(**params))
-
-  if params["mcsc"] is None or params["mcsc"] == "yuv420p":
-    slash.skip_test("{} format not supported".format(csc))
-
-  call(
-    "ffmpeg -init_hw_device qsv=hw -hwaccel qsv -filter_hw_device hw"
-    " -v debug -f rawvideo -pix_fmt {mformat} -s:v {width}x{height} -i {source}"
-    " -vf 'hwupload=extra_hw_frames=64"
-    ",scale_qsv=format={mcsc},hwdownload,format={mcsc}'"
-    " -f rawvideo -vsync passthrough -vframes {frames}"
-    " -y {ofile}".format(**params))
-
-  check_metric(
-    # if user specified metric, then use it.  Otherwise, use ssim metric with perfect score
-    metric = params.get("metric", dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)),
-    # If user specified reference, use it.  Otherwise, assume source is the reference.
-    reference = format_value(params["reference"], case = case, **params)
-      if params.get("reference") else params["source"],
-    decoded = params["ofile"],
-    # if user specified reference, then assume it's format is the same as csc output format.
-    # Otherwise, the format is the source format
-    format = params["format"] if params.get("reference", None) is None else params["csc"],
-    format2 = params["csc"],
-    width = params["width"], height = params["height"], frames = params["frames"],
-  )
+  def check_metrics(self):
+    check_metric(
+      # if user specified metric, then use it.  Otherwise, use ssim metric with perfect score
+      metric = vars(self).get("metric", dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)),
+      # If user specified reference, use it.  Otherwise, assume source is the reference.
+      reference = format_value(self.reference, **vars(self))
+        if vars(self).get("reference") else self.source,
+      decoded = self.decoded,
+      # if user specified reference, then assume it's format is the same as csc output format.
+      # Otherwise, the format is the source format
+      format = self.format if vars(self).get("reference", None) is None else self.csc,
+      format2 = self.csc,
+      width = self.width, height = self.height, frames = self.frames,
+    )

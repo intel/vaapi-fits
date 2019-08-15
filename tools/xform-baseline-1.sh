@@ -104,6 +104,15 @@ sed -i "s/test\/ffmpeg-qsv\/encode\/hevc.py:test_10bit_vbr(/test\/ffmpeg-qsv\/en
 sed -i "s/test\/ffmpeg-qsv\/encode\/jpeg.py:test_cqp(/test\/ffmpeg-qsv\/encode\/jpeg.py:cqp.test(/g" $1
 sed -i "s/test\/ffmpeg-qsv\/encode\/mpeg2.py:test_cqp(/test\/ffmpeg-qsv\/encode\/mpeg2.py:cqp.test(/g" $1
 
+sed -i "s/test\/ffmpeg-qsv\/vpp\/brightness.py:test_default(/test\/ffmpeg-qsv\/vpp\/brightness.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/contrast.py:test_default(/test\/ffmpeg-qsv\/vpp\/contrast.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/hue.py:test_default(/test\/ffmpeg-qsv\/vpp\/hue.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/saturation.py:test_default(/test\/ffmpeg-qsv\/vpp\/saturation.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/denoise.py:test_default(/test\/ffmpeg-qsv\/vpp\/denoise.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/mirroring.py:test_default(/test\/ffmpeg-qsv\/vpp\/mirroring.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/rotation.py:test_default(/test\/ffmpeg-qsv\/vpp\/rotation.py:default.test(/g" $1
+sed -i "s/test\/ffmpeg-qsv\/vpp\/sharpen.py:test_default(/test\/ffmpeg-qsv\/vpp\/sharpen.py:default.test(/g" $1
+
 # gst-msdk
 sed -i "s/test\/gst-msdk\/decode\/avc.py:test_default(/test\/gst-msdk\/decode\/avc.py:default.test(/g" $1
 sed -i "s/test\/gst-msdk\/decode\/hevc.py:test_8bit(/test\/gst-msdk\/decode\/hevc.py:default.test(/g" $1
