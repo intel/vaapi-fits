@@ -6,16 +6,13 @@
 
 from ....lib import *
 from ..util import *
+from .vpp import VppTest
 
 if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "ffmpeg-qsv: vpp deinterlace with raw input is no longer supported")
 
-@slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
-@slash.requires(*have_ffmpeg_filter("vpp_qsv"))
-@slash.requires(using_compatible_driver)
-class DeinterlaceTest(slash.Test):
+class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
     "advanced",
@@ -26,25 +23,21 @@ class DeinterlaceTest(slash.Test):
   ]
 
   def before(self):
-    # default metric
-    self.metric = dict(type = "md5")
-    self.refctx = []
+    vars(self).update(
+      metric  = dict(type = "md5"), # default metric
+      vpp_op  = "deinterlace",
+    )
+    super(DeinterlaceTest, self).before()
 
-  @timefn("ffmpeg")
-  def call_ffmpeg(self):
-    call(
-      "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-      " -v verbose -c:v {ffdecoder} -i {source}"
-      " -vf 'format=nv12|qsv,hwupload=extra_hw_frames=16"
-      ",vpp_qsv=deinterlace={method},hwdownload,format=nv12'"
-      " -pix_fmt {mformat} -f rawvideo -vsync passthrough -an -vframes {frames}"
-      " -y {decoded}".format(**vars(self)))
-
-  def get_name_tmpl(self):
-    return "{case}_di_{method}_{rate}_{width}x{height}_{format}"
+  def init(self, tspec, case, method, rate):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case    = case,
+      method  = method,
+      rate    = rate,
+    )
 
   def deinterlace(self):
-    self.mformat = mapformat(self.format)
     self.mmethod = map_deinterlace_method(self.method)
 
     # The rate is fixed in vpp_qsv deinterlace.  It always outputs at frame
@@ -52,16 +45,10 @@ class DeinterlaceTest(slash.Test):
     if "frame" != self.rate:
       slash.skip_test("{rate} rate not supported".format(**vars(self)))
 
-    if self.mformat is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
-
     if self.mmethod is None:
       slash.skip_test("{method} method not supported".format(**vars(self)))
 
-    name = self.get_name_tmpl().format(**vars(self))
-    self.decoded = get_media()._test_artifact("{}.yuv".format(name))
-    self.call_ffmpeg()
-    self.check_metrics()
+    self.vpp()
 
   def check_metrics(self):
     check_filesize(
@@ -82,8 +69,7 @@ class avc(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_avc, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_avc[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_avc, case, method, rate)
     self.deinterlace()
 
 spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
@@ -98,8 +84,7 @@ class mpeg2(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_mpeg2[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_mpeg2, case, method, rate)
     self.deinterlace()
 
 spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
@@ -114,6 +99,5 @@ class vc1(DeinterlaceTest):
     *gen_vpp_deinterlace_parameters(
       spec_vc1, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
-    vars(self).update(spec_vc1[case].copy())
-    vars(self).update(case = case, method = method, rate = rate)
+    self.init(spec_vc1, case, method, rate)
     self.deinterlace()
