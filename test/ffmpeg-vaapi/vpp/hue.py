@@ -14,6 +14,7 @@ spec_r2r  = load_test_spec("vpp", "hue", "r2r")
 class default(VppTest):
   def before(self):
     vars(self).update(
+      caps    = platform.get_caps("vpp", "hue"),
       vpp_op  = "hue",
       NOOP    = 50, # i.e. 0.0 in ffmpeg range
     )
@@ -27,16 +28,16 @@ class default(VppTest):
       mlevel  = mapRange(level, [0, 100], [-180.0, 180.0]),
     )
 
+  @slash.requires(*platform.have_caps("vpp", "hue"))
   @slash.requires(*have_ffmpeg_filter("procamp_vaapi"))
   @slash.parametrize(*gen_vpp_hue_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
+  @slash.requires(*platform.have_caps("vpp", "hue"))
   @slash.requires(*have_ffmpeg_filter("procamp_vaapi"))
   @slash.parametrize(*gen_vpp_hue_parameters(spec_r2r))
-  @platform_tags(VPP_PLATFORMS)
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)
     vars(self).setdefault("r2r", 5)

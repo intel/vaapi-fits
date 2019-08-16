@@ -38,15 +38,23 @@ class DeinterlaceTest(VppTest):
       method  = method,
       rate    = rate,
     )
+    self.frames *= 2 if "field" == rate else 1
 
-  def deinterlace(self):
+  def validate_caps(self):
+    self.caps = platform.get_caps(
+      "vpp", "deinterlace", self.method.replace('-', '_'))
+
+    if self.caps is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{method} not supported", **vars(self)))
+
     self.mmethod = map_deinterlace_method(self.method)
-    self.frames *= 2 if "field" == self.rate else 1
 
     if self.mmethod is None:
-      slash.skip_test("{method} method not supported".format(**vars(self)))
+      slash.skip_test("{method} not supported".format(**vars(self)))
 
-    self.vpp()
+    super(DeinterlaceTest, self).validate_caps()
 
   def check_metrics(self):
     check_filesize(
@@ -61,7 +69,8 @@ class avc(DeinterlaceTest):
     self.ffdecoder = "h264"
     super(avc, self).before()
 
-  @platform_tags(set(AVC_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
+  @slash.requires(*platform.have_caps("decode", "avc"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("h264"))
   @slash.parametrize(
@@ -69,7 +78,7 @@ class avc(DeinterlaceTest):
       spec_avc, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
     self.init(spec_avc, case, method, rate)
-    self.deinterlace()
+    self.vpp()
 
 spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
 class mpeg2(DeinterlaceTest):
@@ -77,7 +86,8 @@ class mpeg2(DeinterlaceTest):
     self.ffdecoder = "mpeg2video"
     super(mpeg2, self).before()
 
-  @platform_tags(set(MPEG2_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
+  @slash.requires(*platform.have_caps("decode", "mpeg2"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("mpeg2video"))
   @slash.parametrize(
@@ -85,7 +95,7 @@ class mpeg2(DeinterlaceTest):
       spec_mpeg2, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
     self.init(spec_mpeg2, case, method, rate)
-    self.deinterlace()
+    self.vpp()
 
 spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
 class vc1(DeinterlaceTest):
@@ -93,7 +103,8 @@ class vc1(DeinterlaceTest):
     self.ffdecoder = "vc1"
     super(vc1, self).before()
 
-  @platform_tags(set(VC1_DECODE_PLATFORMS) & set(VPP_PLATFORMS))
+  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
+  @slash.requires(*platform.have_caps("decode", "vc1"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("vc1"))
   @slash.parametrize(
@@ -101,4 +112,4 @@ class vc1(DeinterlaceTest):
       spec_vc1, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
     self.init(spec_vc1, case, method, rate)
-    self.deinterlace()
+    self.vpp()

@@ -13,13 +13,14 @@ spec = load_test_spec("vpp", "sharpen")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_op = "sharpen",
+      caps    = platform.get_caps("vpp", "sharpen"),
+      vpp_op  = "sharpen",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "sharpen"))
   @slash.requires(*have_ffmpeg_filter("sharpness_vaapi"))
   @slash.parametrize(*gen_vpp_sharpen_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     vars(self).update(spec[case].copy())
     vars(self).update(
