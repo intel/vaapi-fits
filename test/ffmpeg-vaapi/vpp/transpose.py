@@ -13,14 +13,15 @@ spec = load_test_spec("vpp", "transpose")
 class default(VppTest):
   def before(self):
     vars(self).update(
+      caps    = platform.get_caps("vpp", "transpose"),
       metric  = dict(type = "md5"),
       vpp_op  = "transpose",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "transpose"))
   @slash.requires(*have_ffmpeg_filter("transpose_vaapi"))
   @slash.parametrize(*gen_vpp_transpose_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, degrees, method):
     vars(self).update(spec[case].copy())
     vars(self).update(
