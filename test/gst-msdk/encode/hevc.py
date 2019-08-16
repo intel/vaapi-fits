@@ -27,6 +27,7 @@ class HEVC8EncoderTest(EncoderTest):
 
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -39,7 +40,7 @@ class cqp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
@@ -47,7 +48,7 @@ class cqp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
@@ -57,6 +58,7 @@ class cqp(HEVC8EncoderTest):
 
 class cqp_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case    = case,
@@ -69,7 +71,7 @@ class cqp_lp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main']))
@@ -77,7 +79,7 @@ class cqp_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, qp, quality, profile):
@@ -87,6 +89,7 @@ class cqp_lp(HEVC8EncoderTest):
 
 class cbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -101,7 +104,7 @@ class cbr(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
@@ -109,7 +112,7 @@ class cbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
@@ -119,6 +122,7 @@ class cbr(HEVC8EncoderTest):
 
 class cbr_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -133,7 +137,7 @@ class cbr_lp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main']))
@@ -141,7 +145,7 @@ class cbr_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
@@ -151,6 +155,7 @@ class cbr_lp(HEVC8EncoderTest):
 
 class vbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -168,7 +173,7 @@ class vbr(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
@@ -176,7 +181,7 @@ class vbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
@@ -186,6 +191,7 @@ class vbr(HEVC8EncoderTest):
 
 class vbr_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -203,7 +209,7 @@ class vbr_lp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.requires(*have_gst_element("msdkh265dec"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main']))
@@ -211,7 +217,7 @@ class vbr_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_gst_element("msdkh265enc"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
