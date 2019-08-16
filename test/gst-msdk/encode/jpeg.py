@@ -28,6 +28,7 @@ class JPEGEncoderTest(EncoderTest):
 
 class cqp(JPEGEncoderTest):
   def init(self, tspec, case, quality):
+    self.caps = platform.get_caps("vdenc", "jpeg")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case    = case,
@@ -35,7 +36,7 @@ class cqp(JPEGEncoderTest):
       rcmode  = "cqp",
     )
 
-  @platform_tags(JPEG_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "jpeg"))
   @slash.requires(*have_gst_element("msdkmjpegenc"))
   @slash.requires(*have_gst_element("msdkmjpegdec"))
   @slash.parametrize(*gen_jpeg_cqp_parameters(spec))
@@ -43,7 +44,7 @@ class cqp(JPEGEncoderTest):
     self.init(spec, case, quality)
     self.encode()
 
-  @platform_tags(JPEG_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "jpeg"))
   @slash.requires(*have_gst_element("msdkmjpegenc"))
   @slash.parametrize(*gen_jpeg_cqp_parameters(spec_r2r))
   def test_r2r(self, case, quality):
