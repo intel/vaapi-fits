@@ -31,11 +31,25 @@ class DecoderTest(slash.Test):
       name += "_r2r"
     return name
 
-  def decode(self):
-    self.hwformat = maphwformat(self.format)
+  def validate_caps(self):
+    if match_best_format(self.format, self.caps["fmts"]) is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{format} not supported", **vars(self)))
+
+    maxw, maxh = self.caps["maxres"]
+    if self.width > maxw or self.height > maxh:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
+
     self.mformatu = mapformatu(self.format)
     if self.mformatu is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
+      slash.skip_test(
+        "gstreamer.{format} not supported".format(**vars(self)))
+
+  def decode(self):
+    self.validate_caps()
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
