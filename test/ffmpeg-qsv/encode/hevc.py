@@ -8,8 +8,8 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-spec = load_test_spec("hevc", "encode", "8bit")
-spec_r2r = load_test_spec("hevc", "encode", "8bit", "r2r")
+spec      = load_test_spec("hevc", "encode", "8bit")
+spec_r2r  = load_test_spec("hevc", "encode", "8bit", "r2r")
 
 class HEVC8EncoderTest(EncoderTest):
   def before(self):
@@ -17,7 +17,6 @@ class HEVC8EncoderTest(EncoderTest):
       codec     = "hevc-8",
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
-      hwformat  = "nv12",
     )
     super(HEVC8EncoderTest, self).before()
 
@@ -26,6 +25,7 @@ class HEVC8EncoderTest(EncoderTest):
 
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -38,7 +38,7 @@ class cqp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
@@ -46,7 +46,7 @@ class cqp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec_r2r, ['main']))
@@ -57,6 +57,7 @@ class cqp(HEVC8EncoderTest):
 
 class cqp_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case     = case,
@@ -69,7 +70,7 @@ class cqp_lp(HEVC8EncoderTest):
       slices   = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main']))
@@ -77,7 +78,7 @@ class cqp_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main']))
@@ -88,6 +89,7 @@ class cqp_lp(HEVC8EncoderTest):
 
 class cbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -102,7 +104,7 @@ class cbr(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
@@ -110,7 +112,7 @@ class cbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec_r2r, ['main']))
@@ -121,6 +123,7 @@ class cbr(HEVC8EncoderTest):
 
 class cbr_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -135,7 +138,7 @@ class cbr_lp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main']))
@@ -143,7 +146,7 @@ class cbr_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec_r2r, ['main']))
@@ -154,6 +157,7 @@ class cbr_lp(HEVC8EncoderTest):
 
 class vbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -170,7 +174,7 @@ class vbr(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
@@ -178,7 +182,7 @@ class vbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec_r2r, ['main']))
@@ -189,6 +193,7 @@ class vbr(HEVC8EncoderTest):
 
 class vbr_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -205,7 +210,7 @@ class vbr_lp(HEVC8EncoderTest):
       slices  = slices,
     )
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main']))
@@ -213,7 +218,7 @@ class vbr_lp(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(HEVC_ENCODE_8BIT_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
   @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
   @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main']))

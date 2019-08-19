@@ -8,8 +8,8 @@ from ....lib import *
 from ..util import *
 from .encoder import EncoderTest
 
-spec = load_test_spec("avc", "encode")
-spec_r2r = load_test_spec("avc", "encode", "r2r")
+spec      = load_test_spec("avc", "encode")
+spec_r2r  = load_test_spec("avc", "encode", "r2r")
 
 class AVCEncoderTest(EncoderTest):
   def before(self):
@@ -17,7 +17,6 @@ class AVCEncoderTest(EncoderTest):
       codec     = "avc",
       ffencoder = "h264_qsv",
       ffdecoder = "h264_qsv",
-      hwformat  = "nv12",
     )
     super(AVCEncoderTest, self).before()
 
@@ -26,6 +25,7 @@ class AVCEncoderTest(EncoderTest):
 
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -39,7 +39,7 @@ class cqp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main', 'baseline']))
@@ -47,7 +47,7 @@ class cqp(AVCEncoderTest):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec_r2r, ['high', 'main', 'baseline']))
@@ -58,6 +58,7 @@ class cqp(AVCEncoderTest):
 
 class cqp_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
+    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -70,7 +71,7 @@ class cqp_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_CQP_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['high', 'main']))
@@ -78,7 +79,7 @@ class cqp_lp(AVCEncoderTest):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_CQP_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec_r2r, ['high', 'main']))
@@ -89,6 +90,7 @@ class cqp_lp(AVCEncoderTest):
 
 class cbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -104,7 +106,7 @@ class cbr(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main', 'baseline']))
@@ -112,7 +114,7 @@ class cbr(AVCEncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec_r2r, ['high', 'main', 'baseline']))
@@ -123,6 +125,7 @@ class cbr(AVCEncoderTest):
 
 class cbr_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
+    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -137,7 +140,7 @@ class cbr_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec, ['high', 'main']))
@@ -145,7 +148,7 @@ class cbr_lp(AVCEncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec_r2r, ['high', 'main']))
@@ -156,6 +159,7 @@ class cbr_lp(AVCEncoderTest):
 
 class vbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -173,7 +177,7 @@ class vbr(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec, ['high', 'main', 'baseline']))
@@ -181,7 +185,7 @@ class vbr(AVCEncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec_r2r, ['high', 'main', 'baseline']))
@@ -192,6 +196,7 @@ class vbr(AVCEncoderTest):
 
 class vbr_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -208,7 +213,7 @@ class vbr_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main']))
@@ -216,7 +221,7 @@ class vbr_lp(AVCEncoderTest):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @platform_tags(AVC_ENCODE_CBRVBR_LP_PLATFORMS)
+  @slash.requires(*platform.have_caps("vdenc", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec_r2r, ['high', 'main']))
@@ -225,11 +230,12 @@ class vbr_lp(AVCEncoderTest):
     self.encode()
 
 class vbr_la(AVCEncoderTest):
-  @platform_tags(AVC_ENCODE_PLATFORMS)
+  @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
   @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_la_parameters(spec, ['high', 'main', 'baseline']))
   def test(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
+    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bframes   = bframes,
