@@ -13,16 +13,16 @@ spec = load_test_spec("vpp", "rotation")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_element = "rotation"
+      caps        = platform.get_caps("vpp", "rotation"),
+      vpp_element = "rotation",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "rotation"))
   @slash.parametrize(*gen_vpp_rotation_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, degrees):
     vars(self).update(spec[case].copy())
-    vars(self).update(
-      case = case, degrees = degrees)
+    vars(self).update(case = case, degrees = degrees)
     self.vpp()
 
   def check_metrics(self):

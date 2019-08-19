@@ -28,23 +28,6 @@ def mapsubsampling(format_subsampling):
   }.get(format_subsampling, [])
 
 @memoize
-def mapformat_hwup(format):
-  from ...lib import get_media
-  fmt = {
-    "iHD" : {
-      "I420"  : "NV12",
-      "AYUV"  : "NV12",
-      "YUY2"  : "NV12",
-      "YV12"  : "NV12",
-    },
-  }.get(get_media()._get_driver_name(), {}).get(format, format)
-
-  return mapformatu(fmt)
-
-# alias
-maphwformat = mapformat_hwup
-
-@memoize
 def mapformat(format):
   return {
     "I420"  : "i420",
@@ -90,6 +73,7 @@ def map_vpp_mirroring(method):
 def map_deinterlace_method(method):
   return {
     "bob"              : "bob",
+    "motion-adaptive"  : "advanced", # aka
     "advanced"         : "advanced",
     "advanced-no-ref"  : "advanced-no-ref",
     "advanced-scd"     : "advanced-scd",
