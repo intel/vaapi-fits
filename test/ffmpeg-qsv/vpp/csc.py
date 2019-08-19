@@ -13,12 +13,13 @@ spec = load_test_spec("vpp", "csc")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_op = "csc",
+      caps    = platform.get_caps("vpp", "csc"),
+      vpp_op  = "csc",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "csc"))
   @slash.parametrize(*gen_vpp_csc_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, csc):
     vars(self).update(spec[case].copy())
     vars(self).update(

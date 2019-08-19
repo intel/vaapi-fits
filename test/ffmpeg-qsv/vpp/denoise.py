@@ -13,12 +13,13 @@ spec = load_test_spec("vpp", "denoise")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_op = "denoise",
+      caps    = platform.get_caps("vpp", "denoise"),
+      vpp_op  = "denoise",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "denoise"))
   @slash.parametrize(*gen_vpp_denoise_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     vars(self).update(spec[case].copy())
     vars(self).update(

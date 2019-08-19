@@ -49,17 +49,10 @@ def mapformat(format):
   }.get(format, None)
 
 @memoize
-def maphwformat(format):
-  fmt = {
-    "I420"  : "NV12",
-  }.get(format, format)
-
-  return mapformat(fmt)
-
-@memoize
 def map_deinterlace_method(method):
   return {
     "bob"               : "bob",
+    "motion-adaptive"   : "advanced", # aka
     "advanced"          : "advanced",
   }.get(method, None)
 

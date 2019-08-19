@@ -27,7 +27,7 @@ class VppTest(slash.Test):
   def gen_output_opts(self):
     vfilter = []
     if self.vpp_op not in ["csc"]:
-      vfilter.append("format={hwformat}|qsv")
+      vfilter.append("format={ihwformat}|qsv")
     vfilter.append("hwupload=extra_hw_frames=16")
     vfilter.append(
       dict(
@@ -39,11 +39,11 @@ class VppTest(slash.Test):
         scale       = "vpp_qsv=w={scale_width}:h={scale_height}",
         sharpen     = "vpp_qsv=detail={mlevel}",
         deinterlace = "vpp_qsv=deinterlace={mmethod}",
-        csc         = "vpp_qsv=format={hwformat}",
+        csc         = "vpp_qsv=format={ohwformat}",
       )[self.vpp_op]
     )
     vfilter.append("hwdownload")
-    vfilter.append("format={hwformat}")
+    vfilter.append("format={ohwformat}")
 
     opts  = "-vf '{}'".format(",".join(vfilter))
     if self.vpp_op not in ["csc"]:
@@ -77,21 +77,51 @@ class VppTest(slash.Test):
       "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
       " -v verbose {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
-  def vpp(self):
-    if self.vpp_op not in ["csc"]:
-      self.hwformat = maphwformat(self.format)
-    else:
-      self.hwformat = mapformat(self.csc)
-      if self.hwformat is None:
-        slash.skip_test("{csc} format not supported".format(**vars(self)))
-
+  def validate_caps(self):
+    ifmts         = self.caps.get("ifmts", [])
+    ofmts         = self.caps.get("ofmts", [])
+    self.ifmt     = self.format
+    self.ofmt     = self.format if "csc" != self.vpp_op else self.csc
     self.mformat  = mapformat(self.format)
+
+    # MSDK does not support I420 and YV12 output formats even though
+    # iHD supports it.  Thus, msdkvpp can't output it directly (HW).
+    ofmts = list(set(ofmts) - set(["I420", "YV12"]))
+
+    if self.mformat is None:
+      slash.skip_test("ffmpeg.{format} unsupported".format(**vars(self)))
+
+    if self.vpp_op in ["csc"]:
+      ihwfmt = self.ifmt if self.ifmt in ifmts else None
+      ohwfmt = self.ofmt if self.ofmt in ofmts else None
+    else:
+      ihwfmt = match_best_format(self.ifmt, ifmts)
+      ohwfmt = match_best_format(self.ofmt, ofmts)
+
+    if ihwfmt is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{ifmt} input unsupported", **vars(self)))
+
+    if ohwfmt is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}|MSDK.{ofmt} output unsupported", **vars(self)))
+
+    self.ihwformat = mapformat(ihwfmt)
+    self.ohwformat = mapformat(ohwfmt)
+
+    if self.ihwformat is None:
+      slash.skip_test("ffmpeg.{ifmt} unsupported".format(**vars(self)))
+    if self.ohwformat is None:
+      slash.skip_test("ffmpeg.{ofmt} unsupported".format(**vars(self)))
+
+  def vpp(self):
+    self.validate_caps()
+
     iopts         = self.gen_input_opts()
     oopts         = self.gen_output_opts()
     name          = self.gen_name().format(**vars(self))
-
-    if self.mformat is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))

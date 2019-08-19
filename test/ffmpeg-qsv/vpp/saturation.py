@@ -14,6 +14,7 @@ spec_r2r  = load_test_spec("vpp", "saturation", "r2r")
 class default(VppTest):
   def before(self):
     vars(self).update(
+      caps    = platform.get_caps("vpp", "saturation"),
       vpp_op  = "saturation",
       NOOP    = 10, # i.e. 1.0 in ffmpeg range
     )
@@ -27,14 +28,14 @@ class default(VppTest):
       mlevel  = mapRange(level, [0, 100], [0.0, 10.0]),
     )
 
+  @slash.requires(*platform.have_caps("vpp", "saturation"))
   @slash.parametrize(*gen_vpp_saturation_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
+  @slash.requires(*platform.have_caps("vpp", "saturation"))
   @slash.parametrize(*gen_vpp_saturation_parameters(spec_r2r))
-  @platform_tags(VPP_PLATFORMS)
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)
     vars(self).setdefault("r2r", 5)
