@@ -14,23 +14,27 @@ spec_r2r = load_test_spec("vpp", "scale", "r2r")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_element = "scale"
+      caps        = platform.get_caps("vpp", "scale"),
+      vpp_element = "scale",
     )
     super(default, self).before()
 
   def init(self, tspec, case, scale_width, scale_height):
     vars(self).update(tspec[case].copy())
     vars(self).update(
-      case = case, scale_width = scale_width, scale_height = scale_height)
+      case          = case,
+      scale_height  = scale_height,
+      scale_width   = scale_width,
+    )
 
+  @slash.requires(*platform.have_caps("vpp", "scale"))
   @slash.parametrize(*gen_vpp_scale_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, scale_width, scale_height):
     self.init(spec, case, scale_width, scale_height)
     self.vpp()
 
+  @slash.requires(*platform.have_caps("vpp", "scale"))
   @slash.parametrize(*gen_vpp_scale_parameters(spec_r2r))
-  @platform_tags(VPP_PLATFORMS)
   def test_r2r(self, case, scale_width, scale_height):
     self.init(spec_r2r, case, scale_width, scale_height)
     vars(self).setdefault("r2r", 5)

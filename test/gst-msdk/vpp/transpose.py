@@ -13,17 +13,21 @@ spec = load_test_spec("vpp", "transpose")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      vpp_element = "transpose"
+      caps        = platform.get_caps("vpp", "transpose"),
+      vpp_element = "transpose",
     )
     super(default, self).before()
 
+  @slash.requires(*platform.have_caps("vpp", "transpose"))
   @slash.parametrize(*gen_vpp_transpose_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, degrees, method):
     vars(self).update(spec[case].copy())
     vars(self).update(
-      degrees = degrees, method = method, mmethod = map_vpp_mirroring(method),
-      case = case)
+      case    = case,
+      degrees = degrees,
+      method  = method,
+      mmethod = map_vpp_mirroring(method),
+    )
     self.vpp()
 
   def check_metrics(self):

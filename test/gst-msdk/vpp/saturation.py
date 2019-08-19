@@ -8,12 +8,13 @@ from ....lib import *
 from ..util import *
 from .vpp import VppTest
 
-spec = load_test_spec("vpp", "saturation")
-spec_r2r = load_test_spec("vpp", "saturation", "r2r")
+spec      = load_test_spec("vpp", "saturation")
+spec_r2r  = load_test_spec("vpp", "saturation", "r2r")
 
 class default(VppTest):
   def before(self):
     vars(self).update(
+      caps        = platform.get_caps("vpp", "saturation"),
       vpp_element = "saturation",
       NOOP        = 10 # i.e. 1.0 in msdkvpp range should result in no-op result
     )
@@ -22,17 +23,19 @@ class default(VppTest):
   def init(self, tspec, case, level):
     vars(self).update(tspec[case].copy())
     vars(self).update(
-      level = level, mlevel = mapRange(level, [0, 100], [0.0, 10.0]),
-      case = case)
+      case    = case,
+      level   = level,
+      mlevel  = mapRange(level, [0, 100], [0.0, 10.0]),
+    )
 
+  @slash.requires(*platform.have_caps("vpp", "saturation"))
   @slash.parametrize(*gen_vpp_saturation_parameters(spec))
-  @platform_tags(VPP_PLATFORMS)
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
+  @slash.requires(*platform.have_caps("vpp", "saturation"))
   @slash.parametrize(*gen_vpp_saturation_parameters(spec_r2r))
-  @platform_tags(VPP_PLATFORMS)
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)
     vars(self).setdefault("r2r", 5)
