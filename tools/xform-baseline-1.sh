@@ -146,3 +146,8 @@ sed -i "s/test\/gst-msdk\/vpp\/mirroring.py:test_default(/test\/gst-msdk\/vpp\/m
 sed -i "s/test\/gst-msdk\/vpp\/rotation.py:test_default(/test\/gst-msdk\/vpp\/rotation.py:default.test(/g" $1
 sed -i "s/test\/gst-msdk\/vpp\/sharpen.py:test_default(/test\/gst-msdk\/vpp\/sharpen.py:default.test(/g" $1
 sed -i "s/test\/gst-msdk\/vpp\/transpose.py:test_default(/test\/gst-msdk\/vpp\/transpose.py:default.test(/g" $1
+
+# common
+sed -i "s/test_422/test/g" $1
+sed -i "s/test_444/test/g" $1
+sed -i "s/test_highres/test/g" $1
