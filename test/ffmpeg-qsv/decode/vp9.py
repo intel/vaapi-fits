@@ -12,20 +12,20 @@ spec = load_test_spec("vp9", "decode", "8bit")
 
 class default(DecoderTest):
   def before(self):
-    # default metric
-    self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
+    vars(self).update(
+      caps      = platform.get_caps("decode", "vp9_8"),
+      ffdecoder = "vp9_qsv",
+      # default metric
+      metric    = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
+    )
     super(default, self).before()
 
-  @platform_tags(VP9_DECODE_8BIT_PLATFORMS)
+  @slash.requires(*platform.have_caps("decode", "vp9_8"))
   @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
-    vars(self).update(
-      case      = case,
-      ffdecoder = "vp9_qsv",
-      hwformat  = "nv12",
-    )
+    vars(self).update(case = case)
     self.decode()
 
   def check_output(self):
