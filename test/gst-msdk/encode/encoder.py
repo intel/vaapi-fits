@@ -138,6 +138,11 @@ class EncoderTest(slash.Test):
         format_value(
           "{platform}.{driver}.slice > 1 unsupported in this mode", **vars(self)))
 
+    if not self.caps.get(self.rcmode, True):
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{rcmode} unsupported in this mode", **vars(self)))
+
     self.mprofile = mapprofile(self.codec, self.profile)
     if self.mprofile is None:
       slash.skip_test("{profile} profile is not supported".format(**vars(self)))
@@ -148,10 +153,6 @@ class EncoderTest(slash.Test):
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
     self.hwformat = mapformatu(self.hwformat)
-
-    # TODO: add rcmode caps check
-    #       e.g. not all rc modes for LP are supported on all platforms/drivers?
-    #       e.g. iHD drivers supports more rc modes than i965.
 
   def encode(self):
     self.validate_caps()
