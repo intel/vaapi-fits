@@ -25,7 +25,7 @@ caps = dict(
     vp8     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
   ),
   vdenc   = dict(
-    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"], multislice = False),
+    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"], multislice = False, cbr = False, vbr = False),
     jpeg    = dict(maxres = res8k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
   ),
   vpp    = dict(
