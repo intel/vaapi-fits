@@ -40,17 +40,13 @@ After Git LFS is installed, you can clone and interact with this repository usin
 
 ## Examples
 
-* Run all available test cases
+* Run test cases for SKL platform
 
-  ```vaapi-fits run test```
+  ```vaapi-fits run test --platform SKL```
 
-* Run only test cases that are supported by SKL platform
+* Run only gst-vaapi test cases on iHD driver for KBL platform
 
-  ```vaapi-fits run test -k tag:SKL```
-
-* Run only gst-vaapi test cases on iHD driver
-
-  ```LIBVA_DRIVER_NAME=iHD GST_VAAPI_ALL_DRIVERS=1 vaapi-fits run test/gst-vaapi```
+  ```LIBVA_DRIVER_NAME=iHD GST_VAAPI_ALL_DRIVERS=1 vaapi-fits run test/gst-vaapi --platform KBL```
 
 ## Some Useful Options
 
@@ -58,6 +54,7 @@ After Git LFS is installed, you can clone and interact with this repository usin
 
 option|description
 ------|-----------
+<nobr>`--platform PLATFORM`</nobr> | This flag is REQUIRED.  Loads the capabilities for PLATFORM to determine which tests can execute (see `lib/caps/` directory for supported platforms)
 <nobr>`-v`</nobr> | Make console more verbose (can be specified multiple times)
 <nobr>`--artifact-retention NUM`</nobr> | Retention policy for test artifacts (e.g. encoded or decoded output files) 0 = Keep None; 1 = Keep Failed; 2 = Keep All
 <nobr>`--parallel-metrics`</nobr> | SSIM and PSNR calculations will be processed in parallel mode
