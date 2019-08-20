@@ -30,7 +30,7 @@ caps = dict(
     vp9_10  = dict(maxres = res4k, fmts = ["P010"]),
   ),
   vdenc   = dict(
-    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
+    avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"], multislice = False),
     jpeg    = dict(maxres = res8k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
   ),
   vpp    = dict(

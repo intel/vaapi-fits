@@ -111,6 +111,11 @@ class EncoderTest(slash.Test):
         format_value(
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
 
+    if vars(self).get("slices", 1) > 1 and not self.caps.get("multislice", True):
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.slice > 1 unsupported in this mode", **vars(self)))
+
     self.mprofile = mapprofile(self.codec, self.profile)
     if self.mprofile is None:
       slash.skip_test("{profile} profile is not supported".format(**vars(self)))
@@ -120,9 +125,6 @@ class EncoderTest(slash.Test):
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
     self.hwformat = mapformat(self.hwformat)
-
-    # TODO: add multi-slice caps check
-    #       e.g. iHD supports LP multi-slice, but i965 does not.
 
     # TODO: add rcmode caps check
     #       e.g. not all rc modes for LP are supported on all platforms/drivers?
