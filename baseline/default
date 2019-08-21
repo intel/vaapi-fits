@@ -775,7 +775,7 @@
       }
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         12.5314, 
@@ -787,7 +787,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         12.0616, 
@@ -799,7 +799,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         25.2082, 
@@ -811,7 +811,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         9.7694, 
@@ -823,7 +823,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         9.4388, 
@@ -835,7 +835,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         9.9086, 
@@ -847,7 +847,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/brightness.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/brightness.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         9.5907, 
@@ -859,7 +859,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         7.7349, 
@@ -871,7 +871,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         21.3471, 
@@ -883,7 +883,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         8.2282, 
@@ -895,7 +895,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         5.7905, 
@@ -907,7 +907,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         6.6813, 
@@ -919,7 +919,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         6.7214, 
@@ -931,7 +931,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/contrast.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/contrast.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         6.7095, 
@@ -943,7 +943,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         60.3148, 
@@ -955,7 +955,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -967,7 +967,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         67.4231, 
@@ -979,7 +979,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -991,7 +991,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         57.5142, 
@@ -1003,7 +1003,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1015,7 +1015,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/denoise.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/denoise.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         58.7360, 
@@ -1027,7 +1027,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1039,7 +1039,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1051,7 +1051,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1063,7 +1063,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1075,7 +1075,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1087,7 +1087,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1099,7 +1099,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/hue.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1111,7 +1111,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1123,7 +1123,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1135,7 +1135,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1147,7 +1147,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1159,7 +1159,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1171,7 +1171,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1183,7 +1183,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/saturation.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/saturation.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1195,7 +1195,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         31.4556, 
@@ -1207,7 +1207,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         68.5672, 
@@ -1219,7 +1219,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         40.0549, 
@@ -1231,7 +1231,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1243,7 +1243,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         25.6195, 
@@ -1255,7 +1255,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -1267,7 +1267,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-qsv/vpp/sharpen.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-qsv/vpp/sharpen.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         27.2692, 
@@ -3261,7 +3261,7 @@
       }
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         12.5314, 
@@ -3283,7 +3283,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         12.0616, 
@@ -3305,7 +3305,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         25.2082, 
@@ -3327,7 +3327,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         9.7694, 
@@ -3349,7 +3349,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         9.4388, 
@@ -3371,7 +3371,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         9.9086, 
@@ -3393,7 +3393,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/brightness.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/brightness.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         9.5907, 
@@ -3415,7 +3415,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         7.7349, 
@@ -3437,7 +3437,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         21.5352, 
@@ -3459,7 +3459,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         8.2284, 
@@ -3481,7 +3481,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         5.7905, 
@@ -3503,7 +3503,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         6.6813, 
@@ -3525,7 +3525,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         6.6419, 
@@ -3547,7 +3547,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/contrast.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/contrast.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         6.7095, 
@@ -3569,7 +3569,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
         60.8299, 
@@ -3581,7 +3581,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -3593,7 +3593,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         67.4231, 
@@ -3605,7 +3605,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=QCIF,level=0)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -3617,7 +3617,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=QCIF,level=100)": {
     "drv.iHD": {
       "psnr": [
         57.5142, 
@@ -3629,7 +3629,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=QVGA,level=1)": {
     "drv.iHD": {
       "psnr": [
         100, 
@@ -3641,7 +3641,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/denoise.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/denoise.py:default.test(case=QVGA,level=99)": {
     "drv.iHD": {
       "psnr": [
         58.7360, 
@@ -3653,7 +3653,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3675,7 +3675,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3697,7 +3697,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3719,7 +3719,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3741,7 +3741,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3763,7 +3763,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3785,7 +3785,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/hue.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/hue.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3807,7 +3807,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3829,7 +3829,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=720p,level=12)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3851,7 +3851,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=720p,level=57)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3873,7 +3873,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3895,7 +3895,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3917,7 +3917,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3939,7 +3939,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/saturation.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/saturation.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -3961,7 +3961,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=1080p,level=84)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=1080p,level=84)": {
     "drv.i965": {
       "psnr": [
         31.0491, 
@@ -3983,7 +3983,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=720p,level=12)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=720p,level=12)": {
     "drv.iHD": {
       "psnr": [
         69.8251, 
@@ -3995,7 +3995,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=720p,level=57)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=720p,level=57)": {
     "drv.iHD": {
       "psnr": [
         40.0549, 
@@ -4007,7 +4007,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=QCIF,level=0)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=QCIF,level=0)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -4029,7 +4029,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=QCIF,level=100)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=QCIF,level=100)": {
     "drv.i965": {
       "psnr": [
         29.9990, 
@@ -4051,7 +4051,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=QVGA,level=1)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=QVGA,level=1)": {
     "drv.i965": {
       "psnr": [
         100, 
@@ -4073,7 +4073,7 @@
       ]
     }
   }, 
-  "test/ffmpeg-vaapi/vpp/sharpen.py:test_default(case=QVGA,level=99)": {
+  "test/ffmpeg-vaapi/vpp/sharpen.py:default.test(case=QVGA,level=99)": {
     "drv.i965": {
       "psnr": [
         30.8913, 
