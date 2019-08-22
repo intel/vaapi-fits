@@ -64,8 +64,11 @@ class EncoderTest(slash.Test):
 #    if vars(self).get("looplvl", None) is not None:
 #      opts += " loop-filter-level={looplvl}"
 
-    if self.codec not in ["jpeg", "vp8", ]:
+    if self.codec not in ["jpeg", "vp8", "mpeg2"]:
       opts += " ! {gstmediatype},profile={mprofile}"
+    
+    if self.codec is "mpeg2":
+      opts += " ! {gstmediatype}"
 
     if vars(self).get("gstparser", None) is not None:
       opts += " ! {gstparser}"
