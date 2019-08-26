@@ -16,9 +16,8 @@ class VP8EncoderTest(EncoderTest):
       codec         = "vp8",
       gstencoder    = "vaapivp8enc",
       gstdecoder    = "matroskademux ! vaapivp8dec",
-      gstmediatype  = "video/vp8",
+      gstmediatype  = "video/x-vp8",
       gstmuxer      = "matroskamux",
-      profile       = "version0_3",
     )
     super(VP8EncoderTest, self).before()
 

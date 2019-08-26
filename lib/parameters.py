@@ -172,20 +172,17 @@ gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
 
-def gen_mpeg2_cqp_variants(spec, profiles):
+def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.iteritems():
     variants = copy.deepcopy(params.get("cqp", None))
     if variants is None:
-      keys = ["gop", "bframes", "qp", "quality", "profile"]
-      product  = list(itertools.product([1], [0], [14, 28], [1, 4, 7], profiles))  # I
-      product += list(itertools.product([30], [0], [14, 28], [1, 4, 7], profiles)) # IP
-      product += list(itertools.product([30], [2], [14, 28], [1, 4, 7], profiles)) # IPB
+      keys = ["gop", "bframes", "qp", "quality"]
+      product  = list(itertools.product([1], [0], [14, 28], [1, 4, 7]))  # I
+      product += list(itertools.product([30], [0], [14, 28], [1, 4, 7])) # IP
+      product += list(itertools.product([30], [2], [14, 28], [1, 4, 7])) # IPB
       variants = [dict(zip(keys, vals)) for vals in product]
 
     for variant in variants:
-      uprofile = variant.get("profile", None)
-      cprofiles = [uprofile] if uprofile else profiles
-
       # backwards compatibility for ipbmode user config
       ipbmode = variant.get("ipbmode", None)
       if ipbmode is not None:
@@ -195,15 +192,14 @@ def gen_mpeg2_cqp_variants(spec, profiles):
           gop = 30 if ipbmode != 0 else 1,
           bframes = 2 if ipbmode == 2 else 0)
 
-      for profile in cprofiles:
-        yield [
-          case, variant["gop"], variant["bframes"],
-          variant["qp"], variant["quality"], profile
-        ]
+      yield [
+        case, variant["gop"], variant["bframes"],
+        variant["qp"], variant["quality"]
+      ]
 
-def gen_mpeg2_cqp_parameters(spec, profiles):
-  keys = ("case", "gop", "bframes", "qp", "quality", "profile")
-  params = gen_mpeg2_cqp_variants(spec, profiles)
+def gen_mpeg2_cqp_parameters(spec):
+  keys = ("case", "gop", "bframes", "qp", "quality")
+  params = gen_mpeg2_cqp_variants(spec)
   return keys, params
 
 def gen_jpeg_cqp_variants(spec):

@@ -16,7 +16,6 @@ class JPEGEncoderTest(EncoderTest):
     vars(self).update(
       codec   = "jpeg",
       ffenc   = "mjpeg_vaapi",
-      profile = "baseline",
     )
     super(JPEGEncoderTest, self).before()
 
