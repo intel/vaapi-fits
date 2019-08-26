@@ -108,7 +108,9 @@ class EncoderTest(slash.Test):
       " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
-    self.hwformat = match_best_format(self.format, self.caps["fmts"])
+    # BUG: FFmpeg fails to support I420 hwupload even though i965 supports it.
+    ifmts = list(set(self.caps["fmts"]) - set(["I420"]))
+    self.hwformat = match_best_format(self.format, ifmts)
     if self.hwformat is None:
       slash.skip_test(
         format_value(
