@@ -26,7 +26,7 @@ class default(VppTest):
       case    = case,
       degrees = degrees,
       method  = method,
-      mmethod = map_vpp_mirroring(method),
+      mmethod = map_vpp_transpose(degrees, method),
     )
     self.vpp()
 

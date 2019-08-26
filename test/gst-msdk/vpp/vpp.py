@@ -45,16 +45,12 @@ class VppTest(slash.Test):
         opts += " denoise={level}"
       elif  self.vpp_element in ["hue"]:
         opts += " hue={mlevel}"
-      elif  self.vpp_element in ["mirroring"]:
-        opts += " mirroring={mmethod}"
-      elif  self.vpp_element in ["rotation"]:
-        opts += " rotation={degrees}"
       elif  self.vpp_element in ["saturation"]:
         opts += " saturation={mlevel}"
       elif  self.vpp_element in ["sharpen"]:
         opts += " detail={level}"
-      elif  self.vpp_element in ["transpose"]:
-        opts += " rotation={degrees} mirroring={mmethod}"
+      elif  self.vpp_element in ["mirroring", "rotation", "transpose"]:
+        opts += " video-direction={mmethod}"
 
       opts += " ! video/x-raw,format={ohwformat}"
       if self.vpp_element in ["scale"]:
@@ -103,7 +99,7 @@ class VppTest(slash.Test):
     elif  self.vpp_element in ["rotation"]:
       name += "_rotation_{degrees}"
     elif  self.vpp_element in ["transpose"]:
-      name += "_rotation_{degrees}_{method}"
+      name += "_transpose_{degrees}_{method}"
 
     if vars(self).get("r2r", None) is not None:
       name += "_r2r"

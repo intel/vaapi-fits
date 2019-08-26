@@ -22,7 +22,11 @@ class default(VppTest):
   @slash.parametrize(*gen_vpp_rotation_parameters(spec))
   def test(self, case, degrees):
     vars(self).update(spec[case].copy())
-    vars(self).update(case = case, degrees = degrees)
+    vars(self).update(
+      case    = case,
+      degrees = degrees,
+      mmethod = map_vpp_rotation(degrees),
+    )
     self.vpp()
 
   def check_metrics(self):
