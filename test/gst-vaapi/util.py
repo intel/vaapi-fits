@@ -75,6 +75,15 @@ def map_vpp_mirroring(method):
   }.get(method, None)
 
 @memoize
+def map_vpp_rotation(degrees):
+  return {
+    0   : "identity",
+    90  : "90r",
+    180 : "180",
+    270 : "90l",
+  }.get(degrees, None)
+
+@memoize
 def mapprofile(codec, profile):
   return {
     "avc"      : {
