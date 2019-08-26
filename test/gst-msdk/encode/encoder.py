@@ -64,8 +64,9 @@ class EncoderTest(slash.Test):
 #    if vars(self).get("looplvl", None) is not None:
 #      opts += " loop-filter-level={looplvl}"
 
-    if self.codec not in ["jpeg", "vp8", ]:
-      opts += " ! {gstmediatype},profile={mprofile}"
+    opts += " ! {gstmediatype}"
+    if vars(self).get("profile", None) is not None:
+      opts += ",profile={mprofile}"
 
     if vars(self).get("gstparser", None) is not None:
       opts += " ! {gstparser}"
@@ -78,7 +79,9 @@ class EncoderTest(slash.Test):
     return opts
 
   def gen_name(self):
-    name = "{case}-{rcmode}-{profile}"
+    name = "{case}-{rcmode}"
+    if vars(self).get("profile", None) is not None:
+      name += "-{profile}"
     if vars(self).get("fps", None) is not None:
       name += "-{fps}"
     if vars(self).get("gop", None) is not None:
@@ -143,9 +146,10 @@ class EncoderTest(slash.Test):
         format_value(
           "{platform}.{driver}.{rcmode} unsupported in this mode", **vars(self)))
 
-    self.mprofile = mapprofile(self.codec, self.profile)
-    if self.mprofile is None:
-      slash.skip_test("{profile} profile is not supported".format(**vars(self)))
+    if vars(self).get("profile", None) is not None:
+      self.mprofile = mapprofile(self.codec, self.profile)
+      if self.mprofile is None:
+        slash.skip_test("{profile} profile is not supported".format(**vars(self)))
 
     self.mformat  = mapformat(self.format)
     self.mformatu = mapformatu(self.format)

@@ -23,13 +23,10 @@ class MPEG2EncoderTest(EncoderTest):
     return "m2v"
 
   def get_vaapi_profile(self):
-    return {
-      "simple"  : "VAProfileMPEG2Simple",
-      "main"    : "VAProfileMPEG2Main",
-    }[self.profile]
+    return "VAProfileMPEG2.*"
 
 class cqp(MPEG2EncoderTest):
-  def init(self, tspec, case, gop, bframes, qp, quality, profile):
+  def init(self, tspec, case, gop, bframes, qp, quality):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     self.caps = platform.get_caps("encode", "mpeg2")
     vars(self).update(tspec[case].copy())
@@ -37,7 +34,6 @@ class cqp(MPEG2EncoderTest):
       bframes = bframes,
       case    = case,
       gop     = gop,
-      profile = profile,
       qp      = qp,
       mqp     = mapRange(qp, [0, 100], [1, 31]),
       rcmode  = "cqp",
@@ -45,15 +41,15 @@ class cqp(MPEG2EncoderTest):
 
   @slash.requires(*platform.have_caps("encode", "mpeg2"))
   @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
-  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec, ['main', 'simple']))
-  def test(self, case, gop, bframes, qp, quality, profile):
-    self.init(spec, case, gop, bframes, qp, quality, profile)
+  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec))
+  def test(self, case, gop, bframes, qp, quality):
+    self.init(spec, case, gop, bframes, qp, quality)
     self.encode()
 
   @slash.requires(*platform.have_caps("encode", "mpeg2"))
   @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
-  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r, ['main', 'simple']))
-  def test_r2r(self, case, gop, bframes, qp, quality, profile):
-    self.init(spec_r2r, case, gop, bframes, qp, quality, profile)
+  @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r))
+  def test_r2r(self, case, gop, bframes, qp, quality):
+    self.init(spec_r2r, case, gop, bframes, qp, quality)
     vars(self).setdefault("r2r", 5)
     self.encode()

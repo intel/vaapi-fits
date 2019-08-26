@@ -19,7 +19,6 @@ class JPEGEncoderTest(EncoderTest):
       gstdecoder    = "jpegparse ! vaapijpegdec",
       gstmediatype  = "image/jpeg",
       gstparser     = "jpegparse",
-      profile       = "baseline",
     )
     super(JPEGEncoderTest, self).before()
 

@@ -17,7 +17,6 @@ class JPEGEncoderTest(EncoderTest):
       codec     = "jpeg",
       ffencoder = "mjpeg_qsv",
       ffdecoder = "mjpeg_qsv",
-      profile   = "baseline",
     )
     super(JPEGEncoderTest, self).before()
 

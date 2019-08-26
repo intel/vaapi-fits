@@ -73,15 +73,6 @@ def mapprofile(codec, profile):
     "hevc-10"  : {
       "main10"    : "main10"
     },
-    "mpeg2"    : {
-      "high"      : "high",
-      "main"      : "main",
-      "simple"    : "simple",
-      "unknown"   : "unknown"
-    },
-    "jpeg"     : {
-      "baseline"  : "baseline",
-    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
