@@ -64,6 +64,7 @@ def mapformatu(format):
 @memoize
 def map_vpp_mirroring(method):
   return {
+    None          : "identity",
     "identity"    : "identity",
     "none"        : "identity",
     "horizontal"  : "horiz",
