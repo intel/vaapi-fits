@@ -5391,66 +5391,6 @@
       ]
     }
   }, 
-  "test/gst-msdk/vpp/mirroring.py:default.test(case=1080p,method=horizontal)": {
-    "md5": "984cc41430b6cc6aa4a2ff1db1529755"
-  }, 
-  "test/gst-msdk/vpp/mirroring.py:default.test(case=720p,method=horizontal)": {
-    "md5": "c8aff5aaa0c259f1bf9846627b027635"
-  }, 
-  "test/gst-msdk/vpp/mirroring.py:default.test(case=QCIF,method=horizontal)": {
-    "md5": "f32e66954c8f1c9c0772eef0cd63844a"
-  }, 
-  "test/gst-msdk/vpp/mirroring.py:default.test(case=QVGA,method=horizontal)": {
-    "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=0)": {
-    "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=180)": {
-    "md5": "aeed2cb06b0d2acbfa181ae38a63ed8a"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=270)": {
-    "md5": "47d3008e2cc76bfd971a084777c4b9df"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=1080p,degrees=90)": {
-    "md5": "ac951a6144801875d7d07ed02352ce36"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=0)": {
-    "md5": "5bcf39edf34433e74b709e89db93a57c"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=180)": {
-    "md5": "4549b4090d8f948b57513e344a8316f0"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=270)": {
-    "md5": "d19c95e525acd72a6f4b343dfb9f8988"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=720p,degrees=90)": {
-    "md5": "9db7b428d19e05165c21d0063efc896c"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=0)": {
-    "md5": "330966f7c6feba190bf8a97960036cec"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=180)": {
-    "md5": "675adb6ad3f66f59aa6965ed35d1c59f"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=270)": {
-    "md5": "6d57bf92865c5b19dd6ee99626d10cdd"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QCIF,degrees=90)": {
-    "md5": "160ac05bdfd8e88721bf39ed6325939e"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=0)": {
-    "md5": "59110d2b34c2861f3dc23aba84a02ae7"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=180)": {
-    "md5": "457abe0232714a8a4e5224f37380fac0"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=270)": {
-    "md5": "2aa5086b07048423baae3bcb8458c0ac"
-  }, 
-  "test/gst-msdk/vpp/rotation.py:default.test(case=QVGA,degrees=90)": {
-    "md5": "48ee162e3ac255ff75e6adc509afcc09"
-  }, 
   "test/gst-msdk/vpp/saturation.py:default.test(case=1080p,level=84)": {
     "drv.iHD": {
       "psnr": [
@@ -8382,5 +8322,209 @@
         100
       ]
     }
+  }, 
+  "vpp.mirroring:default.test(case=1080p,method=horizontal)": {
+    "md5": "984cc41430b6cc6aa4a2ff1db1529755"
+  }, 
+  "vpp.mirroring:default.test(case=720p,method=horizontal)": {
+    "md5": "c8aff5aaa0c259f1bf9846627b027635"
+  }, 
+  "vpp.mirroring:default.test(case=QCIF,method=horizontal)": {
+    "md5": "f32e66954c8f1c9c0772eef0cd63844a"
+  }, 
+  "vpp.mirroring:default.test(case=QVGA,method=horizontal)": {
+    "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
+  }, 
+  "vpp.rotation:default.test(case=1080p,degrees=0)": {
+    "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
+  }, 
+  "vpp.rotation:default.test(case=1080p,degrees=180)": {
+    "md5": "aeed2cb06b0d2acbfa181ae38a63ed8a"
+  }, 
+  "vpp.rotation:default.test(case=1080p,degrees=270)": {
+    "md5": "c3279d7c62bc22cce405d89f555d5678"
+  }, 
+  "vpp.rotation:default.test(case=1080p,degrees=90)": {
+    "md5": "0104994093497f08eacc85604b257916"
+  }, 
+  "vpp.rotation:default.test(case=720p,degrees=0)": {
+    "md5": "5bcf39edf34433e74b709e89db93a57c"
+  }, 
+  "vpp.rotation:default.test(case=720p,degrees=180)": {
+    "md5": "4549b4090d8f948b57513e344a8316f0"
+  }, 
+  "vpp.rotation:default.test(case=720p,degrees=270)": {
+    "md5": "9b81eb85e8188162583ec8f1c9899a47"
+  }, 
+  "vpp.rotation:default.test(case=720p,degrees=90)": {
+    "md5": "5d8c9e294f07541ac8eac3c37bae7bba"
+  }, 
+  "vpp.rotation:default.test(case=QCIF,degrees=0)": {
+    "md5": "330966f7c6feba190bf8a97960036cec"
+  }, 
+  "vpp.rotation:default.test(case=QCIF,degrees=180)": {
+    "md5": "675adb6ad3f66f59aa6965ed35d1c59f"
+  }, 
+  "vpp.rotation:default.test(case=QCIF,degrees=270)": {
+    "md5": "50093a2409e143138bf53c327e16db45"
+  }, 
+  "vpp.rotation:default.test(case=QCIF,degrees=90)": {
+    "md5": "982d5a812c0177cede165ca207b9b50c"
+  }, 
+  "vpp.rotation:default.test(case=QVGA,degrees=0)": {
+    "md5": "59110d2b34c2861f3dc23aba84a02ae7"
+  }, 
+  "vpp.rotation:default.test(case=QVGA,degrees=180)": {
+    "md5": "457abe0232714a8a4e5224f37380fac0"
+  }, 
+  "vpp.rotation:default.test(case=QVGA,degrees=270)": {
+    "md5": "6cb8e8fa9252b23e4140e201ba789881"
+  }, 
+  "vpp.rotation:default.test(case=QVGA,degrees=90)": {
+    "md5": "37fc24e6fa474693ffe45b43c2c68ca2"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=0,method=None)": {
+    "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=0,method=horizontal)": {
+    "md5": "984cc41430b6cc6aa4a2ff1db1529755"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=0,method=vertical)": {
+    "md5": "d004a9734a04302661e79702556867b6"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=180,method=None)": {
+    "md5": "aeed2cb06b0d2acbfa181ae38a63ed8a"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=180,method=horizontal)": {
+    "md5": "d004a9734a04302661e79702556867b6"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=180,method=vertical)": {
+    "md5": "984cc41430b6cc6aa4a2ff1db1529755"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=270,method=None)": {
+    "md5": "c3279d7c62bc22cce405d89f555d5678"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=270,method=horizontal)": {
+    "md5": "c91e2d08ed466ea660b7a76478ab2b77"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=270,method=vertical)": {
+    "md5": "f46b298a8589ae2b387acee44a3db882"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=90,method=None)": {
+    "md5": "0104994093497f08eacc85604b257916"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=90,method=horizontal)": {
+    "md5": "f46b298a8589ae2b387acee44a3db882"
+  }, 
+  "vpp.transpose:default.test(case=1080p,degrees=90,method=vertical)": {
+    "md5": "c91e2d08ed466ea660b7a76478ab2b77"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=0,method=None)": {
+    "md5": "5bcf39edf34433e74b709e89db93a57c"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=0,method=horizontal)": {
+    "md5": "c8aff5aaa0c259f1bf9846627b027635"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=0,method=vertical)": {
+    "md5": "600467fd5c5f136e22327c1b00728464"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=180,method=None)": {
+    "md5": "4549b4090d8f948b57513e344a8316f0"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=180,method=horizontal)": {
+    "md5": "600467fd5c5f136e22327c1b00728464"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=180,method=vertical)": {
+    "md5": "c8aff5aaa0c259f1bf9846627b027635"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=270,method=None)": {
+    "md5": "9b81eb85e8188162583ec8f1c9899a47"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=270,method=horizontal)": {
+    "md5": "ac444ab845d72f8b98e9c307b0403d6d"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=270,method=vertical)": {
+    "md5": "3a6b135f1478c100fd7df4c8b76f6dbb"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=90,method=None)": {
+    "md5": "5d8c9e294f07541ac8eac3c37bae7bba"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=90,method=horizontal)": {
+    "md5": "3a6b135f1478c100fd7df4c8b76f6dbb"
+  }, 
+  "vpp.transpose:default.test(case=720p,degrees=90,method=vertical)": {
+    "md5": "ac444ab845d72f8b98e9c307b0403d6d"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=0,method=None)": {
+    "md5": "330966f7c6feba190bf8a97960036cec"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=0,method=horizontal)": {
+    "md5": "f32e66954c8f1c9c0772eef0cd63844a"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=0,method=vertical)": {
+    "md5": "ff1abeffc1edb617bd917494eeadc662"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=180,method=None)": {
+    "md5": "675adb6ad3f66f59aa6965ed35d1c59f"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=180,method=horizontal)": {
+    "md5": "ff1abeffc1edb617bd917494eeadc662"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=180,method=vertical)": {
+    "md5": "f32e66954c8f1c9c0772eef0cd63844a"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=270,method=None)": {
+    "md5": "50093a2409e143138bf53c327e16db45"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=270,method=horizontal)": {
+    "md5": "ab57a7d042bc859f7daa39db10188ac5"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=270,method=vertical)": {
+    "md5": "a190b2a4118df3559bbfd8819cf066e0"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=90,method=None)": {
+    "md5": "982d5a812c0177cede165ca207b9b50c"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=90,method=horizontal)": {
+    "md5": "a190b2a4118df3559bbfd8819cf066e0"
+  }, 
+  "vpp.transpose:default.test(case=QCIF,degrees=90,method=vertical)": {
+    "md5": "ab57a7d042bc859f7daa39db10188ac5"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=0,method=None)": {
+    "md5": "59110d2b34c2861f3dc23aba84a02ae7"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=0,method=horizontal)": {
+    "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=0,method=vertical)": {
+    "md5": "2e75fd8c78e57d96d49c88c9bd4763f5"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=180,method=None)": {
+    "md5": "457abe0232714a8a4e5224f37380fac0"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=180,method=horizontal)": {
+    "md5": "2e75fd8c78e57d96d49c88c9bd4763f5"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=180,method=vertical)": {
+    "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=270,method=None)": {
+    "md5": "6cb8e8fa9252b23e4140e201ba789881"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=270,method=horizontal)": {
+    "md5": "1f3f51b33b0851c757622f0c20e62ef3"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=270,method=vertical)": {
+    "md5": "6b8335e7312aebeb233d6c213462e3ae"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=90,method=None)": {
+    "md5": "37fc24e6fa474693ffe45b43c2c68ca2"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=90,method=horizontal)": {
+    "md5": "6b8335e7312aebeb233d6c213462e3ae"
+  }, 
+  "vpp.transpose:default.test(case=QVGA,degrees=90,method=vertical)": {
+    "md5": "1f3f51b33b0851c757622f0c20e62ef3"
   }
 }

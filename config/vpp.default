@@ -41,15 +41,25 @@ media._get_test_spec("vpp", "csc").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "denoise").update(copy.deepcopy(inputs))
 media._get_test_spec("vpp", "sharpen").update(copy.deepcopy(inputs))
 
-# mirroring uses md5 metric and should be same for all drivers
+# mirroring uses md5 metric and should be same for all drivers and middleware
 media._get_test_spec("vpp", "mirroring").update(copy.deepcopy(inputs))
 for v in media._get_test_spec("vpp", "mirroring").values():
-  del v["refctx"]
+  v["refctx"] = ["key:vpp.mirroring"]
 
-# rotation uses md5 metric and should be same for all drivers
+# rotation uses md5 metric and should be same for all drivers and middleware
 media._get_test_spec("vpp", "rotation").update(copy.deepcopy(inputs))
 for v in media._get_test_spec("vpp", "rotation").values():
-  del v["refctx"]
+  v["refctx"] = ["key:vpp.rotation"]
+
+# transpose uses md5 metric and should be same for all drivers and middleware
+media._get_test_spec("vpp", "transpose").update(copy.deepcopy(inputs))
+for v in media._get_test_spec("vpp", "transpose").values():
+  v["refctx"] = ["key:vpp.transpose"]
+  v.update(
+    transpose = list(
+      itertools.product([0, 90, 180, 270], ["vertical", "horizontal", None])
+    )
+  )
 
 media._get_test_spec("vpp", "deinterlace", "avc").update({
   "QVGA" : dict(
