@@ -84,6 +84,23 @@ def map_vpp_rotation(degrees):
   }.get(degrees, None)
 
 @memoize
+def map_vpp_transpose(degrees, method):
+  return {
+    (  0,         None) : "identity",
+    (  0,   "vertical") : "vert",
+    (  0, "horizontal") : "horiz",
+    ( 90,         None) : "90r",
+    ( 90,   "vertical") : "ur-ll",
+    ( 90, "horizontal") : "ul-lr",
+    (180,         None) : "180",
+    (180,   "vertical") : "horiz",
+    (180, "horizontal") : "vert",
+    (270,         None) : "90l",
+    (270,   "vertical") : "ul-lr",
+    (270, "horizontal") : "ur-ll",
+  }.get((degrees, method), None)
+
+@memoize
 def mapprofile(codec, profile):
   return {
     "avc"      : {
