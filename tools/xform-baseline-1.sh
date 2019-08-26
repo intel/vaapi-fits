@@ -151,3 +151,8 @@ sed -i "s/test\/gst-msdk\/vpp\/transpose.py:test_default(/test\/gst-msdk\/vpp\/t
 sed -i "s/test_422/test/g" $1
 sed -i "s/test_444/test/g" $1
 sed -i "s/test_highres/test/g" $1
+
+# since 377ee39e7c09
+sed -Ei "s/encode\/mpeg2.py:cqp.test\(bframes=(.*),case=(.*),gop=(.*),profile=(.*),qp=(.*),quality=(.*)\)/encode\/mpeg2.py:cqp.test\(bframes=\1,case=\2,gop=\3,qp=\5,quality=\6\)/g" $1
+sed -Ei "s/encode\/mpeg2.py:cqp.test_r2r\(bframes=(.*),case=(.*),gop=(.*),profile=(.*),qp=(.*),quality=(.*)\)/encode\/mpeg2.py:cqp.test_r2r\(bframes=\1,case=\2,gop=\3,qp=\5,quality=\6\)/g" $1
+
