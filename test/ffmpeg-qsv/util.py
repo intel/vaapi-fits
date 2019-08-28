@@ -32,8 +32,7 @@ def have_ffmpeg_decoder(decoder):
   result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
   return result, decoder
 
-@memoize
-def mapformat(format):
+def get_supported_format_map():
   return {
     "I420"  : "yuv420p",
     "NV12"  : "nv12",
@@ -46,7 +45,11 @@ def mapformat(format):
     "ARGB"  : "rgb32",
     "P210"  : "yuv422p10le",
     "P410"  : "yuv444p10le",
-  }.get(format, None)
+  }
+
+@memoize
+def mapformat(format):
+  return get_supported_format_map().get(format, None)
 
 @memoize
 def map_deinterlace_method(method):
