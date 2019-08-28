@@ -15,40 +15,29 @@ def have_gst_element(element):
   result = try_call("gst-inspect-1.0 {}".format(element))
   return result, element
 
+def get_supported_format_map():
+  return {
+    "I420"  : ("i420", "I420"),
+    "NV12"  : ("nv12", "NV12"),
+    "YV12"  : ("yv12", "YV12"),
+    "AYUV"  : ("ayuv", "AYUV"),
+    "YUY2"  : ("yuy2", "YUY2"),
+    "ARGB"  : ("argb", "ARGB"),
+    "BGRA"  : ("bgra", "BGRA"),
+    "422H"  : ("y42b", "Y42B"),
+    "444P"  : ("y444", "Y444"),
+    "P010"  : ("p010-10le", "P010_10LE"),
+    "P210"  : ("i422-10le", "I422_10LE"),
+    "P410"  : ("y444-10le", "Y444_10LE"),
+  }
+
 @memoize
 def mapformat(format):
-  return {
-    "I420"  : "i420",
-    "NV12"  : "nv12",
-    "YV12"  : "yv12",
-    "P010"  : "p010-10le",
-    "AYUV"  : "ayuv",
-    "YUY2"  : "yuy2",
-    "ARGB"  : "argb",
-    "BGRA"  : "bgra",
-    "422H"  : "y42b",
-    "444P"  : "y444",
-    "P210"  : "i422_10le",
-    "P410"  : "y444_10le",
-  }.get(format, None)
+  return get_supported_format_map().get(format, (None, None))[0]
 
 @memoize
 def mapformatu(format):
-  return {
-    "I420"  : "I420",
-    "NV12"  : "NV12",
-    "YV12"  : "YV12",
-    "P010"  : "P010_10LE",
-    "AYUV"  : "AYUV",
-    "YUY2"  : "YUY2",
-    "ARGB"  : "ARGB",
-    "BGRA"  : "BGRA",
-    "422H"  : "Y42B",
-    "444P"  : "Y444",
-    "P210"  : "I422_10LE",
-    "P410"  : "Y444_10LE",
-  }.get(format, None)
-
+  return get_supported_format_map().get(format, (None, None))[1]
 
 @memoize
 def map_deinterlace_method(method):
