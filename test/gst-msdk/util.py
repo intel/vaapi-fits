@@ -19,15 +19,6 @@ def have_gst_element(element):
   return result, element
 
 @memoize
-def mapsubsampling(format_subsampling):
-  return {
-    "FORMATS_400" : ["Y800"],
-    "FORMATS_420" : ["I420", "NV12", "YV12"],
-    "FORMATS_422" : ["422H", "422V", "YUY2"],
-    "FORMATS_444" : ["444P", "AYUV"],
-  }.get(format_subsampling, [])
-
-@memoize
 def mapformat(format):
   return {
     "I420"  : "i420",
