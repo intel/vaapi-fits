@@ -40,6 +40,7 @@ class VppTest(slash.Test):
         sharpen     = "vpp_qsv=detail={mlevel}",
         deinterlace = "vpp_qsv=deinterlace={mmethod}",
         csc         = "vpp_qsv=format={ohwformat}",
+        transpose   = "vpp_qsv=transpose={direction}",
       )[self.vpp_op]
     )
     vfilter.append("hwdownload")
@@ -64,6 +65,7 @@ class VppTest(slash.Test):
       sharpen     = "_{level}_{width}x{height}_{format}",
       deinterlace = "_{method}_{rate}_{width}x{height}_{format}",
       csc         = "_{width}x{height}_{format}_to_{csc}",
+      transpose   = "_{degrees}_{method}_{width}x{height}_{format}",
     )[self.vpp_op]
 
     if vars(self).get("r2r", None) is not None:

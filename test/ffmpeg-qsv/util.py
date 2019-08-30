@@ -60,6 +60,22 @@ def map_deinterlace_method(method):
   }.get(method, None)
 
 @memoize
+def map_transpose_direction(degrees, method):
+  return {
+    (  0,   "vertical") : "vflip",
+    (  0, "horizontal") : "hflip",
+    ( 90,         None) : "clock",
+    ( 90,   "vertical") : "cclock_hflip",
+    ( 90, "horizontal") : "clock_hflip",
+    (180,         None) : "reversal",
+    (180,   "vertical") : "hflip",
+    (180, "horizontal") : "vflip",
+    (270,         None) : "cclock",
+    (270,   "vertical") : "clock_hflip",
+    (270, "horizontal") : "cclock_hflip",
+  }.get( (degrees, method), None)
+
+@memoize
 def mapprofile(codec, profile):
   return {
     "avc"      : {
