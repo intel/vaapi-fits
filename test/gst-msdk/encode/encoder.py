@@ -124,11 +124,14 @@ class EncoderTest(slash.Test):
     self.refctx = []
 
   def validate_caps(self):
-    self.hwformat = match_best_format(self.format, self.caps["fmts"])
+    # MSDK does not support AYUV input format even though iHD supports it.
+    ifmts = list(set(self.caps["fmts"]) - set(["AYUV"]))
+
+    self.hwformat = match_best_format(self.format, ifmts)
     if self.hwformat is None:
       slash.skip_test(
         format_value(
-          "{platform}.{driver}.{format} not supported", **vars(self)))
+          "{platform}.{driver}|msdk.{format} not supported", **vars(self)))
 
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
