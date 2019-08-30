@@ -163,7 +163,7 @@ class TranscoderTest(slash.Test):
   def gen_output_opts(self):
     self.goutputs = dict()
 
-    opts = "-an"
+    opts = "-an -vsync passthrough"
 
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
