@@ -66,13 +66,17 @@ def map_deinterlace_method(method):
 @memoize
 def map_transpose_direction(degrees, method):
   return {
-    (270,   "vertical")   : "cclock_flip",
-    ( 90,         None)   : "clock",
-    (270,         None)   : "cclock",
-    ( 90,   "vertical")   : "clock_flip",
-    (180,         None)   : "reversal",
-    (  0, "horizontal")   : "hflip",
-    (  0,   "vertical")   : "vflip",
+    (  0,   "vertical") : "vflip",
+    (  0, "horizontal") : "hflip",
+    ( 90,         None) : "clock",
+    ( 90,   "vertical") : "clock_flip",
+    ( 90, "horizontal") : "cclock_flip",
+    (180,         None) : "reversal",
+    (180,   "vertical") : "hflip",
+    (180, "horizontal") : "vflip",
+    (270,         None) : "cclock",
+    (270,   "vertical") : "cclock_flip",
+    (270, "horizontal") : "clock_flip",
   }.get( (degrees, method), None)
 
 @memoize
