@@ -49,8 +49,8 @@ class VppTest(slash.Test):
         opts += " saturation={mlevel}"
       elif  self.vpp_element in ["sharpen"]:
         opts += " detail={level}"
-      elif  self.vpp_element in ["mirroring", "rotation", "transpose"]:
-        opts += " video-direction={mmethod}"
+      elif  self.vpp_element in ["transpose"]:
+        opts += " video-direction={direction}"
 
       opts += " ! video/x-raw,format={ohwformat}"
       if self.vpp_element in ["scale"]:
@@ -94,10 +94,6 @@ class VppTest(slash.Test):
       name += "_csc_{csc}"
     elif self.vpp_element in ["deinterlace"]:
       name += "_deinterlace_{method}_{rate}"
-    elif  self.vpp_element in ["mirroring"]:
-      name += "_mirroring_{method}"
-    elif  self.vpp_element in ["rotation"]:
-      name += "_rotation_{degrees}"
     elif  self.vpp_element in ["transpose"]:
       name += "_transpose_{degrees}_{method}"
 

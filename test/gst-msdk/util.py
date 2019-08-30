@@ -43,26 +43,7 @@ def mapformatu(format):
   return get_supported_format_map().get(format, (None, None))[1]
 
 @memoize
-def map_vpp_mirroring(method):
-  return {
-    None          : "identity",
-    "identity"    : "identity",
-    "none"        : "identity",
-    "horizontal"  : "horiz",
-    "vertical"    : "vert",
-  }.get(method, None)
-
-@memoize
-def map_vpp_rotation(degrees):
-  return {
-    0   : "identity",
-    90  : "90r",
-    180 : "180",
-    270 : "90l",
-  }.get(degrees, None)
-
-@memoize
-def map_vpp_transpose(degrees, method):
+def map_transpose_direction(degrees, method):
   return {
     (  0,         None) : "identity",
     (  0,   "vertical") : "vert",
