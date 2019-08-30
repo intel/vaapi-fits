@@ -49,8 +49,8 @@ class VppTest(slash.Test):
       elif self.vpp_element in ["deinterlace"]:
         opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
         opts += " width={width} height={height}"
-      elif self.vpp_element in ["mirroring", "rotation", "transpose"]:
-        opts += " video-direction={mmethod}"
+      elif self.vpp_element in ["transpose"]:
+        opts += " video-direction={direction}"
 
       if self.vpp_element not in ["deinterlace"]:
         opts += " ! video/x-raw,format={ohwformat}"
@@ -93,10 +93,6 @@ class VppTest(slash.Test):
       name += "_csc_{csc}"
     elif self.vpp_element in ["deinterlace"]:
       name += "_deinterlace_{method}_{rate}"
-    elif self.vpp_element in ["mirroring"]:
-      name += "_mirroring_{method}"
-    elif self.vpp_element in ["rotation"]:
-      name += "_rotation_{degrees}"
     elif self.vpp_element in ["transpose"]:
       name += "_transpose_{degrees}_{method}"
 

@@ -14,6 +14,7 @@ class default(VppTest):
   def before(self):
     vars(self).update(
       caps        = platform.get_caps("vpp", "transpose"),
+      metric      = dict(type = "md5"),
       vpp_element = "transpose",
     )
     super(default, self).before()
@@ -23,13 +24,18 @@ class default(VppTest):
   def test(self, case, degrees, method):
     vars(self).update(spec[case].copy())
     vars(self).update(
-      case    = case,
-      degrees = degrees,
-      method  = method,
-      mmethod = map_vpp_transpose(degrees, method),
+      case      = case,
+      degrees   = degrees,
+      direction = map_transpose_direction(degrees, method),
+      method    = method,
     )
+
+    if self.direction is None:
+      slash.skip_test(
+        "{degrees} {method} direction not supported".format(**vars(self)))
+
     self.vpp()
 
   def check_metrics(self):
-    get_media().baseline.check_md5(
-      md5 = md5(self.ofile), context = vars(self).get("refctx", []))
+    self.decoded = self.ofile
+    check_metric(**vars(self))
