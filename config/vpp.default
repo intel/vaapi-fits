@@ -61,6 +61,13 @@ for v in media._get_test_spec("vpp", "transpose").values():
     )
   )
 
+media._get_test_spec("vpp", "crop").update(copy.deepcopy(inputs))
+for v in media._get_test_spec("vpp", "crop").values():
+  v["refctx"] = ["key:vpp.crop"]
+  v["crop"] = list(
+    dict(zip(["left", "right", "top", "bottom"], v))
+      for v in itertools.product([0, 10],[0, 10],[0, 10],[0, 10]))
+
 media._get_test_spec("vpp", "deinterlace", "avc").update({
   "QVGA" : dict(
     source = os.path.join(assets, "avc", "QVGA_i_tff.h264"),
