@@ -404,3 +404,17 @@ def gen_vpp_transpose_parameters(spec):
   keys = ("case", "degrees", "method")
   params = gen_vpp_transpose_variants(spec)
   return keys, params
+
+def gen_vpp_crop_variants(spec):
+  for case, params in spec.iteritems():
+    variants = params.get("crop", [])
+    for variant in variants:
+      yield [
+        case, variant.get("left", 0), variant.get("right", 0),
+        variant.get("top", 0), variant.get("bottom", 0)
+      ]
+
+def gen_vpp_crop_parameters(spec):
+  keys = ("case", "left", "right", "top", "bottom")
+  params = gen_vpp_crop_variants(spec)
+  return keys, params
