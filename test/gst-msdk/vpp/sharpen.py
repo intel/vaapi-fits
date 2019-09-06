@@ -46,4 +46,4 @@ class default(VppTest):
       assert abs(ref[-3] - actual[-3]) <  0.2, "Luma (Y) out of baseline range"
 
     get_media().baseline.check_result(
-      compare = compare, context = vars(self).get("refctx", []), psnr = psnr)
+      compare = compare, context = self.refctx, psnr = psnr)
