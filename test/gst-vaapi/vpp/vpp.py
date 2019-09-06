@@ -51,6 +51,8 @@ class VppTest(slash.Test):
         opts += " width={width} height={height}"
       elif self.vpp_element in ["transpose"]:
         opts += " video-direction={direction}"
+      elif self.vpp_element in ["crop"]:
+        opts += " crop-left={left} crop-right={right} crop-top={top} crop-bottom={bottom}"
 
       if self.vpp_element not in ["deinterlace"]:
         opts += " ! video/x-raw,format={ohwformat}"
@@ -72,6 +74,8 @@ class VppTest(slash.Test):
 
     if self.vpp_element in ["scale"]:
       name += "_{scale_width}x{scale_height}"
+    elif self.vpp_element in ["crop"]:
+      name += "_{crop_width}x{crop_height}"
     else:
       name += "_{width}x{height}"
 
@@ -95,6 +99,8 @@ class VppTest(slash.Test):
       name += "_deinterlace_{method}_{rate}"
     elif self.vpp_element in ["transpose"]:
       name += "_transpose_{degrees}_{method}"
+    elif self.vpp_element in ["crop"]:
+      name += "_crop_{left}_{right}_{top}_{bottom}"
 
     if vars(self).get("r2r", None) is not None:
       name += "_r2r"

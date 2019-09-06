@@ -47,7 +47,11 @@ caps = dict(
       ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
       ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
-    sharpen   = dict(
+    crop        = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+    ),
+    sharpen     = dict(
       ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
       ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),

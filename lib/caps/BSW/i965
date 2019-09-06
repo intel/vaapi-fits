@@ -27,7 +27,11 @@ caps = dict(
       ifmts = ["NV12", "YV12", "I420", "YUY2"],
       ofmts = ["NV12", "YV12", "I420", "YUY2"],
     ),
-    sharpen   = dict(
+    crop        = dict(
+      ifmts = ["NV12", "YV12", "I420", "YUY2"],
+      ofmts = ["NV12", "YV12", "I420", "YUY2"],
+    ),
+    sharpen     = dict(
       ifmts = ["NV12", "YV12", "I420", "YUY2"],
       ofmts = ["NV12", "YV12", "I420", "YUY2"],
     ),
