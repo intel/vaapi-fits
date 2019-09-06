@@ -49,7 +49,7 @@ class Baseline:
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"
       assert all(map(lambda r,a: a+0.2 > r, ref[3:], actual[3:]))
-    self.check_result(compare, context, psnr = map(lambda v: round(v, 4), psnr))
+    self.check_result(compare, context, psnr = psnr)
 
   def check_md5(self, md5, context = []):
     def compare(k, ref, actual):

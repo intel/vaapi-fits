@@ -79,13 +79,15 @@ class YUVMetricAggregator:
   def get(self):
     self.__collect_async()
     result = list(itertools.chain(*self.results))
-    return (
-      min(result[0::3]),
-      min(result[1::3]),
-      min(result[2::3]),
-      sum(result[0::3]) / len(self.results),
-      sum(result[1::3]) / len(self.results),
-      sum(result[2::3]) / len(self.results),
+    return map(
+      lambda v: round(v, 4), (
+        min(result[0::3]),
+        min(result[1::3]),
+        min(result[2::3]),
+        sum(result[0::3]) / len(self.results),
+        sum(result[1::3]) / len(self.results),
+        sum(result[2::3]) / len(self.results),
+      )
     )
 
 def __compare_ssim(planes):

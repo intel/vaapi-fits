@@ -34,7 +34,6 @@ class default(VppTest):
       self.source, self.decoded,
       self.width, self.height,
       self.frames, self.format)
-    psnr = map(lambda v: round(v, 4), psnr)
 
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"

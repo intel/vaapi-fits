@@ -42,4 +42,4 @@ class default(VppTest):
         assert actual[-1] == 100, "Cr(V) changed, but caps don't support DENOISE chroma"
 
     get_media().baseline.check_result(
-      compare = compare, context = vars(self).get("refctx", []), psnr = map(lambda v: round(v, 4), psnr))
+      compare = compare, context = vars(self).get("refctx", []), psnr = psnr)
