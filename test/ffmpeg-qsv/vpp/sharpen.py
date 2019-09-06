@@ -41,7 +41,6 @@ class default(VppTest):
       self.source, self.decoded,
       self.width, self.height,
       self.frames, self.format)
-    psnr = map(lambda v: round(v, 4), psnr)
 
     assert psnr[-2] == 100, "Cb(U) should not be affected by SHARPEN filter"
     assert psnr[-1] == 100, "Cr(V) should not be affected by SHARPEN filter"

@@ -48,7 +48,6 @@ class default(VppTest):
       self.source, self.decoded,
       self.width, self.height,
       self.frames, self.format)
-    psnr = map(lambda v: round(v, 4), psnr)
 
     assert psnr[-3] == 100, "Luma (Y) should not be affected by SATURATION filter"
 

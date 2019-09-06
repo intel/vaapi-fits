@@ -58,4 +58,4 @@ class default(VppTest):
         assert abs(ref[-1] - actual[-1]) <  0.2, "Cr (V) out of baseline range"
 
     get_media().baseline.check_result(
-      compare = compare, context = vars(self).get("refctx", []), psnr = map(lambda v: round(v, 4), psnr))
+      compare = compare, context = vars(self).get("refctx", []), psnr = psnr)

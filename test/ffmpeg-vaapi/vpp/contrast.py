@@ -48,7 +48,6 @@ class default(VppTest):
       self.source, self.decoded,
       self.width, self.height,
       self.frames, self.format)
-    psnr = map(lambda v: round(v, 4), psnr)
 
     if self.level == self.NOOP:
       get_media()._set_test_details(psnr = psnr, ref_psnr = "noop")
