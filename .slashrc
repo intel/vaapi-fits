@@ -277,7 +277,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
     for result in slash.context.session.results.iter_test_results():
       suitename, casename = result.test_metadata.address.split(':')
-      classname = suitename.rstrip(".py").replace(os.sep, '.').strip('.')
+      classname = os.path.splitext(suitename)[0].replace(os.sep, '.').strip('.')
       classname = "{}.{}".format(self.suite, classname)
 
       case = et.SubElement(
