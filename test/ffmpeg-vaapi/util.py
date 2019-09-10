@@ -40,6 +40,7 @@ def get_supported_format_map():
     "444P"  : "yuv444p",
     "Y800"  : "gray8",
     "ARGB"  : "rgb32",
+    "BGRA"  : "bgra",
     "P210"  : "yuv422p10le",
     "P410"  : "yuv444p10le",
   }
