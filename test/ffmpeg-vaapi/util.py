@@ -49,6 +49,19 @@ def get_supported_format_map():
 def mapformat(format):
   return get_supported_format_map().get(format, None)
 
+def get_supported_format_mapj():
+  return {
+    "I420"  : "yuvj420p",
+    "422H"  : "yuvj422p",
+    "422V"  : "yuvj440p",
+    "444P"  : "yuvj444p",
+    "Y800"  : "gray8",
+  }
+
+@memoize
+def mapformatj(format):
+  return get_supported_format_mapj().get(format, None)
+
 @memoize
 def map_deinterlace_method(method):
   from ...lib import get_media

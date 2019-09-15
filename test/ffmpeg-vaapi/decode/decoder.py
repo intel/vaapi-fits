@@ -39,7 +39,10 @@ class DecoderTest(slash.Test):
         format_value(
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
 
-    self.mformat = mapformat(self.format)
+    if vars(self).get("codec") == "jpeg":
+      self.mformat = mapformatj(self.format)
+    else:
+      self.mformat = mapformat(self.format)
     if self.mformat is None:
       slash.skip_test(
         "ffmpeg.{format} format not supported".format(**vars(self)))

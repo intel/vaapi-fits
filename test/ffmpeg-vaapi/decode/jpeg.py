@@ -23,6 +23,7 @@ class default(DecoderTest):
   def test(self, case):
     vars(self).update(spec[case].copy())
     self.case = case
+    self.codec = "jpeg"
     self.decode()
 
   @slash.requires(*platform.have_caps("decode", "jpeg"))
@@ -31,4 +32,5 @@ class default(DecoderTest):
     vars(self).update(spec_r2r[case].copy())
     vars(self).setdefault("r2r", 5)
     self.case = case
+    self.codec = "jpeg"
     self.decode()
