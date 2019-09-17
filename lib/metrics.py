@@ -48,8 +48,9 @@ def __try_read_frame(reader, *args, **kwargs):
     raise
 
 class YUVMetricAggregator:
-  def __init__(self):
+  def __init__(self, biggest_deviator = min):
     self.results = list()
+    self.biggest_deviator = biggest_deviator;
 
     # 50% of physical memory (i.e. 25% in main process and 25% in async pool)
     self.async_thresh = os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES') / 4
@@ -81,9 +82,9 @@ class YUVMetricAggregator:
     result = list(itertools.chain(*self.results))
     return map(
       lambda v: round(v, 4), (
-        min(result[0::3]),
-        min(result[1::3]),
-        min(result[2::3]),
+        self.biggest_deviator(result[0::3]),
+        self.biggest_deviator(result[1::3]),
+        self.biggest_deviator(result[2::3]),
         sum(result[0::3]) / len(self.results),
         sum(result[1::3]) / len(self.results),
         sum(result[2::3]) / len(self.results),
@@ -134,6 +135,46 @@ def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I
         reader, fd2, width, height, debug = (i, nframes, 2))
 
       aggregator.append(__compare_psnr, ((y1, y2), (u1, u2), (v1, v2)))
+
+  return aggregator.get()
+
+def __compare_mse(planes):
+  a, b = planes
+  return skimage.measure.compare_mse(a, b)
+
+@timefn("mse")
+def calculate_mse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
+  reader = FrameReaders[fourcc]
+  aggregator = YUVMetricAggregator(max)
+
+  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
+    for i in xrange(nframes):
+      y1, u1, v1 = __try_read_frame(
+        reader, fd1, width, height, debug = (i, nframes, 1))
+      y2, u2, v2 = __try_read_frame(
+        reader, fd2, width, height, debug = (i, nframes, 2))
+
+      aggregator.append(__compare_mse, ((y1, y2), (u1, u2), (v1, v2)))
+
+  return aggregator.get()
+
+def __compare_nrmse(planes):
+  a, b = planes
+  return skimage.measure.compare_nrmse(a, b, norm_type = "Euclidean")
+
+@timefn("nrmse")
+def calculate_nrmse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
+  reader = FrameReaders[fourcc]
+  aggregator = YUVMetricAggregator(max)
+
+  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
+    for i in xrange(nframes):
+      y1, u1, v1 = __try_read_frame(
+        reader, fd1, width, height, debug = (i, nframes, 1))
+      y2, u2, v2 = __try_read_frame(
+        reader, fd2, width, height, debug = (i, nframes, 2))
+
+      aggregator.append(__compare_nrmse, ((y1, y2), (u1, u2), (v1, v2)))
 
   return aggregator.get()
 
@@ -201,6 +242,28 @@ def check_metric(**params):
         params["width"], params["height"], params["frames"],
         params["format"]),
       context = params.get("refctx", []))
+
+  elif "mse" == type:
+    mse = calculate_mse(
+      params["reference"], params["decoded"],
+      params["width"], params["height"],
+      params["frames"], params["format"])
+    get_media()._set_test_details(mse = mse)
+    avg_range = metric.get("avg_range", [(0, 256), (0, 256), (0, 256)])
+    assert avg_range[0][0] <= mse[-3] <= avg_range[0][1]
+    assert avg_range[1][0] <= mse[-2] <= avg_range[1][1]
+    assert avg_range[2][0] <= mse[-1] <= avg_range[2][1]
+
+  elif "nrmse" == type:
+    nrmse = calculate_nrmse(
+      params["reference"], params["decoded"],
+      params["width"], params["height"],
+      params["frames"], params["format"])
+    get_media()._set_test_details(nrmse = nrmse)
+    avg_range = metric.get("avg_range", [(0, 0.07), (0, 0.07), (0, 0.07)])
+    assert avg_range[0][0] <= nrmse[-3] <= avg_range[0][1]
+    assert avg_range[1][0] <= nrmse[-2] <= avg_range[1][1]
+    assert avg_range[2][0] <= nrmse[-1] <= avg_range[2][1]
 
   else:
     assert False, "unknown metric"
