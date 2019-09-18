@@ -40,14 +40,35 @@ def md5(filename, chunksize = 4096, numbytes = -1):
 
   return m.hexdigest()
 
-def __try_read_frame(reader, *args, **kwargs):
-  try:
-    return reader(*args)
-  except Exception, e:
-    e.args += tuple("{}: {}".format(k,v) for k,v in kwargs.items())
-    raise
+class RawFile:
+  def __init__(self, filename, width, height, nframes, fourcc):
+    self.filename = filename
+    self.width    = width
+    self.height   = height
+    self.nframes  = nframes
+    self.fourcc   = fourcc
+    self.reader   = FrameReaders[self.fourcc]
 
-class YUVMetricAggregator:
+  # to support "with" syntax
+  def __enter__(self):
+    self.nreads = 0
+    self.fd = open(self.filename, "rb")
+    return self
+
+  # to support "with" syntax
+  def __exit__(self, type, value, tb):
+    self.fd.close()
+
+  def next_frame(self):
+    try:
+      return self.reader(self.fd, self.width, self.height)
+    except Exception, e:
+      e.args += tuple(["frame {}/{}".format(self.nreads, self.nframes)])
+      raise
+    finally:
+      self.nreads += 1
+
+class RawMetricAggregator:
   def __init__(self, biggest_deviator = min):
     self.results = list()
     self.biggest_deviator = biggest_deviator;
@@ -62,7 +83,7 @@ class YUVMetricAggregator:
     self.async_bytes = 0
     self.async_results = list()
 
-  def append(self, func, iterable):
+  def __append(self, func, iterable):
     if get_media().metrics_pool is not None:
       self.async_results.append(
         get_media().metrics_pool.map_async(func, iterable))
@@ -77,7 +98,7 @@ class YUVMetricAggregator:
     else:
       self.results.append([func(i) for i in iterable])
 
-  def get(self):
+  def __get(self):
     self.__collect_async()
     result = list(itertools.chain(*self.results))
     return map(
@@ -91,6 +112,14 @@ class YUVMetricAggregator:
       )
     )
 
+  def calculate(self, file1, file2, nframes, compare):
+    with file1, file2: # this opens the files for reading
+      for i in xrange(nframes):
+        y1, u1, v1 = file1.next_frame()
+        y2, u2, v2 = file2.next_frame()
+        self.__append(compare, ((y1, y2), (u1, u2), (v1, v2)))
+    return self.__get()
+
 def __compare_ssim(planes):
   a, b = planes
   if a is None or b is None: # handle Y800 case
@@ -99,20 +128,10 @@ def __compare_ssim(planes):
 
 @timefn("ssim")
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
-  reader  = FrameReaders[fourcc]
-  reader2 = FrameReaders[fourcc2 or fourcc]
-  aggregator = YUVMetricAggregator()
-
-  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in xrange(nframes):
-      y1, u1, v1 = __try_read_frame(
-        reader, fd1, width, height, debug = (i, nframes, 1))
-      y2, u2, v2 = __try_read_frame(
-        reader2, fd2, width, height, debug = (i, nframes, 2))
-
-      aggregator.append(__compare_ssim, ((y1, y2), (u1, u2), (v1, v2)))
-
-  return aggregator.get()
+  return RawMetricAggregator(min).calculate(
+    RawFile(filename1, width, height, nframes, fourcc),
+    RawFile(filename2, width, height, nframes, fourcc2 or fourcc),
+    nframes, __compare_ssim)
 
 def __compare_psnr(planes):
   a, b = planes
@@ -124,19 +143,10 @@ def __compare_psnr(planes):
 
 @timefn("psnr")
 def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
-  reader = FrameReaders[fourcc]
-  aggregator = YUVMetricAggregator()
-
-  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in xrange(nframes):
-      y1, u1, v1 = __try_read_frame(
-        reader, fd1, width, height, debug = (i, nframes, 1))
-      y2, u2, v2 = __try_read_frame(
-        reader, fd2, width, height, debug = (i, nframes, 2))
-
-      aggregator.append(__compare_psnr, ((y1, y2), (u1, u2), (v1, v2)))
-
-  return aggregator.get()
+  return RawMetricAggregator(min).calculate(
+    RawFile(filename1, width, height, nframes, fourcc),
+    RawFile(filename2, width, height, nframes, fourcc),
+    nframes, __compare_psnr)
 
 def __compare_mse(planes):
   a, b = planes
@@ -144,19 +154,10 @@ def __compare_mse(planes):
 
 @timefn("mse")
 def calculate_mse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
-  reader = FrameReaders[fourcc]
-  aggregator = YUVMetricAggregator(max)
-
-  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in xrange(nframes):
-      y1, u1, v1 = __try_read_frame(
-        reader, fd1, width, height, debug = (i, nframes, 1))
-      y2, u2, v2 = __try_read_frame(
-        reader, fd2, width, height, debug = (i, nframes, 2))
-
-      aggregator.append(__compare_mse, ((y1, y2), (u1, u2), (v1, v2)))
-
-  return aggregator.get()
+  return RawMetricAggregator(max).calculate(
+    RawFile(filename1, width, height, nframes, fourcc),
+    RawFile(filename2, width, height, nframes, fourcc),
+    nframes, __compare_mse)
 
 def __compare_nrmse(planes):
   a, b = planes
@@ -164,19 +165,10 @@ def __compare_nrmse(planes):
 
 @timefn("nrmse")
 def calculate_nrmse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
-  reader = FrameReaders[fourcc]
-  aggregator = YUVMetricAggregator(max)
-
-  with open(filename1, "rb") as fd1, open(filename2, "rb") as fd2:
-    for i in xrange(nframes):
-      y1, u1, v1 = __try_read_frame(
-        reader, fd1, width, height, debug = (i, nframes, 1))
-      y2, u2, v2 = __try_read_frame(
-        reader, fd2, width, height, debug = (i, nframes, 2))
-
-      aggregator.append(__compare_nrmse, ((y1, y2), (u1, u2), (v1, v2)))
-
-  return aggregator.get()
+  return RawMetricAggregator(max).calculate(
+    RawFile(filename1, width, height, nframes, fourcc),
+    RawFile(filename2, width, height, nframes, fourcc),
+    nframes, __compare_nrmse)
 
 @memoize
 def get_framesize(w, h, fourcc):
