@@ -40,7 +40,6 @@ class cqp(AVCEncoderTest):
       rcmode    = "cqp",
       slices    = slices,
     )
-    self.encode()
 
   @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_gst_element("msdkh264enc"))
