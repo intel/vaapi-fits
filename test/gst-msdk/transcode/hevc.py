@@ -11,7 +11,7 @@ from .transcoder import TranscoderTest
 spec = load_test_spec("hevc", "transcode")
 
 class default(TranscoderTest):
-  @slash.parametrize(("case"), sorted(spec.keys()))
+  @slash.parametrize(("case"), sorted_by_resolution(spec))
   def test(self, case):
     vars(self).update(spec[case].copy())
     vars(self).update(

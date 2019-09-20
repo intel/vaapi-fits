@@ -12,6 +12,10 @@ import subprocess
 import threading
 import time
 
+def sorted_by_resolution(cases):
+  size = lambda kv: kv[1]["width"] * kv[1]["height"]
+  return [kv[0] for kv in sorted(cases.items(), key = size)]
+
 def timefn(label):
   def count(function):
     # Keep track of the number of times this function was called from the
