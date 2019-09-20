@@ -65,7 +65,7 @@ class TranscoderTest(slash.Test):
     vpp = {
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
-        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format=NV12,width={width},height={height}"),
+        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format={format},width={width},height={height}"),
       ),
     },
   )
@@ -97,7 +97,7 @@ class TranscoderTest(slash.Test):
       return None
     _, _, scale = self.get_requirements_data("vpp", "scale", mode)
     assert scale is not None, "failed to find a suitable vpp scaler: {}".format(mode)
-    return scale.format(width = width or self.width, height = height or self.height)
+    return scale.format(width = width or self.width, height = height or self.height, format = self.format)
 
   def get_file_ext(self, codec):
     return {
@@ -158,9 +158,12 @@ class TranscoderTest(slash.Test):
       slash.skip_test(
         "Missing one or more required gstreamer elements: {}".format(list(unmet)))
 
+    self.format = vars(self).get("format", "NV12")
+
   def gen_input_opts(self):
     opts = "filesrc location={source}"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
+    opts += " ! video/x-raw,format={format}"
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
@@ -190,8 +193,7 @@ class TranscoderTest(slash.Test):
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
-    opts += " ! queue ! videoconvert ! video/x-raw,format=I420"
-    opts += " ! checksumsink2 file-checksum=false qos=false"
+    opts += " ! queue ! checksumsink2 file-checksum=false qos=false"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
     opts += " dump-location={srcyuv}"
 
@@ -218,13 +220,13 @@ class TranscoderTest(slash.Test):
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
         iopts = "filesrc location={} ! {}"
-        oopts = "{} ! videoconvert ! video/x-raw,format=I420"
+        oopts = self.get_vpp_scale(self.width, self.height, "hw")
         oopts += " ! checksumsink2 file-checksum=false qos=false"
         oopts += " frame-checksum=false plane-checksum=false dump-output=true"
         oopts += " dump-location={}"
         self.call_gst(
           iopts.format(encoded, self.get_decoder(output["codec"], "hw")),
-          oopts.format(self.get_vpp_scale(self.width, self.height, "hw"), yuv))
+          oopts.format(yuv))
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)
 
@@ -233,6 +235,6 @@ class TranscoderTest(slash.Test):
       psnr = calculate_psnr(
         self.srcyuv, yuv,
         self.width, self.height,
-        self.frames),
+        self.frames, self.format),
       context = self.refctx + refctx,
     )
