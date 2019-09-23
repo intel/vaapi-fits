@@ -58,10 +58,6 @@ class EncoderTest(slash.Test):
       opts += " low-power=true"
     if vars(self).get("ladepth", None) is not None:
       opts += " rc-lookahead={ladepth}"
-#    if vars(self).get("loopshp", None) is not None:
-#      opts += " sharpness-level={loopshp}"
-#    if vars(self).get("looplvl", None) is not None:
-#      opts += " loop-filter-level={looplvl}"
 
     opts += " ! {gstmediatype}"
     if vars(self).get("profile", None) is not None:

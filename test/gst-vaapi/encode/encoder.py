@@ -65,9 +65,6 @@ class EncoderTest(slash.Test):
     if vars(self).get("profile", None) is not None:
       opts += ",profile={mprofile}"
 
-    #if self.codec not in ["jpeg", "mpeg2", "vp8", "vp9",]:
-      #opts += " ! {gstmediatype},profile={mprofile}"
-
     if vars(self).get("gstparser", None) is not None:
       opts += " ! {gstparser}"
 
