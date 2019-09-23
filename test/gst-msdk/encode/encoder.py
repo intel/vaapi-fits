@@ -19,8 +19,7 @@ class EncoderTest(slash.Test):
     if vars(self).get("fps", None) is not None:
       opts += " framerate={fps}"
 
-    if self.codec not in ["hevc-8", "hevc-10"]:
-      opts += " ! videoconvert ! video/x-raw,format={hwformat}"
+    opts += " ! videoconvert ! video/x-raw,format={hwformat}"
 
     return opts
 
