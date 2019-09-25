@@ -19,6 +19,7 @@ class AVCEncoderTest(EncoderTest):
       gstdecoder    = "h264parse ! vaapih264dec",
       gstmediatype  = "video/x-h264",
       gstparser     = "h264parse",
+      lowpower      = False,
     )
     super(AVCEncoderTest, self).before()
 
@@ -33,7 +34,6 @@ class cqp(AVCEncoderTest):
       bframes   = bframes,
       case      = case,
       gop       = gop,
-      lowpower  = False,
       profile   = profile,
       qp        = qp,
       quality   = quality,
@@ -98,7 +98,6 @@ class cbr(AVCEncoderTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = False,
       maxrate   = bitrate,
       minrate   = bitrate,
       profile   = profile,
@@ -165,7 +164,6 @@ class vbr(AVCEncoderTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = 0,
       ## target percentage 70% (hard-coded in gst-vaapi)
       ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
       maxrate   = int(bitrate / 0.7),

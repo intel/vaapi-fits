@@ -16,6 +16,7 @@ class HEVC10EncoderTest(EncoderTest):
     vars(self).update(
       codec   = "hevc-10",
       ffenc   = "hevc_vaapi",
+      lowpower= 0,
     )
     super(HEVC10EncoderTest, self).before()
 

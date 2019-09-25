@@ -16,6 +16,7 @@ class AVCEncoderTest(EncoderTest):
     vars(self).update(
       codec   = "avc",
       ffenc   = "h264_vaapi",
+      lowpower= 0,
     )
     super(AVCEncoderTest, self).before()
 
@@ -37,7 +38,6 @@ class cqp(AVCEncoderTest):
       bframes   = bframes,
       case      = case,
       gop       = gop,
-      lowpower  = 0,
       profile   = profile,
       qp        = qp,
       quality   = quality,
@@ -100,7 +100,6 @@ class cbr(AVCEncoderTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = 0,
       maxrate   = bitrate,
       minrate   = bitrate,
       profile   = profile,
@@ -165,7 +164,6 @@ class vbr(AVCEncoderTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = 0,
       maxrate   = bitrate * 2, # target percentage 50%
       minrate   = bitrate,
       profile   = profile,

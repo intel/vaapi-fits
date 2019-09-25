@@ -52,8 +52,11 @@ class EncoderTest(slash.Test):
       opts += " ref-pic-mode={refmode}"
     if vars(self).get("refs", None) is not None:
       opts += " refs={refs}"
-    if vars(self).get("lowpower", False):
-      opts += " tune=low-power"
+
+    if vars(self).get("lowpower", None) is not None:
+      opts += " tune="
+      opts += "low-power" if self.lowpower else "none"
+
     if vars(self).get("lowdelayb",False):
       opts += " low-delay-b=1"
     if vars(self).get("loopshp", None) is not None:

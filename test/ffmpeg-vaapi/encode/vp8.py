@@ -15,6 +15,7 @@ class VP8EncoderTest(EncoderTest):
     vars(self).update(
       codec   = "vp8",
       ffenc   = "vp8_vaapi",
+      lowpower= 0,
     )
     super(VP8EncoderTest, self).before()
 

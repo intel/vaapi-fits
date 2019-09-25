@@ -19,6 +19,7 @@ class HEVC8EncoderTest(EncoderTest):
       gstdecoder    = "h265parse ! msdkh265dec hardware=true",
       gstmediatype  = "video/x-h265",
       gstparser     = "h265parse",
+      lowpower      = False,
     )
     super(HEVC8EncoderTest, self).before()
 

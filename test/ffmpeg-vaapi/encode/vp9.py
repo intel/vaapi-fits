@@ -15,6 +15,7 @@ class VP9EncoderTest(EncoderTest):
     vars(self).update(
       codec   = "vp9",
       ffenc   = "vp9_vaapi",
+      lowpower= 0,
     )
     super(VP9EncoderTest, self).before()
 

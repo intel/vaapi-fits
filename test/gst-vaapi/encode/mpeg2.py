@@ -19,6 +19,7 @@ class MPEG2EncoderTest(EncoderTest):
       gstdecoder    = "mpegvideoparse ! vaapimpeg2dec",
       gstmediatype  = "video/mpeg",
       gstparser     = "mpegvideoparse",
+      lowpower      = False,
     )
     super(MPEG2EncoderTest, self).before()
 

@@ -17,6 +17,7 @@ class HEVC10EncoderTest(EncoderTest):
       codec     = "hevc-10",
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
+      lowpower  = 0,
     )
     super(HEVC10EncoderTest, self).before()
 

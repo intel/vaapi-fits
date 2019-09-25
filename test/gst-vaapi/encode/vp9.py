@@ -18,6 +18,7 @@ class VP9EncoderTest(EncoderTest):
       gstdecoder    = "matroskademux ! vaapivp9dec",
       gstmediatype  = "video/x-vp9",
       gstmuxer      = "matroskamux",
+      lowpower      = False,
     )
     super(VP9EncoderTest, self).before()
 

@@ -17,6 +17,7 @@ class HEVC8EncoderTest(EncoderTest):
       codec     = "hevc-8",
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
+      lowpower  = 0,
     )
     super(HEVC8EncoderTest, self).before()
 
