@@ -181,7 +181,7 @@ class TranscoderTest(slash.Test):
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         self.goutputs.setdefault(n, list()).append(ofile)
 
-        opts += " ! queue"
+        opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
         if vppscale is not None:
           opts += " ! {}".format(vppscale)
         opts += " ! {}".format(encoder)
@@ -190,7 +190,8 @@ class TranscoderTest(slash.Test):
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
-    opts += " ! queue ! videoconvert ! video/x-raw,format=I420"
+    opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
+    opts += " ! videoconvert ! video/x-raw,format=I420"
     opts += " ! checksumsink2 file-checksum=false qos=false"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
     opts += " dump-location={srcyuv}"
