@@ -82,6 +82,22 @@ def gen_avc_cbr_parameters(spec, profiles):
   params = gen_avc_cbr_variants(spec, profiles)
   return keys, params
 
+def gen_hevc_cbr_level_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("cbr_level", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["bitrate"], variant.get("fps", 30), profile, variant["level"]
+        ]
+
+def gen_hevc_cbr_level_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "profile", "level")
+  params = gen_hevc_cbr_level_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_vbr_variants(spec, profiles):
   for case, params in spec.iteritems():
     for variant in copy.deepcopy(params.get("vbr", [])):
