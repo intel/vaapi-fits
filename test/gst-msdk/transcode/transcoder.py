@@ -186,7 +186,7 @@ class TranscoderTest(slash.Test):
 
         opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
         if vppscale is not None:
-          opts += "! {}".format(vppscale)
+          opts += " ! {}".format(vppscale)
         opts += " ! {}".format(encoder)
         opts += " ! filesink location={} transcoder.".format(ofile)
 
