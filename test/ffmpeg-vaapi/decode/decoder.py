@@ -17,7 +17,7 @@ class DecoderTest(slash.Test):
   def call_ffmpeg(self):
     self.output = call(
       "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:/dev/dri/renderD128"
-      " -filter_hw_device hw -v verbose"
+      " -hwaccel_flags allow_profile_mismatch -filter_hw_device hw -v verbose"
       " -i {source} -pix_fmt {mformat} -f rawvideo -vsync"
       " passthrough -vframes {frames} -y {decoded}".format(**vars(self)))
 
@@ -70,10 +70,6 @@ class DecoderTest(slash.Test):
       self.check_metrics()
 
   def check_output(self):
-    m = re.search(
-      "not supported for hardware decode", self.output, re.MULTILINE)
-    assert m is None, "Failed to use hardware decode"
-
     m = re.search(
       "hwaccel initialisation returned error", self.output, re.MULTILINE)
     assert m is None, "Failed to use hardware decode"
