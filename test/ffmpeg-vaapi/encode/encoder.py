@@ -65,6 +65,10 @@ class EncoderTest(slash.Test):
     if vars(self).get("level", None) is not None:
       self.level /= 10.0
       opts += " -level {level}"
+    if vars(self).get("qmax", None) is not None:
+      opts += " -qmax {qmax}"
+    if vars(self).get("qmin", None) is not None:
+      opts += " -qmin {qmin}"
 
     opts += " -vframes {frames} -y {encoded}"
 
@@ -102,6 +106,10 @@ class EncoderTest(slash.Test):
       name += "-r2r"
     if vars(self).get("level", None) is not None:
       name += "-{level}"
+    if vars(self).get("qmax", None) is not None:
+      name += "-{qmax}"
+    if vars(self).get("qmin", None) is not None:
+      name += "-{qmin}"
 
     return name
 

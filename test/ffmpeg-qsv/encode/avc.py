@@ -89,7 +89,8 @@ class cqp_lp(AVCEncoderTest):
     self.encode()
 
 class cbr(AVCEncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile,
+          qmax = None, qmin = None):
     self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -103,6 +104,8 @@ class cbr(AVCEncoderTest):
       profile   = profile,
       rcmode    = "cbr",
       slices    = slices,
+      qmax      = qmax,
+      qmin      = qmin,
     )
 
   @slash.requires(*platform.have_caps("encode", "avc"))
@@ -111,6 +114,15 @@ class cbr(AVCEncoderTest):
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main', 'baseline']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
+    self.encode()
+
+  @slash.requires(*platform.have_caps("encode", "avc"))
+  @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
+  @slash.parametrize(*gen_avc_cbr_fqp_parameters(spec, ['high', 'main', 'baseline']))
+  def test_fqp(self, case, gop, slices, bframes, bitrate, fps, profile, qmax, qmin):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile,
+            qmax = qmax, qmin = qmin)
     self.encode()
 
   @slash.requires(*platform.have_caps("encode", "avc"))
@@ -157,7 +169,8 @@ class cbr_lp(AVCEncoderTest):
     self.encode()
 
 class vbr(AVCEncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+          qmax = None, qmin = None):
     self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -173,6 +186,8 @@ class vbr(AVCEncoderTest):
       rcmode    = "vbr",
       refs      = refs,
       slices    = slices,
+      qmax      = qmax,
+      qmin      = qmin,
     )
 
   @slash.requires(*platform.have_caps("encode", "avc"))
@@ -182,6 +197,17 @@ class vbr(AVCEncoderTest):
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
+
+  @slash.requires(*platform.have_caps("encode", "avc"))
+  @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
+  @slash.parametrize(*gen_avc_vbr_fqp_parameters(spec, ['high', 'main', 'baseline']))
+  def test_fqp(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+          qmax, qmin):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+            qmax = qmax, qmin = qmin)
+    self.encode()
+
 
   @slash.requires(*platform.have_caps("encode", "avc"))
   @slash.requires(*have_ffmpeg_encoder("h264_qsv"))

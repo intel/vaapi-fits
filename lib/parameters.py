@@ -98,6 +98,23 @@ def gen_hevc_cbr_level_parameters( spec, profiles):
   params = gen_hevc_cbr_level_variants(spec, profiles)
   return keys, params
 
+def gen_avc_cbr_fqp_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("cbr_fqp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["bitrate"], variant.get("fps", 30), profile,
+          variant["qmax"], variant["qmin"]
+        ]
+
+def gen_avc_cbr_fqp_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "profile", "qmax", "qmin")
+  params = gen_avc_cbr_fqp_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_vbr_variants(spec, profiles):
   for case, params in spec.iteritems():
     for variant in copy.deepcopy(params.get("vbr", [])):
@@ -113,6 +130,24 @@ def gen_avc_vbr_variants(spec, profiles):
 def gen_avc_vbr_parameters(spec, profiles):
   keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "quality", "refs", "profile")
   params = gen_avc_vbr_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_vbr_fqp_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("vbr_fqp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["bitrate"], variant.get("fps", 30), variant.get("quality", 4),
+          variant.get("refs", 1), profile, variant["qmax"], variant["qmin"]
+        ]
+
+def gen_avc_vbr_fqp_parameters(spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "quality",
+          "refs", "profile", "qmax", "qmin")
+  params = gen_avc_vbr_fqp_variants(spec, profiles)
   return keys, params
 
 def gen_avc_cqp_lp_variants(spec, profiles):
@@ -187,6 +222,8 @@ gen_hevc_vbr_parameters = gen_avc_vbr_parameters
 gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
+gen_hevc_cbr_fqp_parameters = gen_avc_cbr_fqp_parameters
+gen_hevc_vbr_fqp_parameters = gen_avc_vbr_fqp_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.iteritems():

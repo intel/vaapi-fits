@@ -55,6 +55,10 @@ class EncoderTest(slash.Test):
     if vars(self).get("ladepth", None) is not None:
       opts += " -look_ahead 1"
       opts += " -look_ahead_depth {ladepth}"
+    if vars(self).get("qmax", None) is not None:
+      opts += " -qmax {qmax}"
+    if vars(self).get("qmin", None) is not None:
+      opts += " -qmin {qmin}"
 
     opts += " -vframes {frames} -y {encoded}"
 
@@ -88,6 +92,10 @@ class EncoderTest(slash.Test):
       name += "-{ladepth}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
+    if vars(self).get("qmax", None) is not None:
+      name += "-{qmax}"
+    if vars(self).get("qmin", None) is not None:
+      name += "-{qmin}"
 
     return name
 

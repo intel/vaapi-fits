@@ -63,6 +63,10 @@ class EncoderTest(slash.Test):
       opts += " sharpness-level={loopshp}"
     if vars(self).get("looplvl", None) is not None:
       opts += " loop-filter-level={looplvl}"
+    if vars(self).get("qmax", None) is not None:
+      opts += " max-qp={qmax}"
+    if vars(self).get("qmin", None) is not None:
+      opts += " min-qp={qmin}"
 
     opts += " ! {gstmediatype}"
     if vars(self).get("profile", None) is not None:
@@ -110,6 +114,10 @@ class EncoderTest(slash.Test):
       name += "-{looplvl}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
+    if vars(self).get("qmax", None) is not None:
+      name += "-{qmax}"
+    if vars(self).get("qmin", None) is not None:
+      name += "-{qmin}"
 
     return name
 

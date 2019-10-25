@@ -90,7 +90,8 @@ class cqp_lp(HEVC8EncoderTest):
     self.encode()
 
 class cbr(HEVC8EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile,
+          qmax = None, qmin = None):
     self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -104,6 +105,8 @@ class cbr(HEVC8EncoderTest):
       profile = profile,
       rcmode  = "cbr",
       slices  = slices,
+      qmax    = qmax,
+      qmin    = qmin,
     )
 
   @slash.requires(*platform.have_caps("encode", "hevc_8"))
@@ -112,6 +115,15 @@ class cbr(HEVC8EncoderTest):
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
+    self.encode()
+
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
+  @slash.requires(*have_gst_element("vaapih265enc"))
+  @slash.requires(*have_gst_element("vaapih265dec"))
+  @slash.parametrize(*gen_hevc_cbr_fqp_parameters(spec, ['main']))
+  def test_fqp(self, case, gop, slices, bframes, bitrate, fps, profile, qmax, qmin):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile,
+            qmax = qmax, qmin = qmin)
     self.encode()
 
   @slash.requires(*platform.have_caps("encode", "hevc_8"))
@@ -157,7 +169,8 @@ class cbr_lp(HEVC8EncoderTest):
     self.encode()
 
 class vbr(HEVC8EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+          qmax = None, qmin = None):
     self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -175,6 +188,8 @@ class vbr(HEVC8EncoderTest):
       rcmode  = "vbr",
       refs    = refs,
       slices  = slices,
+      qmax    = qmax,
+      qmin    = qmin,
     )
 
   @slash.requires(*platform.have_caps("encode", "hevc_8"))
@@ -183,6 +198,16 @@ class vbr(HEVC8EncoderTest):
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
+    self.encode()
+
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
+  @slash.requires(*have_gst_element("vaapih265enc"))
+  @slash.requires(*have_gst_element("vaapih265dec"))
+  @slash.parametrize(*gen_hevc_vbr_fqp_parameters(spec, ['main']))
+  def test_fqp(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+          qmax, qmin):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile,
+            qmax = qmax, qmin = qmin)
     self.encode()
 
   @slash.requires(*platform.have_caps("encode", "hevc_8"))
