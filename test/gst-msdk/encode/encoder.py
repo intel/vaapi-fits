@@ -60,10 +60,9 @@ class EncoderTest(slash.Test):
     if vars(self).get("ladepth", None) is not None:
       opts += " rc-lookahead={ladepth}"
 
-    if vars(self).get("gstmediatype", None) is not None:
-      opts += " ! {gstmediatype}"
-      if vars(self).get("profile", None) is not None:
-        opts += ",profile={mprofile}"
+    opts += " ! {gstmediatype}"
+    if vars(self).get("profile", None) is not None:
+      opts += ",profile={mprofile}"
 
     if vars(self).get("gstparser", None) is not None:
       opts += " ! {gstparser}"
