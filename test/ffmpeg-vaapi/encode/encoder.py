@@ -46,6 +46,8 @@ class EncoderTest(slash.Test):
         opts += " -global_quality {quality}"
       else:
         opts += " -quality {quality}"
+    if vars(self).get("icq_quality", None) is not None:
+      opts += " -global_quality {icq_quality}"
     if vars(self).get("slices", None) is not None:
       opts += " -slices {slices}"
     if vars(self).get("bframes", None) is not None:
@@ -65,6 +67,9 @@ class EncoderTest(slash.Test):
     if vars(self).get("level", None) is not None:
       self.level /= 10.0
       opts += " -level {level}"
+    if vars(self).get("ladepth", None) is not None:
+      opts += " -look_ahead 1"
+      opts += " -look_ahead_depth {ladepth}"
 
     opts += " -vframes {frames} -y {encoded}"
 
@@ -204,6 +209,7 @@ class EncoderTest(slash.Test):
         "|RC mode: CQP"
         "|Driver does not report any supported rate control modes: assuming constant-quality"
       ),
+      icq = "RC mode: ICQ",
       cbr = "RC mode: CBR",
       vbr = "RC mode: VBR",
     )

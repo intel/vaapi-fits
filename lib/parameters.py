@@ -54,6 +54,70 @@ def gen_avc_cqp_parameters(spec, profiles):
   params = gen_avc_cqp_variants(spec, profiles)
   return keys, params
 
+def gen_avc_icq_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("icq", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["quality"], variant.get("icq_quality"), profile
+        ]
+
+def gen_avc_icq_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "quality", "icq_quality", "profile")
+  params = gen_avc_icq_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_icq_la_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("icq_la", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["quality"], variant.get("icq_quality"), profile, variant.get("ladepth")
+        ]
+
+def gen_avc_icq_la_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "quality", "icq_quality", "profile", "ladepth")
+  params = gen_avc_icq_la_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_icq_lp_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("icq_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["quality"], variant.get("icq_quality"), profile
+        ]
+
+def gen_avc_icq_lp_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "quality", "icq_quality", "profile")
+  params = gen_avc_icq_lp_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_icq_lpla_variants(spec, profiles):
+  for case, params in spec.iteritems():
+    for variant in copy.deepcopy(params.get("icq_lpla", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["quality"], variant.get("icq_quality"), profile, variant.get("ladepth")
+        ]
+
+def gen_avc_icq_lpla_parameters( spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "quality", "icq_quality", "profile", "ladepth")
+  params = gen_avc_icq_lpla_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_cbr_variants(spec, profiles):
   for case, params in spec.iteritems():
     for variant in copy.deepcopy(params.get("cbr", [])):
@@ -187,6 +251,10 @@ gen_hevc_vbr_parameters = gen_avc_vbr_parameters
 gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
+gen_hevc_icq_parameters = gen_avc_icq_parameters
+gen_hevc_icq_la_parameters = gen_avc_icq_la_parameters
+gen_hevc_icq_lp_parameters = gen_avc_icq_lp_parameters
+gen_hevc_icq_lpla_parameters = gen_avc_icq_lpla_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.iteritems():

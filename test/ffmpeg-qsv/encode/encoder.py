@@ -40,6 +40,8 @@ class EncoderTest(slash.Test):
         opts += " -global_quality {quality}"
       else:
         opts += " -preset {quality}"
+    if vars(self).get("icq_quality", None) is not None:
+      opts += " -global_quality {icq_quality}"
     if vars(self).get("slices", None) is not None:
       opts += " -slices {slices}"
     if vars(self).get("bframes", None) is not None:
@@ -134,6 +136,8 @@ class EncoderTest(slash.Test):
 
     self.hwformat = mapformat(self.hwformat)
 
+    self.mlog = maplog(self.rcmode, 1 if vars(self).get("ladepth") else 0)
+
   def encode(self):
     self.validate_caps()
 
@@ -166,9 +170,8 @@ class EncoderTest(slash.Test):
     m = re.search("Initialize MFX session", self.output, re.MULTILINE)
     assert m is not None, "It appears that the QSV plugin did not load"
 
-    if vars(self).get("ladepth", None) is not None:
-      m = re.search("Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
-      assert m is not None, "It appears that the lookahead did not load"
+    m = re.search("Using the "+self.mlog+" ratecontrol method", self.output, re.MULTILINE)
+    assert m is not None, "It appears that the "+self.mlog+" did not load"
 
   def check_metrics(self):
     iopts = "-c:v {ffdecoder} -i {encoded}"

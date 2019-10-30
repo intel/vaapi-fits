@@ -95,6 +95,25 @@ def mapprofile(codec, profile):
     },
   }.get(codec, {}).get(profile, None)
 
+@memoize
+def maplog(rcmode, ladepth):
+  return {
+    "icq"   : {
+      1      : "intelligent constant quality with lookahead \(LA_ICQ\)",
+      0      : "intelligent constant quality \(ICQ\)",
+    },
+    "cqp"   : {
+      0      : "constant quantization parameter \(CQP\)",
+    },
+    "cbr"  : {
+      0      : "constant bitrate \(CBR\)",
+    },
+    "vbr"  : {
+      1      : "VBR with lookahead \(LA\)",
+      0      : "variable bitrate \(VBR\)",
+    },
+  }.get(rcmode, {}).get(ladepth, None)
+
 def load_test_spec(*ctx):
   from ...lib import get_media
   import copy

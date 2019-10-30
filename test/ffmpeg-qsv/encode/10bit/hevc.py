@@ -88,6 +88,102 @@ class cqp_lp(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class icq(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, quality, icq_quality, profile):
+    self.caps = platform.get_caps("encode", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      case      = case,
+      gop       = gop,
+      profile   = profile,
+      quality   = quality,
+      icq_quality   = icq_quality,
+      rcmode    = "icq",
+      slices    = slices,
+    )
+
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+  @slash.parametrize(*gen_hevc_icq_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bframes, quality, icq_quality, profile):
+    self.init(spec, case, gop, slices, bframes, quality, icq_quality, profile)
+    self.encode()
+
+class icq_la(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, quality, icq_quality, profile, ladepth):
+    self.caps = platform.get_caps("encode", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      case      = case,
+      gop       = gop,
+      profile   = profile,
+      quality   = quality,
+      icq_quality   = icq_quality,
+      rcmode    = "icq",
+      slices    = slices,
+      ladepth   = ladepth,
+    )
+
+  @slash.requires(*platform.have_caps("encode", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+  @slash.parametrize(*gen_hevc_icq_la_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bframes, quality, icq_quality, profile, ladepth):
+    self.init(spec, case, gop, slices, bframes, quality, icq_quality, profile, ladepth)
+    self.encode()
+
+class icq_lp(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, quality, icq_quality, profile):
+    self.caps = platform.get_caps("vdenc", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      case      = case,
+      gop       = gop,
+      profile   = profile,
+      quality   = quality,
+      icq_quality   = icq_quality,
+      rcmode    = "icq",
+      slices    = slices,
+      lowpower  = 1,
+    )
+
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+  @slash.parametrize(*gen_hevc_icq_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bframes, quality, icq_quality, profile):
+    self.init(spec, case, gop, slices, bframes, quality, icq_quality, profile)
+    self.encode()
+
+class icq_lpla(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, quality, icq_quality, profile, ladepth):
+    self.caps = platform.get_caps("vdenc", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      case      = case,
+      gop       = gop,
+      profile   = profile,
+      quality   = quality,
+      icq_quality   = icq_quality,
+      rcmode    = "icq",
+      slices    = slices,
+      ladepth   = ladepth,
+      lowpower  = 1,
+    )
+
+  @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+  @slash.parametrize(*gen_hevc_icq_lpla_parameters(spec, ['main10']))
+  def test(self, case, gop, slices, bframes, quality, icq_quality, profile, ladepth):
+    self.init(spec, case, gop, slices, bframes, quality, icq_quality, profile, ladepth)
+    self.encode()
+
 class cbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
     self.caps = platform.get_caps("encode", "hevc_10")
