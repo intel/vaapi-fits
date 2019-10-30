@@ -20,7 +20,7 @@ class DecoderTest(slash.Test):
     call(
       "gst-launch-1.0 -vf filesrc location={source}"
       " ! {gstdecoder}"
-      " ! videoconvert ! video/x-raw,format={mformatu}"
+      " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
       " ! checksumsink2 file-checksum=false qos=false"
       " frame-checksum=false plane-checksum=false dump-output=true"
       " dump-location={decoded}".format(**vars(self)))
