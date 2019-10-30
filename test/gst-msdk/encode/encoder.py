@@ -19,7 +19,7 @@ class EncoderTest(slash.Test):
     if vars(self).get("fps", None) is not None:
       opts += " framerate={fps}"
 
-    opts += " ! videoconvert ! video/x-raw,format={hwformat}"
+    opts += " ! videoconvert dither=0 ! video/x-raw,format={hwformat}"
 
     return opts
 
@@ -187,7 +187,7 @@ class EncoderTest(slash.Test):
   def check_metrics(self):
     iopts = "filesrc location={encoded} ! {gstdecoder}"
     oopts = (
-      "videoconvert ! video/x-raw,format={mformatu} ! checksumsink2"
+      "videoconvert dither=0 ! video/x-raw,format={mformatu} ! checksumsink2"
       " file-checksum=false frame-checksum=false plane-checksum=false"
       " dump-output=true qos=false dump-location={decoded}")
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
