@@ -15,24 +15,20 @@ class VP9EncoderTest(EncoderTest):
     vars(self).update(
       codec         = "vp9",
       gstencoder    = "vaapivp9enc",
-      gstdecoder    = "matroskademux ! vaapivp9dec",
+      gstdecoder    = "vaapivp9dec",
       gstmediatype  = "video/x-vp9",
-      gstmuxer      = "matroskamux",
-      lowpower      = False,
+      lowpower      = True,
     )
     super(VP9EncoderTest, self).before()
 
   def get_file_ext(self):
     return "webm"
 
-class cqp(VP9EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp9_8"))
-  @slash.requires(*have_gst_element("vaapivp9enc"))
-  @slash.requires(*have_gst_element("vaapivp9dec"))
-  @slash.parametrize(*gen_vp9_cqp_parameters(spec))
-  def test(self, case, ipmode, qp, quality, refmode, looplvl, loopshp):
-    self.caps = platform.get_caps("encode", "vp9_8")
-    vars(self).update(spec[case].copy())
+class cqp_lp(VP9EncoderTest):
+  def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_8")
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
       gop       = 30 if ipmode != 0 else 1,
@@ -43,16 +39,20 @@ class cqp(VP9EncoderTest):
       rcmode    = "cqp",
       refmode   = refmode,
     )
-    self.encode()
 
-class cbr(VP9EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp9_8"))
+  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
   @slash.requires(*have_gst_element("vaapivp9enc"))
   @slash.requires(*have_gst_element("vaapivp9dec"))
-  @slash.parametrize(*gen_vp9_cbr_parameters(spec))
-  def test(self, case, gop, bitrate, fps, refmode, looplvl, loopshp):
-    self.caps = platform.get_caps("encode", "vp9_8")
-    vars(self).update(spec[case].copy())
+  @slash.parametrize(*gen_vp9_cqp_lp_parameters(spec))
+  def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp)
+    self.encode()
+
+class cbr_lp(VP9EncoderTest):
+  def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_8")
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
@@ -66,15 +66,19 @@ class cbr(VP9EncoderTest):
       rcmode    = "cbr",
       refmode   = refmode,
     )
-    self.encode()
 
-class vbr(VP9EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp9_8"))
+  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
   @slash.requires(*have_gst_element("vaapivp9enc"))
   @slash.requires(*have_gst_element("vaapivp9dec"))
-  @slash.parametrize(*gen_vp9_vbr_parameters(spec))
-  def test(self, case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
-    self.caps = platform.get_caps("encode", "vp9_8")
+  @slash.parametrize(*gen_vp9_cbr_lp_parameters(spec))
+  def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp)
+    self.encode()
+
+class vbr_lp(VP9EncoderTest):
+  def init(self, tspec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -92,4 +96,11 @@ class vbr(VP9EncoderTest):
       rcmode    = "vbr",
       refmode   = refmode,
     )
+
+  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
+  @slash.requires(*have_gst_element("vaapivp9enc"))
+  @slash.requires(*have_gst_element("vaapivp9dec"))
+  @slash.parametrize(*gen_vp9_vbr_lp_parameters(spec))
+  def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp)
     self.encode()

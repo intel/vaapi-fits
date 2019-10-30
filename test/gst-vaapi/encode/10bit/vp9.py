@@ -4,55 +4,55 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib import *
-from ..util import *
-from .encoder import EncoderTest
+from .....lib import *
+from ...util import *
+from ..encoder import EncoderTest
 
-spec = load_test_spec("vp9", "encode", "8bit")
+spec = load_test_spec("vp9", "encode", "10bit")
 
-class VP9EncoderTest(EncoderTest):
+class VP9_10EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
-      codec    = "vp9",
-      ffenc    = "vp9_vaapi",
-      lowpower = 1,
+      codec         = "vp9",
+      gstencoder    = "vaapivp9enc",
+      gstdecoder    = "vaapivp9dec",
+      gstmediatype  = "video/x-vp9",
+      lowpower      = True,
     )
-    super(VP9EncoderTest, self).before()
+    super(VP9_10EncoderTest, self).before()
 
   def get_file_ext(self):
-    return "ivf"
+    return "webm"
 
-  def get_vaapi_profile(self):
-    return "VAProfileVP9Profile0"
-
-class cqp_lp(VP9EncoderTest):
+class cqp_lp(VP9_10EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
-    vars(self).update(spec[case].copy())
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_10")
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
       gop       = 30 if ipmode != 0 else 1,
       looplvl   = looplvl,
       loopshp   = loopshp,
       qp        = qp,
+      quality   = quality,
       rcmode    = "cqp",
-      slices    = slices,
+      refmode   = refmode,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
+  @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+  @slash.requires(*have_gst_element("vaapivp9enc"))
+  @slash.requires(*have_gst_element("vaapivp9dec"))
   @slash.parametrize(*gen_vp9_cqp_lp_parameters(spec))
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp)
     self.encode()
 
-class cbr_lp(VP9EncoderTest):
+class cbr_lp(VP9_10EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
-    vars(self).update(spec[case].copy())
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_10")
+    vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
@@ -64,21 +64,21 @@ class cbr_lp(VP9EncoderTest):
       maxrate   = bitrate,
       minrate   = bitrate,
       rcmode    = "cbr",
-      slices    = slices,
+      refmode   = refmode,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
+  @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+  @slash.requires(*have_gst_element("vaapivp9enc"))
+  @slash.requires(*have_gst_element("vaapivp9dec"))
   @slash.parametrize(*gen_vp9_cbr_lp_parameters(spec))
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp)
     self.encode()
 
-class vbr_lp(VP9EncoderTest):
+class vbr_lp(VP9_10EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
+    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vdenc", "vp9_10")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -88,14 +88,18 @@ class vbr_lp(VP9EncoderTest):
       gop       = gop,
       looplvl   = looplvl,
       loopshp   = loopshp,
-      maxrate   = bitrate * 2, # target percentage 50%
+      ## target percentage 70% (hard-coded in gst-vaapi)
+      ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
+      maxrate   = int(bitrate / 0.7),
       minrate   = bitrate,
+      quality   = quality,
       rcmode    = "vbr",
-      slices    = slices,
+      refmode   = refmode,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-  @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
+  @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+  @slash.requires(*have_gst_element("vaapivp9enc"))
+  @slash.requires(*have_gst_element("vaapivp9dec"))
   @slash.parametrize(*gen_vp9_vbr_lp_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp)
