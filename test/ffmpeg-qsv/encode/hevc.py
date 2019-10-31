@@ -227,3 +227,29 @@ class vbr_lp(HEVC8EncoderTest):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class vbr_la(HEVC8EncoderTest):
+  def init(self, tspec, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
+    self.caps = platform.get_caps("encode", "hevc_8")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      maxrate = bitrate * 2, # target percentage 50%
+      minrate = bitrate,
+      profile = profile,
+      quality = quality,
+      rcmode  = "vbr",
+      refs    = refs,
+      bframes = bframes,
+      ladepth = ladepth,
+    )
+
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+  @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+  @slash.parametrize(*gen_hevc_vbr_la_parameters(spec, ['main']))
+  def test(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
+    self.init(spec, case, bframes, bitrate, fps, quality, refs, profile, ladepth)
+    self.encode()
