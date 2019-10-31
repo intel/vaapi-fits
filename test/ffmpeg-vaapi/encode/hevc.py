@@ -128,6 +128,31 @@ class cbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile, level)
     self.encode()
 
+class cbr_mfs(HEVC8EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile, mfs):
+    self.caps = platform.get_caps("encode", "hevc_8")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes = bframes,
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      gop     = gop,
+      maxrate = bitrate,
+      minrate = bitrate,
+      profile = profile,
+      rcmode  = "cbr",
+      slices  = slices,
+      mfs     = mfs,
+    )
+
+  @slash.requires(*platform.have_caps("encode", "hevc_8"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
+  @slash.parametrize(*gen_hevc_cbr_mfs_parameters(spec, ['main']))
+  def test(self, case, gop, slices, bframes, bitrate, fps, profile, mfs):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile, mfs)
+    self.encode()
+
 class cbr_lp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
     self.caps = platform.get_caps("vdenc", "hevc_8")

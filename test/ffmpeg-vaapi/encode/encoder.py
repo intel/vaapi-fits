@@ -65,6 +65,8 @@ class EncoderTest(slash.Test):
     if vars(self).get("level", None) is not None:
       self.level /= 10.0
       opts += " -level {level}"
+    if vars(self).get("mfs", None) is not None:
+      opts += " -max_frame_size {mfs}"
 
     opts += " -vframes {frames} -y {encoded}"
 
@@ -102,6 +104,8 @@ class EncoderTest(slash.Test):
       name += "-r2r"
     if vars(self).get("level", None) is not None:
       name += "-{level}"
+    if vars(self).get("mfs", None) is not None:
+      name += "-{mfs}"
 
     return name
 
@@ -222,6 +226,8 @@ class EncoderTest(slash.Test):
 
     if vars(self).get("level", None) is not None:
       self.check_level()
+    if vars(self).get("mfs", None) is not None:
+      self.check_mfs()
 
   def check_metrics(self):
     iopts = "-i {encoded}"
@@ -270,3 +276,11 @@ class EncoderTest(slash.Test):
       "ffprobe -i {encoded} -v quiet -show_entries stream=level"
       " -of default=nk=1:nw=1".format(**vars(self)))
     assert float(output)/30 == self.level, "fail to set target level"
+
+  def check_mfs(self):
+    output = call(
+      "ffprobe -i {encoded} -show_frames".format(**vars(self)))
+    m = re.findall(
+      r"pkt_size=(\d+)", output, re.MULTILINE)
+    for x in m:
+      assert int(x) <= self.mfs, "fail to set max_frame_size"

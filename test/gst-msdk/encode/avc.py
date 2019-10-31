@@ -121,6 +121,32 @@ class cbr(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class cbr_mfs(AVCEncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile, mfs):
+    self.caps = platform.get_caps("encode", "avc")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes   = bframes,
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      gop       = gop,
+      maxrate   = bitrate,
+      minrate   = bitrate,
+      profile   = profile,
+      rcmode    = "cbr",
+      slices    = slices,
+      mfs       = mfs,
+    )
+
+  @slash.requires(*platform.have_caps("encode", "avc"))
+  @slash.requires(*have_gst_element("msdkh264enc"))
+  @slash.requires(*have_gst_element("msdkh264dec"))
+  @slash.parametrize(*gen_avc_cbr_mfs_parameters(spec, ['main', 'high', 'constrained-baseline']))
+  def test(self, case, gop, slices, bframes, bitrate, fps, profile, mfs):
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile, mfs)
+    self.encode()
+
 class cbr_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
     self.caps = platform.get_caps("vdenc", "avc")

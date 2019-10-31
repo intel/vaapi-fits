@@ -59,6 +59,8 @@ class EncoderTest(slash.Test):
       opts += "true" if self.lowpower else "false"
     if vars(self).get("ladepth", None) is not None:
       opts += " rc-lookahead={ladepth}"
+    if vars(self).get("mfs", None) is not None:
+      opts += " max-frame-size={mfs}"
 
     if vars(self).get("gstmediatype", None) is not None:
       opts += " ! {gstmediatype}"
@@ -109,6 +111,8 @@ class EncoderTest(slash.Test):
       name += "-{ladepth}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
+    if vars(self).get("mfs", None) is not None:
+      name += "-{mfs}"
 
     return name
 
@@ -185,6 +189,9 @@ class EncoderTest(slash.Test):
       self.check_bitrate()
       self.check_metrics()
 
+    if vars(self).get("mfs", None) is not None:
+      self.check_mfs()
+
   def check_metrics(self):
     iopts = "filesrc location={encoded} ! {gstdecoder}"
     oopts = (
@@ -228,3 +235,11 @@ class EncoderTest(slash.Test):
 
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
+
+  def check_mfs(self):
+    output = call(
+      "ffprobe -i {encoded} -show_frames".format(**vars(self)))
+    m = re.findall(
+      r"pkt_size=(\d+)", output, re.MULTILINE)
+    for x in m:
+      assert int(x) <= self.mfs, "fail to set max_frame_size"
