@@ -111,7 +111,7 @@ class VppTest(slash.Test):
 
   @timefn("gst")
   def call_gst(self, iopts, oopts):
-    call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(
+    call("gst-launch-1.0 --no-position -vf {iopts} ! {oopts}".format(
       iopts = iopts, oopts = oopts))
 
   def validate_caps(self):

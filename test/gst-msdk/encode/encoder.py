@@ -114,7 +114,8 @@ class EncoderTest(slash.Test):
 
   @timefn("gst")
   def call_gst(self, iopts, oopts):
-    self.output = call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(
+    self.output = call(
+      "gst-launch-1.0 --no-position -vf {iopts} ! {oopts}".format(
       iopts = iopts, oopts = oopts))
 
   def before(self):

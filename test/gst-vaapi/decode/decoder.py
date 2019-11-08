@@ -17,7 +17,7 @@ class DecoderTest(slash.Test):
   @timefn("gst")
   def call_gst(self):
     call(
-      "gst-launch-1.0 -vf filesrc location={source}"
+      "gst-launch-1.0 --no-position -vf filesrc location={source}"
       " ! {gstdecoder}"
       " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
       " ! checksumsink2 file-checksum=false qos=false"
