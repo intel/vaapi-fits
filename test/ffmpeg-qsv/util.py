@@ -46,6 +46,7 @@ def get_supported_format_map():
     "BGRA"  : "bgra",
     "P210"  : "yuv422p10le",
     "P410"  : "yuv444p10le",
+    "AYUV"  : "ayuv",
   }
 
 @memoize
