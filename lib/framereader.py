@@ -7,7 +7,7 @@
 import numpy
 
 def read_frame_422H(fd, width, height):
-  width2  = (width + 1) / 2
+  width2  = (width + 1) // 2
   size    = width * height
   size2   = width2 * height
 
@@ -18,7 +18,7 @@ def read_frame_422H(fd, width, height):
   return y, u, v
 
 def read_frame_422V(fd, width, height):
-  height2 = (height + 1) / 2
+  height2 = (height + 1) // 2
   size    = width * height
   size2   = width * height2
 
@@ -38,8 +38,8 @@ def read_frame_444P(fd, width, height):
   return y, u, v
 
 def read_frame_I420(fd, width, height):
-  width2  = (width + 1) / 2
-  height2 = (height + 1) / 2
+  width2  = (width + 1) // 2
+  height2 = (height + 1) // 2
   size    = width * height
   size2   = width2 * height2
 
@@ -57,8 +57,8 @@ def read_frame_Y800(fd, width, height):
   return y, None, None
 
 def read_frame_YV12(fd, width, height):
-  width2  = (width + 1) / 2
-  height2 = (height + 1) / 2
+  width2  = (width + 1) // 2
+  height2 = (height + 1) // 2
   size    = width * height
   size2   = width2 * height2
 
@@ -69,8 +69,8 @@ def read_frame_YV12(fd, width, height):
   return y, u, v
 
 def read_frame_NV12(fd, width, height):
-  width2  = (width + 1) / 2
-  height2 = (height + 1) / 2
+  width2  = (width + 1) // 2
+  height2 = (height + 1) // 2
   size    = width * height
   size2   = width2 * height2 * 2
 
@@ -80,8 +80,8 @@ def read_frame_NV12(fd, width, height):
   return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
 
 def read_frame_P010(fd, width, height):
-  width2  = (width + 1) / 2
-  height2 = (height + 1) / 2
+  width2  = (width + 1) // 2
+  height2 = (height + 1) // 2
   size    = width * height
   size2   = width2 * height2 * 2
 
@@ -144,7 +144,7 @@ def read_frame_BGRA(fd, width, height):
   return r, g, b
 
 def read_frame_P210(fd, width, height):
-  width2  = (width + 1) / 2
+  width2  = (width + 1) // 2
   size    = width * height
   size2   = width2 * height
 
