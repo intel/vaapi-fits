@@ -168,7 +168,7 @@ class VppTest(slash.Test):
       md5ref = md5(self.ofile)
       get_media()._set_test_details(md5_ref = md5ref)
 
-      for i in xrange(1, self.r2r):
+      for i in range(1, self.r2r):
         self.ofile = get_media()._test_artifact(
           "{}_{}.yuv".format(name, i))
         self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))

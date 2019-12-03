@@ -57,7 +57,7 @@ class DecoderTest(slash.Test):
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
       md5ref = md5(self.decoded)
       get_media()._set_test_details(md5_ref = md5ref)
-      for i in xrange(1, self.r2r):
+      for i in range(1, self.r2r):
         self.decoded = get_media()._test_artifact("{}_{}.yuv".format(name, i))
         self.call_ffmpeg()
         result = md5(self.decoded)
