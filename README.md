@@ -28,15 +28,19 @@ After Git LFS is installed, you can clone and interact with this repository usin
 
 * Python Slash library.
 
-  ```sudo pip install slash==1.5.1```
+  ```sudo pip3 install slash==1.5.1```
 
 * Python NumPy library.
 
-  ```sudo pip install numpy```
+  ```sudo pip3 install numpy```
 
 * Python scikit-image library.
 
-  ```sudo pip install scikit-image```
+  ```sudo pip3 install scikit-image```
+
+* Python distro library.
+
+  ```sudo pip3 install distro```
 
 ## Examples
 
