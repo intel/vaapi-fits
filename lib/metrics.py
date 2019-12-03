@@ -114,7 +114,7 @@ class RawMetricAggregator:
 
   def calculate(self, file1, file2, nframes, compare):
     with file1, file2: # this opens the files for reading
-      for i in xrange(nframes):
+      for i in range(nframes):
         y1, u1, v1 = file1.next_frame()
         y2, u2, v2 = file2.next_frame()
         self.__append(compare, ((y1, y2), (u1, u2), (v1, v2)))

@@ -18,7 +18,7 @@ def gen_multiframe_from(infile, count):
   with open(infile, "rb") as fd:
     data = fd.read()
   with open(outfile, "wb") as fd:
-    for i in xrange(count):
+    for i in range(count):
       fd.write(data)
   return outfile
 
@@ -46,6 +46,6 @@ def test_frame_reader(width, height, fmt):
   frames = 27
   with open(gen_multiframe_from(asset, frames), "rb") as fd:
     size = get_framesize(width, height, fmt)
-    for n in xrange(1, frames):
+    for n in range(1, frames):
       y, u, v = FrameReaders[fmt](fd, width, height)
       assert fd.tell() == size * n

@@ -179,7 +179,7 @@ class TranscoderTest(slash.Test):
       vppscale = self.get_vpp_scale(
         output.get("width", None), output.get("height", None), mode)
 
-      for channel in xrange(output.get("channels", 1)):
+      for channel in range(output.get("channels", 1)):
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         self.goutputs.setdefault(n, list()).append(ofile)
@@ -216,7 +216,7 @@ class TranscoderTest(slash.Test):
 
     for n, output in enumerate(self.outputs):
       get_media()._set_test_details(**{"output.{}".format(n) : output})
-      for channel in xrange(output.get("channels", 1)):
+      for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))

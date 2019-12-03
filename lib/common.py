@@ -69,7 +69,7 @@ def killproc(proc):
 
   # try to 'gently' terminate proc
   proc.terminate()
-  for i in xrange(5):
+  for i in range(5):
     result = proc.poll()
     if result is not None:
       return result
@@ -77,7 +77,7 @@ def killproc(proc):
 
   # failed to terminate proc, so kill it
   proc.kill()
-  for i in xrange(10):
+  for i in range(10):
     result = proc.poll()
     if result is not None:
       return result
