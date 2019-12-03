@@ -145,6 +145,8 @@ def call(command, withSlashLogger = True):
     timer.cancel()
     timer.join(30)
     reader.join(30)
+    proc.stdin.close()
+    proc.stdout.close()
 
   if timeout.triggered:
     error = True
