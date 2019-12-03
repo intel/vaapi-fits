@@ -64,6 +64,14 @@ def have_caps(*args):
 def info():
   import platform
   try:
+    from distro import linux_distribution as linux_dist
+  except:
+    try:
+      from platform import dist as linux_dist
+    except:
+      linux_dist = lambda: "unknown"
+
+  try:
     import cpuinfo
     cpu = cpuinfo.get_cpu_info()["brand"]
   except:
@@ -72,6 +80,6 @@ def info():
   return dict(
     node = str(platform.node()),
     kernel = str(platform.release()),
-    dist = str(platform.dist()),
+    dist = str(linux_dist()),
     cpu = cpu,
   )
