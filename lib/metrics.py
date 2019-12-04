@@ -7,10 +7,33 @@
 import hashlib
 import itertools
 import os
-import skimage.measure
 
 from common import get_media, memoize, timefn
 from framereader import FrameReaders
+
+try:
+  # try skimage >= 0.16, first
+  from skimage.metrics import structural_similarity as skimage_ssim
+except:
+  from skimage.measure import compare_ssim as skimage_ssim
+
+try:
+  # try skimage >= 0.16, first
+  from skimage.metrics import peak_signal_noise_ratio as skimage_psnr
+except:
+  from skimage.measure import compare_psnr as skimage_psnr
+
+try:
+  # try skimage >= 0.16, first
+  from skimage.metrics import mean_squared_error as skimage_mse
+except:
+  from skimage.measure import compare_mse as skimage_mse
+
+try:
+  # try skimage >= 0.16, first
+  from skimage.metrics import normalized_root_mse as skimage_nrmse
+except:
+  from skimage.measure import compare_nrmse as skimage_nrmse
 
 @timefn("md5")
 def md5(filename, chunksize = 4096, numbytes = -1):
@@ -124,7 +147,7 @@ def __compare_ssim(planes):
   a, b = planes
   if a is None or b is None: # handle Y800 case
     return 1.0
-  return skimage.measure.compare_ssim(a, b, win_size = 3)
+  return skimage_ssim(a, b, win_size = 3)
 
 @timefn("ssim")
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
@@ -139,7 +162,7 @@ def __compare_psnr(planes):
     # Avoid "Warning: divide by zero encountered in double_scalars" generated
     # by skimage.measure.compare_psnr when a and b are exactly the same.
     return 100
-  return skimage.measure.compare_psnr(a, b)
+  return skimage_psnr(a, b)
 
 @timefn("psnr")
 def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
@@ -150,7 +173,7 @@ def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I
 
 def __compare_mse(planes):
   a, b = planes
-  return skimage.measure.compare_mse(a, b)
+  return skimage_mse(a, b)
 
 @timefn("mse")
 def calculate_mse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
@@ -161,7 +184,7 @@ def calculate_mse(filename1, filename2, width, height, nframes = 1, fourcc = "I4
 
 def __compare_nrmse(planes):
   a, b = planes
-  return skimage.measure.compare_nrmse(a, b, norm_type = "Euclidean")
+  return skimage_nrmse(a, b, norm_type = "Euclidean")
 
 @timefn("nrmse")
 def calculate_nrmse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
