@@ -217,8 +217,8 @@ class MediaPlugin(slash.plugins.PluginInterface):
     if slash.config.root.parallel.worker_id is None:
       capture = self.syscapture.checkpoint()
       hangmsgs = [
-        "\[.*\] i915 0000:00:02.0: Resetting .* after gpu hang",
-        "\[.*\] i915 0000:00:02.0: Resetting .* for hang on .*",
+        r"\[.*\] i915 0000:00:02.0: Resetting .* after gpu hang",
+        r"\[.*\] i915 0000:00:02.0: Resetting .* for hang on .*",
       ]
       for msg in hangmsgs:
         if re.search(msg, capture, re.MULTILINE) is not None:
