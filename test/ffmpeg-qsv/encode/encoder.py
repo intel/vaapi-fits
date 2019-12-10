@@ -167,7 +167,7 @@ class EncoderTest(slash.Test):
     assert m is not None, "It appears that the QSV plugin did not load"
 
     if vars(self).get("ladepth", None) is not None:
-      m = re.search("Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
+      m = re.search(r"Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
       assert m is not None, "It appears that the lookahead did not load"
 
   def check_metrics(self):
