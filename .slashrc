@@ -131,7 +131,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
   def _get_ref_addr(self, context):
     path, case = slash.context.test.__slash__.address.split(':')
-    keyctx = filter(lambda c: str(c).startswith("key:"), context)
+    keyctx = list(filter(lambda c: str(c).startswith("key:"), context))
     if len(keyctx):
       key = keyctx[0].lstrip("key:")
     else:
@@ -287,7 +287,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
       outfile = result.get_log_path()
       if os.path.exists(outfile):
         with open(outfile, 'rb', 0) as out:
-          value = "".join(out.readlines())
+          value = "".join(line.decode("utf-8") for line in out) 
           et.SubElement(case, "system-out").text = ansi_escape(value)
 
       for error in itertools.chain(result.get_errors(), result.get_failures()):
