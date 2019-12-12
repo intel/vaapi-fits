@@ -208,6 +208,7 @@ def get_framesize(w, h, fourcc):
     "Y800" : lambda: w * h,
     "YUY2" : lambda: w * h * 2,
     "AYUV" : lambda: w * h * 4,
+    "VUYA" : lambda: w * h * 4,
     "ARGB" : lambda: w * h * 4,
     "P210" : lambda: szs["422H"]() * 2,
     "P410" : lambda: w * h * 6,
