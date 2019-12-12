@@ -334,7 +334,7 @@ def validate_spec(spec, context = list()):
   for k, v in spec.iteritems():
     if "--spec--" == k:
       for case in v.keys():
-        _VALID_TYPES = (numbers.Integral, basestring)
+        _VALID_TYPES = (numbers.Integral, str)
         assert isinstance(case, _VALID_TYPES), (
           "{}: {}"
           "\n\tIllegal type for test case name"
