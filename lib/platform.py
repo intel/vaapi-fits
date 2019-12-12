@@ -25,7 +25,9 @@ def load_caps():
     )
   )
   if os.path.exists(capsfile):
-    execfile(capsfile, namespace)
+    with open(capsfile, 'rb') as f:
+      exec(f.read(), namespace)
+
   caps = namespace.get("caps", None)
 
   # map some aliases for convenience
