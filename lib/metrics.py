@@ -101,8 +101,8 @@ class RawMetricAggregator:
   def __get(self):
     self.__collect_async()
     result = list(itertools.chain(*self.results))
-    return map(
-      lambda v: round(v, 4), (
+    return [
+      float(round(v, 4)) for v in (
         self.biggest_deviator(result[0::3]),
         self.biggest_deviator(result[1::3]),
         self.biggest_deviator(result[2::3]),
@@ -110,7 +110,7 @@ class RawMetricAggregator:
         sum(result[1::3]) / len(self.results),
         sum(result[2::3]) / len(self.results),
       )
-    )
+    ]
 
   def calculate(self, file1, file2, nframes, compare):
     with file1, file2: # this opens the files for reading
