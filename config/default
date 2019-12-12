@@ -20,7 +20,8 @@ if not os.path.exists(assets):
 
 for file in os.listdir(os.path.dirname(config)):
   if fnmatch.fnmatch(file, "*.default"):
-    execfile(os.path.join(os.path.dirname(config), file))
+    with open(os.path.join(os.path.dirname(config), file), 'rb') as f:
+      exec(f.read())
 
 ###
 ### kate: syntax python;
