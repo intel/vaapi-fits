@@ -21,6 +21,7 @@ def get_supported_format_map():
     "NV12"  : ("nv12", "NV12"),
     "YV12"  : ("yv12", "YV12"),
     "AYUV"  : ("ayuv", "AYUV"),
+    "VUYA"  : ("vuya", "VUYA"),
     "YUY2"  : ("yuy2", "YUY2"),
     "ARGB"  : ("argb", "ARGB"),
     "BGRA"  : ("bgra", "BGRA"),

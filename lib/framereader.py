@@ -101,6 +101,17 @@ def read_frame_AYUV(fd, width, height):
 
   return y, u, v
 
+def read_frame_VUYA(fd, width, height):
+  size = width * height * 4
+
+  ayuv = numpy.fromfile(fd, dtype=numpy.uint8, count=size)
+  a = ayuv[3::4].reshape((height, width))
+  y = ayuv[2::4].reshape((height, width))
+  u = ayuv[1::4].reshape((height, width))
+  v = ayuv[0::4].reshape((height, width))
+
+  return y, u, v
+
 def read_frame_YUY2(fd, width, height):
   size = width * height * 2
 
@@ -163,6 +174,7 @@ FrameReaders = {
   "Y800" : read_frame_Y800,
   "YUY2" : read_frame_YUY2,
   "AYUV" : read_frame_AYUV,
+  "VUYA" : read_frame_VUYA,
   "ARGB" : read_frame_ARGB,
   "P210" : read_frame_P210,
   "P410" : read_frame_P410,
