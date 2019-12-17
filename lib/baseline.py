@@ -38,7 +38,7 @@ class Baseline:
 
     econtext = list(get_media()._expand_context(context))
 
-    for key, val in kwargs.iteritems():
+    for key, val in kwargs.items():
       refval = reference.get(key, None)
       strkey = '.'.join(econtext + [key])
       get_media()._set_test_details(**{"{}:expect".format(strkey):refval})

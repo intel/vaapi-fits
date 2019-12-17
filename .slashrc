@@ -139,7 +139,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     return ':'.join([key, case])
 
   def _set_test_details(self, **kwargs):
-    for k, v in kwargs.iteritems():
+    for k, v in kwargs.items():
       slash.context.result.details.set(k, v)
       slash.logger.notice("DETAIL: {} = {}".format(k, v))
 
@@ -332,7 +332,7 @@ with open(config, 'rb') as f:
 from slash.core.variation import _PRINTABLE_CHARS
 import numbers
 def validate_spec(spec, context = list()):
-  for k, v in spec.iteritems():
+  for k, v in spec.items():
     if "--spec--" == k:
       for case in v.keys():
         _VALID_TYPES = (numbers.Integral, str)

@@ -19,7 +19,7 @@ def format_value(value, **params):
   return value.format(**augmented)
 
 def gen_avc_cqp_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = copy.deepcopy(params.get("cqp", None))
     if variants is None:
       keys = ["gop", "slices", "bframes", "qp", "quality", "profile"]
@@ -55,7 +55,7 @@ def gen_avc_cqp_parameters(spec, profiles):
   return keys, params
 
 def gen_avc_cbr_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("cbr", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -83,7 +83,7 @@ def gen_avc_cbr_parameters(spec, profiles):
   return keys, params
 
 def gen_hevc_cbr_level_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("cbr_level", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -99,7 +99,7 @@ def gen_hevc_cbr_level_parameters( spec, profiles):
   return keys, params
 
 def gen_avc_vbr_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("vbr", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -116,7 +116,7 @@ def gen_avc_vbr_parameters(spec, profiles):
   return keys, params
 
 def gen_avc_cqp_lp_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("cqp_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -132,7 +132,7 @@ def gen_avc_cqp_lp_parameters(spec, profiles):
   return keys, params
 
 def gen_avc_cbr_lp_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("cbr_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -148,7 +148,7 @@ def gen_avc_cbr_lp_parameters(spec, profiles):
   return keys, params
 
 def gen_avc_vbr_lp_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("vbr_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -165,7 +165,7 @@ def gen_avc_vbr_lp_parameters(spec, profiles):
   return keys, params
 
 def gen_avc_vbr_la_variants(spec, profiles):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in copy.deepcopy(params.get("vbr_la", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
@@ -189,7 +189,7 @@ gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
 
 def gen_mpeg2_cqp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = copy.deepcopy(params.get("cqp", None))
     if variants is None:
       keys = ["gop", "bframes", "qp", "quality"]
@@ -219,7 +219,7 @@ def gen_mpeg2_cqp_parameters(spec):
   return keys, params
 
 def gen_jpeg_cqp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("cqp", None)
 
     if variants is None:
@@ -236,7 +236,7 @@ def gen_jpeg_cqp_parameters(spec):
   return keys, params
 
 def gen_vp8_cqp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("cqp", None)
 
     if variants is None:
@@ -255,7 +255,7 @@ def gen_vp8_cqp_parameters(spec):
   return keys, params
 
 def gen_vp8_cbr_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("cbr", []):
         # Required: bitrate
         # Optional: gop, fps, looplvl, loopshp
@@ -271,7 +271,7 @@ def gen_vp8_cbr_parameters(spec):
   return keys, params
 
 def gen_vp8_vbr_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("vbr", []):
         # Required: bitrate
         # Optional: gop, fps, quality, looplvl, loopshp
@@ -287,7 +287,7 @@ def gen_vp8_vbr_parameters(spec):
   return keys, params
 
 def gen_vp9_cqp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("cqp", None)
 
     if variants is None:
@@ -306,7 +306,7 @@ def gen_vp9_cqp_parameters(spec):
   return keys, params
 
 def gen_vp9_cbr_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("cbr", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
@@ -322,7 +322,7 @@ def gen_vp9_cbr_parameters(spec):
   return keys, params
 
 def gen_vp9_vbr_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("vbr", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, quality, looplvl, loopshp
@@ -339,7 +339,7 @@ def gen_vp9_vbr_parameters(spec):
   return keys, params
 
 def gen_vp9_cqp_lp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("cqp_lp", [])
     for variant in variants:
       yield [
@@ -352,7 +352,7 @@ def gen_vp9_cqp_lp_parameters(spec):
   return keys, params
 
 def gen_vp9_cbr_lp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("cbr_lp", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
@@ -368,7 +368,7 @@ def gen_vp9_cbr_lp_parameters(spec):
   return keys, params
 
 def gen_vp9_vbr_lp_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     for variant in params.get("vbr_lp", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
@@ -384,7 +384,7 @@ def gen_vp9_vbr_lp_parameters(spec):
   return keys, params
 
 def gen_vpp_sharpen_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("levels", None) or [0, 1, 20, 50, 59, 99, 100]
     for variant in set(variants):
       yield [case, variant]
@@ -401,7 +401,7 @@ gen_vpp_hue_parameters = gen_vpp_sharpen_parameters
 gen_vpp_saturation_parameters = gen_vpp_sharpen_parameters
 
 def gen_vpp_deinterlace_variants(spec, modes):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("modes", modes)
     for variant in variants:
       yield [case, variant["method"], variant["rate"]]
@@ -412,7 +412,7 @@ def gen_vpp_deinterlace_parameters(spec, modes):
   return keys, params
 
 def gen_vpp_csc_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("colorspaces", None) or ["NV12", "YV12", "I420"]
     for variant in set(variants):
       yield [case, variant]
@@ -423,7 +423,7 @@ def gen_vpp_csc_parameters(spec):
   return keys, params
 
 def gen_vpp_scale_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("scale_resolutions", None) or []
     for scale_width, scale_height in variants:
       yield [case, scale_width, scale_height]
@@ -434,7 +434,7 @@ def gen_vpp_scale_parameters(spec):
   return keys, params
 
 def gen_vpp_mirroring_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("methods", None) or ["vertical", "horizontal"]
     for variant in variants:
       yield [case, variant]
@@ -445,7 +445,7 @@ def gen_vpp_mirroring_parameters(spec):
   return keys, params
 
 def gen_vpp_rotation_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("rotations", None) or [0, 90, 180, 270]
     for variant in variants:
       yield [case, variant]
@@ -456,7 +456,7 @@ def gen_vpp_rotation_parameters(spec):
   return keys, params
 
 def gen_vpp_transpose_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("transpose", None) or []
     for degrees, method in variants:
       yield [case, degrees, method]
@@ -467,7 +467,7 @@ def gen_vpp_transpose_parameters(spec):
   return keys, params
 
 def gen_vpp_crop_variants(spec):
-  for case, params in spec.iteritems():
+  for case, params in spec.items():
     variants = params.get("crop", [])
     for variant in variants:
       yield [
