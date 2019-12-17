@@ -8,7 +8,7 @@ import copy
 import itertools
 
 def format_value(value, **params):
-  from common import get_media
+  from .common import get_media
 
   augmented = dict(
     driver = get_media()._get_driver_name(),

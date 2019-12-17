@@ -7,7 +7,7 @@
 import json
 import os
 import slash
-from common import get_media
+from .common import get_media
 
 ################################################
 # FIXME: Make Baseline work in parallel mode ###
