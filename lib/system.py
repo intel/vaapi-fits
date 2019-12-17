@@ -4,7 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from common import call
+from .common import call
 
 class Capture:
   def __init__(self):
