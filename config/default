@@ -10,7 +10,7 @@ import tarfile
 assets = os.path.join(media.mypath, "assets")
 
 if not os.path.exists(assets):
-  print "Extracting assets..."
+  print("Extracting assets...")
   try:
     with tarfile.open("{}.tbz2".format(assets), "r:*") as tf:
       tf.extractall(media.mypath)
