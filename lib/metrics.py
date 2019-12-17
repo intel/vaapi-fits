@@ -85,7 +85,7 @@ class RawFile:
   def next_frame(self):
     try:
       return self.reader(self.fd, self.width, self.height)
-    except Exception, e:
+    except Exception as e:
       e.args += tuple(["frame {}/{}".format(self.nreads, self.nframes)])
       raise
     finally:

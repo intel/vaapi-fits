@@ -14,7 +14,7 @@ if not os.path.exists(assets):
   try:
     with tarfile.open("{}.tbz2".format(assets), "r:*") as tf:
       tf.extractall(media.mypath)
-  except tarfile.ReadError, e:
+  except tarfile.ReadError as e:
     assert 0, ("Failed to extract assets.  Did you forget to"
       " initialize git lfs (see README.md)?")
 
