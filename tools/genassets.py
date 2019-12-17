@@ -55,7 +55,7 @@ spec = dict(
   ),
 )
 
-for codec, params in spec.iteritems():
+for codec, params in spec.items():
   p = params.copy()
   p.update(path = "./assets/{}".format(codec))
   p.update(ypath = "./assets/yuv")
