@@ -100,9 +100,15 @@ def call(command, withSlashLogger = True):
     logger = lambda x: None
 
   def readproc(proc):
-    for line in iter(proc.stdout.readline, ''):
-      readproc.output += line
-      logger(line.rstrip('\n'))
+    import sys
+    for line in iter(proc.stdout.readline, b''):
+      # check python version
+      if sys.version_info.major == 2:
+        readproc.output += line
+        logger(line.rstrip('\n'))
+      else:
+        readproc.output += line.decode("utf-8")
+        logger(line.decode("utf-8").rstrip().rstrip('\n'))
   readproc.output = ""
 
   def timeout(proc):
