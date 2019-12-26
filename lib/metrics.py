@@ -8,8 +8,8 @@ import hashlib
 import itertools
 import os
 
-from common import get_media, memoize, timefn
-from framereader import FrameReaders
+from .common import get_media, memoize, timefn
+from .framereader import FrameReaders
 
 try:
   # try skimage >= 0.16, first
