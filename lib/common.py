@@ -124,7 +124,8 @@ def call(command, withSlashLogger = True):
     stdin = subprocess.PIPE,
     stdout = subprocess.PIPE,
     stderr = subprocess.STDOUT,
-    shell = True)
+    shell = True,
+    universal_newlines = True)
 
   logger("CALL: {} (pid: {})".format(command, proc.pid))
 
