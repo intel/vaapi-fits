@@ -20,7 +20,7 @@ class Baseline:
     self.rebase = rebase
 
     if self.filename and os.path.exists(self.filename):
-      with open(self.filename, "rb") as fd:
+      with open(self.filename, "r") as fd:
         self.references = json.load(fd)
 
   def __get_reference(self, context = []):
