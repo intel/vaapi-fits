@@ -171,3 +171,7 @@ def try_call(command):
 def mapRange(value, srcRange, destRange):
   (smin, smax), (dmin, dmax) = srcRange, destRange
   return dmin + ((value - smin) * (dmax - dmin) / (smax - smin))
+
+def mapRangeInt(value, srcRange, destRange):
+  (smin, smax), (dmin, dmax) = srcRange, destRange
+  return int(dmin + ((value - smin) * (dmax - dmin) // (smax - smin)))

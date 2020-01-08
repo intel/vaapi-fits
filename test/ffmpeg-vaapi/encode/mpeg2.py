@@ -35,7 +35,7 @@ class cqp(MPEG2EncoderTest):
       case    = case,
       gop     = gop,
       qp      = qp,
-      mqp     = mapRange(qp, [0, 100], [1, 31]),
+      mqp     = mapRangeInt(qp, [0, 100], [1, 31]),
       rcmode  = "cqp",
     )
 
