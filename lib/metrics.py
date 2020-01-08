@@ -184,7 +184,7 @@ def calculate_mse(filename1, filename2, width, height, nframes = 1, fourcc = "I4
 
 def __compare_nrmse(planes):
   a, b = planes
-  return skimage_nrmse(a, b, norm_type = "Euclidean")
+  return skimage_nrmse(a, b)
 
 @timefn("nrmse")
 def calculate_nrmse(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
