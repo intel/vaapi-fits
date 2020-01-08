@@ -26,7 +26,7 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [0, 64]),
+      mlevel  = mapRangeInt(level, [0, 100], [0, 64]),
     )
     self.vpp()
 
