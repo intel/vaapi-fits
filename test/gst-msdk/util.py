@@ -23,8 +23,7 @@ def get_supported_format_map():
     "I420"  : ("i420", "I420"),
     "NV12"  : ("nv12", "NV12"),
     "YV12"  : ("yv12", "YV12"),
-    "AYUV"  : ("ayuv", "AYUV"),
-    "VUYA"  : ("vuya", "VUYA"),
+    "AYUV"  : ("vuya", "VUYA"), #we use microsoft's definition of AYUV,https://docs.microsoft.com/en-us/windows/win32/medfound/recommended-8-bit-yuv-formats-for-video-rendering#ayuv
     "YUY2"  : ("yuy2", "YUY2"),
     "ARGB"  : ("argb", "ARGB"),
     "BGRA"  : ("bgra", "BGRA"),
