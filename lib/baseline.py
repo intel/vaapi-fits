@@ -9,6 +9,14 @@ import os
 import slash
 from .common import get_media
 
+class JSONFloatPrecisionEncoder(json.JSONEncoder):
+  def iterencode(self, o):
+    return json.encoder._make_iterencode(
+      {}, self.default, json.encoder.encode_basestring_ascii,
+      self.indent, "{:.4f}".format, self.key_separator, self.item_separator,
+      self.sort_keys, self.skipkeys, True,
+    )(o, 0)
+
 ################################################
 # FIXME: Make Baseline work in parallel mode ###
 ################################################
@@ -60,9 +68,8 @@ class Baseline:
     if self.rebase:
       if not os.path.exists(os.path.dirname(self.filename)):
         os.makedirs(os.path.dirname(self.filename))
-      with open(self.filename, "wb+") as fd:
-        rep = json.encoder.FLOAT_REPR
-        json.encoder.FLOAT_REPR = lambda f: "{:.4f}".format(f)
-        json.dump(self.references, fd, indent = 2, sort_keys = True)
-        json.encoder.FLOAT_REPR = rep
-
+      with open(self.filename, "w+") as fd:
+        json.dump(
+          self.references, fd, cls = JSONFloatPrecisionEncoder, indent = 2,
+          sort_keys = True
+        )
