@@ -36,7 +36,7 @@ class EncoderTest(slash.Test):
       if self.codec in ["mpeg2"]:
         opts += " qpi={mqp} qpp={mqp} qpb={mqp}"
       else:
-        opts += " qpp={qp}"
+        opts += " qpi={qp} qpp={qp} qpb={qp}"
     if vars(self).get("quality", None) is not None:
       if self.codec in ["jpeg",]:
         opts += " quality={quality}"
