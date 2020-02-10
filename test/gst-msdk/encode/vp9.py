@@ -15,12 +15,14 @@ class VP9EncoderTest(EncoderTest):
     vars(self).update(
       codec         = "vp9",
       gstencoder    = "msdkvp9enc",
-      gstdecoder    = "ivfparse ! msdkvp9dec hardware=true",
+      gstdecoder    = "matroskademux ! msdkvp9dec hardware=true",
+      gstmediatype  = "video/x-vp9",
+      gstmuxer      = "matroskamux",
     )
     super(VP9EncoderTest, self).before()
 
   def get_file_ext(self):
-    return "ivf"
+    return "webm"
 
 class cqp_lp(VP9EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
