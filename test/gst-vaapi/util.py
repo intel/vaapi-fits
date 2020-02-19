@@ -16,6 +16,10 @@ def have_gst_element(element):
   return result, element
 
 def get_supported_format_map():
+  #The map first entry is for gst element properties;the second entry is for gst caps filters
+  #for example:
+  #    i420 is entry for gst properties such as vaapipostproc
+  #    I420: is entry for gst caps filter
   return {
     "I420"  : ("i420", "I420"),
     "NV12"  : ("nv12", "NV12"),
@@ -29,6 +33,7 @@ def get_supported_format_map():
     "P010"  : ("p010-10le", "P010_10LE"),
     "P210"  : ("i422-10le", "I422_10LE"),
     "P410"  : ("y444-10le", "Y444_10LE"),
+    "Y410"  : ("y410", "Y410"),
   }
 
 @memoize
