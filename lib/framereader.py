@@ -165,6 +165,27 @@ def read_frame_P210(fd, width, height):
 
   return y, u, v
 
+def read_frame_Y210(fd, width, height):
+  #https://docs.microsoft.com/en-us/windows/win32/medfound/10-bit-and-16-bit-yuv-video-formats#422-formats
+  #Y210 (each pair of pixels is stored as an array of four WORD)
+  #   Y0           U            Y1             V
+  #  word0        word1        word2         word3
+  #bits 15-0     bits15-0     bits15-0      bits15-0
+  #
+  #The 16bit representations described here use little-endian WORD values for each channel
+  #bits:  15 14 13 ...  ...     5 4 3 2 1 0
+  #data:  valid data  ...       0 0 0 0 0 0
+  size    = width * height * 2
+
+  y210 = numpy.fromfile(fd, dtype=numpy.uint16, count=size)
+  # frames with odd width and height produce an odd number of bytes
+  # in uv components and therefore cannot be effectively reshaped
+  y  = y210[0::2].reshape((height, width)) & 0xffc0
+  u  = y210[1::4] & 0xffc0
+  v  = y210[3::4] & 0xffc0
+
+  return y, u, v
+
 def read_frame_P410(fd, width, height):
   size = width * height
 
@@ -205,6 +226,7 @@ FrameReaders = {
   "VUYA" : read_frame_VUYA,
   "ARGB" : read_frame_ARGB,
   "P210" : read_frame_P210,
+  "Y210" : read_frame_Y210,
   "P410" : read_frame_P410,
   "Y410" : read_frame_Y410,
   "BGRA" : read_frame_BGRA,
