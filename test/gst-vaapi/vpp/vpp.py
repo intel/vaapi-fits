@@ -31,38 +31,33 @@ class VppTest(slash.Test):
 
   def gen_output_opts(self):
     opts = "vaapipostproc"
-    if self.vpp_element not in ["csc"]:
-      if self.vpp_element in ["scale"]:
-        opts += " width={scale_width} height={scale_height}"
-      elif self.vpp_element in ["contrast"]:
-        opts += " contrast={mlevel}"
-      elif self.vpp_element in ["saturation"]:
-        opts += " saturation={mlevel}"
-      elif self.vpp_element in ["hue"]:
-        opts += " hue={mlevel}"
-      elif self.vpp_element in ["brightness"]:
-        opts += " brightness={mlevel}"
-      elif self.vpp_element in ["denoise"]:
-        opts += " denoise={mlevel}"
-      elif self.vpp_element in ["sharpen"]:
-        opts += " sharpen={mlevel}"
-      elif self.vpp_element in ["deinterlace"]:
-        opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
-        opts += " width={width} height={height}"
-      elif self.vpp_element in ["transpose"]:
-        opts += " video-direction={direction}"
-      elif self.vpp_element in ["crop"]:
-        opts += " crop-left={left} crop-right={right} crop-top={top} crop-bottom={bottom}"
 
-      if self.vpp_element not in ["deinterlace"]:
-        opts += " ! video/x-raw,format={ohwformat}"
-        if self.ofmt != self.ohwformat:
-          opts += " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
-      else:
-        opts += " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
+    if self.vpp_element in ["contrast"]:
+      opts += " contrast={mlevel}"
+    elif self.vpp_element in ["saturation"]:
+      opts += " saturation={mlevel}"
+    elif self.vpp_element in ["hue"]:
+      opts += " hue={mlevel}"
+    elif self.vpp_element in ["brightness"]:
+      opts += " brightness={mlevel}"
+    elif self.vpp_element in ["denoise"]:
+      opts += " denoise={mlevel}"
+    elif self.vpp_element in ["sharpen"]:
+      opts += " sharpen={mlevel}"
+    elif self.vpp_element in ["deinterlace"]:
+      opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
+    elif self.vpp_element in ["transpose"]:
+      opts += " video-direction={direction}"
+    elif self.vpp_element in ["crop"]:
+      opts += " crop-left={left} crop-right={right} crop-top={top} crop-bottom={bottom}"
 
-    else:
-      opts += " ! video/x-raw,format={ohwformat}"
+    opts += " ! video/x-raw,format={ohwformat}"
+
+    if self.vpp_element in ["scale"]:
+      opts += ",width={scale_width},height={scale_height}"
+
+    if self.ofmt != self.ohwformat and self.vpp_element not in ["csc"]:
+      opts += " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
 
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
     opts += " plane-checksum=false dump-output=true dump-location={ofile}"
@@ -125,31 +120,30 @@ class VppTest(slash.Test):
     if self.mformat is None:
       slash.skip_test("gst-vaapi.{format} unsupported".format(**vars(self)))
 
-    if "deinterlace" != self.vpp_element:
-      if "csc" == self.vpp_element:
-        ihwfmt = self.ifmt if self.ifmt in ifmts else None
-        ohwfmt = self.ofmt if self.ofmt in ofmts else None
-      else:
-        ihwfmt = match_best_format(self.ifmt, ifmts)
-        ohwfmt = match_best_format(self.ofmt, ofmts)
+    if "csc" == self.vpp_element:
+      ihwfmt = self.ifmt if self.ifmt in ifmts else None
+      ohwfmt = self.ofmt if self.ofmt in ofmts else None
+    else:
+      ihwfmt = match_best_format(self.ifmt, ifmts)
+      ohwfmt = match_best_format(self.ofmt, ofmts)
 
-      if ihwfmt is None:
-        slash.skip_test(
-          format_value(
-            "{platform}.{driver}.{ifmt} input unsupported", **vars(self)))
+    if ihwfmt is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{ifmt} input unsupported", **vars(self)))
 
-      if ohwfmt is None:
-        slash.skip_test(
-          format_value(
-            "{platform}.{driver}.{ofmt} output unsupported", **vars(self)))
+    if ohwfmt is None:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{ofmt} output unsupported", **vars(self)))
 
-      self.ihwformat = mapformatu(ihwfmt)
-      self.ohwformat = mapformatu(ohwfmt)
+    self.ihwformat = mapformatu(ihwfmt)
+    self.ohwformat = mapformatu(ohwfmt)
 
-      if self.ihwformat is None:
-        slash.skip_test("gst-vaapi.{ifmt} unsupported".format(**vars(self)))
-      if self.ohwformat is None:
-        slash.skip_test("gst-vaapi.{ofmt} unsupported".format(**vars(self)))
+    if self.ihwformat is None:
+      slash.skip_test("gst-vaapi.{ifmt} unsupported".format(**vars(self)))
+    if self.ohwformat is None:
+      slash.skip_test("gst-vaapi.{ofmt} unsupported".format(**vars(self)))
 
   def vpp(self):
     self.validate_caps()
