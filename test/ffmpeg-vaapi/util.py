@@ -41,7 +41,6 @@ def get_supported_format_map():
     "Y800"  : "gray8",
     "ARGB"  : "rgb32",
     "BGRA"  : "bgra",
-    "P210"  : "yuv422p10le",
     "Y210"  : "y210",
     "Y410"  : "y410",
     "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
