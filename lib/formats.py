@@ -19,7 +19,6 @@ subsampling = {
   "AYUV" : ("YUV444",  8),
   "VUYA" : ("YUV444",  8),
   "Y410" : ("YUV444", 10),
-  "P410" : ("YUV444", 10),
 }
 
 def match_best_format(fmt, choices):
