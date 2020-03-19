@@ -122,9 +122,9 @@ class VppTest(slash.Test):
     self.mformat  = mapformat(self.format)
     self.mformatu = mapformatu(self.format)
 
-    # MSDK does not support I420 and YV12 output formats even though
+    # MSDK does not support I420 output formats even though
     # iHD supports it.  Thus, msdkvpp can't output it directly (HW).
-    ofmts = list(set(ofmts) - set(["I420", "YV12"]))
+    ofmts = list(set(ofmts) - set(["I420"]))
 
     if self.mformat is None:
       slash.skip_test("gst.{format} unsupported".format(**vars(self)))
