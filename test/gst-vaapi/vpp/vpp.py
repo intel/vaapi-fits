@@ -55,6 +55,8 @@ class VppTest(slash.Test):
 
     if self.vpp_element in ["scale"]:
       opts += ",width={scale_width},height={scale_height}"
+    elif self.vpp_element in ["deinterlace"]:
+      opts += ",width={width},height={height}"
 
     if self.ofmt != self.ohwformat and self.vpp_element not in ["csc"]:
       opts += " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
