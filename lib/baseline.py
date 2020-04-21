@@ -38,11 +38,11 @@ class Baseline:
       reference = reference.setdefault(c, dict())
     return reference
 
-  def check_result(self, compare, context = [], **kwargs):
-    reference = self.__get_reference(context)
-
-    if self.rebase:
-      reference.update(**kwargs)
+  def check_result(self, compare, reference = None, context = [], **kwargs):
+    if reference is None:
+      reference = self.__get_reference(context)
+      if self.rebase:
+        reference.update(**kwargs)
 
     econtext = list(get_media()._expand_context(context))
 
@@ -57,12 +57,16 @@ class Baseline:
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"
       assert all(map(lambda r,a: a+0.2 > r, ref[3:], actual[3:]))
-    self.check_result(compare, context, psnr = psnr)
+    self.check_result(compare = compare, context = context, psnr = psnr)
 
-  def check_md5(self, md5, context = []):
+  def check_md5(self, md5, expect = None, context = []):
     def compare(k, ref, actual):
       assert ref == actual
-    self.check_result(compare, context, md5 = md5)
+    self.check_result(
+      compare = compare,
+      reference = None if expect is None else {"md5" : expect},
+      context = context,
+      md5 = md5)
 
   def finalize(self):
     if self.rebase:

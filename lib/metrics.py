@@ -249,7 +249,9 @@ def check_metric(**params):
     ) * params["frames"])
     res = md5(filename = params["decoded"], numbytes = numbytes)
     get_media().baseline.check_md5(
-      md5 = res, context = params.get("refctx", []))
+      md5 = res,
+      expect = metric.get("expect", None),
+      context = params.get("refctx", []))
 
   elif "psnr" == type:
     get_media().baseline.check_psnr(
