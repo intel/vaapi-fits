@@ -188,6 +188,55 @@ gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
 
+def gen_hevc_cqp_ldb_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("cqp_ldb", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["qp"], variant["quality"], profile
+        ]
+
+def gen_hevc_cqp_ldb_parameters(spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "qp", "quality", "profile")
+  params = gen_hevc_cqp_ldb_variants(spec, profiles)
+  return keys, params
+
+def gen_hevc_cbr_ldb_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("cbr_ldb", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["bitrate"], variant.get("fps", 30), profile
+        ]
+
+def gen_hevc_cbr_ldb_parameters(spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "profile")
+  params = gen_hevc_cbr_ldb_variants(spec, profiles)
+  return keys, params
+
+def gen_hevc_vbr_ldb_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("vbr_ldb", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"], variant["bframes"],
+          variant["bitrate"], variant.get("fps", 30), variant.get("quality", 4),
+          variant.get("refs", 1), profile
+        ]
+
+def gen_hevc_vbr_ldb_parameters(spec, profiles):
+  keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "quality", "refs", "profile")
+  params = gen_hevc_vbr_ldb_variants(spec, profiles)
+  return keys, params
+
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.items():
     variants = copy.deepcopy(params.get("cqp", None))
