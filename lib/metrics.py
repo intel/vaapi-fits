@@ -205,6 +205,7 @@ def get_framesize(w, h, fourcc):
     "NV12" : lambda: szs["I420"](),
     "YV12" : lambda: szs["I420"](),
     "P010" : lambda: szs["I420"]() * 2,
+    "I010" : lambda: szs["P010"](),
     "Y800" : lambda: w * h,
     "YUY2" : lambda: w * h * 2,
     "AYUV" : lambda: w * h * 4,

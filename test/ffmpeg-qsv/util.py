@@ -38,6 +38,7 @@ def get_supported_format_map():
     "I420"  : "yuv420p",
     "NV12"  : "nv12",
     "P010"  : "p010le",
+    "I010"  : "yuv420p10le",
     "YUY2"  : "yuyv422",
     "422H"  : "yuv422p",
     "422V"  : "yuv440p",
