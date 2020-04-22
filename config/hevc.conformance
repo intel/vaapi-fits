@@ -1,0 +1,635 @@
+###
+### Copyright (C) 2020 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+# https://www.itu.int/net/ITU-T/sigdb/spevideo/Hseries-s.htm
+
+# HEVC_v1 Bitstreams - 8 bit
+media._get_test_spec("hevc", "decode", "8bit").update({
+  "AMP_A_Samsung_7" : dict(
+    source = find_conformance_stream("AMP_A_Samsung_7.bin"),
+    format = "I420", width = 2560, height = 1600, frames = 17,
+    metric = dict(type = "md5", expect = "93a5875d58072db5539c04e1e943ed9d")),
+  "AMP_B_Samsung_7" : dict(
+    source = find_conformance_stream("AMP_B_Samsung_7.bin"),
+    format = "I420", width = 2560, height = 1600, frames = 17,
+    metric = dict(type = "md5", expect = "4e051fad4145d5127e16ac2999500069")),
+  "AMP_D_Hisilicon_3" : dict(
+    source = find_conformance_stream("AMP_D_Hisilicon.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 100,
+    metric = dict(type = "md5", expect = "277006085088cf68b9cafbbba0c19443")),
+  "AMP_E_Hisilicon_3" : dict(
+    source = find_conformance_stream("AMP_E_Hisilicon.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 100,
+    metric = dict(type = "md5", expect = "1a301e997917128420e3c33e6c14693a")),
+  "AMP_F_Hisilicon_3" : dict(
+    source = find_conformance_stream("AMP_F_Hisilicon_3.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 100,
+    metric = dict(type = "md5", expect = "6be6b5fb49a9514914f4ea812f737076")),
+  "AMVP_A_MTK_4" : dict(
+    source = find_conformance_stream("AMVP_A_MTK_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 30,
+    metric = dict(type = "md5", expect = "5dd1b1099391ad659225fbf94965a6c7")),
+  "AMVP_B_MTK_4" : dict(
+    source = find_conformance_stream("AMVP_B_MTK_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 41,
+    metric = dict(type = "md5", expect = "7fecb4fe8ee4d4838f4a9873b062b819")),
+  "AMVP_C_Samsung_7" : dict(
+    source = find_conformance_stream("AMVP_C_Samsung_7.bin"),
+    format = "I420", width = 832, height = 480, frames = 60,
+    metric = dict(type = "md5", expect = "75155ad034919a2846bbdcba13b5f733")),
+  "BUMPING_A_ericsson_1" : dict(
+    source = find_conformance_stream("BUMPING_A_ericsson_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 49,
+    metric = dict(type = "md5", expect = "64f213eb1cf45614f0eeb50fd1b725bf")),
+  "CAINIT_A_SHARP_4" : dict(
+    source = find_conformance_stream("CAINIT_A_SHARP_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "550c5a918fecda6a284aa5f44c0e2f33")),
+  "CAINIT_B_SHARP_4" : dict(
+    source = find_conformance_stream("CAINIT_B_SHARP_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "0c633f8ee5a4c5779cff48ca86273685")),
+  "CAINIT_C_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_C_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "9c6c5363724a8bad54e2869b655fbf3b")),
+  "CAINIT_D_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_D_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "0231e327044e45971fc30a43a1bd8275")),
+  "CAINIT_E_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_E_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "55af76d5527af999d12ccc37b1f6b7ae")),
+  "CAINIT_F_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_F_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "88d8cd2d303b662f0a92a25256957b69")),
+  "CAINIT_G_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_G_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "a7036eac7798f6e8691f0975786d6811")),
+  "CAINIT_H_SHARP_3" : dict(
+    source = find_conformance_stream("CAINIT_H_SHARP_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 50,
+    metric = dict(type = "md5", expect = "cfdd3ce0f4cf1eafd012dcb266311d06")),
+  "CIP_A_Panasonic_3" : dict(
+    source = find_conformance_stream("CIP_A_Panasonic_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 2,
+    metric = dict(type = "md5", expect = "4cbf601ba98d63f642defab5eaa12c8d")),
+  "cip_B_NEC_3" : dict(
+    source = find_conformance_stream("cip_B_NEC_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 5,
+    metric = dict(type = "md5", expect = "1315714c7b3f3237b469259f66d9b7aa")),
+  "CIP_C_Panasonic_2" : dict(
+    source = find_conformance_stream("CIP_C_Panasonic_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 2,
+    metric = dict(type = "md5", expect = "ed985932fef2aa8a74ded970070bdab2")),
+  "CONFWIN_A_Sony_1" : dict(
+    source = find_conformance_stream("CONFWIN_A_Sony_1.bit"),
+    format = "I420", width = 414, height = 238, frames = 60,
+    metric = dict(type = "md5", expect = "a3ce3f936ff69ff1ec2621a622dd37ac")),
+  "DBLK_A_SONY_3" : dict(
+    source = find_conformance_stream("DBLK_A_SONY_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 30,
+    metric = dict(type = "md5", expect = "42486a48ea12d5ab6cd98ed2e2807cfe")),
+  "DBLK_B_SONY_3" : dict(
+    source = find_conformance_stream("DBLK_B_SONY_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 30,
+    metric = dict(type = "md5", expect = "cf5de25a94a33e2d4237b8d1c773db06")),
+  "DBLK_C_SONY_3" : dict(
+    source = find_conformance_stream("DBLK_C_SONY_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 30,
+    metric = dict(type = "md5", expect = "41f89edc63b1175ffc1fae909f4fed82")),
+  "DBLK_D_VIXS_2" : dict(
+    source = find_conformance_stream("DBLK_D_VIXS_2.bit"),
+    format = "I420", width = 1280, height = 720, frames = 8,
+    metric = dict(type = "md5", expect = "f6f3075edca573f5dfe4e352d26170f1")),
+  "DBLK_E_VIXS_2" : dict(
+    source = find_conformance_stream("DBLK_E_VIXS_2.bit"),
+    format = "I420", width = 1280, height = 720, frames = 8,
+    metric = dict(type = "md5", expect = "1f94d56d9e462967cad73284ed0f43f9")),
+  "DBLK_F_VIXS_2" : dict(
+    source = find_conformance_stream("DBLK_F_VIXS_2.bit"),
+    format = "I420", width = 1280, height = 720, frames = 8,
+    metric = dict(type = "md5", expect = "c94d0c0d80c93a2edd372a1fd12f93a1")),
+  "DBLK_G_VIXS_2" : dict(
+    source = find_conformance_stream("DBLK_G_VIXS_2.bit"),
+    format = "I420", width = 1280, height = 720, frames = 8,
+    metric = dict(type = "md5", expect = "1f94d56d9e462967cad73284ed0f43f9")),
+  "DELTAQP_A_BRCM_4" : dict(
+    source = find_conformance_stream("DELTAQP_A_BRCM_4.bit"),
+    format = "I420", width = 1920, height = 1088, frames = 96,
+    metric = dict(type = "md5", expect = "1ceef83183197fd1f21472c17b53cbff")),
+  "DELTAQP_B_SONY_3" : dict(
+    source = find_conformance_stream("DELTAQP_B_SONY_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 30,
+    metric = dict(type = "md5", expect = "f02fa96633c63bd5e1ce0f103447d1ed")),
+  "DELTAQP_C_SONY_3" : dict(
+    source = find_conformance_stream("DELTAQP_C_SONY_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 30,
+    metric = dict(type = "md5", expect = "1c2be685b1ae953787e0e93c656ee502")),
+  "DSLICE_A_HHI_5" : dict(
+    source = find_conformance_stream("DSLICE_A_HHI_5.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 50,
+    metric = dict(type = "md5", expect = "c7caf3164b0a316549ac7244f66f1294")),
+  "DSLICE_B_HHI_5" : dict(
+    source = find_conformance_stream("DSLICE_B_HHI_5.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 50,
+    metric = dict(type = "md5", expect = "2e072130f116a4d0f7fc69fa76cfcdfb")),
+  "DSLICE_C_HHI_5" : dict(
+    source = find_conformance_stream("DSLICE_C_HHI_5.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 50,
+    metric = dict(type = "md5", expect = "505a47c5ce4bc66ef5661aeb778b0f1f")),
+  "ENTP_A_QUALCOMM_1" : dict(
+    source = find_conformance_stream("ENTP_A_Qualcomm_1.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 24,
+    metric = dict(type = "md5", expect = "25f3c7facf9e7b75e81247206b4fc60d")),
+  "ENTP_B_Qualcomm_1" : dict(
+    source = find_conformance_stream("ENTP_B_Qualcomm_1.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 24,
+    metric = dict(type = "md5", expect = "6577f102b93577eb899e0bff1a20a401")),
+  "ENTP_C_Qualcomm_1" : dict(
+    source = find_conformance_stream("ENTP_C_Qualcomm_1.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 24,
+    metric = dict(type = "md5", expect = "0b607e6e7946e6e8d0f92a1a294d135d")),
+  "EXT_A_ericsson_4" : dict(
+    source = find_conformance_stream("EXT_A_ericsson_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 3,
+    metric = dict(type = "md5", expect = "5797b3114fe12daf1ce522ed70ce4078")),
+  "FILLER_A_Sony_1" : dict(
+    source = find_conformance_stream("FILLER_A_Sony_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 60,
+    metric = dict(type = "md5", expect = "f92a928770a41b63e7cfc89ea198790f")),
+  "HRD_A_Fujitsu_3" : dict(
+    source = find_conformance_stream("HRD_A_Fujitsu_3.bin"),
+    format = "I420", width = 416, height = 240, frames = 96,
+    metric = dict(type = "md5", expect = "f6d04dba2ef09bcadbea7b8ab5c8c917")),
+  "INITQP_A_Sony_1" : dict(
+    source = find_conformance_stream("INITQP_A_Sony_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 60,
+    metric = dict(type = "md5", expect = "2716af552e71ef61221b86130ad3d444")),
+  "ipcm_A_NEC_3" : dict(
+    source = find_conformance_stream("ipcm_A_NEC_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 1,
+    metric = dict(type = "md5", expect = "8049988c383486e076ea2494edda3831")),
+  "ipcm_B_NEC_3" : dict(
+    source = find_conformance_stream("ipcm_B_NEC_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 1,
+    metric = dict(type = "md5", expect = "23a3b7024fd9bc64b946b9961ab0f51e")),
+  "ipcm_C_NEC_3" : dict(
+    source = find_conformance_stream("ipcm_C_NEC_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 1,
+    metric = dict(type = "md5", expect = "c3e74c399b73a5ab2dbd20523f583464")),
+  "ipcm_D_NEC_3" : dict(
+    source = find_conformance_stream("ipcm_D_NEC_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 1,
+    metric = dict(type = "md5", expect = "aa64a16240064bc2a90fadf979a62a7b")),
+  "ipcm_E_NEC_2" : dict(
+    source = find_conformance_stream("ipcm_E_NEC_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 1,
+    metric = dict(type = "md5", expect = "e1cd7a16d3f6a342855044ccba3e41f5")),
+  "IPRED_A_docomo_2" : dict(
+    source = find_conformance_stream("IPRED_A_docomo_2.bit"),
+    format = "I420", width = 832, height = 480, frames = 20,
+    metric = dict(type = "md5", expect = "0e4e9bd00b74e30e400de46ee7ad8023")),
+  "IPRED_B_Nokia_3" : dict(
+    source = find_conformance_stream("IPRED_B_Nokia_3.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 1,
+    metric = dict(type = "md5", expect = "ec3bcad4f9174404e52d132206b6617b")),
+  "IPRED_C_Mitsubishi_3" : dict(
+    source = find_conformance_stream("IPRED_C_Mitsubishi_3.bit"),
+    format = "I420", width = 832, height = 480, frames = 4,
+    metric = dict(type = "md5", expect = "6043c04fecc60ee88f4247aaca96441f")),
+  "LS_A_Orange_2" : dict(
+    source = find_conformance_stream("LS_A_Orange_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 9,
+    metric = dict(type = "md5", expect = "e14f82958f87a87be73a6f51e76ffdab")),
+  "LS_B_Orange_4" : dict(
+    source = find_conformance_stream("LS_B_Orange_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 25,
+    metric = dict(type = "md5", expect = "05ac9b36977c98001cc6c5a45e363662")),
+  "LTRPSPS_A_Qualcomm_1" : dict(
+    source = find_conformance_stream("LTRPSPS_A_Qualcomm_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 500,
+    metric = dict(type = "md5", expect = "e925d467c20180090c09c02d02c3aa25")),
+  "MAXBINS_A_TI_5" : dict(
+    source = find_conformance_stream("MAXBINS_A_TI_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 2,
+    metric = dict(type = "md5", expect = "1386fb149ddc11bd5a1d9111879acfa4")),
+  "MAXBINS_B_TI_5" : dict(
+    source = find_conformance_stream("MAXBINS_B_TI_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 3,
+    metric = dict(type = "md5", expect = "21d6910760ea4963eab28b26709471fe")),
+  "MAXBINS_C_TI_5" : dict(
+    source = find_conformance_stream("MAXBINS_C_TI_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 3,
+    metric = dict(type = "md5", expect = "7a7e51fdd40c57d70af418f5082416fa")),
+  "MERGE_A_TI_3" : dict(
+    source = find_conformance_stream("MERGE_A_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "3a15886a0158ef1aaf557869b2e9c522")),
+  "MERGE_B_TI_3" : dict(
+    source = find_conformance_stream("MERGE_B_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "83b4dc9f229a8fba3777d9f4f87ce144")),
+  "MERGE_C_TI_3" : dict(
+    source = find_conformance_stream("MERGE_C_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "216f0cc869e3989c8fb2cf261243160b")),
+  "MERGE_D_TI_3" : dict(
+    source = find_conformance_stream("MERGE_D_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "104cccf2b8441862624777955d6ecdc4")),
+  "MERGE_E_TI_3" : dict(
+    source = find_conformance_stream("MERGE_E_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "6e74dbd450123246c22bf01b389bbe11")),
+  "MERGE_F_MTK_4" : dict(
+    source = find_conformance_stream("MERGE_F_MTK_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 41,
+    metric = dict(type = "md5", expect = "a8f0982f026dfda1c02b4d4d3eb88132")),
+  "MERGE_G_HHI_4" : dict(
+    source = find_conformance_stream("MERGE_G_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "c82f4c88d9b2c73fabbeac8944da35a1")),
+  "MVCLIP_A_qualcomm_3" : dict(
+    source = find_conformance_stream("MVCLIP_A_qualcomm_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 5,
+    metric = dict(type = "md5", expect = "78b398c201089b6b17bcbda2bbccf3ae")),
+  "MVDL1ZERO_A_docomo_4" : dict(
+    source = find_conformance_stream("MVDL1ZERO_A_docomo_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 500,
+    metric = dict(type = "md5", expect = "593d1936f6fc2e1775ea2a691a601c34")),
+  "MVEDGE_A_qualcomm_3" : dict(
+    source = find_conformance_stream("MVEDGE_A_qualcomm_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 17,
+    metric = dict(type = "md5", expect = "101c5bfe16ff1739909161794af29a2d")),
+  "NoOutPrior_A_Qualcomm_1" : dict(
+    source = find_conformance_stream("NoOutPrior_A_Qualcomm_1.bit"),
+    format = "I420", width = 832, height = 480, frames = 40,
+    metric = dict(type = "md5", expect = "1c5f20a08ab8dfa0f44d9a0ca23d174d")),
+  "NoOutPrior_B_Qualcomm_1" : dict(
+    source = find_conformance_stream("NoOutPrior_B_Qualcomm_1.bit"),
+    format = "I420", width = 832, height = 480, frames = 47,
+    metric = dict(type = "md5", expect = "048bca0ec216a3f88cf9fbb4bb5a61ac")),
+  "NUT_A_ericsson_5" : dict(
+    source = find_conformance_stream("NUT_A_ericsson_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 34,
+    metric = dict(type = "md5", expect = "9dbe33badd0cc6dfcd1b53e546968fbd")),
+  "OPFLAG_A_Qualcomm_1" : dict(
+    source = find_conformance_stream("OPFLAG_A_Qualcomm_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 500,
+    metric = dict(type = "md5", expect = "35eeeca175938ee262f72b7485146f94")),
+  "OPFLAG_B_Qualcomm_1" : dict(
+    source = find_conformance_stream("OPFLAG_B_Qualcomm_1.bit"),
+    format = "I420", width = 832, height = 480, frames = 98,
+    metric = dict(type = "md5", expect = "516811eeff3ae5ee056dda290dcf2735")),
+  "OPFLAG_C_Qualcomm_1" : dict(
+    source = find_conformance_stream("OPFLAG_C_Qualcomm_1.bit"),
+    format = "I420", width = 832, height = 480, frames = 96,
+    metric = dict(type = "md5", expect = "a82c4f6ee843150067bba60b9342fc50")),
+  "PICSIZE_A_Bossen_1" : dict(
+    source = find_conformance_stream("PICSIZE_A_Bossen_1.bin"),
+    format = "I420", width = 1056, height = 8440, frames = 10,
+    metric = dict(type = "md5", expect = "910ff0e6b3739af0b4aba4f6aa6704f8")),
+  "PICSIZE_B_Bossen_1" : dict(
+    source = find_conformance_stream("PICSIZE_B_Bossen_1.bin"),
+    format = "I420", width = 8440, height = 1056, frames = 10,
+    metric = dict(type = "md5", expect = "e5c4c20a8871aa446a344efb1755bcf9")),
+  "PICSIZE_C_Bossen_1" : dict(
+    source = find_conformance_stream("PICSIZE_C_Bossen_1.bin"),
+    format = "I420", width = 528, height = 4216, frames = 10,
+    metric = dict(type = "md5", expect = "674f9f11eb956257d86782949ec00399")),
+  "PICSIZE_D_Bossen_1" : dict(
+    source = find_conformance_stream("PICSIZE_D_Bossen_1.bin"),
+    format = "I420", width = 4216, height = 528, frames = 10,
+    metric = dict(type = "md5", expect = "5b76e0591618f5affe8b15b03d9c0bef")),
+  "PMERGE_A_TI_3" : dict(
+    source = find_conformance_stream("PMERGE_A_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "6e74dbd450123246c22bf01b389bbe11")),
+  "PMERGE_B_TI_3" : dict(
+    source = find_conformance_stream("PMERGE_B_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "7d0e57ebdbbc6633c972083a17d97550")),
+  "PMERGE_C_TI_3" : dict(
+    source = find_conformance_stream("PMERGE_C_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "7e23d874b198ec7a9f6086a20de0db76")),
+  "PMERGE_D_TI_3" : dict(
+    source = find_conformance_stream("PMERGE_D_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "9771b8c8a71e41547f14032e07be7d61")),
+  "PMERGE_E_TI_3" : dict(
+    source = find_conformance_stream("PMERGE_E_TI_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 8,
+    metric = dict(type = "md5", expect = "26aed56afdb6cb7011fd5c3303379a9d")),
+  "POC_A_Bossen_3" : dict(
+    source = find_conformance_stream("POC_A_Bossen_3.bin"),
+    format = "I420", width = 416, height = 240, frames = 5,
+    metric = dict(type = "md5", expect = "faf33bec64d3e58c426ed2772903a0bf")),
+  "PPS_A_qualcomm_7" : dict(
+    source = find_conformance_stream("PPS_A_qualcomm_7.bit"),
+    format = "I420", width = 832, height = 480, frames = 81,
+    metric = dict(type = "md5", expect = "bccf29fab6744215fe007ea3a5d6da42")),
+  "PS_B_VIDYO_3" : dict(
+    source = find_conformance_stream("PS_B_VIDYO_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 25,
+    metric = dict(type = "md5", expect = "eb85521ee103333eac61a8253637eac4")),
+  "RAP_A_docomo_6" : dict(
+    source = find_conformance_stream("RAP_A_docomo_6.bit"),
+    format = "I420", width = 416, height = 240, frames = 86,
+    metric = dict(type = "md5", expect = "8a536a80ed42b37b1ac5810bc046f82a")),
+  "RAP_B_Bossen_2" : dict(
+    source = find_conformance_stream("RAP_B_Bossen_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 80,
+    metric = dict(type = "md5", expect = "f38befcc280f2fd0d23f48f807f843c2")),
+  "RPLM_A_qualcomm_4" : dict(
+    source = find_conformance_stream("RPLM_A_qualcomm_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 300,
+    metric = dict(type = "md5", expect = "011794872709c341880ee42ade036ed3")),
+  "RPLM_B_qualcomm_4" : dict(
+    source = find_conformance_stream("RPLM_B_qualcomm_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 300,
+    metric = dict(type = "md5", expect = "653ac7c46fa7b9d7d966e3db317eb938")),
+  "RPS_A_docomo_5" : dict(
+    source = find_conformance_stream("RPS_A_docomo_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 44,
+    metric = dict(type = "md5", expect = "7f4ad6c6b3de54558b0db59629b87db9")),
+  "RPS_B_qualcomm_5" : dict(
+    source = find_conformance_stream("RPS_B_qualcomm_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 300,
+    metric = dict(type = "md5", expect = "6d1ed392b067050ebd3a24a37281da03")),
+  "RPS_C_ericsson_5" : dict(
+    source = find_conformance_stream("RPS_C_ericsson_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 40,
+    metric = dict(type = "md5", expect = "0306b9e3ec365115ccb7060c0a437b32")),
+  "RPS_D_ericsson_6" : dict(
+    source = find_conformance_stream("RPS_D_ericsson_6.bit"),
+    format = "I420", width = 416, height = 240, frames = 68,
+    metric = dict(type = "md5", expect = "d0fcd71e6266b1ae1f66b9cb1802ea03")),
+  "RPS_E_qualcomm_5" : dict(
+    source = find_conformance_stream("RPS_E_qualcomm_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 300,
+    metric = dict(type = "md5", expect = "c30d38bbd7ea483dc7ffe81325118e16")),
+  "RPS_F_docomo_2" : dict(
+    source = find_conformance_stream("RPS_F_docomo_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 50,
+    metric = dict(type = "md5", expect = "fd6e6d973d39622d197dbdf4543643f2")),
+  "RQT_A_HHI_4" : dict(
+    source = find_conformance_stream("RQT_A_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "aa7f6ef07bf76ebddd52f7e528cd6ab8")),
+  "RQT_B_HHI_4" : dict(
+    source = find_conformance_stream("RQT_B_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "a63f4f4e966e77a5eb4e65dcdcc488a4")),
+  "RQT_C_HHI_4" : dict(
+    source = find_conformance_stream("RQT_C_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "c82f4c88d9b2c73fabbeac8944da35a1")),
+  "RQT_D_HHI_4" : dict(
+    source = find_conformance_stream("RQT_D_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "33b58b954fa82753526fda9e9e6bc8cb")),
+  "RQT_E_HHI_4" : dict(
+    source = find_conformance_stream("RQT_E_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "65f22431d0eb149e04c327f881ce6581")),
+  "RQT_F_HHI_4" : dict(
+    source = find_conformance_stream("RQT_F_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "56ba354d919d06a33b44862dd18e9437")),
+  "RQT_G_HHI_4" : dict(
+    source = find_conformance_stream("RQT_G_HHI_4.bit"),
+    format = "I420", width = 832, height = 480, frames = 2,
+    metric = dict(type = "md5", expect = "2fb67256014a6840b69ca6dad2426304")),
+  "SAODBLK_A_MainConcept_4" : dict(
+    source = find_conformance_stream("SAODBLK_A_MainConcept_4.bin"),
+    format = "I420", width = 1016, height = 760, frames = 500,
+    metric = dict(type = "md5", expect = "b9c98937bcb6be445348fdc89c208f1e")),
+  "SAODBLK_B_MainConcept_4" : dict(
+    source = find_conformance_stream("SAODBLK_B_MainConcept_4.bin"),
+    format = "I420", width = 1016, height = 760, frames = 500,
+    metric = dict(type = "md5", expect = "031043495e9b9f4ce120afa316aa5705")),
+  "SAO_A_MediaTek_4" : dict(
+    source = find_conformance_stream("SAO_A_MediaTek_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 60,
+    metric = dict(type = "md5", expect = "272e694a2262a2b34f6248f787a4431d")),
+  "SAO_B_MediaTek_5" : dict(
+    source = find_conformance_stream("SAO_B_MediaTek_5.bit"),
+    format = "I420", width = 832, height = 480, frames = 60,
+    metric = dict(type = "md5", expect = "90cc57237e3ce47eb3b4c901e200112d")),
+  "SAO_C_Samsung_5" : dict(
+    source = find_conformance_stream("SAO_C_Samsung_5.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 5,
+    metric = dict(type = "md5", expect = "962290491f2f1a1e70ab7aa63d2264bc")),
+  "SAO_D_Samsung_5" : dict(
+    source = find_conformance_stream("SAO_D_Samsung_5.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 5,
+    metric = dict(type = "md5", expect = "6db9575a7737816b1d7a3a3bf3ba126c")),
+  "SAO_E_Canon_4" : dict(
+    source = find_conformance_stream("SAO_E_Canon_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 16,
+    metric = dict(type = "md5", expect = "0b04a1378274a6ffbb8f6121e027290c")),
+  "SAO_F_Canon_3" : dict(
+    source = find_conformance_stream("SAO_F_Canon_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 16,
+    metric = dict(type = "md5", expect = "5c295ecba132d1e68a12dd8209e86a02")),
+  "SAO_G_Canon_3" : dict(
+    source = find_conformance_stream("SAO_G_Canon_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 16,
+    metric = dict(type = "md5", expect = "1f743a3e28617b8bae3e348096edcf76")),
+  "SAO_H_Parabola_1" : dict(
+    source = find_conformance_stream("SAO_H_Parabola_1.bit"),
+    format = "I420", width = 416, height = 240, frames = 4,
+    metric = dict(type = "md5", expect = "7e23c16898b14831b25d7857b69a9a9a")),
+  "SDH_A_Orange_4" : dict(
+    source = find_conformance_stream("SDH_A_Orange_4.bit"),
+    format = "I420", width = 1920, height = 1080, frames = 2,
+    metric = dict(type = "md5", expect = "0a1a6a76a86dbdc7ca479e4235f5b822")),
+  "SLICES_A_Rovi_3" : dict(
+    source = find_conformance_stream("SLICES_A_Rovi_3.bin"),
+    format = "I420", width = 640, height = 480, frames = 9,
+    metric = dict(type = "md5", expect = "c2d63a4d145a5713afecd822032ec271")),
+  "SLIST_A_Sony_5" : dict(
+    source = find_conformance_stream("SLIST_A_Sony_5.bin"),
+    format = "I420", width = 832, height = 480, frames = 65,
+    metric = dict(type = "md5", expect = "b00bc5362e6fad1a0e704aad8e69b863")),
+  "SLIST_B_Sony_9" : dict(
+    source = find_conformance_stream("SLIST_B_Sony_9.bin"),
+    format = "I420", width = 832, height = 480, frames = 65,
+    metric = dict(type = "md5", expect = "312b4ebb3e885587d5e12b78aa95977a")),
+  "SLIST_C_Sony_4" : dict(
+    source = find_conformance_stream("SLIST_C_Sony_4.bin"),
+    format = "I420", width = 832, height = 480, frames = 65,
+    metric = dict(type = "md5", expect = "61024c25cbd60e9bf86dbe3bc5b9b48b")),
+  "SLIST_D_Sony_9" : dict(
+    source = find_conformance_stream("str.bin"),
+    format = "I420", width = 832, height = 480, frames = 65,
+    metric = dict(type = "md5", expect = "8d38ce43b17627ff1f86e526bfb7ffc4")),
+  "SLPPLP_A_VIDYO_2" : dict(
+    source = find_conformance_stream("SLPPLP_A_VIDYO_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 33,
+    metric = dict(type = "md5", expect = "99e13916ede2bc9b77718787579104a9")),
+  "STRUCT_A_Samsung_7" : dict(
+    source = find_conformance_stream("STRUCT_A_Samsung_7.bin"),
+    format = "I420", width = 832, height = 480, frames = 60,
+    metric = dict(type = "md5", expect = "02f02cc9a67222004ae18ee6bebd475a")),
+  "STRUCT_B_Samsung_7" : dict(
+    source = find_conformance_stream("STRUCT_B_Samsung_7.bin"),
+    format = "I420", width = 832, height = 480, frames = 60,
+    metric = dict(type = "md5", expect = "1f472e014aff120681e8482c8a04ef93")),
+  "TILES_A_Cisco_2" : dict(
+    source = find_conformance_stream("TILES_A_Cisco_2.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 100,
+    metric = dict(type = "md5", expect = "946f0771fa87d49f684f96871c9c3c88")),
+  "TILES_B_Cisco_1" : dict(
+    source = find_conformance_stream("TILES_B_Cisco_1.bin"),
+    format = "I420", width = 1920, height = 1080, frames = 100,
+    metric = dict(type = "md5", expect = "3382291f2b19ee2d760647d4cc756e95")),
+  "TMVP_A_MS_3" : dict(
+    source = find_conformance_stream("TMVP_A_MS_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 17,
+    metric = dict(type = "md5", expect = "168f8096e56b8a8c1aa03fa5fffdfd23")),
+  "TSCL_A_VIDYO_5" : dict(
+    source = find_conformance_stream("TSCL_A_VIDYO_5.bit"),
+    format = "I420", width = 416, height = 240, frames = 73,
+    metric = dict(type = "md5", expect = "27cbe23eabe1b174d745c286cc2ed8ff")),
+  "TSCL_B_VIDYO_4" : dict(
+    source = find_conformance_stream("TSCL_B_VIDYO_4.bit"),
+    format = "I420", width = 416, height = 240, frames = 73,
+    metric = dict(type = "md5", expect = "95e7910b85c08a01e2e9ce72c92d7d62")),
+  "TSKIP_A_MS_3" : dict(
+    source = find_conformance_stream("TSKIP_A_MS_3.bit"),
+    format = "I420", width = 1280, height = 720, frames = 17,
+    metric = dict(type = "md5", expect = "4280cb848219176f4fcad51f3290210d")),
+  "TUSIZE_A_Samsung_1" : dict(
+    source = find_conformance_stream("TUSIZE_A_Samsung_1.bin"),
+    format = "I420", width = 2560, height = 1600, frames = 5,
+    metric = dict(type = "md5", expect = "5e6c198c852e92cdcca0e137fc2610c4")),
+  "VPSID_A_VIDYO_2" : dict(
+    source = find_conformance_stream("VPSID_A_VIDYO_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 33,
+    metric = dict(type = "md5", expect = "99e13916ede2bc9b77718787579104a9")),
+  "VPSSPSPPS_A_MainConcept_1" : dict(
+    # multi-resolution bitstream (therefore, numbytes = -1 for md5 metric)
+    #
+    # Frame:      0 POC:     0, SLICE_TYPE: I 176x144
+    # Frame:      1 POC:     0, SLICE_TYPE: I 320x240
+    # Frame:      2 POC:     0, SLICE_TYPE: I 352x288
+    # Frame:      3 POC:     0, SLICE_TYPE: I 640x480
+    # Frame:      4 POC:     0, SLICE_TYPE: I 704x576
+    # Frame:      5 POC:     0, SLICE_TYPE: I 1280x720
+    #
+    # TODO: It is unknown whether the yuv output was multi-resolution or scaled
+    # when ITU generated the md5.  Therefore, it is uncertain if the generated
+    # middleware pipeline test commands will be sufficient to duplicate the
+    # appropriate result.
+    source = find_conformance_stream("VPSSPSPPS_A_MainConcept_1.bin"),
+    format = "I420", width = 1280, height = 720, frames = 6,
+    metric = dict(type = "md5", expect = "1ddf74263cb4953cfdfcf99c563d88ea", numbytes = -1)),
+  "WPP_A_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_A_ericsson_MAIN_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "cd7e815eb47e8138fec2185d4de84304")),
+  "WPP_B_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_B_ericsson_MAIN_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "e37c7e561a1226640a7bf98e81df78b1")),
+  "WPP_C_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_C_ericsson_MAIN_2.bit"),
+    format = "I420", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "e067aa3a6a12cd5743849ded793c8d3f")),
+  "WPP_D_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_D_ericsson_MAIN_2.bit"),
+    format = "I420", width = 64, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "f710612103f386c415be3e6300693451")),
+  "WPP_E_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_E_ericsson_MAIN_2.bit"),
+    format = "I420", width = 128, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "485798dbf95ad61232075df2f294aa3f")),
+  "WPP_F_ericsson_MAIN_2" : dict(
+    source = find_conformance_stream("WPP_F_ericsson_MAIN_2.bit"),
+    format = "I420", width = 192, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "2aaf16274fe8e799d72fa08a4963850d")),
+  "WP_A_Toshiba_3" : dict(
+    source = find_conformance_stream("WP_A_Toshiba_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 256,
+    metric = dict(type = "md5", expect = "127b99d0c11c930b6f248750b5848a0b")),
+  "WP_B_Toshiba_3" : dict(
+    source = find_conformance_stream("WP_B_Toshiba_3.bit"),
+    format = "I420", width = 416, height = 240, frames = 256,
+    metric = dict(type = "md5", expect = "82d39f8cd09e532b8fa9d35894c96258")),
+})
+
+# RExt Bitstreams - 8 bit
+media._get_test_spec("hevc", "decode", "8bit").update({
+  # TODO
+})
+
+# HEVC_v1 Bitstreams - 10 bit
+media._get_test_spec("hevc", "decode", "10bit").update({
+  "DBLK_A_MAIN10_VIXS_4" : dict(
+    source = find_conformance_stream("DBLK_A_MAIN10_VIXS_4.bit"),
+    format = "I010", width = 176, height = 144, frames = 8,
+    metric = dict(type = "md5", expect = "c4594956bb9e8303f1662f9eb1bcdf50")),
+  "INITQP_B_Main10_Sony_1" : dict(
+    source = find_conformance_stream("INITQP_B_Main10_Sony_1.bit"),
+    format = "I010", width = 416, height = 240, frames = 90,
+    metric = dict(type = "md5", expect = "f63c71e5f6b9c6ddf2b080524f9f14b1")),
+  "TSUNEQBD_A_MAIN10_Technicolor_2" : dict(
+    # bit-depth-luma=10 bit-depth-chroma = 9
+    source = find_conformance_stream("TSUNEQBD_A_MAIN10_Technicolor_2.bit"),
+    format = "I010", width = 1024, height = 768, frames = 8,
+    metric = dict(type = "md5", expect = "1bed23df7253170eeb8efc3fd1b740a3")),
+  "WPP_A_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_A_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "e68b9d75ff9cf1d9486e964051351f69")),
+  "WPP_B_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_B_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "d8290fc1eec3a196aa796c92e71a779b")),
+  "WPP_C_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_C_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 416, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "aadac4d468d5950551d606c1016abc9c")),
+  "WPP_D_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_D_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 64, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "dde9aa65b78a8ca5602d834f234655d4")),
+  "WPP_E_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_E_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 128, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "f12e746306c59544d6162de0b62c4649")),
+  "WPP_F_ericsson_MAIN10_2" : dict(
+    source = find_conformance_stream("WPP_F_ericsson_MAIN10_2.bit"),
+    format = "I010", width = 192, height = 240, frames = 48,
+    metric = dict(type = "md5", expect = "210055a33d7d912fda6a3c40764b0482")),
+  "WP_A_MAIN10_Toshiba_3" : dict(
+    source = find_conformance_stream("WP_A_MAIN10_Toshiba_3.bit"),
+    format = "I010", width = 416, height = 240, frames = 256,
+    metric = dict(type = "md5", expect = "c48e853010a234786dc87790d053b03a")),
+  "WP_MAIN10_B_Toshiba_3" : dict(
+    source = find_conformance_stream("WP_MAIN10_B_Toshiba_3.bit"),
+    format = "I010", width = 416, height = 240, frames = 256,
+    metric = dict(type = "md5", expect = "ed891c60a17f5cbc64e1848f0ea9cf45")),
+})
+
+# RExt Bitstreams - 10 bit
+media._get_test_spec("hevc", "decode", "10bit").update({
+  # TODO: confirm on ICL
+  "ADJUST_IPRED_ANGLE_A_RExt_Mitsubishi_2" : dict(
+    source = find_conformance_stream("ADJUST_IPRED_ANGLE_A_RExt_Mitsubishi_2.bit"),
+    format = "Y210", width = 1920, height = 1080, frames = 3,
+    metric = dict(type = "md5", expect = "b045776950c2e06d35348bd03268c07f")),
+})
+
+###
+### kate: syntax python;
+###
