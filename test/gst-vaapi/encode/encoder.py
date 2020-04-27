@@ -122,11 +122,11 @@ class EncoderTest(slash.Test):
     self.refctx = []
 
   def validate_caps(self):
-    self.hwformat = match_best_format(self.format, self.caps["fmts"])
-    if self.hwformat is None:
-      slash.skip_test(
-        format_value(
-          "{platform}.{driver}.{format} not supported", **vars(self)))
+    self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
+    self.mformat  = mapformat(self.format)
+    self.mformatu = mapformatu(self.format)
+    if None in [self.hwformat, self.mformatu]:
+      slash.skip_test("{format} format not supported".format(**vars(self)))
 
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
@@ -148,13 +148,6 @@ class EncoderTest(slash.Test):
       self.mprofile = mapprofile(self.codec, self.profile)
       if self.mprofile is None:
         slash.skip_test("{profile} profile is not supported".format(**vars(self)))
-
-    self.mformat  = mapformat(self.format)
-    self.mformatu = mapformatu(self.format)
-    if self.mformat is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
-
-    self.hwformat = mapformatu(self.hwformat)
 
   def encode(self):
     self.validate_caps()

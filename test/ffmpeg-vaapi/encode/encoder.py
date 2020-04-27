@@ -121,11 +121,10 @@ class EncoderTest(slash.Test):
   def validate_caps(self):
     # BUG: FFmpeg fails to support I420 hwupload even though i965 supports it.
     ifmts = list(set(self.caps["fmts"]) - set(["I420"]))
-    self.hwformat = match_best_format(self.format, ifmts)
-    if self.hwformat is None:
-      slash.skip_test(
-        format_value(
-          "{platform}.{driver}.{format} not supported", **vars(self)))
+    self.hwformat = map_best_hw_format(self.format, ifmts)
+    self.mformat = mapformat(self.format)
+    if None in [self.hwformat, self.mformat]:
+      slash.skip_test("{format} not supported", **vars(self))
 
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
@@ -147,12 +146,6 @@ class EncoderTest(slash.Test):
       self.mprofile = mapprofile(self.codec, self.profile)
       if self.mprofile is None:
         slash.skip_test("{profile} profile is not supported".format(**vars(self)))
-
-    self.mformat = mapformat(self.format)
-    if self.mformat is None:
-      slash.skip_test("{format} format not supported".format(**vars(self)))
-
-    self.hwformat = mapformat(self.hwformat)
 
     vars(self).update(rcmodeu = self.rcmode.upper())
 

@@ -5,6 +5,7 @@
 ###
 
 from ...lib.common import memoize, try_call, get_media
+from ...lib.formats import match_best_format
 
 def using_compatible_driver():
   return get_media()._get_driver_name() == "iHD"
@@ -52,6 +53,11 @@ def get_supported_format_map():
 @memoize
 def mapformat(format):
   return get_supported_format_map().get(format, None)
+
+def map_best_hw_format(format, hwformats):
+  return mapformat(
+    match_best_format(
+      format, set(hwformats) & set(get_supported_format_map().keys())))
 
 @memoize
 def map_deinterlace_method(method):

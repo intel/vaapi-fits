@@ -5,6 +5,7 @@
 ###
 
 from ...lib.common import memoize, try_call, get_media
+from ...lib.formats import match_best_format
 
 def using_compatible_driver():
   return get_media()._get_driver_name() == "iHD"
@@ -45,6 +46,11 @@ def mapformat(format):
 @memoize
 def mapformatu(format):
   return get_supported_format_map().get(format, (None, None))[1]
+
+def map_best_hw_format(format, hwformats):
+  return mapformatu(
+    match_best_format(
+      format, set(hwformats) & set(get_supported_format_map().keys())))
 
 @memoize
 def map_transpose_direction(degrees, method):

@@ -30,22 +30,16 @@ class DecoderTest(slash.Test):
     return name
 
   def validate_caps(self):
-    self.hwformat = mapformat(match_best_format(self.format, self.caps["fmts"]))
-    if self.hwformat is None:
-      slash.skip_test(
-        format_value(
-          "{platform}.{driver}.{format} not supported", **vars(self)))
+    self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
+    self.mformat = mapformat(self.format)
+    if None in [self.hwformat, self.mformat]:
+      slash.skip_test("{format} format not supported".format(**vars(self)))
 
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
       slash.skip_test(
         format_value(
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
-
-    self.mformat = mapformat(self.format)
-    if self.mformat is None:
-      slash.skip_test(
-        "ffmpeg.{format} format not supported".format(**vars(self)))
 
   def decode(self):
     self.validate_caps()

@@ -88,29 +88,16 @@ class VppTest(slash.Test):
       slash.skip_test("ffmpeg.{format} unsupported".format(**vars(self)))
 
     if self.vpp_op in ["csc"]:
-      ihwfmt = self.ifmt if self.ifmt in ifmts else None
-      ohwfmt = self.ofmt if self.ofmt in ofmts else None
+      self.ihwformat = mapformat(self.ifmt if self.ifmt in ifmts else None)
+      self.ohwformat = mapformat(self.ofmt if self.ofmt in ofmts else None)
     else:
-      ihwfmt = match_best_format(self.ifmt, ifmts)
-      ohwfmt = match_best_format(self.ofmt, ofmts)
-
-    if ihwfmt is None:
-      slash.skip_test(
-        format_value(
-          "{platform}.{driver}.{ifmt} input unsupported", **vars(self)))
-
-    if ohwfmt is None:
-      slash.skip_test(
-        format_value(
-          "{platform}.{driver}.{ofmt} output unsupported", **vars(self)))
-
-    self.ihwformat = mapformat(ihwfmt)
-    self.ohwformat = mapformat(ohwfmt)
+      self.ihwformat = map_best_hw_format(self.ifmt, ifmts)
+      self.ohwformat = map_best_hw_format(self.ofmt, ofmts)
 
     if self.ihwformat is None:
-      slash.skip_test("ffmpeg.{ifmt} unsupported".format(**vars(self)))
+      slash.skip_test("{ifmt} unsupported".format(**vars(self)))
     if self.ohwformat is None:
-      slash.skip_test("ffmpeg.{ofmt} unsupported".format(**vars(self)))
+      slash.skip_test("{ofmt} unsupported".format(**vars(self)))
 
   def vpp(self):
     self.validate_caps()
