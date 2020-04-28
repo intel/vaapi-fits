@@ -52,6 +52,8 @@ class EncoderTest(slash.Test):
       opts += " -refs {refs}"
     if vars(self).get("lowpower", None) is not None:
       opts += " -low_power {lowpower}"
+    if vars(self).get("lowdelayb", None) is not None:
+      opts += " -gpb {lowdelayb}"
     if vars(self).get("ladepth", None) is not None:
       opts += " -look_ahead 1"
       opts += " -look_ahead_depth {ladepth}"
