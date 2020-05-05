@@ -17,6 +17,9 @@ import xml.etree.cElementTree as et
 
 __SCRIPT_DIR__ = os.path.abspath(os.path.dirname(__file__))
 
+# We don't support any of the built-in slash plugins
+slash.plugins.manager.uninstall_all()
+
 slash.config.root.log.root = os.path.join(__SCRIPT_DIR__, "results")
 slash.config.root.log.last_session_symlink = "session.latest.log"
 slash.config.root.log.last_session_dir_symlink = "session.latest"
