@@ -124,7 +124,7 @@ class EncoderTest(slash.Test):
     self.hwformat = map_best_hw_format(self.format, ifmts)
     self.mformat = mapformat(self.format)
     if None in [self.hwformat, self.mformat]:
-      slash.skip_test("{format} not supported", **vars(self))
+      slash.skip_test("{format} not supported".format(**vars(self)))
 
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
