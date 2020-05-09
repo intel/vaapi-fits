@@ -212,13 +212,18 @@ class EncoderTest(slash.Test):
     # ipb mode
     ipbmode = 0 if vars(self).get("gop", 0) <= 1 else 1 if vars(self).get("bframes", 0) < 1 else 2
     if vars(self).get("lowdelayb", None) is not None:
-      if 1 == self.lowdelayb :
+      if 1 == self.lowdelayb and 0 == self.lowpower:
         ipbmode = 3
+    if vars(self).get("lowpower", None) is not None:
+      if 1 == self.lowpower and self.gop > 1:
+        if "hevc-8" == self.codec or "hevc-10" == self.codec : #Only for hevc encode but not include h264, vp9 low power
+          ipbmode = 4
     ipbmsgs = [
       "Using intra frames only",
-      "Using intra and P-frames",
+      "Using intra and P-frames", #ffmpeg-vaapi vme mode output
       "Using intra, P- and B-frames",
-      "[L|l]ow delay" #ffmpeg-vaapi cqp output is "Low delay", cbr/vbr output is "low delay"
+      "[L|l]ow delay", #ffmpeg-vaapi cqp output is "Low delay", cbr/vbr output is "low delay"
+      "Using intra and low delay B-frames" #ffmpeg-vaapi low power mode output
     ]
     m = re.search(ipbmsgs[ipbmode], self.output, re.MULTILINE)
     assert m is not None, "Possible incorrect IPB mode used"
