@@ -9,6 +9,7 @@ from ...util import *
 from ..encoder import EncoderTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
+spec_ldb  = load_test_spec("hevc", "encode", "10bit", "ldb") #low delay b 10bit spec support
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
 
 class HEVC10EncoderTest(EncoderTest):
@@ -88,6 +89,30 @@ class cqp_lp(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+#hevc 10bit VME Low delay b cqp encode
+class cqp_ldb(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes      = bframes,
+      case         = case,
+      gop          = gop,
+      lowdelayb    = 1,
+      profile      = profile,
+      qp           = qp,
+      rcmode       = "cqp",
+      slices       = slices,
+    )
+
+  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
+  @slash.parametrize(*gen_hevc_cqp_ldb_parameters(spec_ldb, ['main10']))
+  def test(self, case, gop, slices, bframes, qp, quality, profile):
+    self.init(spec_ldb, case, gop, slices, bframes, qp, quality, profile)
+    self.encode()
+
 class cbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
     self.caps = platform.get_caps("encode", "hevc_10")
@@ -150,6 +175,32 @@ class cbr_lp(HEVC10EncoderTest):
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+#hevc 10bit VME Low delay b cbr encode
+class cbr_ldb(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
+    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes      = bframes,
+      bitrate      = bitrate,
+      case         = case,
+      fps          = fps,
+      gop          = gop,
+      lowdelayb    = 1,
+      minrate      = bitrate,
+      maxrate      = bitrate,
+      profile      = profile,
+      rcmode       = "cbr",
+      slices       = slices,
+    )
+
+  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
+  @slash.parametrize(*gen_hevc_cbr_ldb_parameters(spec_ldb, ['main10']))
+  def test(self, case, gop, slices, bframes, bitrate, fps, profile):
+    self.init(spec_ldb, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
 class vbr(HEVC10EncoderTest):
@@ -218,4 +269,32 @@ class vbr_lp(HEVC10EncoderTest):
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+#hevc 10bit VME Low delay b vbr encode
+class vbr_ldb(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bframes      = bframes,
+      bitrate      = bitrate,
+      case         = case,
+      fps          = fps,
+      gop          = gop,
+      lowdelayb    = 1,
+      maxrate      = bitrate * 2, # target percentage 50%
+      minrate      = bitrate,
+      profile      = profile,
+      rcmode       = "vbr",
+      refs         = refs,
+      slices       = slices,
+    )
+
+  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
+  @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
+  @slash.parametrize(*gen_hevc_vbr_ldb_parameters(spec_ldb, ['main10']))
+  def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.init(spec_ldb, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
