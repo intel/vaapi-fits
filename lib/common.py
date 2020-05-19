@@ -95,7 +95,7 @@ def call(command, withSlashLogger = True):
   assert calls_allowed, "call refused"
 
   if withSlashLogger:
-    logger = slash.logger.info
+    logger = slash.logger.debug
   else:
     logger = lambda x: None
 
