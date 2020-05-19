@@ -144,7 +144,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
   def _set_test_details(self, **kwargs):
     for k, v in kwargs.items():
       slash.context.result.details.set(k, v)
-      slash.logger.notice("DETAIL: {} = {}".format(k, v))
+      slash.logger.info("DETAIL: {} = {}".format(k, v))
 
   def _test_artifact(self, filename):
     tstfile = os.path.join(slash.context.result.get_log_dir(), filename)
