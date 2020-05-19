@@ -188,7 +188,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     result = slash.context.result
     variation = test.get_variation().values
     self.test_call_timeout = 0
-    self._set_test_details(**variation)
+    #self._set_test_details(**variation)
     result.data.update(test_start = dt.now())
 
     # Begin system capture for test (i.e. dmesg).
