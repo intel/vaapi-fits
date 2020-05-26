@@ -23,6 +23,7 @@ class DeinterlaceTest(VppTest):
   _default_modes_ = [
     dict(zip(["method", "rate"], m)) for m in itertools.product(
         _default_methods_, ["field", "frame"])]
+  _test_modes_ = _default_modes_
 
   def before(self):
     vars(self).update(
@@ -69,13 +70,20 @@ class avc(DeinterlaceTest):
     self.ffdecoder = "h264"
     super(avc, self).before()
 
+  for case, params in spec_avc.items():
+    variants = params.get("rate", None)
+    if params.get("rate", None) is not None:
+      DeinterlaceTest._test_modes_ = [
+        dict(zip(["method", "rate"], m)) for m in itertools.product(
+        DeinterlaceTest._default_methods_, variants)]
+
   @slash.requires(*platform.have_caps("vpp", "deinterlace"))
   @slash.requires(*platform.have_caps("decode", "avc"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("h264"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
-      spec_avc, DeinterlaceTest._default_modes_))
+      spec_avc, DeinterlaceTest._test_modes_))
   def test(self, case, method, rate):
     self.init(spec_avc, case, method, rate)
     self.vpp()
@@ -86,13 +94,20 @@ class mpeg2(DeinterlaceTest):
     self.ffdecoder = "mpeg2video"
     super(mpeg2, self).before()
 
+  for case, params in spec_mpeg2.items():
+    variants = params.get("rate", None)
+    if params.get("rate", None) is not None:
+      DeinterlaceTest._test_modes_ = [
+        dict(zip(["method", "rate"], m)) for m in itertools.product(
+        DeinterlaceTest._default_methods_, variants)]
+
   @slash.requires(*platform.have_caps("vpp", "deinterlace"))
   @slash.requires(*platform.have_caps("decode", "mpeg2"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("mpeg2video"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
-      spec_mpeg2, DeinterlaceTest._default_modes_))
+      spec_mpeg2, DeinterlaceTest._test_modes_))
   def test(self, case, method, rate):
     self.init(spec_mpeg2, case, method, rate)
     self.vpp()
@@ -103,13 +118,20 @@ class vc1(DeinterlaceTest):
     self.ffdecoder = "vc1"
     super(vc1, self).before()
 
+  for case, params in spec_vc1.items():
+    variants = params.get("rate", None)
+    if params.get("rate", None) is not None:
+      DeinterlaceTest._test_modes_ = [
+        dict(zip(["method", "rate"], m)) for m in itertools.product(
+        DeinterlaceTest._default_methods_, variants)]
+
   @slash.requires(*platform.have_caps("vpp", "deinterlace"))
   @slash.requires(*platform.have_caps("decode", "vc1"))
   @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
   @slash.requires(*have_ffmpeg_decoder("vc1"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
-      spec_vc1, DeinterlaceTest._default_modes_))
+      spec_vc1, DeinterlaceTest._test_modes_))
   def test(self, case, method, rate):
     self.init(spec_vc1, case, method, rate)
     self.vpp()
