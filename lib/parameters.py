@@ -449,15 +449,43 @@ gen_vpp_contrast_parameters = gen_vpp_sharpen_parameters
 gen_vpp_hue_parameters = gen_vpp_sharpen_parameters
 gen_vpp_saturation_parameters = gen_vpp_sharpen_parameters
 
-def gen_vpp_deinterlace_variants(spec, modes):
+def gen_vpp_deinterlace_variants(spec, default_modes):
   for case, params in spec.items():
-    variants = params.get("modes", modes)
-    for variant in variants:
-      yield [case, variant["method"], variant["rate"]]
+    # Keeps track of variants (modes) that we've already yielded for this
+    # case so we don't produce duplicates.
+    seen = set()
 
-def gen_vpp_deinterlace_parameters(spec, modes):
+    # Use the modes from the user spec/config if it's defined.  Otherwise, use
+    # the modes provided by the default_modes.
+    modes = params.get("modes", default_modes)
+
+    # For each specified mode, generate and yield each variant for this case
+    for mode in modes:
+      method = mode.get("method", None)
+      rate = mode.get("rate", None)
+
+      if method is None: # method is variant, rate is fixed
+        assert rate is not None, "user config must specify method and/or rate"
+        # select all modes from the default_modes that match the specified rate.
+        gmodes = filter(lambda m: m["rate"] == rate, default_modes)
+      elif rate is None: # rate is variant, method is fixed
+        assert method is not None, "user config must specify method and/or rate"
+        # select all modes from the default_modes that match the specified method.
+        gmodes = filter(lambda m: m["method"] == method, default_modes)
+      else: # rate and method are fixed
+        gmodes = [mode]
+
+      # For each generated mode, yield a unique variant for this case
+      for gmode in gmodes:
+        mode_hash = tuple(sorted(gmode.values()))
+        # only yield if we haven't seen this mode for this case
+        if mode_hash not in seen:
+          yield [case, gmode["method"], gmode["rate"]]
+          seen.add(mode_hash)
+
+def gen_vpp_deinterlace_parameters(spec, default_modes):
   keys = ("case", "method", "rate")
-  params = gen_vpp_deinterlace_variants(spec, modes)
+  params = gen_vpp_deinterlace_variants(spec, default_modes)
   return keys, params
 
 def gen_vpp_csc_variants(spec):
