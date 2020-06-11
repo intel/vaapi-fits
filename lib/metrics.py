@@ -43,7 +43,6 @@ def md5(filename, chunksize = 4096, numbytes = -1):
   numbytesread = 0
   m = hashlib.md5()
   with open(filename, "rb") as f:
-
     # read numchunks of size chunksize
     numchunks = int(numbytes / chunksize)
     if numchunks > 0:
@@ -205,6 +204,7 @@ def get_framesize(w, h, fourcc):
     "NV12" : lambda: szs["I420"](),
     "YV12" : lambda: szs["I420"](),
     "P010" : lambda: szs["I420"]() * 2,
+    "P012" : lambda: szs["I420"]() * 2,
     "I010" : lambda: szs["P010"](),
     "Y800" : lambda: w * h,
     "YUY2" : lambda: w * h * 2,
