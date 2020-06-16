@@ -133,10 +133,15 @@ class MediaPlugin(slash.plugins.PluginInterface):
     for c in context:
       sc = str(c).strip().lower()
       if "driver" == sc:
-        sc = "drv.{}".format(info().get("driver", "unknown"))
+        sc = "drv.{driver}"
+      elif "platform" == sc:
+        sc = "plat.{platform}"
+      elif "gpu.gen" == sc:
+        sc = "gpu.gen.{gpu[gen]}"
       elif sc.startswith("key:"):
         continue
-      yield sc
+
+      yield sc.format(**info())
 
   def _get_ref_addr(self, context):
     path, case = slash.context.test.__slash__.address.split(':')
