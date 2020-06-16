@@ -63,6 +63,7 @@ def have_caps(*args):
   )
   return get_caps(*args) is not None, failmsg
 
+@memoize
 def info():
   import platform
   try:
@@ -84,4 +85,6 @@ def info():
     kernel = str(platform.release()),
     dist = str(linux_dist()),
     cpu = cpu,
+    driver = str(get_media()._get_driver_name()),
+    platform = str(get_media()._get_platform_name()),
   )
