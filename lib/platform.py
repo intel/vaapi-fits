@@ -80,6 +80,19 @@ def info():
   except:
     cpu = "unknown"
 
+  from .common import get_media
+  plinfo = dict()
+  infofile = os.path.abspath(
+    os.path.join(
+      os.path.dirname(__file__), "caps",
+      str(get_media()._get_platform_name()),
+      "info"
+    )
+  )
+  if os.path.exists(infofile):
+    with open(infofile, 'rb') as f:
+      exec(f.read(), plinfo)
+
   return dict(
     node = str(platform.node()),
     kernel = str(platform.release()),
@@ -87,4 +100,5 @@ def info():
     cpu = cpu,
     driver = str(get_media()._get_driver_name()),
     platform = str(get_media()._get_platform_name()),
+    **plinfo.get("info", dict()),
   )
