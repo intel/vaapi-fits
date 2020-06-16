@@ -129,10 +129,11 @@ class MediaPlugin(slash.plugins.PluginInterface):
     return data.setdefault(key, state_value(default))
 
   def _expand_context(self, context):
+    from lib.platform import info
     for c in context:
       sc = str(c).strip().lower()
       if "driver" == sc:
-        sc = "drv.{}".format(self._get_driver_name())
+        sc = "drv.{}".format(info().get("driver", "unknown"))
       elif sc.startswith("key:"):
         continue
       yield sc
