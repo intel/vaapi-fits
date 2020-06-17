@@ -1,0 +1,26 @@
+{
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=1080p,method=horizontal)": {
+    "md5": "984cc41430b6cc6aa4a2ff1db1529755"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=1080p,method=vertical)": {
+    "md5": "d004a9734a04302661e79702556867b6"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=720p,method=horizontal)": {
+    "md5": "c8aff5aaa0c259f1bf9846627b027635"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=720p,method=vertical)": {
+    "md5": "600467fd5c5f136e22327c1b00728464"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QCIF,method=horizontal)": {
+    "md5": "f32e66954c8f1c9c0772eef0cd63844a"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QCIF,method=vertical)": {
+    "md5": "ff1abeffc1edb617bd917494eeadc662"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QVGA,method=horizontal)": {
+    "md5": "011e890c4c7b3d66008f3c4cff9e5ddd"
+  },
+  "test/gst-vaapi/vpp/mirroring.py:default.test(case=QVGA,method=vertical)": {
+    "md5": "2e75fd8c78e57d96d49c88c9bd4763f5"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "test/ffmpeg-vaapi/encode/vp8.py:cbr.test(bitrate=250,case=QCIF,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        34.5837,
+        41.8445,
+        45.2633,
+        39.1819,
+        45.4921,
+        47.9140
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/vp8.py:cbr.test(bitrate=4000,case=720p,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        28.6733,
+        45.6781,
+        49.5462,
+        33.1720,
+        50.0896,
+        53.6768
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/vp8.py:cbr.test(bitrate=500,case=QVGA,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        31.0116,
+        43.5411,
+        47.2594,
+        35.6476,
+        46.4212,
+        49.4136
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/vp8.py:cbr.test(bitrate=6000,case=1080p,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        27.4826,
+        45.6711,
+        48.9662,
+        29.1378,
+        48.7251,
+        52.1582
+      ]
+    }
+  }
+}

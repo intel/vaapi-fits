@@ -1,0 +1,156 @@
+{
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=0,case=1080p,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        58.6991,
+        68.6840,
+        70.2902,
+        58.7312,
+        68.7818,
+        70.4392
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        58.8373,
+        68.9936,
+        70.2477,
+        58.8651,
+        69.0125,
+        70.2730
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=0,case=720p,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        45.6774,
+        52.0869,
+        53.0321,
+        45.7253,
+        52.4661,
+        53.7568
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        45.6687,
+        52.1192,
+        53.1068,
+        45.7164,
+        52.5015,
+        53.8453
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        56.3969,
+        58.4626,
+        58.0939,
+        56.6067,
+        58.6326,
+        58.3389
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        56.4084,
+        59.3185,
+        58.4848,
+        56.6462,
+        59.3185,
+        58.8173
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        41.6939,
+        43.5743,
+        43.8056,
+        42.0338,
+        43.8889,
+        44.2729
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        41.9672,
+        43.2551,
+        43.7575,
+        42.3264,
+        43.6058,
+        44.1066
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=0,case=QVGA,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        57.5066,
+        60.7685,
+        60.2561,
+        57.6409,
+        60.8453,
+        60.4348
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        57.4609,
+        61.0782,
+        60.8439,
+        57.5843,
+        61.0782,
+        60.8439
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=2,case=1080p,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.i965": {
+      "psnr": [
+        41.3648,
+        53.1515,
+        53.0228,
+        42.2347,
+        54.3623,
+        54.1349
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        41.7170,
+        54.7276,
+        54.9540,
+        42.6110,
+        55.1115,
+        55.2946
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cqp.test(bframes=2,case=QVGA,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.i965": {
+      "psnr": [
+        40.7247,
+        46.1734,
+        47.1183,
+        41.6000,
+        46.4928,
+        47.5656
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        41.0126,
+        46.4397,
+        47.4135,
+        41.9214,
+        46.7427,
+        47.6922
+      ]
+    }
+  }
+}

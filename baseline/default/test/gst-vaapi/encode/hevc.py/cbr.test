@@ -1,0 +1,90 @@
+{
+  "test/gst-vaapi/encode/hevc.py:cbr.test(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        39.7128,
+        45.5522,
+        45.6174,
+        43.1426,
+        49.6622,
+        49.6189
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        38.4956,
+        44.6203,
+        45.1501,
+        43.3504,
+        49.5417,
+        49.5842
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cbr.test(bframes=0,bitrate=500,case=QVGA,fps=25,gop=30,profile=main,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        35.6153,
+        45.6548,
+        45.2888,
+        39.9574,
+        49.0114,
+        49.1603
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        35.6863,
+        45.5458,
+        45.4595,
+        40.0607,
+        49.3161,
+        49.3491
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cbr.test(bframes=0,bitrate=6000,case=1080p,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        26.6001,
+        44.0683,
+        43.9566,
+        29.6931,
+        49.2256,
+        49.0052
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        27.5169,
+        45.2548,
+        46.1877,
+        29.9997,
+        49.0549,
+        49.1642
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/hevc.py:cbr.test(bframes=2,bitrate=4000,case=720p,fps=30,gop=30,profile=main,slices=4)": {
+    "drv.i965": {
+      "psnr": [
+        28.4432,
+        48.2165,
+        48.6580,
+        32.8928,
+        52.5684,
+        53.4099
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        28.4643,
+        48.1996,
+        48.6179,
+        32.9847,
+        52.4618,
+        53.3369
+      ]
+    }
+  }
+}

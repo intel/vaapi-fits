@@ -1,0 +1,362 @@
+{
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        54.6137,
+        67.7462,
+        67.7987,
+        55.0286,
+        69.3336,
+        67.8875
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        43.1904,
+        49.7837,
+        50.2754,
+        43.4543,
+        49.8388,
+        50.3489
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        43.1904,
+        49.7837,
+        50.2754,
+        43.4543,
+        49.8388,
+        50.3489
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        54.6137,
+        67.7462,
+        67.7987,
+        55.0286,
+        69.3336,
+        67.8875
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        43.1904,
+        49.7837,
+        50.2754,
+        43.4543,
+        49.8388,
+        50.3489
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        43.1904,
+        49.7837,
+        50.2754,
+        43.4543,
+        49.8388,
+        50.3489
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        55.6512,
+        65.9441,
+        67.0559,
+        55.9234,
+        66.1414,
+        67.1435
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        56.9981,
+        65.9441,
+        67.0559,
+        57.0739,
+        66.1878,
+        67.1567
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.1617,
+        66.3373,
+        66.4652,
+        58.5327,
+        66.6423,
+        66.8071
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        55.6512,
+        65.9441,
+        67.0559,
+        55.9234,
+        66.1414,
+        67.1435
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        56.9981,
+        65.9441,
+        67.0559,
+        57.0739,
+        66.1878,
+        67.1567
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.1617,
+        66.3373,
+        66.4652,
+        58.5327,
+        66.6423,
+        66.8071
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        39.4637,
+        45.0182,
+        44.1437,
+        39.5309,
+        45.0182,
+        44.1437
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        39.4637,
+        45.0182,
+        44.1437,
+        39.5309,
+        45.0182,
+        44.1437
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        39.4637,
+        45.0182,
+        44.1437,
+        39.5309,
+        45.0182,
+        44.1437
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        39.4637,
+        45.0182,
+        44.1437,
+        39.5309,
+        45.0182,
+        44.1437
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        40.9390,
+        58.5147,
+        57.6425,
+        41.9218,
+        59.1323,
+        58.4191
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        40.9390,
+        58.6516,
+        57.9667,
+        41.9796,
+        59.4720,
+        58.5128
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        40.9678,
+        60.4905,
+        58.7770,
+        56.6767,
+        61.0828,
+        59.6220
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        40.9390,
+        58.5147,
+        57.6425,
+        41.9218,
+        59.1323,
+        58.4191
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        40.9390,
+        58.6516,
+        57.9667,
+        41.9796,
+        59.4720,
+        58.5128
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        40.9678,
+        60.4905,
+        58.7770,
+        56.6767,
+        61.0828,
+        59.6220
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        44.4468,
+        46.9228,
+        47.6378,
+        44.5666,
+        46.9228,
+        47.6378
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        44.4468,
+        46.9228,
+        47.6378,
+        44.5666,
+        46.9228,
+        47.6378
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        44.4468,
+        46.9228,
+        47.6378,
+        44.5666,
+        46.9228,
+        47.6378
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        44.4468,
+        46.9228,
+        47.6378,
+        44.5666,
+        46.9228,
+        47.6378
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        53.7447,
+        62.4758,
+        60.8018,
+        54.3658,
+        63.0114,
+        61.3629
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        55.0699,
+        62.2950,
+        61.2279,
+        55.3642,
+        63.1969,
+        61.3888
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        55.8533,
+        62.0540,
+        61.4650,
+        57.8012,
+        63.1701,
+        61.7919
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        53.7447,
+        62.4758,
+        60.8018,
+        54.3658,
+        63.0114,
+        61.3629
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        55.0699,
+        62.2950,
+        61.2279,
+        55.3642,
+        63.1969,
+        61.3888
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        55.8533,
+        62.0540,
+        61.4650,
+        57.8012,
+        63.1701,
+        61.7919
+      ]
+    }
+  }
+}

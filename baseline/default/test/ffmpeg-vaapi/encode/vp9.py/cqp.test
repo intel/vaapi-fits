@@ -1,0 +1,38 @@
+{
+  "test/ffmpeg-vaapi/encode/vp9.py:cqp.test(case=1080p,ipmode=1,looplvl=0,loopshp=0,qp=28,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        54.3628,
+        66.0492,
+        67.3570,
+        54.5560,
+        66.0970,
+        67.4072
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/vp9.py:cqp.test(case=QCIF,ipmode=0,looplvl=0,loopshp=0,qp=14,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        59.4488,
+        61.0301,
+        61.8193,
+        59.6386,
+        61.0809,
+        61.8495
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/vp9.py:cqp.test(case=QVGA,ipmode=1,looplvl=0,loopshp=0,qp=14,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        57.3978,
+        63.8542,
+        63.5999,
+        57.9060,
+        63.9283,
+        63.6230
+      ]
+    }
+  }
+}

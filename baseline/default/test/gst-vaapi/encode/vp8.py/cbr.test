@@ -1,0 +1,90 @@
+{
+  "test/gst-vaapi/encode/vp8.py:cbr.test(bitrate=250,case=QCIF,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        36.6651,
+        41.8979,
+        45.8490,
+        39.5233,
+        45.0007,
+        47.7849
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        35.5865,
+        41.9134,
+        46.3548,
+        39.3511,
+        45.1506,
+        48.0486
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cbr.test(bitrate=4000,case=720p,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        29.3393,
+        45.6825,
+        49.5274,
+        33.2532,
+        50.1420,
+        53.6154
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        28.9891,
+        45.6825,
+        49.5274,
+        33.2015,
+        50.2241,
+        53.5157
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cbr.test(bitrate=500,case=QVGA,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        30.9279,
+        43.5080,
+        47.0149,
+        35.7217,
+        46.2913,
+        49.1268
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        30.9960,
+        43.5088,
+        47.0064,
+        35.6971,
+        46.3265,
+        49.1279
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cbr.test(bitrate=6000,case=1080p,fps=30,gop=30,looplvl=0,loopshp=0)": {
+    "drv.i965": {
+      "psnr": [
+        27.4922,
+        45.2245,
+        46.3044,
+        29.4654,
+        46.8989,
+        49.0344
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        27.4791,
+        45.9730,
+        47.5517,
+        29.6224,
+        47.0945,
+        49.3029
+      ]
+    }
+  }
+}

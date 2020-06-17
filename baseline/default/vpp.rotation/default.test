@@ -1,0 +1,50 @@
+{
+  "vpp.rotation:default.test(case=1080p,degrees=0)": {
+    "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
+  },
+  "vpp.rotation:default.test(case=1080p,degrees=180)": {
+    "md5": "aeed2cb06b0d2acbfa181ae38a63ed8a"
+  },
+  "vpp.rotation:default.test(case=1080p,degrees=270)": {
+    "md5": "c3279d7c62bc22cce405d89f555d5678"
+  },
+  "vpp.rotation:default.test(case=1080p,degrees=90)": {
+    "md5": "0104994093497f08eacc85604b257916"
+  },
+  "vpp.rotation:default.test(case=720p,degrees=0)": {
+    "md5": "5bcf39edf34433e74b709e89db93a57c"
+  },
+  "vpp.rotation:default.test(case=720p,degrees=180)": {
+    "md5": "4549b4090d8f948b57513e344a8316f0"
+  },
+  "vpp.rotation:default.test(case=720p,degrees=270)": {
+    "md5": "9b81eb85e8188162583ec8f1c9899a47"
+  },
+  "vpp.rotation:default.test(case=720p,degrees=90)": {
+    "md5": "5d8c9e294f07541ac8eac3c37bae7bba"
+  },
+  "vpp.rotation:default.test(case=QCIF,degrees=0)": {
+    "md5": "330966f7c6feba190bf8a97960036cec"
+  },
+  "vpp.rotation:default.test(case=QCIF,degrees=180)": {
+    "md5": "675adb6ad3f66f59aa6965ed35d1c59f"
+  },
+  "vpp.rotation:default.test(case=QCIF,degrees=270)": {
+    "md5": "50093a2409e143138bf53c327e16db45"
+  },
+  "vpp.rotation:default.test(case=QCIF,degrees=90)": {
+    "md5": "982d5a812c0177cede165ca207b9b50c"
+  },
+  "vpp.rotation:default.test(case=QVGA,degrees=0)": {
+    "md5": "59110d2b34c2861f3dc23aba84a02ae7"
+  },
+  "vpp.rotation:default.test(case=QVGA,degrees=180)": {
+    "md5": "457abe0232714a8a4e5224f37380fac0"
+  },
+  "vpp.rotation:default.test(case=QVGA,degrees=270)": {
+    "md5": "6cb8e8fa9252b23e4140e201ba789881"
+  },
+  "vpp.rotation:default.test(case=QVGA,degrees=90)": {
+    "md5": "37fc24e6fa474693ffe45b43c2c68ca2"
+  }
+}

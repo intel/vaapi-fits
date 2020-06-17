@@ -1,0 +1,98 @@
+{
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=1080p,quality=10)": {
+    "drv.iHD": {
+      "psnr": [
+        25.9221,
+        34.2333,
+        35.8174,
+        25.9487,
+        34.2333,
+        35.8174
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=1080p,quality=73)": {
+    "drv.iHD": {
+      "psnr": [
+        39.5913,
+        47.7085,
+        49.3823,
+        39.6223,
+        47.7085,
+        49.3823
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=720p,quality=10)": {
+    "drv.iHD": {
+      "psnr": [
+        25.8613,
+        33.2505,
+        33.9022,
+        25.8966,
+        33.2505,
+        33.9022
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=720p,quality=73)": {
+    "drv.iHD": {
+      "psnr": [
+        39.4824,
+        46.3657,
+        48.1733,
+        39.5164,
+        46.3657,
+        48.1733
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=QCIF,quality=10)": {
+    "drv.iHD": {
+      "psnr": [
+        24.8585,
+        25.2786,
+        26.3214,
+        25.1508,
+        25.2786,
+        26.3214
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=QCIF,quality=73)": {
+    "drv.iHD": {
+      "psnr": [
+        37.8966,
+        37.7756,
+        38.2889,
+        38.1096,
+        37.7756,
+        38.2889
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=QVGA,quality=10)": {
+    "drv.iHD": {
+      "psnr": [
+        25.5148,
+        28.3993,
+        29.0005,
+        25.6073,
+        28.3993,
+        29.0005
+      ]
+    }
+  },
+  "test/gst-msdk/encode/jpeg.py:cqp.test(case=QVGA,quality=73)": {
+    "drv.iHD": {
+      "psnr": [
+        38.9243,
+        40.7233,
+        41.4444,
+        39.0506,
+        40.7233,
+        41.4444
+      ]
+    }
+  }
+}

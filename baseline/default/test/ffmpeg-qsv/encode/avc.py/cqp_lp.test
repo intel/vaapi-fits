@@ -1,0 +1,98 @@
+{
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7102,
+        73.6043,
+        71.7364,
+        58.9146,
+        73.9984,
+        71.9553
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.9597,
+        73.5194,
+        71.6658,
+        59.1459,
+        73.9846,
+        71.9419
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.5499,
+        70.6734,
+        70.4139,
+        58.7930,
+        70.6734,
+        70.4139
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.8586,
+        70.6734,
+        70.4139,
+        59.0802,
+        70.6734,
+        70.4139
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        56.7863,
+        60.5980,
+        62.0328,
+        57.5831,
+        61.0812,
+        63.1977
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.6074,
+        60.1284,
+        62.0328,
+        58.3383,
+        61.0637,
+        63.1388
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.7071,
+        63.2997,
+        65.0979,
+        58.2564,
+        63.4797,
+        65.2788
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.1632,
+        63.2997,
+        65.0979,
+        58.6778,
+        63.4797,
+        65.2788
+      ]
+    }
+  }
+}

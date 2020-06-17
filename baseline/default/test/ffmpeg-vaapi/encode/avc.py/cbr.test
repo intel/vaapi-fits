@@ -1,0 +1,90 @@
+{
+  "test/ffmpeg-vaapi/encode/avc.py:cbr.test(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        38.7763,
+        47.8720,
+        48.3943,
+        42.2191,
+        51.5226,
+        51.8784
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        38.8373,
+        48.0851,
+        48.9333,
+        41.7884,
+        52.3913,
+        52.4309
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/avc.py:cbr.test(bframes=0,bitrate=500,case=QVGA,fps=25,gop=30,profile=main,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        37.2481,
+        46.2860,
+        44.9526,
+        41.6181,
+        49.8693,
+        49.7048
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        37.3802,
+        46.4924,
+        44.9608,
+        41.9319,
+        51.0693,
+        50.9251
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/avc.py:cbr.test(bframes=0,bitrate=6000,case=1080p,fps=30,gop=30,profile=high,slices=1)": {
+    "drv.i965": {
+      "psnr": [
+        29.0070,
+        43.4700,
+        44.1440,
+        31.2150,
+        46.3253,
+        46.8872
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        28.9839,
+        43.2301,
+        43.8664,
+        31.3338,
+        46.3879,
+        47.2952
+      ]
+    }
+  },
+  "test/ffmpeg-vaapi/encode/avc.py:cbr.test(bframes=2,bitrate=4000,case=720p,fps=30,gop=30,profile=main,slices=4)": {
+    "drv.i965": {
+      "psnr": [
+        29.6937,
+        45.4464,
+        45.7218,
+        34.4182,
+        51.1335,
+        51.9400
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        30.6068,
+        47.3822,
+        48.6992,
+        34.4613,
+        51.0201,
+        51.0431
+      ]
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=1080p,ipmode=1,looplvl=0,loopshp=0,qp=14,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        50.1039,
+        52.4766,
+        51.9614,
+        50.1371,
+        52.6227,
+        52.0225
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        50.1075,
+        52.4692,
+        51.9217,
+        50.1391,
+        52.6119,
+        51.9756
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=1080p,ipmode=1,looplvl=0,loopshp=0,qp=28,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        46.1926,
+        45.5488,
+        45.6163,
+        46.2176,
+        45.5981,
+        45.6664
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        46.1890,
+        45.5578,
+        45.6246,
+        46.2168,
+        45.5991,
+        45.6671
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=720p,ipmode=0,looplvl=0,loopshp=0,qp=28,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        46.0988,
+        47.3013,
+        44.7087,
+        46.1377,
+        47.3013,
+        44.7087
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        46.0988,
+        47.3013,
+        44.7087,
+        46.1377,
+        47.3013,
+        44.7087
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=QCIF,ipmode=0,looplvl=0,loopshp=0,qp=14,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        48.0631,
+        48.0225,
+        47.8232,
+        48.3731,
+        48.0225,
+        47.8232
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        48.0631,
+        48.0225,
+        47.8232,
+        48.3731,
+        48.0225,
+        47.8232
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=QCIF,ipmode=1,looplvl=0,loopshp=0,qp=28,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        44.3673,
+        44.4148,
+        42.9166,
+        44.5712,
+        44.6282,
+        42.9869
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        44.3466,
+        44.4870,
+        42.8770,
+        44.5685,
+        44.6357,
+        42.9845
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=QVGA,ipmode=0,looplvl=0,loopshp=0,qp=28,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        45.1436,
+        47.7402,
+        44.3039,
+        45.3108,
+        47.7402,
+        44.3039
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        45.1436,
+        47.7402,
+        44.3039,
+        45.3108,
+        47.7402,
+        44.3039
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp8.py:cqp.test(case=QVGA,ipmode=1,looplvl=0,loopshp=0,qp=14,quality=4)": {
+    "drv.i965": {
+      "psnr": [
+        49.1505,
+        49.4156,
+        49.9039,
+        49.3114,
+        49.4781,
+        49.9783
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        49.1534,
+        49.4156,
+        49.9039,
+        49.3133,
+        49.4827,
+        49.9783
+      ]
+    }
+  }
+}

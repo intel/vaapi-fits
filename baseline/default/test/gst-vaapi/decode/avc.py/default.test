@@ -1,0 +1,14 @@
+{
+  "test/gst-vaapi/decode/avc.py:default.test(case=1080p)": {
+    "md5": "2873526ec49defd754c7853f0658799d"
+  },
+  "test/gst-vaapi/decode/avc.py:default.test(case=720p)": {
+    "md5": "e6b24a42be6b698f1bf96b75d1480ade"
+  },
+  "test/gst-vaapi/decode/avc.py:default.test(case=QCIF)": {
+    "md5": "61aeb97a3ab5da00a28a962ae9d69a28"
+  },
+  "test/gst-vaapi/decode/avc.py:default.test(case=QVGA)": {
+    "md5": "767f88894d9635691c6e1af82b1a738b"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=1080p,level=84)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        7.1039,
+        5.4619,
+        100,
+        7.1039,
+        5.4619
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=720p,level=12)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        5.3879,
+        6.0868,
+        100,
+        5.3879,
+        6.0868
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=720p,level=57)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        18.4629,
+        18.1274,
+        100,
+        18.4629,
+        18.1274
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QCIF,level=0)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        5.5066,
+        5.0911,
+        100,
+        5.5066,
+        5.0911
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QCIF,level=100)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        5.5066,
+        5.0911,
+        100,
+        5.5066,
+        5.0911
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QVGA,level=1)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        5.5062,
+        5.0912,
+        100,
+        5.5062,
+        5.0912
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/vpp/hue.py:default.test(case=QVGA,level=99)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        5.5148,
+        5.0853,
+        100,
+        5.5148,
+        5.0853
+      ]
+    }
+  }
+}

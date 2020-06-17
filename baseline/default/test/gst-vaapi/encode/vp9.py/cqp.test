@@ -1,0 +1,86 @@
+{
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=1080p,ipmode=1,looplvl=0,loopshp=0,qp=14,quality=4,refmode=1)": {
+    "drv.i965": {
+      "psnr": [
+        57.9746,
+        71.5190,
+        70.5601,
+        58.1397,
+        71.5310,
+        70.5967
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=1080p,ipmode=1,looplvl=0,loopshp=0,qp=28,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        54.2829,
+        66.1926,
+        66.8464,
+        54.4543,
+        66.2046,
+        66.8464
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=720p,ipmode=0,looplvl=0,loopshp=0,qp=28,quality=4,refmode=1)": {
+    "drv.i965": {
+      "psnr": [
+        57.2951,
+        65.0107,
+        65.4646,
+        57.3446,
+        65.0107,
+        65.4646
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=QCIF,ipmode=0,looplvl=0,loopshp=0,qp=14,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        59.4488,
+        59.3456,
+        59.9580,
+        59.6386,
+        59.3800,
+        59.9580
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=QCIF,ipmode=1,looplvl=0,loopshp=0,qp=28,quality=4,refmode=1)": {
+    "drv.i965": {
+      "psnr": [
+        52.3261,
+        54.6784,
+        55.2711,
+        52.8870,
+        55.1295,
+        55.9932
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=QVGA,ipmode=0,looplvl=16,loopshp=7,qp=28,quality=4,refmode=1)": {
+    "drv.i965": {
+      "psnr": [
+        56.2293,
+        59.5119,
+        59.6444,
+        56.3821,
+        59.5119,
+        59.6444
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:cqp.test(case=QVGA,ipmode=1,looplvl=0,loopshp=0,qp=14,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        57.4170,
+        63.9654,
+        63.0050,
+        57.7850,
+        63.9907,
+        63.0050
+      ]
+    }
+  }
+}

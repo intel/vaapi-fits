@@ -1,0 +1,156 @@
+{
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=1080p,level=84)": {
+    "drv.i965": {
+      "psnr": [
+        12.5314,
+        100,
+        100,
+        12.5316,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        12.5314,
+        100,
+        100,
+        12.5316,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=720p,level=12)": {
+    "drv.i965": {
+      "psnr": [
+        12.0616,
+        100,
+        100,
+        12.0624,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        12.0616,
+        100,
+        100,
+        12.0624,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=720p,level=57)": {
+    "drv.i965": {
+      "psnr": [
+        25.2082,
+        100,
+        100,
+        25.2082,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        25.2082,
+        100,
+        100,
+        25.2082,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QCIF,level=0)": {
+    "drv.i965": {
+      "psnr": [
+        9.7694,
+        100,
+        100,
+        9.7709,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        9.7694,
+        100,
+        100,
+        9.7709,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QCIF,level=100)": {
+    "drv.i965": {
+      "psnr": [
+        9.4388,
+        100,
+        100,
+        9.4437,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        9.4388,
+        100,
+        100,
+        9.4437,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QVGA,level=1)": {
+    "drv.i965": {
+      "psnr": [
+        9.9086,
+        100,
+        100,
+        9.9107,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        9.9086,
+        100,
+        100,
+        9.9107,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-vaapi/vpp/brightness.py:default.test(case=QVGA,level=99)": {
+    "drv.i965": {
+      "psnr": [
+        9.5907,
+        100,
+        100,
+        9.5926,
+        100,
+        100
+      ]
+    },
+    "drv.iHD": {
+      "psnr": [
+        9.5907,
+        100,
+        100,
+        9.5926,
+        100,
+        100
+      ]
+    }
+  }
+}
