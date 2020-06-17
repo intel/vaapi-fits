@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import json
+
+# duplicate definition from lib/baseline.py
+class JSONFloatPrecisionEncoder(json.JSONEncoder):
+  def iterencode(self, o):
+    return json.encoder._make_iterencode(
+      {}, self.default, json.encoder.encode_basestring_ascii,
+      self.indent, "{:.4f}".format, self.key_separator, self.item_separator,
+      self.sort_keys, self.skipkeys, True,
+    )(o, 0)
+
+# some path helpers
+def abspath(path):
+  return os.path.sep + os.path.abspath(path).lstrip(os.path.sep)
+
+def pathexists(path):
+  return os.path.exists(abspath(path))
+
+def makepath(path):
+  if not pathexists(path):
+    os.makedirs(abspath(path))
+
+baseline_path = abspath(sys.argv[1])
+assert pathexists(baseline_path)
+assert not os.path.isdir(baseline_path), "baseline already appears to be expanded"
+
+# read the current references from the flat baseline file
+with open(baseline_path, "r") as fd:
+  baseline = json.load(fd)
+
+# rename the flat baseline file to make room for the new baseline directory
+os.rename(baseline_path, "{}.flat".format(baseline_path))
+
+# refs aggregated by testkey and testname
+refsbyfile = dict()
+nitems = len(baseline.keys())
+for n, item in enumerate(baseline.items(), 1):
+  case, ref = item
+  print("aggregating case {} of {}:".format(n, nitems), case)
+
+  testkey, testcase = case.split(':')
+  testname, params = testcase.split('(')
+
+  reffile = os.path.join(baseline_path, testkey, testname)
+
+  assert case not in refsbyfile.setdefault(reffile, dict()).keys()
+  refsbyfile[reffile][case] = ref
+
+# dump each ref aggregation into their own baseline file
+nitems = len(refsbyfile.keys())
+for n, item in enumerate(refsbyfile.items(), 1):
+  reffile, refs = item
+  print("writing file {} of {}:".format(n, nitems), reffile)
+  makepath(os.path.dirname(reffile))
+
+  # dump json the same way as lib/baseline.py
+  with open(reffile, "w+") as fd:
+    json.dump(
+      refs, fd, cls = JSONFloatPrecisionEncoder, indent = 2,
+      sort_keys = True
+    )
+
+# verify expansion
+print("verifying expansion...")
+newbaseline = dict()
+for root, dirs, files in os.walk(baseline_path):
+  for name in files:
+    reffile = os.path.join(root, name)
+    with open(reffile, "r") as fd:
+      newbaseline.update(json.load(fd))
+assert newbaseline == baseline, "something went wrong!!"
+print("success!")
