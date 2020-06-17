@@ -102,6 +102,17 @@ def read_frame_I010(fd, width, height):
 
   return y, u, v
 
+def read_frame_P012(fd, width, height):
+  width2  = (width + 1) // 2
+  height2 = (height + 1) // 2
+  size    = width * height
+  size2   = width2 * height2 * 2
+
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width))
+  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2)
+
+  return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
+
 def read_frame_AYUV(fd, width, height):
   size = width * height * 4
 
@@ -213,6 +224,7 @@ FrameReaders = {
   "YV12" : read_frame_YV12,
   "P010" : read_frame_P010,
   "I010" : read_frame_I010,
+  "P012" : read_frame_P012,
   "Y800" : read_frame_Y800,
   "YUY2" : read_frame_YUY2,
   "AYUV" : read_frame_AYUV,
