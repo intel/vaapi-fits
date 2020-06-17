@@ -1,0 +1,362 @@
+{
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.8848,
+        67.2001,
+        67.6808,
+        58.9770,
+        67.2932,
+        67.7858
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        43.1905,
+        49.8754,
+        50.2729,
+        43.4704,
+        49.9359,
+        50.3621
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.6385,
+        67.1637,
+        67.6402,
+        58.7553,
+        67.3003,
+        67.7937
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        43.3288,
+        49.8772,
+        50.2708,
+        43.5920,
+        49.9377,
+        50.3494
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.8848,
+        67.2001,
+        67.6808,
+        58.9770,
+        67.2932,
+        67.7858
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        43.1905,
+        49.8754,
+        50.2729,
+        43.4704,
+        49.9359,
+        50.3621
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7638,
+        65.4861,
+        67.2408,
+        58.8844,
+        65.5651,
+        67.3592
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7369,
+        65.5046,
+        67.0515,
+        58.8585,
+        65.5668,
+        67.1393
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        58.4270,
+        65.5149,
+        67.2840,
+        58.6133,
+        65.5668,
+        67.3617
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.3970,
+        65.5097,
+        67.0589,
+        58.5688,
+        65.5656,
+        67.1376
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7638,
+        65.4861,
+        67.2408,
+        58.8844,
+        65.5651,
+        67.3592
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7369,
+        65.5046,
+        67.0515,
+        58.8585,
+        65.5668,
+        67.1393
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        42.6084,
+        45.0857,
+        44.1897,
+        42.7456,
+        45.0857,
+        44.1897
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        42.4441,
+        45.0857,
+        44.1897,
+        42.7077,
+        45.0857,
+        44.1897
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        42.6084,
+        45.0857,
+        44.1897,
+        42.7456,
+        45.0857,
+        44.1897
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5306,
+        58.9723,
+        57.8175,
+        58.1851,
+        59.5958,
+        58.6609
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5968,
+        59.2826,
+        58.7770,
+        58.2570,
+        59.8127,
+        59.2070
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        56.7314,
+        58.9723,
+        58.0131,
+        57.5032,
+        59.6076,
+        58.6639
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        56.6795,
+        59.0563,
+        58.4184,
+        57.4938,
+        59.8167,
+        59.1515
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5306,
+        58.9723,
+        57.8175,
+        58.1851,
+        59.5958,
+        58.6609
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5968,
+        59.2826,
+        58.7770,
+        58.2570,
+        59.8127,
+        59.2070
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        44.8331,
+        46.9013,
+        47.7980,
+        44.9629,
+        46.9013,
+        47.7980
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        44.7254,
+        46.9013,
+        47.7980,
+        44.8905,
+        46.9013,
+        47.7980
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        44.8331,
+        46.9013,
+        47.7980,
+        44.9629,
+        46.9013,
+        47.7980
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.9259,
+        62.9292,
+        60.8102,
+        58.3267,
+        63.3504,
+        61.2895
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.8953,
+        62.7552,
+        61.2279,
+        58.2633,
+        63.3331,
+        61.5125
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.3826,
+        62.9704,
+        60.9987,
+        57.9765,
+        63.3487,
+        61.2896
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.3366,
+        62.7552,
+        61.1592,
+        57.8827,
+        63.3342,
+        61.5137
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.9259,
+        62.9292,
+        60.8102,
+        58.3267,
+        63.3504,
+        61.2895
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.8953,
+        62.7552,
+        61.2279,
+        58.2633,
+        63.3331,
+        61.5125
+      ]
+    }
+  }
+}

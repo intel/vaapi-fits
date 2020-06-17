@@ -1,0 +1,86 @@
+{
+  "test/gst-msdk/vpp/denoise.py:default.test(case=1080p,level=84)": {
+    "drv.iHD": {
+      "psnr": [
+        60.3148,
+        100,
+        100,
+        60.3334,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=720p,level=12)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=720p,level=57)": {
+    "drv.iHD": {
+      "psnr": [
+        67.4231,
+        100,
+        100,
+        67.4858,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QCIF,level=0)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QCIF,level=100)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5142,
+        100,
+        100,
+        57.7899,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QVGA,level=1)": {
+    "drv.iHD": {
+      "psnr": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    }
+  },
+  "test/gst-msdk/vpp/denoise.py:default.test(case=QVGA,level=99)": {
+    "drv.iHD": {
+      "psnr": [
+        58.7360,
+        100,
+        100,
+        58.8670,
+        100,
+        100
+      ]
+    }
+  }
+}

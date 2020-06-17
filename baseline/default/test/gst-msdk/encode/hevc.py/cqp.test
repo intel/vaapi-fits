@@ -1,0 +1,86 @@
+{
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=0,case=1080p,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        58.8340,
+        68.6489,
+        70.3401,
+        58.8666,
+        68.7147,
+        70.3861
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=0,case=720p,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        45.6774,
+        52.0869,
+        53.0321,
+        45.7253,
+        52.4661,
+        53.7568
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        56.3969,
+        58.4626,
+        58.0939,
+        56.6067,
+        58.6326,
+        58.3389
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        41.6056,
+        43.6531,
+        43.8801,
+        42.0154,
+        43.9542,
+        44.2909
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=0,case=QVGA,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.5066,
+        60.7685,
+        60.2561,
+        57.6409,
+        60.8453,
+        60.4348
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=2,case=1080p,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        41.3868,
+        54.9297,
+        53.8883,
+        42.2509,
+        55.2291,
+        54.1256
+      ]
+    }
+  },
+  "test/gst-msdk/encode/hevc.py:cqp.test(bframes=2,case=QVGA,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        40.6529,
+        46.4715,
+        46.8918,
+        41.5157,
+        46.7169,
+        47.2406
+      ]
+    }
+  }
+}

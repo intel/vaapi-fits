@@ -1,0 +1,50 @@
+{
+  "test/ffmpeg-qsv/encode/hevc.py:cbr.test(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        37.6782,
+        45.4823,
+        45.7267,
+        42.4846,
+        49.3460,
+        49.4797
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cbr.test(bframes=0,bitrate=500,case=QVGA,fps=25,gop=30,profile=main,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        38.1786,
+        46.1625,
+        46.8823,
+        40.1478,
+        49.4158,
+        50.0058
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cbr.test(bframes=0,bitrate=6000,case=1080p,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        28.0780,
+        46.9454,
+        46.8040,
+        30.2296,
+        50.6729,
+        50.4053
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cbr.test(bframes=2,bitrate=4000,case=720p,fps=30,gop=30,profile=main,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        28.4048,
+        48.3091,
+        48.6580,
+        33.0646,
+        52.1397,
+        52.5679
+      ]
+    }
+  }
+}

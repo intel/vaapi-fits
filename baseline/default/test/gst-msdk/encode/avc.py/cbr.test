@@ -1,0 +1,50 @@
+{
+  "test/gst-msdk/encode/avc.py:cbr.test(bframes=0,bitrate=250,case=QCIF,fps=30,gop=30,profile=main,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        39.4699,
+        46.2951,
+        46.6507,
+        41.6606,
+        50.2913,
+        50.4313
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cbr.test(bframes=0,bitrate=500,case=QVGA,fps=25,gop=30,profile=main,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        39.1122,
+        46.0132,
+        46.6976,
+        41.3492,
+        49.3525,
+        49.6836
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cbr.test(bframes=0,bitrate=6000,case=1080p,fps=30,gop=30,profile=high,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        28.9235,
+        41.8559,
+        43.0942,
+        31.4376,
+        46.5240,
+        46.9499
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cbr.test(bframes=2,bitrate=4000,case=720p,fps=30,gop=30,profile=main,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        30.4245,
+        44.9922,
+        45.6145,
+        34.5485,
+        49.9091,
+        50.4530
+      ]
+    }
+  }
+}

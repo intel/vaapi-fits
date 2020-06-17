@@ -1,0 +1,50 @@
+{
+  "test/gst-vaapi/encode/vp9.py:vbr.test(bitrate=250,case=QCIF,fps=30,gop=30,looplvl=0,loopshp=0,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        34.6963,
+        41.8081,
+        46.1221,
+        42.8827,
+        48.5439,
+        49.9714
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:vbr.test(bitrate=4000,case=720p,fps=30,gop=30,looplvl=0,loopshp=0,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        27.5304,
+        43.4476,
+        46.5225,
+        33.2847,
+        48.9380,
+        52.1099
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:vbr.test(bitrate=500,case=QVGA,fps=30,gop=30,looplvl=0,loopshp=0,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        29.8326,
+        42.3982,
+        41.1598,
+        36.9079,
+        46.9588,
+        48.8193
+      ]
+    }
+  },
+  "test/gst-vaapi/encode/vp9.py:vbr.test(bitrate=6000,case=1080p,fps=30,gop=30,looplvl=0,loopshp=0,quality=4,refmode=0)": {
+    "drv.i965": {
+      "psnr": [
+        24.8757,
+        51.6637,
+        47.5934,
+        29.7887,
+        54.1463,
+        52.6116
+      ]
+    }
+  }
+}

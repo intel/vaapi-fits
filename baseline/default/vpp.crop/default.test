@@ -1,0 +1,194 @@
+{
+  "vpp.crop:default.test(bottom=0,case=1080p,left=0,right=0,top=0)": {
+    "md5": "65f0b22f4fb0c6266a7d6ce13a9ae560"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=0,right=0,top=10)": {
+    "md5": "da4c083bc965e584c5285bf8562b38ca"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=0,right=10,top=0)": {
+    "md5": "d0ef2d8d6705384b7aafb5bca60516d9"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=0,right=10,top=10)": {
+    "md5": "54b0836c9d99576d5bff81e153aec904"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=10,right=0,top=0)": {
+    "md5": "3dfb4655934717979cf4ebcddad310ae"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=10,right=0,top=10)": {
+    "md5": "8bcf97b963504584da7358af73d83426"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=10,right=10,top=0)": {
+    "md5": "7e6fe2591793c375a687aa4be3553bcd"
+  },
+  "vpp.crop:default.test(bottom=0,case=1080p,left=10,right=10,top=10)": {
+    "md5": "1d5f384bcc76c3ac4710596b8a1c0c6b"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=0,right=0,top=0)": {
+    "md5": "5bcf39edf34433e74b709e89db93a57c"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=0,right=0,top=10)": {
+    "md5": "0fd13fd536a80ce7d78ba29929560030"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=0,right=10,top=0)": {
+    "md5": "69cb2a78b40c6efd0f8331da476b5d0a"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=0,right=10,top=10)": {
+    "md5": "e9d1cea1d0576b9da8b20749b29f5373"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=10,right=0,top=0)": {
+    "md5": "cadbb5b1cce858d14c505f91872ef8a5"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=10,right=0,top=10)": {
+    "md5": "065f8d13a56427f732fa03eb740456fa"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=10,right=10,top=0)": {
+    "md5": "867234f4955dcc8037b45fef1a412310"
+  },
+  "vpp.crop:default.test(bottom=0,case=720p,left=10,right=10,top=10)": {
+    "md5": "eee7916409466b14707a7cc9ad89b661"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=0,right=0,top=0)": {
+    "md5": "330966f7c6feba190bf8a97960036cec"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=0,right=0,top=10)": {
+    "md5": "80dc2a5c85c28c206c932a8dc517a91c"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=0,right=10,top=0)": {
+    "md5": "7a273013ef4e1633fa0ab5ac6bec8a00"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=0,right=10,top=10)": {
+    "md5": "40ef327b4b179d8968b6d2043fbc7f1b"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=10,right=0,top=0)": {
+    "md5": "aab10d319fa59f67966a6b07c7380626"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=10,right=0,top=10)": {
+    "md5": "0bc9c13a1ce308b2bfea8ef935456109"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=10,right=10,top=0)": {
+    "md5": "c3552361a7edca210a2a700f2d36a0c8"
+  },
+  "vpp.crop:default.test(bottom=0,case=QCIF,left=10,right=10,top=10)": {
+    "md5": "d3dbde590269b1346475468ef7babad0"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=0,right=0,top=0)": {
+    "md5": "59110d2b34c2861f3dc23aba84a02ae7"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=0,right=0,top=10)": {
+    "md5": "fa543f97b22b964f45d4c8256ce53625"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=0,right=10,top=0)": {
+    "md5": "568667375ba37f9ef74199820e460305"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=0,right=10,top=10)": {
+    "md5": "f1a7d54f049273f697efca5368b52005"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=10,right=0,top=0)": {
+    "md5": "60b776cf95c92a9dfdce46b96e4515aa"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=10,right=0,top=10)": {
+    "md5": "cd7194e729917338eed55b8d7c3975b3"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=10,right=10,top=0)": {
+    "md5": "ac9f3ebf0ab25bc1524f76450588b6c3"
+  },
+  "vpp.crop:default.test(bottom=0,case=QVGA,left=10,right=10,top=10)": {
+    "md5": "e87a7ea448e7045042abf965890dce59"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=0,right=0,top=0)": {
+    "md5": "bbffa83460bebcb73159d8f94118c49b"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=0,right=0,top=10)": {
+    "md5": "b4cb15d6408216f4c388a2cc227be392"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=0,right=10,top=0)": {
+    "md5": "65c1b1ed369327b0fff8d9340add12da"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=0,right=10,top=10)": {
+    "md5": "39aeb74ba4c4996b2e53c645c6835446"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=10,right=0,top=0)": {
+    "md5": "9c3e1e943e316ff5ea0a0a4a58b172a9"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=10,right=0,top=10)": {
+    "md5": "b2d677eb0f40b15e313a7f38b0045603"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=10,right=10,top=0)": {
+    "md5": "ebacd79290390dc4c018c2744145d2b5"
+  },
+  "vpp.crop:default.test(bottom=10,case=1080p,left=10,right=10,top=10)": {
+    "md5": "63a72ee8dad17e47074448e0c8be989b"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=0,right=0,top=0)": {
+    "md5": "93ff1bd3cc7d7a9363c8c61c100b0006"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=0,right=0,top=10)": {
+    "md5": "ee12a721d8529c17e47d76941c995fa6"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=0,right=10,top=0)": {
+    "md5": "9576eba62705de3f64ca816492c471fd"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=0,right=10,top=10)": {
+    "md5": "e99f8fd1461c9184365d38efc6208183"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=10,right=0,top=0)": {
+    "md5": "84fd0e639ec9179bdb0406d173184a35"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=10,right=0,top=10)": {
+    "md5": "f782bece40634bdadaba356c8f459b9d"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=10,right=10,top=0)": {
+    "md5": "e49960c60433b1649e3cbaf9843dbf60"
+  },
+  "vpp.crop:default.test(bottom=10,case=720p,left=10,right=10,top=10)": {
+    "md5": "76c37c9ddb2cf5e4c3adb04e4fcb9631"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=0,right=0,top=0)": {
+    "md5": "fc816c41367312184c105bca0deaf01e"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=0,right=0,top=10)": {
+    "md5": "85e71190bb6b3f95be7e1388ff816206"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=0,right=10,top=0)": {
+    "md5": "a707edea8b3ca7291dc2d1d7c6301978"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=0,right=10,top=10)": {
+    "md5": "d084dea671a50ce75fbdcf12fcd15fa1"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=10,right=0,top=0)": {
+    "md5": "223e46635507205462d28fadee8fd19f"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=10,right=0,top=10)": {
+    "md5": "6e4b4ae9ab98b95be3518a08ef57f7a5"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=10,right=10,top=0)": {
+    "md5": "fa43a3c5ed1f8d772ce925f24cd34bc3"
+  },
+  "vpp.crop:default.test(bottom=10,case=QCIF,left=10,right=10,top=10)": {
+    "md5": "3b515b47f9d20fa8f028134fd710de94"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=0,right=0,top=0)": {
+    "md5": "00774dc616462d62c708792d9e9bf176"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=0,right=0,top=10)": {
+    "md5": "b3e5b38f450b90c541a4c807618b8a33"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=0,right=10,top=0)": {
+    "md5": "41e4928956a01fe4724205e3bcf770b1"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=0,right=10,top=10)": {
+    "md5": "0b121f795e1d41a684755f0666ab6d08"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=10,right=0,top=0)": {
+    "md5": "a2a6dd48457cf007f508b94d8a23c44f"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=10,right=0,top=10)": {
+    "md5": "dd79f36d9d81a7a8d448289494e50a0e"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=10,right=10,top=0)": {
+    "md5": "8fd694bd87490fef6b5acbc7ec0d83c8"
+  },
+  "vpp.crop:default.test(bottom=10,case=QVGA,left=10,right=10,top=10)": {
+    "md5": "07506d5dd32a4dcc285bfde72fb3d80a"
+  }
+}

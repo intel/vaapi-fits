@@ -1,0 +1,86 @@
+{
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=0,case=1080p,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        61.7923,
+        70.0622,
+        69.9831,
+        61.8322,
+        70.0622,
+        69.9831
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=0,case=720p,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        51.1857,
+        56.8648,
+        56.6323,
+        51.2173,
+        57.7804,
+        57.4391
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        59.1032,
+        61.8033,
+        63.3386,
+        59.3526,
+        62.2928,
+        63.3386
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=0,case=QCIF,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        40.5872,
+        49.3756,
+        49.2692,
+        42.1802,
+        50.4493,
+        50.2358
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=0,case=QVGA,gop=1,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        60.4581,
+        64.8466,
+        66.7150,
+        60.6545,
+        64.9697,
+        66.7150
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=2,case=1080p,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        34.0493,
+        58.8407,
+        59.5440,
+        37.8487,
+        59.1705,
+        60.2199
+      ]
+    }
+  },
+  "test/ffmpeg-qsv/encode/hevc.py:cqp.test(bframes=2,case=QVGA,gop=30,profile=main,qp=28,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        33.6864,
+        50.5082,
+        51.3043,
+        37.5514,
+        52.2069,
+        52.6200
+      ]
+    }
+  }
+}
