@@ -175,3 +175,14 @@ def mapRange(value, srcRange, destRange):
 def mapRangeInt(value, srcRange, destRange):
   (smin, smax), (dmin, dmax) = srcRange, destRange
   return int(dmin + ((value - smin) * (dmax - dmin) // (smax - smin)))
+
+# some path helpers
+def abspath(path):
+  return os.path.sep + os.path.abspath(path).lstrip(os.path.sep)
+
+def pathexists(path):
+  return os.path.exists(abspath(path))
+
+def makepath(path):
+  if not pathexists(path):
+    os.makedirs(abspath(path))
