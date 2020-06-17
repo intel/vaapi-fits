@@ -17,6 +17,7 @@ caps = dict(
     jpeg    = dict(maxres = res16k, fmts = ["NV12", "411P", "422H", "422V", "444P", "Y800"]),
     hevc_8  = dict(maxres = res8k , fmts = ["NV12", "YUY2", "AYUV"]),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y210", "Y410"]),
+    hevc_12 = dict(maxres = res8k , fmts = ["P012"]),
     vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
   ),
