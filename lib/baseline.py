@@ -7,7 +7,7 @@
 import json
 import os
 import slash
-from .common import get_media
+from .common import get_media, makepath, pathexists, abspath
 
 class JSONFloatPrecisionEncoder(json.JSONEncoder):
   def iterencode(self, o):
@@ -23,13 +23,22 @@ class JSONFloatPrecisionEncoder(json.JSONEncoder):
 
 class Baseline:
   def __init__(self, filename, rebase = False):
-    self.filename = filename
+    assert filename, "invalid filename"
+
+    self.filename = abspath(filename)
     self.references = dict()
     self.rebase = rebase
 
-    if self.filename and os.path.exists(self.filename):
-      with open(self.filename, "r") as fd:
-        self.references = json.load(fd)
+    # load existing baseline references
+    if pathexists(self.filename):
+      if os.path.isdir(self.filename): # expanded reference files
+        for root, dirs, files in os.walk(self.filename):
+          for name in files:
+            with open(os.path.join(root, name), "r") as fd:
+              self.references.update(json.load(fd))
+      else: # flat reference file for backwards compatibility
+        with open(self.filename, "r") as fd:
+          self.references = json.load(fd)
 
   def __get_reference(self, context = []):
     addr = get_media()._get_ref_addr(context)
@@ -70,10 +79,29 @@ class Baseline:
 
   def finalize(self):
     if self.rebase:
-      if not os.path.exists(os.path.dirname(self.filename)):
-        os.makedirs(os.path.dirname(self.filename))
-      with open(self.filename, "w+") as fd:
-        json.dump(
-          self.references, fd, cls = JSONFloatPrecisionEncoder, indent = 2,
-          sort_keys = True
-        )
+      # expanded reference files by default
+      if not pathexists(self.filename) or os.path.isdir(self.filename):
+        # aggregate refs by testkey and testname
+        refsbyfile = dict()
+        for item in self.references.items():
+          case, ref = item
+          testkey, testcase = case.split(':')
+          testname, params = testcase.split('(')
+          reffile = os.path.join(self.filename, testkey, testname)
+          refsbyfile.setdefault(reffile, dict())[case] = ref
+
+        # dump aggregated refs into their own files
+        for item in refsbyfile.items():
+          reffile, refs = item
+          makepath(os.path.dirname(reffile))
+          with open(reffile, "w+") as fd:
+            json.dump(
+              refs, fd, cls = JSONFloatPrecisionEncoder, indent = 2,
+              sort_keys = True
+            )
+      else: # flat reference file for backwards compatibility
+        with open(self.filename, "w+") as fd:
+          json.dump(
+            self.references, fd, cls = JSONFloatPrecisionEncoder, indent = 2,
+            sort_keys = True
+          )
