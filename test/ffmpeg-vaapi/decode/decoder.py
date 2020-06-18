@@ -18,8 +18,8 @@ class DecoderTest(slash.Test):
     self.output = call(
       "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:/dev/dri/renderD128"
       " -hwaccel_flags allow_profile_mismatch -filter_hw_device hw -v verbose"
-      " -i {source} -pix_fmt {mformat} -f rawvideo -vsync"
-      " passthrough -vframes {frames} -y {decoded}".format(**vars(self)))
+      " -i {source} -pix_fmt {mformat} -f rawvideo -vsync passthrough"
+      " -autoscale 0 -vframes {frames} -y {decoded}".format(**vars(self)))
 
   def gen_name(self):
     name = "{case}_{width}x{height}_{format}"
