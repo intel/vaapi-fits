@@ -21,7 +21,7 @@ class DecoderTest(slash.Test):
       " -v verbose -c:v {ffdecoder} -i {source}"
       " -vf 'hwdownload,format={hwformat}'"
       " -pix_fmt {mformat} -f rawvideo -vsync passthrough"
-      " -vframes {frames} -y {decoded}".format(**vars(self)))
+      " -autoscale 0 -vframes {frames} -y {decoded}".format(**vars(self)))
 
   def gen_name(self):
     name = "{case}_{width}x{height}_{format}"
