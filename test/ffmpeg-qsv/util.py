@@ -38,6 +38,7 @@ def get_supported_format_map():
     "I420"  : "yuv420p",
     "NV12"  : "nv12",
     "P010"  : "p010le",
+    "P012"  : "p012",
     "I010"  : "yuv420p10le",
     "YUY2"  : "yuyv422",
     "422H"  : "yuv422p",
@@ -100,6 +101,9 @@ def mapprofile(codec, profile):
     },
     "hevc-10"  : {
       "main10"    : "main10"
+    },
+    "hevc-12" : {
+      "main12"                : "main-12",
     },
   }.get(codec, {}).get(profile, None)
 
