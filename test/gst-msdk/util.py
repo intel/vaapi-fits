@@ -39,6 +39,7 @@ def get_supported_format_map():
     "I010"  : ("i420-10le", "I420_10LE"),
     "Y210"  : ("y210", "Y210"),
     "Y410"  : ("y410", "Y410"),
+    "Y412"  : ("y412-le", "Y412_LE"),
   }
 
 @memoize
