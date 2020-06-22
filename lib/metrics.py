@@ -214,6 +214,7 @@ def get_framesize(w, h, fourcc):
     "ARGB" : lambda: w * h * 4,
     "Y210" : lambda: w * h * 4,
     "Y410" : lambda: w * h * 4,
+    "Y412" : lambda: w * h * 8,
     "BGRA" : lambda: w * h * 4,
   }
   return szs[fourcc]()

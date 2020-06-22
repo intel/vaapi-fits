@@ -215,6 +215,25 @@ def read_frame_Y410(fd, width, height):
 
   return y, u, v
 
+def read_frame_Y412(fd, width, height):
+  #https://docs.microsoft.com/en-us/windows/win32/medfound/10-bit-and-16-bit-yuv-video-formats
+  #y412 64bit
+  #U bit[15:0]
+  #Y bit[31:16]
+  #V bit[47:32]
+  #A bit[63:48]
+  size    = width * height * 4
+
+  y412 = numpy.fromfile(fd, dtype=numpy.uint16, count=size)
+  #bit 0-15
+  u = y412[0::4].reshape((height, width)) & 0x0fff
+  #bit 16-31
+  y = y412[1::4].reshape((height, width)) & 0x0fff
+  #bit 32-47
+  v = y412[2::4].reshape((height, width)) & 0x0fff
+
+  return y, u, v
+
 FrameReaders = {
   "I420" : read_frame_I420,
   "422H" : read_frame_422H,
@@ -232,5 +251,6 @@ FrameReaders = {
   "ARGB" : read_frame_ARGB,
   "Y210" : read_frame_Y210,
   "Y410" : read_frame_Y410,
+  "Y412" : read_frame_Y412,
   "BGRA" : read_frame_BGRA,
 }
