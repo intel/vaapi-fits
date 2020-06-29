@@ -213,6 +213,7 @@ def get_framesize(w, h, fourcc):
     "VUYA" : lambda: w * h * 4,
     "ARGB" : lambda: w * h * 4,
     "Y210" : lambda: w * h * 4,
+    "Y212" : lambda: w * h * 4,
     "Y410" : lambda: w * h * 4,
     "Y412" : lambda: w * h * 8,
     "BGRA" : lambda: w * h * 4,
