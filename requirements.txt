@@ -1,0 +1,5 @@
+slash==1.5.1
+numpy
+scikit-image
+distro
+py-cpuinfo
