@@ -130,7 +130,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
   def _expand_context(self, context):
     from lib.platform import info
+    import types
     for c in context:
+      if type(c) is types.FunctionType:
+        c = c()
+        if c is None: continue
+
       sc = str(c).strip().lower()
       if "driver" == sc:
         sc = "drv.{driver}"
