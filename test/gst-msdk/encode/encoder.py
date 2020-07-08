@@ -56,7 +56,7 @@ class EncoderTest(slash.Test):
       opts += " ref-frames={refs}"
     if vars(self).get("lowpower", None) is not None:
       opts += " low-power="
-      opts += "true" if self.lowpower else "false"
+      opts += "1" if self.lowpower else "0"
     if vars(self).get("ladepth", None) is not None:
       opts += " rc-lookahead={ladepth}"
 
