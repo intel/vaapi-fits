@@ -121,8 +121,7 @@ class EncoderTest(slash.Test):
     self.refctx = []
 
   def validate_caps(self):
-    # MSDK does not support AYUV input format even though iHD supports it.
-    ifmts = list(set(self.caps["fmts"]) - set(["AYUV"]))
+    ifmts = self.caps["fmts"]
 
     self.hwformat = map_best_hw_format(self.format, ifmts)
     self.mformat  = mapformat(self.format)
