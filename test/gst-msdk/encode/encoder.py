@@ -122,6 +122,8 @@ class EncoderTest(slash.Test):
 
   def validate_caps(self):
     ifmts = self.caps["fmts"]
+    if self.codec not in ["hevc-8"]:
+      ifmts = list(set(ifmts) - set(["AYUV"]))
 
     self.hwformat = map_best_hw_format(self.format, ifmts)
     self.mformat  = mapformat(self.format)
