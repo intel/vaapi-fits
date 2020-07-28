@@ -32,3 +32,6 @@ def match_best_format(fmt, choices):
   if len(matches) == 0:
     return None
   return list(matches)[0]
+
+def get_bit_depth(fmt):
+  return subsampling[fmt][1]
