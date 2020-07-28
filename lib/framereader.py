@@ -85,8 +85,8 @@ def read_frame_P010(fd, width, height):
   size    = width * height
   size2   = width2 * height2 * 2
 
-  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width))
-  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2)
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width)) >> 6
+  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2) >> 6
 
   return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
 
@@ -96,9 +96,9 @@ def read_frame_I010(fd, width, height):
   size    = width * height
   size2   = width2 * height2
 
-  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width))
-  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2))
-  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2))
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width)) >> 6
+  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) >> 6
+  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) >> 6
 
   return y, u, v
 
@@ -108,8 +108,8 @@ def read_frame_P012(fd, width, height):
   size    = width * height
   size2   = width2 * height2 * 2
 
-  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width))
-  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2)
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width)) >> 4
+  uv = numpy.fromfile(fd, dtype=numpy.uint16, count=size2) >> 4
 
   return y, uv[0::2].reshape((height2, width2)), uv[1::2].reshape((height2, width2))
 
@@ -189,12 +189,12 @@ def read_frame_Y210(fd, width, height):
   #data:  valid data  ...       0 0 0 0 0 0
   size    = width * height * 2
 
-  y210 = numpy.fromfile(fd, dtype=numpy.uint16, count=size)
+  y210 = numpy.fromfile(fd, dtype=numpy.uint16, count=size) >> 6
   # frames with odd width and height produce an odd number of bytes
   # in uv components and therefore cannot be effectively reshaped
-  y  = y210[0::2].reshape((height, width)) & 0xffc0
-  u  = y210[1::4] & 0xffc0
-  v  = y210[3::4] & 0xffc0
+  y  = y210[0::2].reshape((height, width))
+  u  = y210[1::4]
+  v  = y210[3::4]
 
   return y, u, v
 
@@ -207,13 +207,13 @@ def read_frame_Y212(fd, width, height):
   #V  bit[63:48]
   size    = width * height * 2
 
-  y212 = numpy.fromfile(fd, dtype=numpy.uint16, count=size)
+  y212 = numpy.fromfile(fd, dtype=numpy.uint16, count=size) >> 4
   #bit 0-15
-  y = y212[0::2].reshape((height, width)) & 0xfff0
+  y = y212[0::2].reshape((height, width))
   #bit 16-31
-  u = y212[1::4] & 0xfff0
+  u = y212[1::4]
   #bit 32-47
-  v = y212[3::4] & 0xfff0
+  v = y212[3::4]
 
   return y, u, v
 
@@ -226,11 +226,11 @@ def read_frame_Y410(fd, width, height):
   #A bit[31:30]
   y410 = numpy.fromfile(fd, dtype=numpy.uint32, count=width*height)
   #bit 0-9
-  u = (y410 & 0x3ff).reshape((height, width))
+  u = (y410 & 0x3ff).reshape((height, width)).astype(numpy.uint16)
   #bit 10-19
-  y = ((y410 >> 10) & 0x3ff).reshape((height, width))
+  y = ((y410 >> 10) & 0x3ff).reshape((height, width)).astype(numpy.uint16)
   #bit 20-30
-  v = ((y410 >> 20) & 0x3ff).reshape((height, width))
+  v = ((y410 >> 20) & 0x3ff).reshape((height, width)).astype(numpy.uint16)
 
   return y, u, v
 

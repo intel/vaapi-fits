@@ -95,10 +95,10 @@ def test_frame_reader_Y210(width, height):
   with open(testfile, "rb") as fd:
     y, u, v = read_frame_Y210(fd, width, height)
 
-    y0f = lambda val: val == oy0
-    uf  = lambda val: val == ou
-    y1f = lambda val: val == oy1
-    vf  = lambda val: val == ov
+    y0f = lambda val: val == (oy0 >> 6)
+    uf  = lambda val: val == (ou >> 6)
+    y1f = lambda val: val == (oy1 >> 6)
+    vf  = lambda val: val == (ov >> 6)
 
     y_fd = y.reshape(1, y.size)
     y0_fd = y_fd[:,0::2]
