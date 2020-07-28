@@ -143,33 +143,43 @@ class RawMetricAggregator:
         self.__append(compare, ((y1, y2), (u1, u2), (v1, v2)))
     return self.__get()
 
-def __compare_ssim(planes):
+class MetricWithDataRange:
+  def __init__(self, func, fourcc):
+    self.func = func
+    self.data_range = None
+    if fourcc in ["Y410"]:
+      self.data_range = 0x3ff
+
+  def __call__(self, planes):
+    return self.func(planes, self.data_range)
+
+def __compare_ssim(planes, data_range = None):
   a, b = planes
   if a is None or b is None: # handle Y800 case
     return 1.0
-  return skimage_ssim(a, b, win_size = 3)
+  return skimage_ssim(a, b, win_size = 3, data_range = data_range)
 
 @timefn("ssim")
 def calculate_ssim(filename1, filename2, width, height, nframes = 1, fourcc = "I420", fourcc2 = None):
   return RawMetricAggregator(min).calculate(
     RawFile(filename1, width, height, nframes, fourcc),
     RawFile(filename2, width, height, nframes, fourcc2 or fourcc),
-    nframes, __compare_ssim)
+    nframes, MetricWithDataRange(__compare_ssim, fourcc))
 
-def __compare_psnr(planes):
+def __compare_psnr(planes, data_range = None):
   a, b = planes
   if (a == b).all():
     # Avoid "Warning: divide by zero encountered in double_scalars" generated
     # by skimage.measure.compare_psnr when a and b are exactly the same.
     return 100
-  return skimage_psnr(a, b)
+  return skimage_psnr(a, b, data_range = data_range)
 
 @timefn("psnr")
 def calculate_psnr(filename1, filename2, width, height, nframes = 1, fourcc = "I420"):
   return RawMetricAggregator(min).calculate(
     RawFile(filename1, width, height, nframes, fourcc),
     RawFile(filename2, width, height, nframes, fourcc),
-    nframes, __compare_psnr)
+    nframes, MetricWithDataRange(__compare_psnr, fourcc))
 
 def __compare_mse(planes):
   a, b = planes
