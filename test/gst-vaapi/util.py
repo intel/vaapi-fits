@@ -99,6 +99,7 @@ def mapprofile(codec, profile):
     },
     "hevc-10"  : {
       "main10"                : "main-10",
+      "main444-10"            : "main-444-10",
     },
   }.get(codec, {}).get(profile, None)
 
