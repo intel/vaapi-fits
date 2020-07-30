@@ -34,4 +34,6 @@ def match_best_format(fmt, choices):
   return list(matches)[0]
 
 def get_bit_depth(fmt):
+  if fmt in ["BGRA", "ARGB"]:
+    return 8
   return subsampling[fmt][1]
