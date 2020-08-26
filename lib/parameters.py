@@ -115,6 +115,23 @@ def gen_avc_vbr_parameters(spec, profiles):
   params = gen_avc_vbr_variants(spec, profiles)
   return keys, params
 
+def gen_hevc_vbr_quality_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("vbr", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["bframes"],
+          variant.get("fps", 30), variant.get("quality", 4),
+          variant.get("refs", 1), profile
+        ]
+
+def gen_hevc_vbr_quality_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "fps", "quality", "refs", "profile")
+  params = gen_hevc_vbr_quality_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_cqp_lp_variants(spec, profiles):
   for case, params in spec.items():
     for variant in copy.deepcopy(params.get("cqp_lp", [])):

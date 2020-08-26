@@ -77,6 +77,15 @@ class Baseline:
       context = context,
       md5 = md5)
 
+  def check_bdrate(self, bdrate, expect = None, context = []):
+    def compare(k, ref, actual):
+      assert ref == actual
+    self.check_result(
+      compare = compare,
+      reference = None if expect is None else {"bdrate" : expect},
+      context = context,
+      bdrate = bdrate)
+
   def finalize(self):
     if self.rebase:
       # expanded reference files by default
