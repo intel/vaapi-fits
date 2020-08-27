@@ -249,27 +249,20 @@ class EncoderTest(slash.Test):
     )
 
   def check_bitrate(self):
-    if "cbr" == self.rcmode:
-      encsize = os.path.getsize(self.encoded)
-      bitrate_actual = encsize * 8 * self.fps / 1024.0 / self.frames
-      bitrate_gap = abs(bitrate_actual - self.bitrate) / self.bitrate
+    encsize = os.path.getsize(self.encoded)
+    bitrate_actual = encsize * 8 * vars(self).get("fps", 25) / 1024.0 / self.frames
+    get_media()._set_test_details(
+      size_encoded = encsize,
+      bitrate_actual = "{:-.2f}".format(bitrate_actual))
 
-      get_media()._set_test_details(
-        size_encoded = encsize,
-        bitrate_actual = "{:-.2f}".format(bitrate_actual),
-        bitrate_gap = "{:.2%}".format(bitrate_gap))
+    if "cbr" == self.rcmode:
+      bitrate_gap = abs(bitrate_actual - self.bitrate) / self.bitrate
+      get_media()._set_test_details(bitrate_gap = "{:.2%}".format(bitrate_gap))
 
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
     elif "vbr" == self.rcmode:
-      encsize = os.path.getsize(self.encoded)
-      bitrate_actual = encsize * 8 * self.fps / 1024.0 / self.frames
-
-      get_media()._set_test_details(
-        size_encoded = encsize,
-        bitrate_actual = "{:-.2f}".format(bitrate_actual))
-
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
