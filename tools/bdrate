@@ -1,0 +1,130 @@
+#!/usr/bin/env python3
+
+###
+### Copyright (C) 2020 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+import argparse
+import ast
+import sys
+import xml.etree.cElementTree as et
+
+# HINT: sudo pip3 install bd-metric
+from bd_metric.bjontegaard_metric import *
+
+def parseArgs():
+  parser = argparse.ArgumentParser()
+
+  parser.add_argument(
+    'results',
+    metavar = '<xmlfile>',
+    type = str,
+    nargs = 2,
+    help = "An xml test result file.  The first file is the reference.",
+  )
+
+  parser.add_argument(
+    '-a', '--aggregates',
+    dest = "aggvars",
+    type = str,
+    default = "bitrate,qp",
+    metavar = "VAR[,VAR]",
+    help = "The list of test param names that are aggregated together [default: %(default)s]",
+  )
+
+  parser.add_argument(
+    '--show-points',
+    action = "store_true",
+    help = "Show the (bitrate, psnr) data points used to compute the bdrate",
+  )
+
+  return parser.parse_args()
+
+def aggregate(root):
+  global aggvars
+
+  result = dict()
+  for testcase in root:
+    if testcase.get("skipped", 0) == "1":
+      continue
+
+    # get the test classname without middleware info
+    # e.g. full.test.ffmpeg-qsv.encode.hevc -> encode.hevc
+    classname = '.'.join(testcase.get("classname").split('.')[3:])
+
+    # split the testcase name into test and params
+    test, params = testcase.get("name").rstrip(')').split('(')
+
+    # split the params string into a dict
+    params = dict(kv.split('=') for kv in params.split(','))
+
+    # build the fixed params list (without the aggvars)
+    fixed = '.'.join('='.join((k,v)) for k,v in params.items() if k not in aggvars)
+
+    # build the aggregate test name
+    aggname = '.'.join([classname, test, fixed])
+
+    # find bitrate and psnr details
+    bitrate = psnr = None
+    for detail in testcase.findall("./detail"):
+      if detail.get("name") == "bitrate_actual":
+        assert bitrate is None # bitrate_actual detail should only exist once
+        bitrate = ast.literal_eval(detail.get("value"))
+      elif detail.get("name").endswith("psnr:actual"):
+        assert psnr is None # psnr:actual detail should only exist once
+        psnr = ast.literal_eval(detail.get("value"))[3]
+
+    # No data found, skip
+    if psnr is None or bitrate is None: continue
+
+    # append the bitrate and psnr to the fixed aggregate
+    result.setdefault(aggname, list()).append((bitrate, psnr))
+
+  return result
+
+args = parseArgs()
+aggvars = args.aggvars.split(',')
+
+aggA = aggregate(et.parse(sys.argv[1]).getroot())
+aggB = aggregate(et.parse(sys.argv[2]).getroot())
+
+for agg, points in aggA.items():
+  pointsA = sorted(points)
+  pointsB = sorted(aggB.get(agg, list()))
+
+  print()
+  print(agg)
+
+  if len(pointsB) == 0 or len(pointsA) == 0:
+    print("\tDataset missing")
+    continue
+
+  if len(pointsA) < 4 or len(pointsB) < 4:
+    print("\tDataset too small", len(pointsA), len(pointsB))
+    continue
+
+  if args.show_points:
+    print("\t", "Points A:", pointsA)
+    print("\t", "Points B:", pointsB)
+
+  result = BD_RATE(
+    [v[0] for v in pointsA],
+    [v[1] for v in pointsA],
+    [v[0] for v in pointsB],
+    [v[1] for v in pointsB],
+  )
+
+  print("\t", "BD_RATE:", "{:.4f}".format(result))
+
+  result = BD_PSNR(
+    [v[0] for v in pointsA],
+    [v[1] for v in pointsA],
+    [v[0] for v in pointsB],
+    [v[1] for v in pointsB],
+  )
+
+  print("\t", "BD_PSNR:", "{:.4f}".format(result))
+
+
