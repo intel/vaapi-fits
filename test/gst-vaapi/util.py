@@ -32,6 +32,7 @@ def get_supported_format_map():
     "422H"  : ("y42b", "Y42B"),
     "444P"  : ("y444", "Y444"),
     "P010"  : ("p010-10le", "P010_10LE"),
+    "P012"  : ("p012-le", "P012_LE"),
     "I010"  : ("i420-10le", "I420_10LE"),
     "Y210"  : ("y210", "Y210"),
     "Y410"  : ("y410", "Y410"),
@@ -100,6 +101,9 @@ def mapprofile(codec, profile):
     "hevc-10"  : {
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
+    },
+    "hevc-12" : {
+      "main12"                : "main-12",
     },
   }.get(codec, {}).get(profile, None)
 
