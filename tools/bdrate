@@ -209,17 +209,6 @@ for agg, points in aggA.items():
 
   failures += refs.check(test, agg, "bd-rate", result)
 
-  result = BD_PSNR(
-    [v[0] for v in pointsA],
-    [v[1] for v in pointsA],
-    [v[0] for v in pointsB],
-    [v[1] for v in pointsB],
-  )
-
-  print("\t", "BD_PSNR:", "{:.4f}".format(result))
-
-  et.SubElement(case, "bd-psnr").text = str(result)
-
 suite.set("tests", str(tests))
 suite.set("errors", str(errors))
 suite.set("failures", str(failures))
