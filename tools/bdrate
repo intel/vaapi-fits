@@ -8,6 +8,7 @@
 
 import argparse
 import ast
+import json
 import os
 import sys
 import xml.etree.cElementTree as et
@@ -55,12 +56,46 @@ def parseArgs():
   )
 
   parser.add_argument(
+    '--ref',
+    type = str,
+    default = "bdrate-ref.json",
+  )
+
+  parser.add_argument(
+    '--rebase',
+    action = "store_true",
+    default = False,
+  )
+
+  parser.add_argument(
     '--show-points',
     action = "store_true",
     help = "Show the (bitrate, psnr) data points used to compute the bdrate",
   )
 
   return parser.parse_args()
+
+class Refs:
+  def __init__(self, filename, rebase = False):
+    self.filename = filename
+    self.references = dict()
+    self.rebase = rebase
+
+    if os.path.exists(self.filename):
+      with open(self.filename, "r") as fd:
+        self.references = json.load(fd)
+
+  def check(self, compare, addr, key, value):
+    reference = self.references.setdefault(addr, dict())
+    if self.rebase:
+      reference[key] = value
+    ref = reference.get(key, None)
+    return compare(ref, value)
+
+  def finalize(self):
+    if self.rebase:
+      with open(self.filename, "w+") as fd:
+        json.dump(self.references, fd, indent = 2, sort_keys = True)
 
 def aggregate(root, filters):
   global aggvars
@@ -110,6 +145,8 @@ def aggregate(root, filters):
 args = parseArgs()
 aggvars = args.aggvars.split(',')
 
+refs = Refs(args.ref, args.rebase)
+
 aggA = aggregate(et.parse(sys.argv[1]).getroot(), args.afilters)
 aggB = aggregate(et.parse(sys.argv[2]).getroot(), args.bfilters)
 
@@ -134,8 +171,8 @@ for agg, points in aggA.items():
   print()
   print(agg)
 
-  et.SubElement(case, "points-a").text = str(pointsA)
-  et.SubElement(case, "points-b").text = str(pointsB)
+  et.SubElement(case, "detail", name = "points-a", value = str(pointsA))
+  et.SubElement(case, "detail", name = "points-b", value = str(pointsB))
 
   if len(pointsB) == 0 or len(pointsA) == 0:
     print("\tDataset missing")
@@ -159,10 +196,18 @@ for agg, points in aggA.items():
     [v[0] for v in pointsB],
     [v[1] for v in pointsB],
   )
+  print("\t", "bd-rate:actual", "{:.4f}".format(result))
+  et.SubElement(case, "detail", name = "bd-rate:actual", value = str(result))
 
-  print("\t", "BD_RATE:", "{:.4f}".format(result))
+  def test(ref, val):
+    print("\t", "bd-rate:expect", ref if ref is None else "{:.4f}".format(ref))
+    et.SubElement(case, "detail", name = "bd-rate:expect", value = str(ref))
+    if ref is None or abs(ref - val) > 3:
+      et.SubElement(case, "failure", type = "failure", message = "bd-rate change > 3%")
+      return 1
+    return 0
 
-  et.SubElement(case, "bd-rate").text = str(result)
+  failures += refs.check(test, agg, "bd-rate", result)
 
   result = BD_PSNR(
     [v[0] for v in pointsA],
@@ -182,3 +227,5 @@ suite.set("skipped", str(skipped))
 tree = et.ElementTree(suite)
 filename = os.path.join("bdrate-results.xml")
 tree.write(filename)
+
+refs.finalize()
