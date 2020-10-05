@@ -8,11 +8,12 @@
 
 import argparse
 import ast
+import os
 import sys
 import xml.etree.cElementTree as et
 
-# HINT: sudo pip3 install bd-metric
-from bd_metric.bjontegaard_metric import *
+from bd_metric.bjontegaard_metric import * # HINT: sudo pip3 install bd-metric
+from datetime import datetime as dt
 
 def parseArgs():
   parser = argparse.ArgumentParser()
@@ -64,7 +65,7 @@ def aggregate(root):
     fixed = '.'.join('='.join((k,v)) for k,v in params.items() if k not in aggvars)
 
     # build the aggregate test name
-    aggname = '.'.join([classname, test, fixed])
+    aggname = ':'.join([classname, test, fixed])
 
     # find bitrate and psnr details
     bitrate = psnr = None
@@ -90,19 +91,40 @@ aggvars = args.aggvars.split(',')
 aggA = aggregate(et.parse(sys.argv[1]).getroot())
 aggB = aggregate(et.parse(sys.argv[2]).getroot())
 
+tests = 0
+errors = 0
+failures = 0
+skipped = 0
+
+suite = et.Element("testsuite", name = "bdrate", time = "0", timestamp = dt.now().isoformat())
+
 for agg, points in aggA.items():
+  tests += 1
+
+  classname, test, fixed = agg.split(':')
+  case = et.SubElement(
+    suite, "testcase", name = ':'.join([test, fixed]), classname = classname,
+    time = "0")
+
   pointsA = sorted(points)
   pointsB = sorted(aggB.get(agg, list()))
 
   print()
   print(agg)
 
+  et.SubElement(case, "points-a").text = str(pointsA)
+  et.SubElement(case, "points-b").text = str(pointsB)
+
   if len(pointsB) == 0 or len(pointsA) == 0:
     print("\tDataset missing")
+    errors += 1
+    et.SubElement(case, "error", type = "error", message = "Dataset missing")
     continue
 
   if len(pointsA) < 4 or len(pointsB) < 4:
     print("\tDataset too small", len(pointsA), len(pointsB))
+    errors += 1
+    et.SubElement(case, "error", type = "error", message = "Dataset too small")
     continue
 
   if args.show_points:
@@ -118,6 +140,8 @@ for agg, points in aggA.items():
 
   print("\t", "BD_RATE:", "{:.4f}".format(result))
 
+  et.SubElement(case, "bd-rate").text = str(result)
+
   result = BD_PSNR(
     [v[0] for v in pointsA],
     [v[1] for v in pointsA],
@@ -127,4 +151,12 @@ for agg, points in aggA.items():
 
   print("\t", "BD_PSNR:", "{:.4f}".format(result))
 
+  et.SubElement(case, "bd-psnr").text = str(result)
 
+suite.set("tests", str(tests))
+suite.set("errors", str(errors))
+suite.set("failures", str(failures))
+suite.set("skipped", str(skipped))
+tree = et.ElementTree(suite)
+filename = os.path.join("bdrate-results.xml")
+tree.write(filename)
