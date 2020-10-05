@@ -14,6 +14,8 @@ import xml.etree.cElementTree as et
 # HINT: sudo pip3 install bd-metric
 from bd_metric.bjontegaard_metric import *
 
+from slash.utils.pattern_matching import Matcher
+
 def parseArgs():
   parser = argparse.ArgumentParser()
 
@@ -32,6 +34,15 @@ def parseArgs():
     default = "bitrate,qp",
     metavar = "VAR[,VAR]",
     help = "The list of test param names that are aggregated together [default: %(default)s]",
+  )
+
+  parser.add_argument(
+    '-k',
+    dest = "filters",
+    type = Matcher,
+    action = "append",
+    default = [],
+    metavar = "FILTER",
   )
 
   parser.add_argument(
@@ -91,6 +102,9 @@ aggA = aggregate(et.parse(sys.argv[1]).getroot())
 aggB = aggregate(et.parse(sys.argv[2]).getroot())
 
 for agg, points in aggA.items():
+  if len(args.filters) and not any(f.matches(agg) for f in args.filters):
+    continue
+
   pointsA = sorted(points)
   pointsB = sorted(aggB.get(agg, list()))
 
