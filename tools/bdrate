@@ -14,6 +14,7 @@ import xml.etree.cElementTree as et
 
 from bd_metric.bjontegaard_metric import * # HINT: sudo pip3 install bd-metric
 from datetime import datetime as dt
+from slash.utils.pattern_matching import Matcher
 
 def parseArgs():
   parser = argparse.ArgumentParser()
@@ -36,6 +37,24 @@ def parseArgs():
   )
 
   parser.add_argument(
+    '--afilter',
+    dest = "afilters",
+    type = Matcher,
+    action = "append",
+    default = [],
+    metavar = "FILTER",
+  )
+
+  parser.add_argument(
+    '--bfilter',
+    dest = "bfilters",
+    type = Matcher,
+    action = "append",
+    default = [],
+    metavar = "FILTER",
+  )
+
+  parser.add_argument(
     '--show-points',
     action = "store_true",
     help = "Show the (bitrate, psnr) data points used to compute the bdrate",
@@ -43,7 +62,7 @@ def parseArgs():
 
   return parser.parse_args()
 
-def aggregate(root):
+def aggregate(root, filters):
   global aggvars
 
   result = dict()
@@ -57,6 +76,9 @@ def aggregate(root):
 
     # split the testcase name into test and params
     test, params = testcase.get("name").rstrip(')').split('(')
+
+    if len(filters) and not any(f.matches(classname) or f.matches(test) or f.matches(params) for f in filters):
+      continue
 
     # split the params string into a dict
     params = dict(kv.split('=') for kv in params.split(','))
@@ -88,8 +110,8 @@ def aggregate(root):
 args = parseArgs()
 aggvars = args.aggvars.split(',')
 
-aggA = aggregate(et.parse(sys.argv[1]).getroot())
-aggB = aggregate(et.parse(sys.argv[2]).getroot())
+aggA = aggregate(et.parse(sys.argv[1]).getroot(), args.afilters)
+aggB = aggregate(et.parse(sys.argv[2]).getroot(), args.bfilters)
 
 tests = 0
 errors = 0
