@@ -137,8 +137,14 @@ def aggregate(root, filters):
     # No data found, skip
     if psnr is None or bitrate is None: continue
 
+    datapoint = {
+      "bitrate:actual"  : bitrate,
+      "ypsnr"           : psnr,
+      "case"            : "{}.{}".format(testcase.get("classname"), testcase.get("name"))
+    }
+
     # append the bitrate and psnr to the fixed aggregate
-    result.setdefault(aggname, list()).append((bitrate, psnr))
+    result.setdefault(aggname, list()).append(datapoint)
 
   return result
 
@@ -157,44 +163,50 @@ skipped = 0
 
 suite = et.Element("testsuite", name = "bdrate", time = "0", timestamp = dt.now().isoformat())
 
-for agg, points in aggA.items():
+for aggname, dsa in aggA.items():
   tests += 1
 
-  classname, test, fixed = agg.split(':')
+  classname, test, fixed = aggname.split(':')
   case = et.SubElement(
     suite, "testcase", name = ':'.join([test, fixed]), classname = classname,
     time = "0")
 
-  pointsA = sorted(points)
-  pointsB = sorted(aggB.get(agg, list()))
+  dsa = sorted(dsa, key = lambda dp: dp["bitrate:actual"])
+  dsb = sorted(aggB.get(aggname, list()), key = lambda dp: dp["bitrate:actual"])
 
   print()
-  print(agg)
+  print(aggname)
 
-  et.SubElement(case, "detail", name = "points-a", value = str(pointsA))
-  et.SubElement(case, "detail", name = "points-b", value = str(pointsB))
+  def log_dataset(dataset):
+    for dp in dataset:
+      p = et.SubElement(case, "datapoint", case = dp["case"])
+      if args.show_points: print("\t", dp["case"])
+      for k,v in dp.items():
+        if k == "case": continue
+        et.SubElement(p, "detail", name = str(k), value = str(v))
+        if args.show_points: print("\t\t", k, v)
+    if args.show_points: print()
 
-  if len(pointsB) == 0 or len(pointsA) == 0:
+  log_dataset(dsa)
+  log_dataset(dsb)
+
+  if len(dsb) == 0 or len(dsa) == 0:
     print("\tDataset missing")
     errors += 1
     et.SubElement(case, "error", type = "error", message = "Dataset missing")
     continue
 
-  if len(pointsA) < 4 or len(pointsB) < 4:
-    print("\tDataset too small", len(pointsA), len(pointsB))
+  if len(dsa) < 4 or len(dsb) < 4:
+    print("\tDataset too small", len(dsa), len(dsb))
     errors += 1
     et.SubElement(case, "error", type = "error", message = "Dataset too small")
     continue
 
-  if args.show_points:
-    print("\t", "Points A:", pointsA)
-    print("\t", "Points B:", pointsB)
-
   result = BD_RATE(
-    [v[0] for v in pointsA],
-    [v[1] for v in pointsA],
-    [v[0] for v in pointsB],
-    [v[1] for v in pointsB],
+    [dp["bitrate:actual"] for dp in dsa],
+    [dp["ypsnr"] for dp in dsa],
+    [dp["bitrate:actual"] for dp in dsb],
+    [dp["ypsnr"] for dp in dsb],
   )
   print("\t", "bd-rate:actual", "{:.4f}".format(result))
   et.SubElement(case, "detail", name = "bd-rate:actual", value = str(result))
@@ -207,7 +219,7 @@ for agg, points in aggA.items():
       return 1
     return 0
 
-  failures += refs.check(test, agg, "bd-rate", result)
+  failures += refs.check(test, aggname, "bd-rate", result)
 
 suite.set("tests", str(tests))
 suite.set("errors", str(errors))
