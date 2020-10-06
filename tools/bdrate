@@ -85,12 +85,11 @@ class Refs:
       with open(self.filename, "r") as fd:
         self.references = json.load(fd)
 
-  def check(self, compare, addr, key, value):
+  def get(self, addr, key, value):
     reference = self.references.setdefault(addr, dict())
     if self.rebase:
       reference[key] = value
-    ref = reference.get(key, None)
-    return compare(ref, value)
+    return reference.get(key, None)
 
   def finalize(self):
     if self.rebase:
@@ -202,24 +201,27 @@ for aggname, dsa in aggA.items():
     et.SubElement(case, "error", type = "error", message = "Dataset too small")
     continue
 
-  result = BD_RATE(
-    [dp["bitrate:actual"] for dp in dsa],
-    [dp["ypsnr"] for dp in dsa],
-    [dp["bitrate:actual"] for dp in dsb],
-    [dp["ypsnr"] for dp in dsb],
-  )
+  ratea = [dp["bitrate:actual"] for dp in dsa]
+  psnra = [dp["ypsnr"] for dp in dsa]
+  rateb = [dp["bitrate:actual"] for dp in dsb]
+  psnrb = [dp["ypsnr"] for dp in dsb]
+
+  result = round(BD_RATE(ratea, psnra, rateb, psnrb), 4)
+
+  refs.get(aggname, "bitrate:a", ratea)
+  refs.get(aggname, "ypsnr:a", psnra)
+  refs.get(aggname, "bitrate:b", rateb)
+  refs.get(aggname, "ypsnr:b", psnrb)
+
   print("\t", "bd-rate:actual", "{:.4f}".format(result))
   et.SubElement(case, "detail", name = "bd-rate:actual", value = str(result))
 
-  def test(ref, val):
-    print("\t", "bd-rate:expect", ref if ref is None else "{:.4f}".format(ref))
-    et.SubElement(case, "detail", name = "bd-rate:expect", value = str(ref))
-    if ref is None or abs(ref - val) > 3:
-      et.SubElement(case, "failure", type = "failure", message = "bd-rate change > 3%")
-      return 1
-    return 0
-
-  failures += refs.check(test, aggname, "bd-rate", result)
+  ref = refs.get(aggname, "bd-rate", result)
+  print("\t", "bd-rate:expect", ref if ref is None else "{:.4f}".format(ref))
+  et.SubElement(case, "detail", name = "bd-rate:expect", value = str(ref))
+  if ref is None or abs(ref - result) > 3:
+    et.SubElement(case, "failure", type = "failure", message = "bd-rate change > 3%")
+    failures += 1
 
 suite.set("tests", str(tests))
 suite.set("errors", str(errors))
