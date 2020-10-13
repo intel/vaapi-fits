@@ -164,6 +164,7 @@ for aggname, dsa in aggA.items():
   tests += 1
 
   classname, test, casename = aggname.split(':')
+  casename = "{}({})({})".format(casename, strfiltersa, strfiltersb)
   case = et.SubElement(
     suite, "testcase", name = ':'.join([test, casename]), classname = classname,
     time = "0")
