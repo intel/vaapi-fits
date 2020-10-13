@@ -85,8 +85,11 @@ class Refs:
       with open(self.filename, "r") as fd:
         self.references = json.load(fd)
 
-  def get(self, addr, key, value):
+  def get(self, addr, key, value, context = []):
     reference = self.references.setdefault(addr, dict())
+    for c in context:
+      reference = reference.setdefault(c, dict())
+
     if self.rebase:
       reference[key] = value
     return reference.get(key, None)
@@ -149,11 +152,18 @@ def aggregate(root, filters):
 
 args = parseArgs()
 aggvars = args.aggvars.split(',')
-
 refs = Refs(args.ref, args.rebase)
+rootA = et.parse(args.results[0]).getroot()
+rootB = et.parse(args.results[1]).getroot()
+aggA = aggregate(rootA, args.afilters)
+aggB = aggregate(rootB, args.bfilters)
+platA = rootA.get("platform", "unknown")
+platB = rootB.get("platform", "unknown")
+drvA = rootA.get("driver", "unknown")
+drvB = rootB.get("driver", "unknown")
 
-aggA = aggregate(et.parse(sys.argv[1]).getroot(), args.afilters)
-aggB = aggregate(et.parse(sys.argv[2]).getroot(), args.bfilters)
+strfiltersa = ','.join(m._matcher.pattern for m in args.afilters)
+strfiltersb = ','.join(m._matcher.pattern for m in args.bfilters)
 
 tests = 0
 errors = 0
@@ -208,15 +218,27 @@ for aggname, dsa in aggA.items():
 
   result = round(BD_RATE(ratea, psnra, rateb, psnrb), 4)
 
-  refs.get(aggname, "bitrate:a", ratea)
-  refs.get(aggname, "ypsnr:a", psnra)
-  refs.get(aggname, "bitrate:b", rateb)
-  refs.get(aggname, "ypsnr:b", psnrb)
+  compA = set(dp["case"].split('.')[2] for dp in dsa)
+  compB = set(dp["case"].split('.')[2] for dp in dsb)
+  assert len(compA) == 1 and len(compB) == 1
+  compA = compA.pop()
+  compB = compB.pop()
+
+  context = [
+    "{}({})::{}({})".format(compA, strfiltersa, compB, strfiltersb),
+    "{}::{}".format(drvA, drvB),
+    "{}::{}".format(platA, platB),
+  ]
+
+  refs.get(aggname, "bitrate:a", ratea, context)
+  refs.get(aggname, "ypsnr:a", psnra, context)
+  refs.get(aggname, "bitrate:b", rateb, context)
+  refs.get(aggname, "ypsnr:b", psnrb, context)
 
   print("\t", "bd-rate:actual", "{:.4f}".format(result))
   et.SubElement(case, "detail", name = "bd-rate:actual", value = str(result))
 
-  ref = refs.get(aggname, "bd-rate", result)
+  ref = refs.get(aggname, "bd-rate", result, context)
   print("\t", "bd-rate:expect", ref if ref is None else "{:.4f}".format(ref))
   et.SubElement(case, "detail", name = "bd-rate:expect", value = str(ref))
   if ref is None or abs(ref - result) > 3:
