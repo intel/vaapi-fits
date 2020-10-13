@@ -29,15 +29,6 @@ def parseArgs():
   )
 
   parser.add_argument(
-    '-a', '--aggregates',
-    dest = "aggvars",
-    type = str,
-    default = "bitrate,qp",
-    metavar = "VAR[,VAR]",
-    help = "The list of test param names that are aggregated together [default: %(default)s]",
-  )
-
-  parser.add_argument(
     '--afilter',
     dest = "afilters",
     type = Matcher,
@@ -100,8 +91,6 @@ class Refs:
         json.dump(self.references, fd, indent = 2, sort_keys = True)
 
 def aggregate(root, filters):
-  global aggvars
-
   result = dict()
   for testcase in root:
     if testcase.get("skipped", 0) == "1":
@@ -120,11 +109,11 @@ def aggregate(root, filters):
     # split the params string into a dict
     params = dict(kv.split('=') for kv in params.split(','))
 
-    # build the fixed params list (without the aggvars)
-    fixed = '.'.join('='.join((k,v)) for k,v in params.items() if k not in aggvars)
+    # aggregate based on case name
+    casename = "{case}".format(**params)
 
     # build the aggregate test name
-    aggname = ':'.join([classname, test, fixed])
+    aggname = ':'.join([classname, test, casename])
 
     # find bitrate and psnr details
     bitrate = psnr = None
@@ -145,13 +134,12 @@ def aggregate(root, filters):
       "case"            : "{}.{}".format(testcase.get("classname"), testcase.get("name"))
     }
 
-    # append the bitrate and psnr to the fixed aggregate
+    # append the bitrate and psnr to the aggregate
     result.setdefault(aggname, list()).append(datapoint)
 
   return result
 
 args = parseArgs()
-aggvars = args.aggvars.split(',')
 refs = Refs(args.ref, args.rebase)
 rootA = et.parse(args.results[0]).getroot()
 rootB = et.parse(args.results[1]).getroot()
@@ -175,9 +163,9 @@ suite = et.Element("testsuite", name = "bdrate", time = "0", timestamp = dt.now(
 for aggname, dsa in aggA.items():
   tests += 1
 
-  classname, test, fixed = aggname.split(':')
+  classname, test, casename = aggname.split(':')
   case = et.SubElement(
-    suite, "testcase", name = ':'.join([test, fixed]), classname = classname,
+    suite, "testcase", name = ':'.join([test, casename]), classname = classname,
     time = "0")
 
   dsa = sorted(dsa, key = lambda dp: dp["bitrate:actual"])
