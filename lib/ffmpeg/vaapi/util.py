@@ -4,8 +4,8 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ...lib.common import memoize, try_call
-from ...lib.formats import match_best_format
+from ....lib.common import memoize, try_call
+from ....lib.formats import match_best_format
 
 @memoize
 def have_ffmpeg():
@@ -60,7 +60,7 @@ def map_best_hw_format(format, hwformats):
 
 @memoize
 def map_deinterlace_method(method):
-  from ...lib import get_media
+  from ....lib import get_media
   return {
     "iHD" : {
       "bob"               : "bob",
@@ -125,7 +125,7 @@ def mapprofile(codec, profile):
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
-  from ...lib import get_media
+  from ....lib import get_media
   import copy
 
   # get copy of general ctx entries
