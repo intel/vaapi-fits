@@ -5,8 +5,8 @@
 ###
 
 from .....lib import *
-from ...util import *
-from ..encoder import EncoderTest
+from .....lib.ffmpeg.vaapi.util import *
+from .....lib.ffmpeg.vaapi.encoder import EncoderTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
 spec_ldb  = load_test_spec("hevc", "encode", "10bit", "ldb") #low delay b 10bit spec support

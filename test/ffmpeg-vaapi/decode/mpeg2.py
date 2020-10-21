@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .decoder import DecoderTest
+from ....lib.ffmpeg.vaapi.util import *
+from ....lib.ffmpeg.vaapi.decoder import DecoderTest
 
 spec = load_test_spec("mpeg2", "decode")
 spec_r2r = load_test_spec("mpeg2", "decode", "r2r")

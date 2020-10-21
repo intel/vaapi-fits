@@ -5,7 +5,7 @@
 ###
 
 from ....lib import *
-from ..util import *
+from .util import *
 
 @slash.requires(have_ffmpeg)
 @slash.requires(have_ffmpeg_vaapi_accel)

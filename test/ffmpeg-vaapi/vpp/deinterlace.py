@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .vpp import VppTest
+from ....lib.ffmpeg.vaapi.util import *
+from ....lib.ffmpeg.vaapi.vpp import VppTest
 
 if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
