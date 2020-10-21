@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .encoder import EncoderTest
+from ....lib.ffmpeg.qsv.util import *
+from ....lib.ffmpeg.qsv.encoder import EncoderTest
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")

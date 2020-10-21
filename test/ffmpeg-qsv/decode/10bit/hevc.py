@@ -5,8 +5,8 @@
 ###
 
 from .....lib import *
-from ...util import *
-from ..decoder import DecoderTest
+from .....lib.ffmpeg.qsv.util import *
+from .....lib.ffmpeg.qsv.decoder import DecoderTest
 
 spec = load_test_spec("hevc", "decode", "10bit")
 

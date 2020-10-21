@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .transcoder import TranscoderTest
+from ....lib.ffmpeg.qsv.util import *
+from ....lib.ffmpeg.qsv.transcoder import TranscoderTest
 
 spec = load_test_spec("mpeg2", "transcode")
 

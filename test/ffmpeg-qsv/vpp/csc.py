@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .vpp import VppTest
+from ....lib.ffmpeg.qsv.util import *
+from ....lib.ffmpeg.qsv.vpp import VppTest
 
 spec = load_test_spec("vpp", "csc")
 
