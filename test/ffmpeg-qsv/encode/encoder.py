@@ -100,7 +100,8 @@ class EncoderTest(slash.Test):
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
       "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-      " -v verbose {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
+      " -hwaccel_output_format qsv -v verbose"
+      " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
     self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
