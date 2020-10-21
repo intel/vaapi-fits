@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .encoder import EncoderTest
+from ....lib.gstreamer.vaapi.util import *
+from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")

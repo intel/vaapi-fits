@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .transcoder import TranscoderTest
+from ....lib.gstreamer.vaapi.util import *
+from ....lib.gstreamer.vaapi.transcoder import TranscoderTest
 
 spec = load_test_spec("avc", "transcode")
 

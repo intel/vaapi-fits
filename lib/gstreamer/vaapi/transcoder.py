@@ -5,7 +5,7 @@
 ###
 
 from ....lib import *
-from ..util import *
+from .util import *
 import os
 
 @slash.requires(have_gst)
