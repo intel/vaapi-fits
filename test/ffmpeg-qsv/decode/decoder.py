@@ -18,7 +18,7 @@ class DecoderTest(slash.Test):
   def call_ffmpeg(self):
     self.output = call(
       "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-      " -v verbose -c:v {ffdecoder} -i {source}"
+      " -hwaccel_output_format qsv -v verbose -c:v {ffdecoder} -i {source}"
       " -vf 'hwdownload,format={hwformat}'"
       " -pix_fmt {mformat} -f rawvideo -vsync passthrough"
       " -autoscale 0 -vframes {frames} -y {decoded}".format(**vars(self)))
