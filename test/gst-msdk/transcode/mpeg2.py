@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .transcoder import TranscoderTest
+from ....lib.gstreamer.msdk.util import *
+from ....lib.gstreamer.msdk.transcoder import TranscoderTest
 
 spec = load_test_spec("mpeg2", "transcode")
 

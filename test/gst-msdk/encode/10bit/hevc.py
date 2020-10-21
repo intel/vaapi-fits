@@ -5,8 +5,8 @@
 ###
 
 from .....lib import *
-from ...util import *
-from ..encoder import EncoderTest
+from .....lib.gstreamer.msdk.util import *
+from .....lib.gstreamer.msdk.encoder import EncoderTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")

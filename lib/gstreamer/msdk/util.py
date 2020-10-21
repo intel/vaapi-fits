@@ -4,8 +4,8 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ...lib.common import memoize, try_call, get_media
-from ...lib.formats import match_best_format
+from ....lib.common import memoize, try_call, get_media
+from ....lib.formats import match_best_format
 
 def using_compatible_driver():
   return get_media()._get_driver_name() == "iHD"
@@ -114,7 +114,7 @@ def mapprofile(codec,profile):
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
-  from ...lib import get_media
+  from ....lib import get_media
   import copy
 
   # get copy of general ctx entries
