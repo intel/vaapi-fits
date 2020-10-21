@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .decoder import DecoderTest
+from ....lib.gstreamer.vaapi.util import *
+from ....lib.gstreamer.vaapi.decoder import DecoderTest
 
 spec = load_test_spec("vp9", "decode", "8bit")
 

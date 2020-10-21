@@ -5,7 +5,7 @@
 ###
 
 from ....lib import *
-from ..util import *
+from .util import *
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("vaapi"))
