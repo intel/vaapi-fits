@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .decoder import DecoderTest
+from ....lib.gstreamer.msdk.util import *
+from ....lib.gstreamer.msdk.decoder import DecoderTest
 
 spec = load_test_spec("jpeg", "decode")
 spec_r2r = load_test_spec("jpeg", "decode", "r2r")

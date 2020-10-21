@@ -5,8 +5,8 @@
 ###
 
 from ....lib import *
-from ..util import *
-from .vpp import VppTest
+from ....lib.gstreamer.msdk.util import *
+from ....lib.gstreamer.msdk.vpp import VppTest
 
 spec = load_test_spec("vpp", "mirroring")
 
