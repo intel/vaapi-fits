@@ -72,6 +72,8 @@ class EncoderTest(slash.Test):
       name += "-{fps}"
     if vars(self).get("gop", None) is not None:
       name += "-{gop}"
+    if vars(self).get("extbrc", None) is not None:
+      name += "-extbrc{extbrc}"
     if vars(self).get("qp", None) is not None:
       name += "-{qp}"
     if vars(self).get("slices", None) is not None:
