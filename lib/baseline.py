@@ -47,6 +47,14 @@ class Baseline:
       reference = reference.setdefault(c, dict())
     return reference
 
+  def update_reference(self, context = [], **kwargs):
+    reference = self.__get_reference(context)
+    reference.update(**kwargs)
+    econtext = list(get_media()._expand_context(context))
+    for key, val in kwargs.items():
+      strkey = '.'.join(econtext + [key])
+      get_media()._set_test_details(**{strkey:val})
+
   def check_result(self, compare, reference = None, context = [], **kwargs):
     if reference is None:
       reference = self.__get_reference(context)
