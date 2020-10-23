@@ -30,6 +30,8 @@ class EncoderTest(slash.Test):
 
     if vars(self).get("gop", None) is not None:
       opts += " -g {gop}"
+    if vars(self).get("extbrc", None) is not None:
+      opts += " -extbrc {extbrc}"
     if vars(self).get("qp", None) is not None:
       if self.codec in ["mpeg2"]:
         opts += " -q {mqp}"
