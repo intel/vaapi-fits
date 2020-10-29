@@ -105,6 +105,9 @@ def mapprofile(codec, profile):
     "hevc-12" : {
       "main12"                : "main-12",
     },
+    "vp9-12" : {
+      "profile3"              : "profile3",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
