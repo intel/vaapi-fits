@@ -119,6 +119,9 @@ def mapprofile(codec, profile):
     "vp9"      : {
       "profile0"              : "profile0",
     },
+    "vp9-12"      : {
+      "profile3"              : "profile3",
+    },
     "av1-8"   : {
       "main"                  : "main",
     },
