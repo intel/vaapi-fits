@@ -68,7 +68,14 @@ class Baseline:
       strkey = '.'.join(econtext + [key])
       get_media()._set_test_details(**{"{}:expect".format(strkey):refval})
       get_media()._set_test_details(**{"{}:actual".format(strkey):val})
-      compare(key, refval, val)
+      try:
+        compare(key, refval, val)
+        compareSuccess = True
+      except:
+        compareSuccess = False
+        raise
+      finally:
+        get_media()._set_test_details(**{"{}:success".format(strkey):compareSuccess})
 
   def check_psnr(self, psnr, context = []):
     def compare(k, ref, actual):
