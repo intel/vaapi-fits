@@ -54,11 +54,11 @@ class TranscoderTest(slash.Test):
         hw = (platform.get_caps("encode", "avc"), have_gst_element("msdkh264enc"), "msdkh264enc ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("vme_lowdelayb", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
