@@ -53,11 +53,11 @@ class TranscoderTest(slash.Test):
         hw = (platform.get_caps("encode", "avc"), have_gst_element("vaapih264enc"), "vaapih264enc ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element("vaapih265enc"), "vaapih265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("vme_lowdelayb", "hevc_8"), have_gst_element("vaapih265enc"), "vaapih265enc tune=none low-delay-b=1 ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
@@ -200,7 +200,7 @@ class TranscoderTest(slash.Test):
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
-    opts += " ! videoconvert dither=0 ! video/x-raw,format=I420"
+    opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420"
     opts += " ! checksumsink2 file-checksum=false qos=false"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
     opts += " dump-location={srcyuv}"
@@ -228,7 +228,7 @@ class TranscoderTest(slash.Test):
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
         iopts = "filesrc location={} ! {}"
-        oopts =  "{} ! videoconvert dither=0 ! video/x-raw,format=I420"
+        oopts =  "{} ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420"
         oopts += " ! checksumsink2 file-checksum=false qos=false"
         oopts += " frame-checksum=false plane-checksum=false dump-output=true"
         oopts += " dump-location={}"

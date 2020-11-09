@@ -26,7 +26,7 @@ class VppTest(slash.Test):
 
     if self.vpp_element not in ["csc", "deinterlace"]:
       if self.ifmt != self.ihwformat:
-        opts += " ! videoconvert dither=0 ! video/x-raw,format={ihwformat}"
+        opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={ihwformat}"
 
     return opts
 
@@ -61,7 +61,7 @@ class VppTest(slash.Test):
         opts += ",width={width},height={height}"
 
       if self.ofmt != self.ohwformat:
-        opts += " ! videoconvert dither=0 ! video/x-raw,format={mformatu}"
+        opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu}"
     else:
       opts += " ! video/x-raw,format={ohwformat}"
 
