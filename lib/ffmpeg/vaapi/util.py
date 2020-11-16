@@ -45,6 +45,7 @@ def get_supported_format_map():
     "ARGB"  : "rgb32",
     "BGRA"  : "bgra",
     "Y210"  : "y210",
+    "Y212"  : "y212",
     "Y410"  : "y410",
     "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
   }
