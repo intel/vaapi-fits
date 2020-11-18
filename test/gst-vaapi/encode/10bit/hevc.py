@@ -9,7 +9,6 @@ from .....lib.gstreamer.vaapi.util import *
 from .....lib.gstreamer.vaapi.encoder import EncoderTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
-spec_ldb  = load_test_spec("hevc", "encode", "10bit", "ldb") #low delay b 10bit spec support
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
 
 class HEVC10EncoderTest(EncoderTest):
@@ -67,7 +66,6 @@ class cqp_lp(HEVC10EncoderTest):
       gop       = gop,
       qp        = qp,
       lowpower  = True,
-      lowdelayb = 1,
       quality   = quality,
       profile   = profile,
       rcmode    = "cqp",
@@ -88,31 +86,6 @@ class cqp_lp(HEVC10EncoderTest):
   def test_r2r(self, case, gop, slices, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
-    self.encode()
-
-#hevc 10bit VME Low delay b cqp encode
-class cqp_ldb(HEVC10EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
-    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
-    vars(self).update(tspec[case].copy())
-    vars(self).update(
-      bframes = bframes,
-      case         = case,
-      gop          = gop,
-      qp           = qp,
-      lowdelayb    = 1,
-      quality      = quality,
-      profile      = profile,
-      rcmode       = "cqp",
-      slices       = slices,
-    )
-
-  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
-  @slash.requires(*have_gst_element("vaapih265enc"))
-  @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_cqp_ldb_parameters(spec_ldb, ['main10']))
-  def test(self, case, gop, slices, bframes, qp, quality, profile):
-    self.init(spec_ldb, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
 class cbr(HEVC10EncoderTest):
@@ -158,7 +131,6 @@ class cbr_lp(HEVC10EncoderTest):
       fps       = fps,
       gop       = gop,
       lowpower  = True,
-      lowdelayb = 1,
       maxrate   = bitrate,
       minrate   = bitrate,
       profile   = profile,
@@ -180,33 +152,6 @@ class cbr_lp(HEVC10EncoderTest):
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, profile)
     vars(self).setdefault("r2r", 5)
-    self.encode()
-
-#hevc 8bit vme low delay b encode cbr encode
-class cbr_ldb(HEVC10EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
-    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
-    vars(self).update(tspec[case].copy())
-    vars(self).update(
-      bframes      = bframes,
-      bitrate      = bitrate,
-      case         = case,
-      fps          = fps,
-      gop          = gop,
-      lowdelayb    = 1,
-      maxrate      = bitrate,
-      minrate      = bitrate,
-      profile      = profile,
-      rcmode       = "cbr",
-      slices       = slices,
-    )
-
-  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
-  @slash.requires(*have_gst_element("vaapih265enc"))
-  @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_cbr_ldb_parameters(spec_ldb, ['main10']))
-  def test(self, case, gop, slices, bframes, bitrate, fps, profile):
-    self.init(spec_ldb, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
 class vbr(HEVC10EncoderTest):
@@ -256,7 +201,6 @@ class vbr_lp(HEVC10EncoderTest):
       fps       = fps,
       gop       = gop,
       lowpower  = True,
-      lowdelayb = 1,
       ## target percentage 70% (hard-coded in gst-vaapi)
       ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
       maxrate   = int(bitrate / 0.7),
@@ -282,35 +226,4 @@ class vbr_lp(HEVC10EncoderTest):
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
-    self.encode()
-
-#hevc 10bit vme low delay b vbr encode
-class vbr_ldb(HEVC10EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.caps = platform.get_caps("vme_lowdelayb", "hevc_10")
-    vars(self).update(tspec[case].copy())
-    vars(self).update(
-      bframes      = bframes,
-      bitrate      = bitrate,
-      case         = case,
-      fps          = fps,
-      gop          = gop,
-      lowdelayb    = 1,
-      ## target percentage 70% (hard-coded in gst-vaapi)
-      ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
-      maxrate      = int(bitrate / 0.7),
-      minrate      = bitrate,
-      profile      = profile,
-      quality      = quality,
-      rcmode       = "vbr",
-      refs         = refs,
-      slices       = slices,
-    )
-
-  @slash.requires(*platform.have_caps("vme_lowdelayb", "hevc_10"))
-  @slash.requires(*have_gst_element("vaapih265enc"))
-  @slash.requires(*have_gst_element("vaapih265dec"))
-  @slash.parametrize(*gen_hevc_vbr_ldb_parameters(spec_ldb, ['main10']))
-  def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.init(spec_ldb, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()

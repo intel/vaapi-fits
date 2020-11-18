@@ -22,10 +22,6 @@ class TranscoderTest(slash.Test):
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_decoder("hevc"), "hevc"),
         hw = (platform.get_caps("decode", "hevc_8"), have_ffmpeg_decoder("hevc"), "hevc"),
       ),
-      "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_ffmpeg_decoder("hevc"), "hevc"),
-        hw = (platform.get_caps("decode", "hevc_8"), have_ffmpeg_decoder("hevc"), "hevc"),
-      ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
         hw = (platform.get_caps("decode", "mpeg2"), have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
@@ -47,10 +43,6 @@ class TranscoderTest(slash.Test):
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx265"), "libx265"),
         hw = (platform.get_caps("encode", "hevc_8"), have_ffmpeg_encoder("hevc_vaapi"), "hevc_vaapi"),
-      ),
-      "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx265"), "libx265"),
-        hw = (platform.get_caps("vme_lowdelayb", "hevc_8"), have_ffmpeg_encoder("hevc_vaapi"), "hevc_vaapi -b_strategy 1"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_ffmpeg_encoder("mpeg2video"), "mpeg2video"),
@@ -103,7 +95,6 @@ class TranscoderTest(slash.Test):
       "avc"            : "h264",
       "hevc"           : "h265",
       "hevc-8"         : "h265",
-      "hevc-8-vme-ldb" : "h265",
       "mpeg2"          : "m2v",
       "mjpeg"          : "mjpeg",
     }.get(codec, "???")
