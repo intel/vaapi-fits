@@ -23,10 +23,6 @@ class TranscoderTest(slash.Test):
         sw = (dict(maxres = (16384, 16384)), have_gst_element("avdec_h265"), "h265parse ! avdec_h265"),
         hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("msdkh265dec"), "h265parse ! msdkh265dec"),
       ),
-      "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("avdec_h265"), "h265parse ! avdec_h265"),
-        hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("msdkh265dec"), "h265parse ! msdkh265dec"),
-      ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("avdec_mpeg2video"), "mpegvideoparse ! avdec_mpeg2video"),
         hw = (platform.get_caps("decode", "mpeg2"), have_gst_element("msdkmpeg2dec"), "mpegvideoparse ! msdkmpeg2dec"),
@@ -56,10 +52,6 @@ class TranscoderTest(slash.Test):
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc ! video/x-h265,profile=main ! h265parse"),
-      ),
-      "hevc-8-vme-ldb" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
-        hw = (platform.get_caps("vme_lowdelayb", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
@@ -112,7 +104,6 @@ class TranscoderTest(slash.Test):
       "avc"            : "h264",
       "hevc"           : "h265",
       "hevc-8"         : "h265",
-      "hevc-8-vme-ldb" : "h265",
       "mpeg2"          : "m2v",
       "mjpeg"          : "mjpeg",
     }.get(codec, "???")

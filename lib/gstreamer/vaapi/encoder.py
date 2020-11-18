@@ -57,8 +57,6 @@ class EncoderTest(slash.Test):
       opts += " tune="
       opts += "low-power" if self.lowpower else "none"
 
-    if vars(self).get("lowdelayb",False):
-      opts += " low-delay-b=1"
     if vars(self).get("loopshp", None) is not None:
       opts += " sharpness-level={loopshp}"
     if vars(self).get("looplvl", None) is not None:
