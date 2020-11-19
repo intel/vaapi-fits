@@ -66,6 +66,10 @@ class EncoderTest(slash.Test):
       self.level /= 10.0
       opts += " -level {level}"
 
+    # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
+    if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
+      opts += " -b_strategy 1"
+
     opts += " -vframes {frames} -y {encoded}"
 
     return opts
