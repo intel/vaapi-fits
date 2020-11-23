@@ -20,7 +20,7 @@ caps = dict(
     hevc_12 = dict(maxres = res8k , fmts = ["P012", "Y212", "Y412"]),
     vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
-    vp9_12  = dict(maxres = res8k , fmts = ["P012"]),
+    vp9_12  = dict(maxres = res8k , fmts = ["P012", "Y412"]),
     av1_8   = dict(maxres = res8k , fmts = ["NV12"]),
   ),
   encode  = dict(
