@@ -211,8 +211,8 @@ class EncoderTest(slash.Test):
     ipbmode = 0 if vars(self).get("gop", 0) <= 1 else 1 if vars(self).get("bframes", 0) < 1 else 2
     ipbmsgs = [
       "Using intra frames only",
-      "Using intra and P-frames|[L|l]ow delay",
-      "Using intra, P- and B-frames|[L|l]ow delay",
+      "Using intra and P-frames|[L|l]ow delay|forward-prediction",
+      "Using intra, P- and B-frames|[L|l]ow delay|forward-prediction",
     ]
     m = re.search(ipbmsgs[ipbmode], self.output, re.MULTILINE)
     assert m is not None, "Possible incorrect IPB mode used"
