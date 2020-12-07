@@ -44,6 +44,8 @@ class DecoderTest(slash.Test):
       slash.skip_test(
         "ffmpeg.{format} format not supported".format(**vars(self)))
 
+    skip_test_if_missing_features(self)
+
   def decode(self):
     self.validate_caps()
 

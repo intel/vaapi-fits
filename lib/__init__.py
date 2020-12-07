@@ -11,6 +11,7 @@ from .metrics import *
 from .parameters import *
 from .platform import *
 from .system import *
+from .util import *
 
 import itertools
 import os
