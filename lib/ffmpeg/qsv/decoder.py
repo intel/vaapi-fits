@@ -41,6 +41,8 @@ class DecoderTest(slash.Test):
         format_value(
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
 
+    skip_test_if_missing_features(self)
+
   def decode(self):
     self.validate_caps()
 
