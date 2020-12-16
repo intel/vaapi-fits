@@ -131,6 +131,8 @@ class EncoderTest(slash.Test):
     if None in [self.hwformat, self.mformatu]:
       slash.skip_test("{format} format not supported".format(**vars(self)))
 
+    skip_test_if_missing_features(self)
+
     maxw, maxh = self.caps["maxres"]
     if self.width > maxw or self.height > maxh:
       slash.skip_test(
