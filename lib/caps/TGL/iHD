@@ -31,13 +31,21 @@ caps = dict(
   encode  = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12"]),
     mpeg2   = dict(maxres = res2k , fmts = ["NV12"]),
-    hevc_8  = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
+    hevc_8  = dict(
+      maxres    = res8k,
+      fmts      = ["NV12", "AYUV"],
+      features  = dict(scc = True),
+    ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"]),
     jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY", "AYUV", "Y800"]),
-    hevc_8  = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
+    hevc_8  = dict(
+      maxres    = res8k,
+      fmts      = ["NV12", "AYUV"],
+      features  = dict(scc = True),
+    ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
     vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
