@@ -25,7 +25,8 @@ class HEVC8EncoderTest(EncoderTest):
 
   def get_vaapi_profile(self):
     return {
-      "main" : "VAProfileHEVCMain",
+      "main"     : "VAProfileHEVCMain",
+      "scc"      : "VAProfileHEVCSccMain",
     }[self.profile]
 
 class cqp(HEVC8EncoderTest):
