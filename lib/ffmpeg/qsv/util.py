@@ -98,6 +98,7 @@ def mapprofile(codec, profile):
     },
     "hevc-8"   : {
       "main"      : "main",
+      "scc"       : "scc",
       "mainsp"    : "mainsp",
       "unknown"   : "unknown"
     },
