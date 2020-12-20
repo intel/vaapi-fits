@@ -27,6 +27,7 @@ class HEVC8EncoderTest(EncoderTest):
     return {
       "main"     : "VAProfileHEVCMain",
       "scc"      : "VAProfileHEVCSccMain",
+      "scc-444"  : "VAProfileHEVCSccMain444",
     }[self.profile]
 
 class cqp(HEVC8EncoderTest):
