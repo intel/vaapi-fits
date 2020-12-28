@@ -37,6 +37,7 @@ def get_supported_format_map():
     "Y210"  : ("y210", "Y210"),
     "Y212"  : ("y212-le", "Y212_LE"),
     "Y410"  : ("y410", "Y410"),
+    "Y412"  : ("y412", "Y412_LE"),
   }
 
 @memoize
