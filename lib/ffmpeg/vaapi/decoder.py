@@ -16,7 +16,7 @@ class DecoderTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self):
     self.output = call(
-      "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:/dev/dri/renderD128"
+      "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:" + self.renderDevice +
       " -hwaccel_flags allow_profile_mismatch -filter_hw_device hw -v verbose"
       " -i {source} -pix_fmt {mformat} -f rawvideo -vsync passthrough"
       " -autoscale 0 -vframes {frames} -y {decoded}".format(**vars(self)))
@@ -53,6 +53,7 @@ class DecoderTest(slash.Test):
 
     name = self.gen_name().format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.renderDevice = get_hardware_render()
     self.call_ffmpeg()
 
     if vars(self).get("r2r", None) is not None:
