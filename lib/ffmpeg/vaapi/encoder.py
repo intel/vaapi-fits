@@ -115,7 +115,7 @@ class EncoderTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
-      "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
+      "ffmpeg -hwaccel vaapi -vaapi_device " + self.renderDevice + " -v verbose"
       " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
@@ -160,6 +160,7 @@ class EncoderTest(slash.Test):
     ext   = self.get_file_ext()
 
     self.encoded = get_media()._test_artifact("{}.{}".format(name, ext))
+    self.renderDevice = get_hardware_render()
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
