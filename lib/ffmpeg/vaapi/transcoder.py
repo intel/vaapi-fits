@@ -152,7 +152,7 @@ class TranscoderTest(slash.Test):
         "Missing one or more required ffmpeg elements: {}".format(list(unmet)))
 
   def gen_input_opts(self):
-    opts = "-init_hw_device vaapi=hw:/dev/dri/renderD128 -filter_hw_device hw"
+    opts = "-init_hw_device vaapi=hw:" + self.renderDevice + " -filter_hw_device hw"
     opts += " -hwaccel_output_format vaapi"
     if "hw" == self.mode:
       opts += " -hwaccel vaapi"
@@ -221,6 +221,7 @@ class TranscoderTest(slash.Test):
 
   def transcode(self):
     self.validate_caps()
+    self.renderDevice = get_hardware_render()
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
 
