@@ -142,3 +142,10 @@ def load_test_spec(*ctx):
   spec.update(get_media()._get_test_spec("ffmpeg-vaapi", *ctx))
 
   return spec
+
+def get_hardware_render():
+  import subprocess
+  result, renderDevice = subprocess.getstatusoutput('ls /dev/dri/renderD1*|head -n 1')
+  if result:
+    return renderDevice
+  return '/dev/dri/renderD128'
