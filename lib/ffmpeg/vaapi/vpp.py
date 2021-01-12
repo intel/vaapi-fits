@@ -74,7 +74,7 @@ class VppTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     call(
-      "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
+      "ffmpeg -hwaccel vaapi -vaapi_device " + self.renderDevice + " -v verbose"
       " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
@@ -107,6 +107,7 @@ class VppTest(slash.Test):
     name          = self.gen_name().format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.renderDevice = get_hardware_render()
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
