@@ -106,6 +106,12 @@ def mapprofile(codec, profile):
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
     },
+    "av1-8"   : {
+      "main"                  : "main",
+    },
+    "av1-10"   : {
+      "main"                  : "main",
+    },
     "hevc-12" : {
       "main12"                : "main-12",
     },
