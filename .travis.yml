@@ -26,3 +26,4 @@ addons:
 script:
   - if [ "${COVERITY_SCAN_BRANCH}" == 1 ]; then exit ; fi
   - ./vaapi-fits run test/self --platform NONE -v
+  - ./vaapi-fits list
