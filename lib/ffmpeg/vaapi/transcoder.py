@@ -42,8 +42,7 @@ class TranscoderTest(slash.Test):
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx265"), "libx265"),
-        # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
-        hw = (platform.get_caps("encode", "hevc_8"), have_ffmpeg_encoder("hevc_vaapi"), "hevc_vaapi" if get_media()._get_gpu_gen() < 11 else "hevc_vaapi -b_strategy 1"),
+        hw = (platform.get_caps("encode", "hevc_8"), have_ffmpeg_encoder("hevc_vaapi"), "hevc_vaapi"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_ffmpeg_encoder("mpeg2video"), "mpeg2video"),
@@ -171,6 +170,10 @@ class TranscoderTest(slash.Test):
       mode = output["mode"]
       encoder = self.get_encoder(codec, mode)
       ext = self.get_file_ext(codec)
+
+      # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
+      if "hevc_vaapi" == encoder and get_media()._get_gpu_gen() > 10:
+        encoder += " -b_strategy 1"
 
       filters = []
       tmode = (self.mode, mode)
