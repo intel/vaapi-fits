@@ -25,7 +25,8 @@ class HEVC10EncoderTest(EncoderTest):
 
   def get_vaapi_profile(self):
     return {
-      "main10" : "VAProfileHEVCMain10",
+      "main10"      : "VAProfileHEVCMain10",
+      "main444-10"  : "VAProfileHEVCMain444_10",
     }[self.profile]
 
 class cqp(HEVC10EncoderTest):
