@@ -249,6 +249,8 @@ class MediaPlugin(slash.plugins.PluginInterface):
       for msg in hangmsgs:
         if re.search(msg, capture, re.MULTILINE) is not None:
           slash.logger.error("GPU HANG DETECTED!")
+      if re.search(r"\[.*\] i915 .*: \[drm\] .*Failed to reset", capture, re.MULTILINE) is not None:
+        result.add_error('GPU RESET FAILED')
       for line in capture.split('\n'):
         if len(line):
           slash.logger.info(line)
