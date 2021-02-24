@@ -192,7 +192,7 @@ class TranscoderTest(slash.Test):
       "src_{case}.yuv".format(**vars(self)))
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
     opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420"
-    opts += " ! checksumsink2 file-checksum=false qos=false"
+    opts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
     opts += " dump-location={srcyuv}"
 
@@ -220,13 +220,13 @@ class TranscoderTest(slash.Test):
           "{}_{}_{}.yuv".format(self.case, n, channel))
         iopts = "filesrc location={} ! {}"
         oopts =  "{} ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420"
-        oopts += " ! checksumsink2 file-checksum=false qos=false"
+        oopts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
         oopts += " frame-checksum=false plane-checksum=false dump-output=true"
         oopts += " dump-location={}"
 
         self.call_gst(
           iopts.format(encoded, self.get_decoder(output["codec"], "hw")),
-          oopts.format(self.get_vpp_scale(self.width, self.height, "hw"), yuv))
+          oopts.format(self.get_vpp_scale(self.width, self.height, "hw"), yuv, frames = self.frames))
 
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)

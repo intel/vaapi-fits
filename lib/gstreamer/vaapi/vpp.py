@@ -62,7 +62,7 @@ class VppTest(slash.Test):
       opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu}"
 
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-    opts += " plane-checksum=false dump-output=true dump-location={ofile}"
+    opts += " plane-checksum=false dump-output=true dump-location={ofile} eos-after={frames}"
 
     return opts
 

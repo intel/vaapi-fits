@@ -66,7 +66,7 @@ class VppTest(slash.Test):
       opts += " ! video/x-raw,format={ohwformat}"
 
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-    opts += " plane-checksum=false dump-output=true dump-location={ofile}"
+    opts += " plane-checksum=false dump-output=true dump-location={ofile} eos-after={frames}"
 
     return opts
 
