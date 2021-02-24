@@ -181,7 +181,7 @@ class EncoderTest(slash.Test):
     oopts = (
       " videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu} ! checksumsink2"
       " file-checksum=false frame-checksum=false plane-checksum=false"
-      " dump-output=true qos=false dump-location={decoded}")
+      " dump-output=true qos=false dump-location={decoded} eos-after={frames}")
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
