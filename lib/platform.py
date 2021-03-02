@@ -9,21 +9,14 @@ from .common import memoize
 import os
 
 @memoize
-def load_caps():
-  from .common import get_media
+def load_caps_file(capsfile):
   namespace = dict(
     res2k   = ( 2048,  2048),
     res4k   = ( 4096,  4096),
     res8k   = ( 8192,  8192),
     res16k  = (16384, 16384),
   )
-  capsfile = os.path.abspath(
-    os.path.join(
-      os.path.dirname(__file__), "caps",
-      str(get_media()._get_platform_name()),
-      str(get_media()._get_driver_name()),
-    )
-  )
+
   if os.path.exists(capsfile):
     with open(capsfile, 'rb') as f:
       exec(f.read(), namespace)
@@ -43,6 +36,20 @@ def load_caps():
       di.setdefault("advanced", di["motion_adaptive"])
 
   return caps
+
+@memoize
+def load_caps():
+  from .common import get_media
+
+  capsfile = os.path.abspath(
+    os.path.join(
+      os.path.dirname(__file__), "caps",
+      str(get_media()._get_platform_name()),
+      str(get_media()._get_driver_name()),
+    )
+  )
+
+  return load_caps_file(capsfile)
 
 @memoize
 def get_caps(*args):
