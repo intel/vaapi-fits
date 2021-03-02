@@ -64,6 +64,24 @@ def have_caps(*args):
   return get_caps(*args) is not None, failmsg
 
 @memoize
+def load_capsinfo():
+  from .common import get_media
+
+  namespace = dict()
+  infofile = os.path.abspath(
+    os.path.join(
+      os.path.dirname(__file__), "caps",
+      str(get_media()._get_platform_name()),
+      "info"
+    )
+  )
+  if os.path.exists(infofile):
+    with open(infofile, 'rb') as f:
+      exec(f.read(), namespace)
+
+  return namespace.get("info", None)
+
+@memoize
 def info():
   import platform
   try:
@@ -81,17 +99,8 @@ def info():
     cpu = "unknown"
 
   from .common import get_media
-  plinfo = dict()
-  infofile = os.path.abspath(
-    os.path.join(
-      os.path.dirname(__file__), "caps",
-      str(get_media()._get_platform_name()),
-      "info"
-    )
-  )
-  if os.path.exists(infofile):
-    with open(infofile, 'rb') as f:
-      exec(f.read(), plinfo)
+
+  capsinfo = load_capsinfo() or dict()
 
   return dict(
     node = str(platform.node()),
@@ -100,5 +109,5 @@ def info():
     cpu = cpu,
     driver = str(get_media()._get_driver_name()),
     platform = str(get_media()._get_platform_name()),
-    **plinfo.get("info", dict()),
+    **capsinfo,
   )
