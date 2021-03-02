@@ -40,15 +40,28 @@ def load_caps_file(capsfile):
 @memoize
 def load_caps():
   from .common import get_media
+  from slash import logger
 
-  capsfile = os.path.abspath(
-    os.path.join(
-      os.path.dirname(__file__), "caps",
-      str(get_media()._get_platform_name()),
-      str(get_media()._get_driver_name()),
+  pname = str(get_media()._get_platform_name())
+  dname = str(get_media()._get_driver_name())
+
+  # user caps
+  usercaps = os.environ.get("VAAPI_FITS_CAPS", None)
+  if usercaps is not None:
+    capsfile = os.path.abspath(
+      os.path.join(usercaps, pname, dname)
     )
+    caps = load_caps_file(capsfile)
+    if caps is not None:
+      logger.notice("Using user caps")
+      return caps
+
+  # library caps
+  capsfile = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "caps", pname, dname)
   )
 
+  logger.notice("Using library caps")
   return load_caps_file(capsfile)
 
 @memoize
@@ -84,12 +97,21 @@ def load_capsinfo_file(infofile):
 def load_capsinfo():
   from .common import get_media
 
-  infofile = os.path.abspath(
-    os.path.join(
-      os.path.dirname(__file__), "caps",
-      str(get_media()._get_platform_name()),
-      "info"
+  pname = str(get_media()._get_platform_name())
+
+  # user caps info
+  usercaps = os.environ.get("VAAPI_FITS_CAPS", None)
+  if usercaps is not None:
+    infofile = os.path.abspath(
+      os.path.join(usercaps, pname, "info")
     )
+    capsinfo = load_capsinfo_file(infofile)
+    if capsinfo is not None:
+      return capsinfo
+
+  # library caps info
+  infofile = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "caps", pname, "info")
   )
 
   return load_capsinfo_file(infofile)
