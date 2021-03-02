@@ -71,10 +71,19 @@ def have_caps(*args):
   return get_caps(*args) is not None, failmsg
 
 @memoize
+def load_capsinfo_file(infofile):
+  namespace = dict()
+
+  if os.path.exists(infofile):
+    with open(infofile, 'rb') as f:
+      exec(f.read(), namespace)
+
+  return namespace.get("info", None)
+
+@memoize
 def load_capsinfo():
   from .common import get_media
 
-  namespace = dict()
   infofile = os.path.abspath(
     os.path.join(
       os.path.dirname(__file__), "caps",
@@ -82,11 +91,8 @@ def load_capsinfo():
       "info"
     )
   )
-  if os.path.exists(infofile):
-    with open(infofile, 'rb') as f:
-      exec(f.read(), namespace)
 
-  return namespace.get("info", None)
+  return load_capsinfo_file(infofile)
 
 @memoize
 def info():
