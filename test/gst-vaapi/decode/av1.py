@@ -29,6 +29,6 @@ class default(DecoderTest):
 
     vars(self).update(
       case        = case,
-      gstdecoder  = "{} ! vaapiav1dec".format(dxmap[ext]),
+      gstdecoder  = "{} ! av1parse ! vaapiav1dec".format(dxmap[ext]),
     )
     self.decode()
