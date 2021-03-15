@@ -58,6 +58,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
   platform = None
   suite = os.path.basename(sys.argv[0])
   mypath = __SCRIPT_DIR__
+  blacklist = {}
 
   RETENTION_NONE = 0;
   RETENTION_FAIL = 1;
@@ -218,6 +219,8 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
     # enable call timeout tracking during test function execution (see test_end)
     self.cta_enabled = True
+    # check test-case whether at blacklist
+    self._assert_not_blacklisted(test)
 
   def test_end(self):
     # only enabled during test function execution (see test_start)
@@ -341,6 +344,27 @@ class MediaPlugin(slash.plugins.PluginInterface):
       slash.context.session.results.global_result.get_log_dir(), "results.xml")
     tree.write(filename)
 
+  def _load_blacklist(self, file_path = None):
+    if file_path is None or len(file_path) == 0 or not os.path.exists(file_path):
+      return
+
+    import json, glob
+    for file in glob.glob(os.path.join(str(file_path), "*.json")):
+      with open(file, 'rb') as f:
+        self.blacklist.update(json.load(f))
+
+  def _assert_not_blacklisted(self, test):
+    # Current platform and driver combine not in blacklist
+    from slash.utils.pattern_matching import Matcher
+    search= [
+      str(test.__slash__),
+      "driver=" + self._get_driver_name(),
+      "platform=" + self._get_platform_name(),
+    ]
+
+    for filter,message in self.blacklist.items():
+      assert not Matcher(filter).matches(" ".join(search)), 'Blacklisted: ' + message
+
 media = MediaPlugin()
 slash.plugins.manager.install(media, activate = True, is_internal = True)
 
@@ -356,6 +380,11 @@ config = os.environ.get(
 assert os.path.exists(config)
 with open(config, 'rb') as f:
   exec(f.read())
+
+blacklist = os.environ.get(
+  'VAAPI_FITS_BLACKLIST',
+  os.path.abspath(os.path.join(media.mypath, "blacklist")))
+media._load_blacklist(blacklist)
 
 from slash.core.variation import _PRINTABLE_CHARS
 import numbers
