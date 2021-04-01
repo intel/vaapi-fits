@@ -75,6 +75,7 @@ class TranscoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    os.environ["GST_VAAPI_DRM_DEVICE"] = get_media().render_device
 
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(

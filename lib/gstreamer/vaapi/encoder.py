@@ -6,6 +6,7 @@
 
 from ....lib import *
 from .util import *
+import os
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("vaapi"))
@@ -118,6 +119,7 @@ class EncoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    os.environ["GST_VAAPI_DRM_DEVICE"] = get_media().render_device
 
   def validate_caps(self):
     self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
