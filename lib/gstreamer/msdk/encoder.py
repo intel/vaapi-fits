@@ -6,6 +6,7 @@
 
 from ....lib import *
 from .util import *
+import os
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("msdk"))
@@ -119,6 +120,7 @@ class EncoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    os.environ["GST_MSDK_DRM_DEVICE"] = get_media().render_device
 
   def validate_caps(self):
     ifmts = self.caps["fmts"]

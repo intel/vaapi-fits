@@ -6,6 +6,7 @@
 
 from ....lib import *
 from .util import *
+import os
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("msdk"))
@@ -14,6 +15,7 @@ from .util import *
 class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
+    os.environ["GST_MSDK_DRM_DEVICE"] = get_media().render_device
 
   @timefn("gst")
   def call_gst(self):
