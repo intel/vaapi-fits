@@ -12,11 +12,12 @@ from .util import *
 class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
 
   @timefn("ffmpeg")
   def call_ffmpeg(self):
     self.output = call(
-      "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:/dev/dri/renderD128"
+      "ffmpeg -hwaccel vaapi -init_hw_device vaapi=hw:{renderDevice}"
       " -hwaccel_flags allow_profile_mismatch -filter_hw_device hw -v verbose"
       " -i {source} -pix_fmt {mformat} -f rawvideo -vsync passthrough"
       " -autoscale 0 -vframes {frames} -y {decoded}".format(**vars(self)))
