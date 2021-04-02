@@ -14,6 +14,7 @@ from .util import *
 class VppTest(slash.Test):
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
 
   def gen_input_opts(self):
     if self.vpp_op not in ["deinterlace"]:
@@ -76,8 +77,8 @@ class VppTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     call(
-      "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
-      " -v verbose {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
+      "ffmpeg -init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -hwaccel qsv -filter_hw_device qsv"
+      " -v verbose {iopts} {oopts}".format(renderDevice= self.renderDevice, iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
     ifmts         = self.caps.get("ifmts", [])
