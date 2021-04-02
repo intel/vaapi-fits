@@ -67,6 +67,7 @@ class TranscoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
  
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(
@@ -151,7 +152,7 @@ class TranscoderTest(slash.Test):
         "Missing one or more required ffmpeg elements: {}".format(list(unmet)))
 
   def gen_input_opts(self):
-    opts = "-init_hw_device qsv=hw:/dev/dri/renderD128 -filter_hw_device hw"
+    opts = "-init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -filter_hw_device qsv"
     opts += " -hwaccel_output_format qsv"
     if "hw" == self.mode:
       opts += " -hwaccel qsv"

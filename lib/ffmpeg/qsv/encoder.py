@@ -97,13 +97,14 @@ class EncoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
 
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
-      "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
+      "ffmpeg -init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -hwaccel qsv -filter_hw_device qsv"
       " -hwaccel_output_format qsv -v verbose"
-      " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
+      " {iopts} {oopts}".format(renderDevice= self.renderDevice, iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
     self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])

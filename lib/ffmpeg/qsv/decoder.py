@@ -13,11 +13,12 @@ from .util import *
 class DecoderTest(slash.Test):
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
 
   @timefn("ffmpeg")
   def call_ffmpeg(self):
     self.output = call(
-      "ffmpeg -init_hw_device qsv=qsv:hw -hwaccel qsv -filter_hw_device qsv"
+      "ffmpeg -init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -hwaccel qsv -filter_hw_device qsv"
       " -hwaccel_output_format qsv -v verbose -c:v {ffdecoder} -i {source}"
       " -vf 'hwdownload,format={hwformat}'"
       " -pix_fmt {mformat} -f rawvideo -vsync passthrough"
