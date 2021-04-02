@@ -111,12 +111,13 @@ class EncoderTest(slash.Test):
 
   def before(self):
     self.refctx = []
+    self.renderDevice = get_media().render_device
 
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     self.output = call(
-      "ffmpeg -hwaccel vaapi -vaapi_device /dev/dri/renderD128 -v verbose"
-      " {iopts} {oopts}".format(iopts = iopts, oopts = oopts))
+      "ffmpeg -hwaccel vaapi -vaapi_device {renderDevice} -v verbose"
+      " {iopts} {oopts}".format(renderDevice = self.renderDevice, iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
     # BUG: FFmpeg fails to support I420 hwupload even though i965 supports it.
