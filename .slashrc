@@ -83,6 +83,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
       help = "number of call timeouts allowed per run")
     parser.add_argument("--parallel-metrics", action = "store_true")
     parser.add_argument("--platform", default = None, type = str, required = True)
+    parser.add_argument("--device", default = '/dev/dri/renderD128', type = str, help = 'vaapi-fits run with render device')
 
   def configure_from_parsed_args(self, args):
     self.baseline = Baseline(args.baseline_file, args.rebase)
@@ -92,10 +93,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
     self.ctapt = args.ctapt
     self.ctapr = args.ctapr
     self.platform = args.platform
+    self.render_device = args.device
 
     assert not (args.rebase and slash.config.root.parallel.num_workers > 0), "rebase in parallel mode is not supported"
     assert not (args.ctapt != -1 and slash.config.root.parallel.num_workers > 0), "ctapt in parallel mode is not supported"
     assert not (args.ctapr != -1 and slash.config.root.parallel.num_workers > 0), "ctapr in parallel mode is not supported"
+    assert os.path.exists(args.device), "Target Device {} not exist".format(args.device)
 
   def _calls_allowed(self):
     # only enabled during test function execution (see test_start/test_end)
