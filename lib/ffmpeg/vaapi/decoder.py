@@ -77,5 +77,14 @@ class DecoderTest(slash.Test):
       "hwaccel initialisation returned error", self.output, re.MULTILINE)
     assert m is None, "Failed to use hardware decode"
 
+    # AV1d specific (checked here to ensure we cover all bit-depth tests for AV1d,
+    # current and future).
+    #
+    # Don't allow false success if ffmpeg falls back to a SW alternative... it
+    # clearly defeats the purpose of our test.
+    m = re.search(
+      "Your platform doesn't suppport hardware accelerated AV1 decoding", self.output, re.MULTILINE)
+    assert m is None, "Failed to use hardware decode"
+
   def check_metrics(self):
     check_metric(**vars(self))
