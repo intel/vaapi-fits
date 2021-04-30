@@ -16,6 +16,7 @@ class VppTest(slash.Test):
   def before(self):
     self.refctx = []
     os.environ["GST_VAAPI_DRM_DEVICE"] = get_media().render_device
+    self.gst_vpp_element = 'vaapipostproc'
 
   def gen_input_opts(self):
     if self.vpp_element not in ["deinterlace"]:
@@ -32,7 +33,7 @@ class VppTest(slash.Test):
     return opts
 
   def gen_output_opts(self):
-    opts = "vaapipostproc"
+    opts = self.gst_vpp_element
 
     if self.vpp_element in ["contrast"]:
       opts += " contrast={mlevel}"
