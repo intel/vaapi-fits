@@ -1,0 +1,14 @@
+{
+  "decode.vp9.8bit:default.test(case=1080p)": {
+    "md5": "6c4e5c87c6f0e28aaf9fd22d76e67502"
+  },
+  "decode.vp9.8bit:default.test(case=720p)": {
+    "md5": "94fa781d49e61edb726bc67745aff937"
+  },
+  "decode.vp9.8bit:default.test(case=QCIF)": {
+    "md5": "c983151ec2d2b6ebfcff776112a5ae3f"
+  },
+  "decode.vp9.8bit:default.test(case=QVGA)": {
+    "md5": "e0b3e642609dcd5718bc0c6d7c5b8c3d"
+  }
+}
