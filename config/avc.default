@@ -8,22 +8,22 @@ media._get_test_spec("avc", "decode").update({
   "QCIF" : dict(
     source = os.path.join(assets, "avc", "QCIF.h264"),
     width = 176, height = 144, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.avc"],
   ),
   "QVGA" : dict(
     source = os.path.join(assets, "avc", "QVGA.h264"),
     width = 320, height = 240, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.avc"],
   ),
   "720p" : dict(
     source = os.path.join(assets, "avc", "720p.h264"),
     width = 1280, height = 720, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.avc"],
   ),
   "1080p" : dict(
     source = os.path.join(assets, "avc", "1080p.h264"),
     width = 1920, height = 1080, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.avc"],
   ),
 })
 

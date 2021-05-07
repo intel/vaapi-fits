@@ -8,22 +8,22 @@ media._get_test_spec("hevc", "decode", "8bit").update({
   "QCIF" : dict(
     source = os.path.join(assets, "hevc", "QCIF.h265"),
     width = 176, height = 144, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.hevc.8bit"],
   ),
   "QVGA" : dict(
     source = os.path.join(assets, "hevc", "QVGA.h265"),
     width = 320, height = 240, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.hevc.8bit"],
   ),
   "720p" : dict(
     source = os.path.join(assets, "hevc", "720p.h265"),
     width = 1280, height = 720, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.hevc.8bit"],
   ),
   "1080p" : dict(
     source = os.path.join(assets, "hevc", "1080p.h265"),
     width = 1920, height = 1080, format = "NV12", frames = 10,
-    metric = dict(type = "md5"),
+    metric = dict(type = "md5"), refctx = ["key:decode.hevc.8bit"],
   ),
 })
 
