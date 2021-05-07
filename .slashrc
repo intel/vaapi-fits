@@ -98,7 +98,9 @@ class MediaPlugin(slash.plugins.PluginInterface):
     assert not (args.rebase and slash.config.root.parallel.num_workers > 0), "rebase in parallel mode is not supported"
     assert not (args.ctapt != -1 and slash.config.root.parallel.num_workers > 0), "ctapt in parallel mode is not supported"
     assert not (args.ctapr != -1 and slash.config.root.parallel.num_workers > 0), "ctapr in parallel mode is not supported"
-    assert os.path.exists(args.device), "Target Device {} not exist".format(args.device)
+
+    if "NONE" != self.platform.upper():
+      assert os.path.exists(args.device), "Target Device {} not exist".format(args.device)
 
   def _calls_allowed(self):
     # only enabled during test function execution (see test_start/test_end)
