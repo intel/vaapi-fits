@@ -10,6 +10,8 @@ from ....lib.ffmpeg.qsv.decoder import DecoderTest
 
 spec = load_test_spec("av1", "decode", "8bit")
 
+@slash.requires(*platform.have_caps("decode", "av1_8"))
+@slash.requires(*have_ffmpeg_decoder("av1_qsv"))
 class default(DecoderTest):
   def before(self):
     vars(self).update(
@@ -20,8 +22,6 @@ class default(DecoderTest):
     )
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("decode", "av1_8"))
-  @slash.requires(*have_ffmpeg_decoder("av1_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())

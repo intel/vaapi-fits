@@ -11,6 +11,8 @@ from ....lib.gstreamer.msdk.decoder import DecoderTest
 spec = load_test_spec("mpeg2", "decode")
 spec_r2r = load_test_spec("mpeg2", "decode", "r2r")
 
+@slash.requires(*platform.have_caps("decode", "mpeg2"))
+@slash.requires(*have_gst_element("msdkmpeg2dec"))
 class default(DecoderTest):
   def before(self):
     # default metric
@@ -18,8 +20,6 @@ class default(DecoderTest):
     self.caps   = platform.get_caps("decode", "mpeg2")
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_gst_element("msdkmpeg2dec"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
@@ -29,8 +29,6 @@ class default(DecoderTest):
     )
     self.decode()
 
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_gst_element("msdkmpeg2dec"))
   @slash.parametrize(("case"), sorted(spec_r2r.keys()))
   def test_r2r(self, case):
     vars(self).update(spec_r2r[case].copy())

@@ -11,6 +11,8 @@ from ....lib.ffmpeg.qsv.decoder import DecoderTest
 spec      = load_test_spec("mpeg2", "decode")
 spec_r2r  = load_test_spec("mpeg2", "decode", "r2r")
 
+@slash.requires(*platform.have_caps("decode", "mpeg2"))
+@slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
 class default(DecoderTest):
   def before(self):
     vars(self).update(
@@ -25,15 +27,11 @@ class default(DecoderTest):
     vars(self).update(tspec[case].copy())
     vars(self).update(case = case)
 
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     self.init(spec, case)
     self.decode()
 
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
   @slash.parametrize(("case"), sorted(spec_r2r.keys()))
   def test_r2r(self, case):
     self.init(spec_r2r, case)
