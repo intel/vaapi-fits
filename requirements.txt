@@ -1,4 +1,4 @@
-slash==1.5.1
+slash==1.12.0
 numpy
 scikit-image
 distro

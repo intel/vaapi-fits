@@ -12,7 +12,7 @@ before_install:
   - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 
 install:
-  - pip install -r requirements.txt
+  - pip3 install -r requirements.txt
 
 addons:
   coverity_scan:
