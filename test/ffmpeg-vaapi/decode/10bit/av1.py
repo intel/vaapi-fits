@@ -10,6 +10,7 @@ from .....lib.ffmpeg.vaapi.decoder import DecoderTest
 
 spec = load_test_spec("av1", "decode", "10bit")
 
+@slash.requires(*platform.have_caps("decode", "av1_10"))
 class default(DecoderTest):
   def before(self):
     # default metric
@@ -17,7 +18,6 @@ class default(DecoderTest):
     self.caps   = platform.get_caps("decode", "av1_10")
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("decode", "av1_10"))
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
