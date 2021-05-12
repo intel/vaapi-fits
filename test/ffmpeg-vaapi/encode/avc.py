@@ -11,6 +11,7 @@ from ....lib.ffmpeg.vaapi.encoder import EncoderTest
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
 
+@slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
 class AVCEncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -30,6 +31,7 @@ class AVCEncoderTest(EncoderTest):
       "constrained-baseline"  : "VAProfileH264ConstrainedBaseline",
     }[self.profile]
 
+@slash.requires(*platform.have_caps("encode", "avc"))
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
     self.caps = platform.get_caps("encode", "avc")
@@ -45,21 +47,18 @@ class cqp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+@slash.requires(*platform.have_caps("vdenc", "avc"))
 class cqp_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
     self.caps = platform.get_caps("vdenc", "avc")
@@ -75,21 +74,18 @@ class cqp_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, qp, quality, profile):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "avc"))
 class cbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
     self.caps = platform.get_caps("encode", "avc")
@@ -107,21 +103,18 @@ class cbr(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+@slash.requires(*platform.have_caps("vdenc", "avc"))
 class cbr_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
     self.caps = platform.get_caps("vdenc", "avc")
@@ -139,21 +132,18 @@ class cbr_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec, case, gop, slices, bitrate, fps, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "avc"))
 class vbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.caps = platform.get_caps("encode", "avc")
@@ -173,21 +163,18 @@ class vbr(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("encode", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+@slash.requires(*platform.have_caps("vdenc", "avc"))
 class vbr_lp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.caps = platform.get_caps("vdenc", "avc")
@@ -207,15 +194,11 @@ class vbr_lp(AVCEncoderTest):
       slices    = slices,
     )
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main']))
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @slash.requires(*platform.have_caps("vdenc", "avc"))
-  @slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
