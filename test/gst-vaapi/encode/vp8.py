@@ -10,6 +10,8 @@ from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
 spec = load_test_spec("vp8", "encode")
 
+@slash.requires(*have_gst_element("vaapivp8enc"))
+@slash.requires(*have_gst_element("vaapivp8dec"))
 class VP8EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -25,10 +27,8 @@ class VP8EncoderTest(EncoderTest):
   def get_file_ext(self):
     return "webm"
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class cqp(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_gst_element("vaapivp8enc"))
-  @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     self.caps = platform.get_caps("encode", "vp8")
@@ -44,10 +44,8 @@ class cqp(VP8EncoderTest):
     )
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class cbr(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_gst_element("vaapivp8enc"))
-  @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, looplvl, loopshp):
     self.caps = platform.get_caps("encode", "vp8")
@@ -66,10 +64,8 @@ class cbr(VP8EncoderTest):
     )
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class vbr(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_gst_element("vaapivp8enc"))
-  @slash.requires(*have_gst_element("vaapivp8dec"))
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
     self.caps = platform.get_caps("encode", "vp8")

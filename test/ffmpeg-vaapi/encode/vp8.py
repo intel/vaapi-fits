@@ -10,6 +10,7 @@ from ....lib.ffmpeg.vaapi.encoder import EncoderTest
 
 spec = load_test_spec("vp8", "encode")
 
+@slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
 class VP8EncoderTest(EncoderTest):
   def before(self):
     vars(self).update(
@@ -25,9 +26,8 @@ class VP8EncoderTest(EncoderTest):
   def get_vaapi_profile(self):
     return "VAProfileVP8Version0_3"
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class cqp(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
@@ -43,9 +43,8 @@ class cqp(VP8EncoderTest):
     )
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class cbr(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, looplvl, loopshp):
     self.caps = platform.get_caps("encode", "vp8")
@@ -64,9 +63,8 @@ class cbr(VP8EncoderTest):
     )
     self.encode()
 
+@slash.requires(*platform.have_caps("encode", "vp8"))
 class vbr(VP8EncoderTest):
-  @slash.requires(*platform.have_caps("encode", "vp8"))
-  @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")

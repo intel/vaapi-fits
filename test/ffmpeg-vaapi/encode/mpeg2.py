@@ -11,13 +11,16 @@ from ....lib.ffmpeg.vaapi.encoder import EncoderTest
 spec      = load_test_spec("mpeg2", "encode")
 spec_r2r  = load_test_spec("mpeg2", "encode", "r2r")
 
+@slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
+@slash.requires(*platform.have_caps("encode", "mpeg2"))
 class MPEG2EncoderTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
-      codec   = "mpeg2",
-      ffenc   = "mpeg2_vaapi",
+      caps  = platform.get_caps("encode", "mpeg2"),
+      codec = "mpeg2",
+      ffenc = "mpeg2_vaapi",
     )
-    super(MPEG2EncoderTest, self).before()
 
   def get_file_ext(self):
     return "m2v"
@@ -28,7 +31,6 @@ class MPEG2EncoderTest(EncoderTest):
 class cqp(MPEG2EncoderTest):
   def init(self, tspec, case, gop, bframes, qp, quality):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "mpeg2")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -39,15 +41,11 @@ class cqp(MPEG2EncoderTest):
       rcmode  = "cqp",
     )
 
-  @slash.requires(*platform.have_caps("encode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec))
   def test(self, case, gop, bframes, qp, quality):
     self.init(spec, case, gop, bframes, qp, quality)
     self.encode()
 
-  @slash.requires(*platform.have_caps("encode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
   @slash.parametrize(*gen_mpeg2_cqp_parameters(spec_r2r))
   def test_r2r(self, case, gop, bframes, qp, quality):
     self.init(spec_r2r, case, gop, bframes, qp, quality)
