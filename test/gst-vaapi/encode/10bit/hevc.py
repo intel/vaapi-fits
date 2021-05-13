@@ -13,25 +13,40 @@ spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
 
 @slash.requires(*have_gst_element("vaapih265enc"))
 @slash.requires(*have_gst_element("vaapih265dec"))
-class HEVC10EncoderTest(EncoderTest):
+class HEVC10EncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec         = "hevc-10",
       gstencoder    = "vaapih265enc",
       gstdecoder    = "h265parse ! vaapih265dec",
       gstmediatype  = "video/x-h265",
       gstparser     = "h265parse",
-      lowpower      = False,
     )
-    super(HEVC10EncoderTest, self).before()
 
   def get_file_ext(self):
     return "h265"
 
 @slash.requires(*platform.have_caps("encode", "hevc_10"))
+class HEVC10EncoderTest(HEVC10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_10"),
+      lowpower  = False,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_10"),
+      lowpower  = True,
+    )
+
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
-    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -55,16 +70,13 @@ class cqp(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class cqp_lp(HEVC10EncoderTest):
+class cqp_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
-    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
       gop       = gop,
       qp        = qp,
-      lowpower  = True,
       quality   = quality,
       profile   = profile,
       rcmode    = "cqp",
@@ -82,10 +94,8 @@ class cqp_lp(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
 class cbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
-    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -111,17 +121,14 @@ class cbr(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class cbr_lp(HEVC10EncoderTest):
+class cbr_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
-    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = True,
       maxrate   = bitrate,
       minrate   = bitrate,
       profile   = profile,
@@ -140,10 +147,8 @@ class cbr_lp(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
 class vbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.caps = platform.get_caps("encode", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -173,17 +178,14 @@ class vbr(HEVC10EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class vbr_lp(HEVC10EncoderTest):
+class vbr_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.caps = platform.get_caps("vdenc", "hevc_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = True,
       ## target percentage 70% (hard-coded in gst-vaapi)
       ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
       maxrate   = int(bitrate / 0.7),
