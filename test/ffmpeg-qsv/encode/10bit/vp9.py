@@ -12,25 +12,32 @@ spec = load_test_spec("vp9", "encode", "10bit")
 
 @slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
 @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
-class VP9EncoderTest(EncoderTest):
+class VP9_10EncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec     = "vp9",
       ffencoder = "vp9_qsv",
       ffdecoder = "vp9_qsv",
     )
-    super(VP9EncoderTest, self).before()
 
   def get_file_ext(self):
     return "ivf"
 
 @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class cqp_lp(VP9EncoderTest):
+class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "vp9_10"),
+      lowpower  = 1,
+    )
+
+class cqp_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'loopshp' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -39,7 +46,6 @@ class cqp_lp(VP9EncoderTest):
       slices    = slices,
       rcmode    = "cqp",
       quality   = quality,
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_cqp_lp_parameters(spec))
@@ -47,13 +53,11 @@ class cqp_lp(VP9EncoderTest):
     self.init(spec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class cbr_lp(VP9EncoderTest):
+class cbr_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'loopshp' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -65,7 +69,6 @@ class cbr_lp(VP9EncoderTest):
       minrate   = bitrate,
       rcmode    = "cbr",
       slices    = slices,
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_cbr_lp_parameters(spec))
@@ -73,13 +76,11 @@ class cbr_lp(VP9EncoderTest):
     self.init(spec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class vbr_lp(VP9EncoderTest):
+class vbr_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'loopshp' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_10")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       quality   = quality,
@@ -92,7 +93,6 @@ class vbr_lp(VP9EncoderTest):
       minrate   = bitrate,
       rcmode    = "vbr",
       slices    = slices,
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_vbr_lp_parameters(spec))
