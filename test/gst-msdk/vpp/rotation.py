@@ -10,6 +10,7 @@ from ....lib.gstreamer.msdk.vpp import VppTest
 
 spec = load_test_spec("vpp", "rotation")
 
+@slash.requires(*platform.have_caps("vpp", "rotation"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -19,7 +20,6 @@ class default(VppTest):
     )
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "rotation"))
   @slash.parametrize(*gen_vpp_rotation_parameters(spec))
   def test(self, case, degrees):
     vars(self).update(spec[case].copy())

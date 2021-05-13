@@ -12,6 +12,8 @@ if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "ffmpeg-vaapi: vpp deinterlace with raw input is no longer supported")
 
+@slash.requires(*platform.have_caps("vpp", "deinterlace"))
+@slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
 class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
@@ -64,15 +66,13 @@ class DeinterlaceTest(VppTest):
     check_metric(**vars(self))
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+@slash.requires(*platform.have_caps("decode", "avc"))
+@slash.requires(*have_ffmpeg_decoder("h264"))
 class avc(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "h264"
     super(avc, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "avc"))
-  @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
-  @slash.requires(*have_ffmpeg_decoder("h264"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_avc, DeinterlaceTest._default_modes_))
@@ -81,15 +81,13 @@ class avc(DeinterlaceTest):
     self.vpp()
 
 spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+@slash.requires(*platform.have_caps("decode", "mpeg2"))
+@slash.requires(*have_ffmpeg_decoder("mpeg2video"))
 class mpeg2(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "mpeg2video"
     super(mpeg2, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
-  @slash.requires(*have_ffmpeg_decoder("mpeg2video"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2, DeinterlaceTest._default_modes_))
@@ -98,15 +96,13 @@ class mpeg2(DeinterlaceTest):
     self.vpp()
 
 spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+@slash.requires(*platform.have_caps("decode", "vc1"))
+@slash.requires(*have_ffmpeg_decoder("vc1"))
 class vc1(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "vc1"
     super(vc1, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "vc1"))
-  @slash.requires(*have_ffmpeg_filter("deinterlace_vaapi"))
-  @slash.requires(*have_ffmpeg_decoder("vc1"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_vc1, DeinterlaceTest._default_modes_))

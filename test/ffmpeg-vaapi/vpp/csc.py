@@ -10,6 +10,8 @@ from ....lib.ffmpeg.vaapi.vpp import VppTest
 
 spec = load_test_spec("vpp", "csc")
 
+@slash.requires(*platform.have_caps("vpp", "csc"))
+@slash.requires(*have_ffmpeg_filter("scale_vaapi"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -18,8 +20,6 @@ class default(VppTest):
     )
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "csc"))
-  @slash.requires(*have_ffmpeg_filter("scale_vaapi"))
   @slash.parametrize(*gen_vpp_csc_parameters(spec))
   def test(self, case, csc):
     vars(self).update(spec[case].copy())

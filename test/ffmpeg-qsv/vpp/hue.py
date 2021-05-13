@@ -11,6 +11,7 @@ from ....lib.ffmpeg.qsv.vpp import VppTest
 spec      = load_test_spec("vpp", "hue")
 spec_r2r  = load_test_spec("vpp", "hue", "r2r")
 
+@slash.requires(*platform.have_caps("vpp", "hue"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -28,13 +29,11 @@ class default(VppTest):
       mlevel  = mapRange(level, [0, 100], [-180.0, 180.0]),
     )
 
-  @slash.requires(*platform.have_caps("vpp", "hue"))
   @slash.parametrize(*gen_vpp_hue_parameters(spec))
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "hue"))
   @slash.parametrize(*gen_vpp_hue_parameters(spec_r2r))
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)

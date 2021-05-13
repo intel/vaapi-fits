@@ -10,6 +10,7 @@ from ....lib.ffmpeg.qsv.vpp import VppTest
 
 spec = load_test_spec("vpp", "mirroring")
 
+@slash.requires(*platform.have_caps("vpp", "mirroring"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -19,7 +20,6 @@ class default(VppTest):
     )
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "mirroring"))
   @slash.parametrize(*gen_vpp_mirroring_parameters(spec))
   def test(self, case, method):
     vars(self).update(spec[case].copy())

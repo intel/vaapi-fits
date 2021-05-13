@@ -11,6 +11,7 @@ from ....lib.gstreamer.msdk.vpp import VppTest
 spec      = load_test_spec("vpp", "brightness")
 spec_r2r  = load_test_spec("vpp", "brightness", "r2r")
 
+@slash.requires(*platform.have_caps("vpp", "brightness"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -28,13 +29,11 @@ class default(VppTest):
       mlevel  = mapRange(level, [0, 100], [-100.0, 100.0]),
     )
 
-  @slash.requires(*platform.have_caps("vpp", "brightness"))
   @slash.parametrize(*gen_vpp_brightness_parameters(spec))
   def test(self, case, level):
     self.init(spec, case, level)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "brightness"))
   @slash.parametrize(*gen_vpp_brightness_parameters(spec_r2r))
   def test_r2r(self, case, level):
     self.init(spec_r2r, case, level)
