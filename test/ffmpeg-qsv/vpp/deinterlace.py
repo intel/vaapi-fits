@@ -12,6 +12,7 @@ if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "ffmpeg-qsv: vpp deinterlace with raw input is no longer supported")
 
+@slash.requires(*platform.have_caps("vpp", "deinterlace"))
 class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
@@ -66,14 +67,13 @@ class DeinterlaceTest(VppTest):
     check_metric(**vars(self))
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+@slash.requires(*platform.have_caps("decode", "avc"))
+@slash.requires(*have_ffmpeg_decoder("h264_qsv"))
 class avc(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "h264_qsv"
     super(avc, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "avc"))
-  @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_avc, DeinterlaceTest._default_modes_))
@@ -82,14 +82,13 @@ class avc(DeinterlaceTest):
     self.vpp()
 
 spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+@slash.requires(*platform.have_caps("decode", "mpeg2"))
+@slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
 class mpeg2(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "mpeg2_qsv"
     super(mpeg2, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2, DeinterlaceTest._default_modes_))
@@ -98,14 +97,13 @@ class mpeg2(DeinterlaceTest):
     self.vpp()
 
 spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+@slash.requires(*platform.have_caps("decode", "vc1"))
+@slash.requires(*have_ffmpeg_decoder("vc1_qsv"))
 class vc1(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "vc1_qsv"
     super(vc1, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "vc1"))
-  @slash.requires(*have_ffmpeg_decoder("vc1_qsv"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_vc1, DeinterlaceTest._default_modes_))

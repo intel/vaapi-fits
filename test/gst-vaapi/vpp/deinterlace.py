@@ -12,6 +12,7 @@ if len(load_test_spec("vpp", "deinterlace")):
   slash.logger.warn(
     "gst-vaapi: vpp deinterlace with raw input is no longer supported")
 
+@slash.requires(*platform.have_caps("vpp", "deinterlace"))
 class DeinterlaceTest(VppTest):
   _default_methods_ = [
     "bob",
@@ -65,14 +66,13 @@ class DeinterlaceTest(VppTest):
 
 spec_avc      = load_test_spec("vpp", "deinterlace", "avc")
 spec_avc_r2r  = load_test_spec("vpp", "deinterlace", "avc", "r2r")
+@slash.requires(*platform.have_caps("decode", "avc"))
+@slash.requires(*have_gst_element("vaapih264dec"))
 class avc(DeinterlaceTest):
   def before(self):
     self.gstdecoder = "h264parse ! vaapih264dec"
     super(avc, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "avc"))
-  @slash.requires(*have_gst_element("vaapih264dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_avc, DeinterlaceTest._default_modes_))
@@ -80,9 +80,6 @@ class avc(DeinterlaceTest):
     self.init(spec_avc, case, method, rate)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "avc"))
-  @slash.requires(*have_gst_element("vaapih264dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_avc_r2r, DeinterlaceTest._default_modes_))
@@ -93,14 +90,13 @@ class avc(DeinterlaceTest):
 
 spec_mpeg2      = load_test_spec("vpp", "deinterlace", "mpeg2")
 spec_mpeg2_r2r  = load_test_spec("vpp", "deinterlace", "mpeg2", "r2r")
+@slash.requires(*platform.have_caps("decode", "mpeg2"))
+@slash.requires(*have_gst_element("vaapimpeg2dec"))
 class mpeg2(DeinterlaceTest):
   def before(self):
     self.gstdecoder = "mpegvideoparse ! vaapimpeg2dec"
     super(mpeg2, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_gst_element("vaapimpeg2dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2, DeinterlaceTest._default_modes_))
@@ -108,9 +104,6 @@ class mpeg2(DeinterlaceTest):
     self.init(spec_mpeg2, case, method, rate)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "mpeg2"))
-  @slash.requires(*have_gst_element("vaapimpeg2dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_mpeg2_r2r, DeinterlaceTest._default_modes_))
@@ -121,15 +114,14 @@ class mpeg2(DeinterlaceTest):
 
 spec_vc1      = load_test_spec("vpp", "deinterlace", "vc1")
 spec_vc1_r2r  = load_test_spec("vpp", "deinterlace", "vc1", "r2r")
+@slash.requires(*platform.have_caps("decode", "vc1"))
+@slash.requires(*have_gst_element("vaapivc1dec"))
 class vc1(DeinterlaceTest):
   def before(self):
     self.gstdecoder  = "'video/x-wmv,profile=(string)advanced',width={width}"
     self.gstdecoder += ",height={height},framerate=14/1 ! vaapivc1dec"
     super(vc1, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "vc1"))
-  @slash.requires(*have_gst_element("vaapivc1dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_vc1, DeinterlaceTest._default_modes_))
@@ -137,9 +129,6 @@ class vc1(DeinterlaceTest):
     self.init(spec_vc1, case, method, rate)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "deinterlace"))
-  @slash.requires(*platform.have_caps("decode", "vc1"))
-  @slash.requires(*have_gst_element("vaapivc1dec"))
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
       spec_vc1_r2r, DeinterlaceTest._default_modes_))

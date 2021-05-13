@@ -10,6 +10,8 @@ from ....lib.ffmpeg.vaapi.vpp import VppTest
 
 spec = load_test_spec("vpp", "transpose")
 
+@slash.requires(*platform.have_caps("vpp", "transpose"))
+@slash.requires(*have_ffmpeg_filter("transpose_vaapi"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -19,8 +21,6 @@ class default(VppTest):
     )
     super(default, self).before()
 
-  @slash.requires(*platform.have_caps("vpp", "transpose"))
-  @slash.requires(*have_ffmpeg_filter("transpose_vaapi"))
   @slash.parametrize(*gen_vpp_transpose_parameters(spec))
   def test(self, case, degrees, method):
     vars(self).update(spec[case].copy())

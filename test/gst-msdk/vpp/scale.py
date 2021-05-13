@@ -11,6 +11,7 @@ from ....lib.gstreamer.msdk.vpp import VppTest
 spec = load_test_spec("vpp", "scale")
 spec_r2r = load_test_spec("vpp", "scale", "r2r")
 
+@slash.requires(*platform.have_caps("vpp", "scale"))
 class default(VppTest):
   def before(self):
     vars(self).update(
@@ -27,13 +28,11 @@ class default(VppTest):
       scale_width   = scale_width,
     )
 
-  @slash.requires(*platform.have_caps("vpp", "scale"))
   @slash.parametrize(*gen_vpp_scale_parameters(spec))
   def test(self, case, scale_width, scale_height):
     self.init(spec, case, scale_width, scale_height)
     self.vpp()
 
-  @slash.requires(*platform.have_caps("vpp", "scale"))
   @slash.parametrize(*gen_vpp_scale_parameters(spec_r2r))
   def test_r2r(self, case, scale_width, scale_height):
     self.init(spec_r2r, case, scale_width, scale_height)
