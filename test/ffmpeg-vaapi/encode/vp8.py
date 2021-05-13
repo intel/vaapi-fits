@@ -11,14 +11,13 @@ from ....lib.ffmpeg.vaapi.encoder import EncoderTest
 spec = load_test_spec("vp8", "encode")
 
 @slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
-class VP8EncoderTest(EncoderTest):
+class VP8EncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec   = "vp8",
       ffenc   = "vp8_vaapi",
-      lowpower= 0,
     )
-    super(VP8EncoderTest, self).before()
 
   def get_file_ext(self):
     return "ivf"
@@ -27,11 +26,18 @@ class VP8EncoderTest(EncoderTest):
     return "VAProfileVP8Version0_3"
 
 @slash.requires(*platform.have_caps("encode", "vp8"))
+class VP8EncoderTest(VP8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp8"),
+      lowpower  = 0,
+    )
+
 class cqp(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       case      = case,
@@ -43,11 +49,9 @@ class cqp(VP8EncoderTest):
     )
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "vp8"))
 class cbr(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, looplvl, loopshp):
-    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -63,12 +67,10 @@ class cbr(VP8EncoderTest):
     )
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "vp8"))
 class vbr(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "vp8")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
