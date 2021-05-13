@@ -13,23 +13,38 @@ spec_r2r  = load_test_spec("avc", "encode", "r2r")
 
 @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
 @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
-class AVCEncoderTest(EncoderTest):
+class AVCEncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec     = "avc",
       ffencoder = "h264_qsv",
       ffdecoder = "h264_qsv",
-      lowpower  = 0,
     )
-    super(AVCEncoderTest, self).before()
 
   def get_file_ext(self):
     return "h264"
 
 @slash.requires(*platform.have_caps("encode", "avc"))
+class AVCEncoderTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "avc"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "avc"))
+class AVCEncoderLPTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "avc"),
+      lowpower  = 1,
+    )
+
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
-    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -53,15 +68,12 @@ class cqp(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class cqp_lp(AVCEncoderTest):
+class cqp_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
-    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
       gop       = gop,
-      lowpower  = 1,
       profile   = profile,
       qp        = qp,
       quality   = quality,
@@ -80,10 +92,8 @@ class cqp_lp(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "avc"))
 class cbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
-    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -109,17 +119,14 @@ class cbr(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class cbr_lp(AVCEncoderTest):
+class cbr_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
-    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = 1,
       maxrate   = bitrate,
       minrate   = bitrate,
       profile   = profile,
@@ -138,10 +145,8 @@ class cbr_lp(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "avc"))
 class vbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -169,17 +174,14 @@ class vbr(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class vbr_lp(AVCEncoderTest):
+class vbr_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.caps = platform.get_caps("vdenc", "avc")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
       gop       = gop,
-      lowpower  = 1,
       maxrate   = bitrate * 2, # target percentage 50%
       minrate   = bitrate,
       profile   = profile,
@@ -199,11 +201,10 @@ class vbr_lp(AVCEncoderTest):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "avc"))
+# TODO: This can be moved into the vbr test class in a test_la method
 class vbr_la(AVCEncoderTest):
   @slash.parametrize(*gen_avc_vbr_la_parameters(spec, ['high', 'main', 'baseline']))
   def test(self, case, bframes, bitrate, fps, quality, refs, profile, ladepth):
-    self.caps = platform.get_caps("encode", "avc")
     vars(self).update(spec[case].copy())
     vars(self).update(
       bframes   = bframes,
