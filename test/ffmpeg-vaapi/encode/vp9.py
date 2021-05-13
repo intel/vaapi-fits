@@ -11,13 +11,13 @@ from ....lib.ffmpeg.vaapi.encoder import EncoderTest
 spec = load_test_spec("vp9", "encode", "8bit")
 
 @slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
-class VP9EncoderTest(EncoderTest):
+class VP9EncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec   = "vp9",
       ffenc   = "vp9_vaapi",
     )
-    super(VP9EncoderTest, self).before()
 
   def get_file_ext(self):
     return "ivf"
@@ -26,11 +26,27 @@ class VP9EncoderTest(EncoderTest):
     return "VAProfileVP9Profile0"
 
 @slash.requires(*platform.have_caps("encode", "vp9_8"))
+class VP9EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp9_8"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
+class VP9EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "vp9_8"),
+      lowpower  = 1,
+    )
+
 class cqp(VP9EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -39,7 +55,6 @@ class cqp(VP9EncoderTest):
       loopshp   = loopshp,
       qp        = qp,
       rcmode    = "cqp",
-      lowpower  = 0,
     )
 
   @slash.parametrize(*gen_vp9_cqp_parameters(spec))
@@ -47,12 +62,10 @@ class cqp(VP9EncoderTest):
     self.init(spec, case, ipmode, qp, quality, refmode, looplvl, loopshp)  
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class cqp_lp(VP9EncoderTest):
+class cqp_lp(VP9EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -62,7 +75,6 @@ class cqp_lp(VP9EncoderTest):
       qp        = qp,
       slices    = slices,
       rcmode    = "cqp",
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_cqp_lp_parameters(spec))
@@ -70,11 +82,9 @@ class cqp_lp(VP9EncoderTest):
     self.init(spec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "vp9_8"))
 class cbr(VP9EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -87,7 +97,6 @@ class cbr(VP9EncoderTest):
       maxrate   = bitrate,
       minrate   = bitrate,
       rcmode    = "cbr",
-      lowpower  = 0,
     )
 
   @slash.parametrize(*gen_vp9_cbr_parameters(spec))
@@ -95,12 +104,10 @@ class cbr(VP9EncoderTest):
     self.init(spec, case, gop, bitrate, fps, refmode, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class cbr_lp(VP9EncoderTest):
+class cbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -113,7 +120,6 @@ class cbr_lp(VP9EncoderTest):
       minrate   = bitrate,
       rcmode    = "cbr",
       slices    = slices,
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_cbr_lp_parameters(spec))
@@ -121,12 +127,10 @@ class cbr_lp(VP9EncoderTest):
     self.init(spec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "vp9_8"))
 class vbr(VP9EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -139,7 +143,6 @@ class vbr(VP9EncoderTest):
       maxrate   = bitrate * 2, # target percentage 50%
       minrate   = bitrate,
       rcmode    = "vbr",
-      lowpower  = 0,
     )
 
   @slash.parametrize(*gen_vp9_vbr_parameters(spec))
@@ -147,13 +150,11 @@ class vbr(VP9EncoderTest):
     self.init(spec, case, gop, bitrate, fps, refmode, quality, looplvl, loopshp)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class vbr_lp(VP9EncoderTest):
+class vbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
     slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "vp9_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -166,7 +167,6 @@ class vbr_lp(VP9EncoderTest):
       minrate   = bitrate,
       rcmode    = "vbr",
       slices    = slices,
-      lowpower  = 1,
     )
 
   @slash.parametrize(*gen_vp9_vbr_lp_parameters(spec))

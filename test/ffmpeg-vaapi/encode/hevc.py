@@ -12,14 +12,13 @@ spec      = load_test_spec("hevc", "encode", "8bit")
 spec_r2r  = load_test_spec("hevc", "encode", "8bit", "r2r")
 
 @slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
-class HEVC8EncoderTest(EncoderTest):
+class HEVC8EncoderBaseTest(EncoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       codec   = "hevc-8",
       ffenc   = "hevc_vaapi",
-      lowpower= 0,
     )
-    super(HEVC8EncoderTest, self).before()
 
   def get_file_ext(self):
     return "h265"
@@ -33,10 +32,26 @@ class HEVC8EncoderTest(EncoderTest):
     }[self.profile]
 
 @slash.requires(*platform.have_caps("encode", "hevc_8"))
+class HEVC8EncoderTest(HEVC8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_8"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
+class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_8"),
+      lowpower  = 1,
+    )
+
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -59,16 +74,13 @@ class cqp(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class cqp_lp(HEVC8EncoderTest):
+class cqp_lp(HEVC8EncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case     = case,
       gop      = gop,
-      lowpower = 1,
       qp       = qp,
       profile  = profile,
       rcmode   = "cqp",
@@ -86,10 +98,8 @@ class cqp_lp(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
 class cbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile, level=None):
-    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -121,17 +131,14 @@ class cbr(HEVC8EncoderTest):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, profile, level)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class cbr_lp(HEVC8EncoderTest):
+class cbr_lp(HEVC8EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
-    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
       case    = case,
       fps     = fps,
       gop     = gop,
-      lowpower= 1,
       maxrate = bitrate,
       minrate = bitrate,
       profile = profile,
@@ -150,11 +157,9 @@ class cbr_lp(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
 class vbr(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("encode", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -181,18 +186,15 @@ class vbr(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class vbr_lp(HEVC8EncoderTest):
+class vbr_lp(HEVC8EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
     slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    self.caps = platform.get_caps("vdenc", "hevc_8")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
       case    = case,
       fps     = fps,
       gop     = gop,
-      lowpower= 1,
       maxrate = bitrate * 2, # target percentage 50%
       minrate = bitrate,
       profile = profile,
