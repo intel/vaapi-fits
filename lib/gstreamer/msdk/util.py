@@ -4,20 +4,12 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib.common import memoize, try_call, get_media
+from ....lib.common import memoize, get_media
 from ....lib.formats import match_best_format
+from ....lib.gstreamer.util import *
 
 def using_compatible_driver():
   return get_media()._get_driver_name() == "iHD"
-
-@memoize
-def have_gst():
-  return try_call("which gst-launch-1.0") and try_call("which gst-inspect-1.0")
-
-@memoize
-def have_gst_element(element):
-  result = try_call("gst-inspect-1.0 {}".format(element))
-  return result, element
 
 def get_supported_format_map():
   #The map first entry is for gst element properties;the second entry is for gst caps filters
