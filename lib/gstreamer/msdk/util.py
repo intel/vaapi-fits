@@ -91,6 +91,7 @@ def mapprofile(codec,profile):
       "scc"                   : "screen-extended-main",
       "scc-444"               : "screen-extended-main-444",
       "main444"               : "main-444",
+      "mainsp"                : "main-still-picture",
     },
     "hevc-10" : {
       "main10"                : "main-10",
