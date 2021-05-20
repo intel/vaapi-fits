@@ -23,12 +23,16 @@ class default(DecoderTest):
   def test(self, case):
     vars(self).update(spec[case].copy())
 
-    dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux", ".mkv" : "matroskademux"}
+    dxmap = {".ivf" : "ivfparse", ".webm" : "matroskademux", ".mkv" : "matroskademux", ".obu" : "av1parse"}
     ext = os.path.splitext(self.source)[1]
-    assert ext in dxmap.keys(), "Unrecognized source file extension {}".format(ext)
+    dx = dxmap.get(ext, None)
+    assert dx is not None, "Unrecognized source file extension {}".format(ext)
+
+    if "av1parse" not in dx:
+      dx += " ! av1parse"
 
     vars(self).update(
       case        = case,
-      gstdecoder  = "{} ! av1parse ! vaapiav1dec".format(dxmap[ext]),
+      gstdecoder  = "{} ! vaapiav1dec".format(dx),
     )
     self.decode()
