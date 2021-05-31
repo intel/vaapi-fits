@@ -112,7 +112,16 @@ class vbr(VP9EncoderTest):
 
 class cqp_lp(VP9EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cqp_lp", ['slices'],
+      case      = case,
+      ipmode    = ipmode,
+      qp        = qp,
+      quality   = quality,
+      slices    = slices,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -132,7 +141,16 @@ class cqp_lp(VP9EncoderLPTest):
 
 class cbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cbr_lp", ['slices'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      slices    = slices,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -155,7 +173,17 @@ class cbr_lp(VP9EncoderLPTest):
 
 class vbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'slices' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/vbr_lp", ['slices'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      quality   = quality,
+      slices    = slices,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
