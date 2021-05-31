@@ -30,7 +30,13 @@ class MPEG2EncoderTest(EncoderTest):
 
 class cqp(MPEG2EncoderTest):
   def init(self, tspec, case, gop, bframes, qp, quality):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/mpeg2/cqp", ['quality'],
+      case      = case,
+      gop       = gop,
+      bframes   = bframes,
+      qp        = qp,
+      quality   = quality,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,

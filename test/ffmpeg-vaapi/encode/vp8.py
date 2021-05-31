@@ -37,7 +37,14 @@ class VP8EncoderTest(VP8EncoderBaseTest):
 class cqp(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp8/cqp", ['quality'],
+      case      = case,
+      ipmode    = ipmode,
+      qp        = qp,
+      quality   = quality,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(spec[case].copy())
     vars(self).update(
       case      = case,
@@ -70,7 +77,15 @@ class cbr(VP8EncoderTest):
 class vbr(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp8/vbr", ['quality'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      quality   = quality,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(spec[case].copy())
     vars(self).update(
       bitrate   = bitrate,

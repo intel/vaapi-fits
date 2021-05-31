@@ -45,8 +45,15 @@ class VP9EncoderLPTest(VP9EncoderBaseTest):
 
 class cqp(VP9EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cqp", ['quality', 'refmode'],
+      case      = case,
+      ipmode    = ipmode,
+      qp        = qp,
+      quality   = quality,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -64,8 +71,16 @@ class cqp(VP9EncoderTest):
 
 class cqp_lp(VP9EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cqp_lp", ['quality', 'refmode'],
+      case      = case,
+      ipmode    = ipmode,
+      qp        = qp,
+      quality   = quality,
+      slices    = slices,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -84,7 +99,15 @@ class cqp_lp(VP9EncoderLPTest):
 
 class cbr(VP9EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cbr", ['refmode'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -106,8 +129,16 @@ class cbr(VP9EncoderTest):
 
 class cbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/cbr_lp", ['refmode', 'looplvl'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      slices    = slices,
+      refmode   = refmode,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -129,8 +160,16 @@ class cbr_lp(VP9EncoderLPTest):
 
 class vbr(VP9EncoderTest):
   def init(self, tspec, case, gop, bitrate, fps, refmode, quality, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/vbr", ['refmode', 'quality'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      refmode   = refmode,
+      quality   = quality,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -152,9 +191,17 @@ class vbr(VP9EncoderTest):
 
 class vbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'refmode' parameter unused (not supported by plugin)")
-    slash.logger.notice("NOTICE: 'looplvl' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/vp9/vbr_lp", ['refmode', 'quality', 'looplvl'],
+      case      = case,
+      gop       = gop,
+      bitrate   = bitrate,
+      fps       = fps,
+      slices    = slices,
+      refmode   = refmode,
+      quality   = quality,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,

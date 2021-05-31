@@ -49,7 +49,15 @@ class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/10bit/hevc/cqp", ['quality'],
+      case      = case,
+      gop       = gop,
+      slices    = slices,
+      bframes   = bframes,
+      qp        = qp,
+      quality   = quality,
+      profile   = profile,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -74,7 +82,14 @@ class cqp(HEVC10EncoderTest):
 
 class cqp_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/10bit/hevc/cqp_lp", ['quality'],
+      case      = case,
+      gop       = gop,
+      slices    = slices,
+      qp        = qp,
+      quality   = quality,
+      profile   = profile,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case    = case,
@@ -151,7 +166,17 @@ class cbr_lp(HEVC10EncoderLPTest):
 
 class vbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/10bit/hevc/vbr", ['quality'],
+      case      = case,
+      gop       = gop,
+      slices    = slices,
+      bframes   = bframes,
+      bitrate   = bitrate,
+      fps       = fps,
+      quality   = quality,
+      refs      = refs,
+      profile   = profile,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -180,7 +205,16 @@ class vbr(HEVC10EncoderTest):
 
 class vbr_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
+    skip_test_by_parameter("encode/10bit/hevc/vbr_lp", ['quality'],
+      case      = case,
+      gop       = gop,
+      slices    = slices,
+      bitrate   = bitrate,
+      fps       = fps,
+      quality   = quality,
+      refs      = refs,
+      profile   = profile,
+    )
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
