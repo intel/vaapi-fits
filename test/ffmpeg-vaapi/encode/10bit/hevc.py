@@ -49,7 +49,6 @@ class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -61,12 +60,12 @@ class cqp(HEVC10EncoderTest):
       slices  = slices,
     )
 
-  @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main10']))
+  @parametrize_with_unused(*gen_hevc_cqp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
     self.encode()
 
-  @slash.parametrize(*gen_hevc_cqp_parameters(spec_r2r, ['main10']))
+  @parametrize_with_unused(*gen_hevc_cqp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
@@ -74,7 +73,6 @@ class cqp(HEVC10EncoderTest):
 
 class cqp_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case    = case,
@@ -85,12 +83,12 @@ class cqp_lp(HEVC10EncoderLPTest):
       slices  = slices,
     )
 
-  @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main10']))
+  @parametrize_with_unused(*gen_hevc_cqp_lp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, qp, quality, profile):
     self.init(spec, case, gop, slices, qp, quality, profile)
     self.encode()
 
-  @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main10']))
+  @parametrize_with_unused(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, qp, quality, profile):
     self.init(spec_r2r, case, gop, slices, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
@@ -151,7 +149,6 @@ class cbr_lp(HEVC10EncoderLPTest):
 
 class vbr(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -167,12 +164,12 @@ class vbr(HEVC10EncoderTest):
       slices = slices,
     )
 
-  @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main10']))
+  @parametrize_with_unused(*gen_hevc_vbr_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @slash.parametrize(*gen_hevc_vbr_parameters(spec_r2r, ['main10']))
+  @parametrize_with_unused(*gen_hevc_vbr_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
@@ -180,7 +177,6 @@ class vbr(HEVC10EncoderTest):
 
 class vbr_lp(HEVC10EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
-    slash.logger.notice("NOTICE: 'quality' parameter unused (not supported by plugin)")
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -195,12 +191,12 @@ class vbr_lp(HEVC10EncoderLPTest):
       slices = slices,
     )
 
-  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main10']))
+  @parametrize_with_unused(*gen_hevc_vbr_lp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
-  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main10']))
+  @parametrize_with_unused(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
