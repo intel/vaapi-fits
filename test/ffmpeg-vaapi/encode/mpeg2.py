@@ -29,7 +29,7 @@ class MPEG2EncoderTest(EncoderTest):
     return "VAProfileMPEG2.*"
 
 class cqp(MPEG2EncoderTest):
-  def init(self, tspec, case, gop, bframes, qp, quality):
+  def init(self, tspec, case, gop, bframes, qp):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -42,11 +42,11 @@ class cqp(MPEG2EncoderTest):
 
   @parametrize_with_unused(*gen_mpeg2_cqp_parameters(spec), ['quality'])
   def test(self, case, gop, bframes, qp, quality):
-    self.init(spec, case, gop, bframes, qp, quality)
+    self.init(spec, case, gop, bframes, qp)
     self.encode()
 
   @parametrize_with_unused(*gen_mpeg2_cqp_parameters(spec_r2r), ['quality'])
   def test_r2r(self, case, gop, bframes, qp, quality):
-    self.init(spec_r2r, case, gop, bframes, qp, quality)
+    self.init(spec_r2r, case, gop, bframes, qp)
     vars(self).setdefault("r2r", 5)
     self.encode()

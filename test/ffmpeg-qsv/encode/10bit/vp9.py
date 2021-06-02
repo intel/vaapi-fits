@@ -34,7 +34,7 @@ class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
     )
 
 class cqp_lp(VP9_10EncoderLPTest):
-  def init(self, tspec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
+  def init(self, tspec, case, ipmode, qp, quality, slices):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -47,11 +47,11 @@ class cqp_lp(VP9_10EncoderLPTest):
 
   @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp)
+    self.init(spec, case, ipmode, qp, quality, slices)
     self.encode()
 
 class cbr_lp(VP9_10EncoderLPTest):
-  def init(self, tspec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
+  def init(self, tspec, case, gop, bitrate, fps, slices):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -67,11 +67,11 @@ class cbr_lp(VP9_10EncoderLPTest):
 
   @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    self.init(spec, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp)
+    self.init(spec, case, gop, bitrate, fps, slices)
     self.encode()
 
 class vbr_lp(VP9_10EncoderLPTest):
-  def init(self, tspec, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
+  def init(self, tspec, case, gop, bitrate, fps, slices, quality):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       quality   = quality,
@@ -88,5 +88,5 @@ class vbr_lp(VP9_10EncoderLPTest):
 
   @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
-    self.init(spec, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp)
+    self.init(spec, case, gop, bitrate, fps, slices, quality)
     self.encode()

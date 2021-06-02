@@ -48,7 +48,7 @@ class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
     )
 
 class cqp(HEVC10EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+  def init(self, tspec, case, gop, slices, bframes, qp, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -62,17 +62,17 @@ class cqp(HEVC10EncoderTest):
 
   @parametrize_with_unused(*gen_hevc_cqp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bframes, qp, quality, profile):
-    self.init(spec, case, gop, slices, bframes, qp, quality, profile)
+    self.init(spec, case, gop, slices, bframes, qp, profile)
     self.encode()
 
   @parametrize_with_unused(*gen_hevc_cqp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
-    self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
+    self.init(spec_r2r, case, gop, slices, bframes, qp, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
 class cqp_lp(HEVC10EncoderLPTest):
-  def init(self, tspec, case, gop, slices, qp, quality, profile):
+  def init(self, tspec, case, gop, slices, qp, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case    = case,
@@ -85,12 +85,12 @@ class cqp_lp(HEVC10EncoderLPTest):
 
   @parametrize_with_unused(*gen_hevc_cqp_lp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, qp, quality, profile):
-    self.init(spec, case, gop, slices, qp, quality, profile)
+    self.init(spec, case, gop, slices, qp, profile)
     self.encode()
 
   @parametrize_with_unused(*gen_hevc_cqp_lp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, qp, quality, profile):
-    self.init(spec_r2r, case, gop, slices, qp, quality, profile)
+    self.init(spec_r2r, case, gop, slices, qp, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
@@ -148,7 +148,7 @@ class cbr_lp(HEVC10EncoderLPTest):
     self.encode()
 
 class vbr(HEVC10EncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+  def init(self, tspec, case, gop, slices, bframes, bitrate, fps, refs, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes = bframes,
@@ -166,17 +166,17 @@ class vbr(HEVC10EncoderTest):
 
   @parametrize_with_unused(*gen_hevc_vbr_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, refs, profile)
     self.encode()
 
   @parametrize_with_unused(*gen_hevc_vbr_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
-    self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
+    self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
 
 class vbr_lp(HEVC10EncoderLPTest):
-  def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
+  def init(self, tspec, case, gop, slices, bitrate, fps, refs, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate = bitrate,
@@ -193,11 +193,11 @@ class vbr_lp(HEVC10EncoderLPTest):
 
   @parametrize_with_unused(*gen_hevc_vbr_lp_parameters(spec, ['main10']), ['quality'])
   def test(self, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
+    self.init(spec, case, gop, slices, bitrate, fps, refs, profile)
     self.encode()
 
   @parametrize_with_unused(*gen_hevc_vbr_lp_parameters(spec_r2r, ['main10']), ['quality'])
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
-    self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
+    self.init(spec_r2r, case, gop, slices, bitrate, fps, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
