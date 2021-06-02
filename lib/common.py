@@ -42,6 +42,23 @@ def timefn(label):
 
   return inner
 
+def parametrize_with_unused(names, values, unused):
+  def inner(func):
+    used = vars(func).setdefault("__params_used__", list())
+    @functools.wraps(func)
+    @slash.parametrize(names, sorted(values))
+    def wrapper(*args, **kwargs):
+      params = kwargs.copy()
+      for param in unused:
+        slash.logger.notice("NOTICE: '{}' parameter unused".format(param))
+        del params[param]
+      if params in used:
+        slash.skip_test("Test case is redundant")
+      used.append(params)
+      func(*args, **kwargs)
+    return wrapper
+  return inner
+
 class memoize:
   def __init__(self, function):
     self.function = function
