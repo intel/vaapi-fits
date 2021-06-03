@@ -16,7 +16,7 @@ class default(VppTest):
     vars(self).update(
       caps        = platform.get_caps("vpp", "crop"),
       metric      = dict(type = "md5"),
-      vpp_element = "crop",
+      vpp_op = "crop",
     )
     super(default, self).before()
 

@@ -38,13 +38,13 @@ class BaseVppTest(slash.Test):
     raise NotImplementedError
 
   def gen_input_opts(self):
-    if self.vpp_element not in ["deinterlace"]:
+    if self.vpp_op not in ["deinterlace"]:
       opts =  "filesrc location={source} num-buffers={frames}"
       opts += " ! rawvideoparse format={mformat} width={width} height={height}"
     else:
       opts =  "filesrc location={source}"
       opts += " ! {gstdecoder}"
-    if self.vpp_element not in ["csc", "deinterlace"]:
+    if self.vpp_op not in ["csc", "deinterlace"]:
       if self.ifmt != self.ihwformat:
         opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={ihwformat}"
 
@@ -53,11 +53,11 @@ class BaseVppTest(slash.Test):
   def gen_output_opts(self):
     opts = "{gstvpp} " + self.gen_vpp_opts()
     opts += " ! video/x-raw,format={ohwformat}"
-    if self.vpp_element in ["scale"]:
+    if self.vpp_op in ["scale"]:
       opts += ",width={scale_width},height={scale_height}"
-    elif self.vpp_element in ["deinterlace"]:
+    elif self.vpp_op in ["deinterlace"]:
       opts += ",width={width},height={height}"
-    if self.ofmt != self.ohwformat and self.vpp_element not in ["csc"]:
+    if self.ofmt != self.ohwformat and self.vpp_op not in ["csc"]:
       opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu}"
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
     opts += " plane-checksum=false dump-output=true dump-location={ofile} eos-after={frames}"
@@ -66,33 +66,33 @@ class BaseVppTest(slash.Test):
 
   def gen_name(self):
     name = "{case}"
-    if self.vpp_element in ["scale"]:
+    if self.vpp_op in ["scale"]:
       name += "_{scale_width}x{scale_height}"
-    elif self.vpp_element in ["crop"]:
+    elif self.vpp_op in ["crop"]:
       name += "_{crop_width}x{crop_height}"
     else:
       name += "_{width}x{height}"
-    if self.vpp_element in ["contrast"]:
+    if self.vpp_op in ["contrast"]:
       name += "_contrast_{level}"
-    elif self.vpp_element in ["saturation"]:
+    elif self.vpp_op in ["saturation"]:
       name += "_saturation_{level}"
-    elif self.vpp_element in ["hue"]:
+    elif self.vpp_op in ["hue"]:
       name += "_hue_{level}"
-    elif self.vpp_element in ["brightness"]:
+    elif self.vpp_op in ["brightness"]:
       name += "_brightness_{level}"
-    elif self.vpp_element in ["denoise"]:
+    elif self.vpp_op in ["denoise"]:
       name += "_denoise_{level}"
-    elif self.vpp_element in ["sharpen"]:
+    elif self.vpp_op in ["sharpen"]:
       name += "_sharpen_{level}"
-    elif self.vpp_element in ["scale"]:
+    elif self.vpp_op in ["scale"]:
       name += "_scaled"
-    elif self.vpp_element in ["csc"]:
+    elif self.vpp_op in ["csc"]:
       name += "_csc_{csc}"
-    elif self.vpp_element in ["deinterlace"]:
+    elif self.vpp_op in ["deinterlace"]:
       name += "_deinterlace_{method}_{rate}"
-    elif self.vpp_element in ["transpose"]:
+    elif self.vpp_op in ["transpose"]:
       name += "_transpose_{degrees}_{method}"
-    elif self.vpp_element in ["crop"]:
+    elif self.vpp_op in ["crop"]:
       name += "_crop_{left}_{right}_{top}_{bottom}"
     if vars(self).get("r2r", None) is not None:
       name += "_r2r"
@@ -108,14 +108,14 @@ class BaseVppTest(slash.Test):
     ifmts         = self.get_input_formats()
     ofmts         = self.get_output_formats()
     self.ifmt     = self.format
-    self.ofmt     = self.format if "csc" != self.vpp_element else self.csc
+    self.ofmt     = self.format if "csc" != self.vpp_op else self.csc
     self.mformat  = self.map_format(self.format)
     self.mformatu = self.map_formatu(self.format)
 
     if self.mformat is None:
       slash.skip_test("{gstvpp}.{format} unsupported".format(**vars(self)))
 
-    if "csc" == self.vpp_element:
+    if "csc" == self.vpp_op:
       self.ihwformat = self.map_formatu(self.ifmt if self.ifmt in ifmts else None)
       self.ohwformat = self.map_formatu(self.ofmt if self.ofmt in ofmts else None)
     else:

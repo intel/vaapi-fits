@@ -16,7 +16,7 @@ class default(VppTest):
   def before(self):
     vars(self).update(
       caps        = platform.get_caps("vpp", "brightness"),
-      vpp_element = "brightness",
+      vpp_op = "brightness",
     )
     super(default, self).before()
 

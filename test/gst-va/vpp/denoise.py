@@ -15,7 +15,7 @@ class default(VppTest):
   def before(self):
     vars(self).update(
       caps        = platform.get_caps("vpp", "denoise"),
-      vpp_element = "denoise",
+      vpp_op = "denoise",
     )
     super(default, self).before()
 

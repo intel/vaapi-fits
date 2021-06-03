@@ -16,7 +16,7 @@ class default(VppTest):
     vars(self).update(
       caps        = platform.get_caps("vpp", "rotation"),
       metric      = dict(type = "md5"),
-      vpp_element = "transpose",
+      vpp_op = "transpose",
     )
     super(default, self).before()
 
