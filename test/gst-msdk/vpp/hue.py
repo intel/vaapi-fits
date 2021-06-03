@@ -16,7 +16,7 @@ class default(VppTest):
   def before(self):
     vars(self).update(
       caps        = platform.get_caps("vpp", "hue"),
-      vpp_element = "hue",
+      vpp_op = "hue",
       NOOP        = 50 # i.e. 0.0 in msdkvpp range should result in no-op result
     )
     super(default, self).before()

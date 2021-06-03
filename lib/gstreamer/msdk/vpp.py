@@ -38,25 +38,25 @@ class VppTest(BaseVppTest):
 
   def gen_vpp_opts(self):
     opts = "hardware=true"
-    if self.vpp_element in ["scale"]:
+    if self.vpp_op in ["scale"]:
       opts += " scaling-mode=1"
-    elif self.vpp_element in ["deinterlace"]:
+    elif self.vpp_op in ["deinterlace"]:
       opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
-    elif self.vpp_element in ["brightness"]:
+    elif self.vpp_op in ["brightness"]:
       opts += " brightness={mlevel}"
-    elif self.vpp_element in ["contrast"]:
+    elif self.vpp_op in ["contrast"]:
       opts += " contrast={mlevel}"
-    elif self.vpp_element in ["denoise"]:
+    elif self.vpp_op in ["denoise"]:
       opts += " denoise={level}"
-    elif self.vpp_element in ["hue"]:
+    elif self.vpp_op in ["hue"]:
       opts += " hue={mlevel}"
-    elif self.vpp_element in ["saturation"]:
+    elif self.vpp_op in ["saturation"]:
       opts += " saturation={mlevel}"
-    elif self.vpp_element in ["sharpen"]:
+    elif self.vpp_op in ["sharpen"]:
       opts += " detail={level}"
-    elif self.vpp_element in ["transpose"]:
+    elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
-    elif self.vpp_element in ["crop"]:
+    elif self.vpp_op in ["crop"]:
       opts += " crop-left={left} crop-right={right}"
       opts += " crop-top={top} crop-bottom={bottom}"
 

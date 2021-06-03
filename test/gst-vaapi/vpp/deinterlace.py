@@ -28,7 +28,7 @@ class DeinterlaceTest(VppTest):
   def before(self):
     vars(self).update(
       metric      = dict(type = "md5"), # default metric
-      vpp_element = "deinterlace",
+      vpp_op = "deinterlace",
     )
     super(DeinterlaceTest, self).before()
 
