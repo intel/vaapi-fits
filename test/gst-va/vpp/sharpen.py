@@ -23,9 +23,9 @@ class default(VppTest):
   def test(self, case, level):
     vars(self).update(spec[case].copy())
     if get_media()._get_driver_name() == 'iHD':
-      mlevel  = mapRange(level, [0, 100], [0.0, 64.0]),
+      mlevel  = mapRange(level, [0, 100], [0.0, 64.0])
     else:
-      mlevel  = mapRange(level, [0, 100], [0.0, 1.0]),
+      mlevel  = mapRange(level, [0, 100], [0.0, 1.0])
     vars(self).update(
       case    = case,
       level   = level,
