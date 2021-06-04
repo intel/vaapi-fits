@@ -26,7 +26,6 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [0.0, 10.0]),
     )
 
   @slash.parametrize(*gen_vpp_contrast_parameters(spec))
