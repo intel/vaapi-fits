@@ -25,7 +25,6 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [-180.0, 180.0]),
     )
 
   @slash.parametrize(*gen_vpp_hue_parameters(spec))
