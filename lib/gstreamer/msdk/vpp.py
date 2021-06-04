@@ -11,7 +11,7 @@ from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.msdk.util import using_compatible_driver
 from ....lib.gstreamer.msdk.util import map_best_hw_format, mapformat, mapformatu
-from ....lib.common import get_media
+from ....lib.common import get_media, mapRange
 
 @slash.requires(*have_gst_element("msdk"))
 @slash.requires(*have_gst_element("msdkvpp"))
@@ -38,20 +38,23 @@ class VppTest(BaseVppTest):
 
   def gen_vpp_opts(self):
     opts = "hardware=true"
-    if self.vpp_op in ["scale"]:
+
+    procamp = dict(
+      brightness  = [-100.0, 100.0],
+      contrast    = [   0.0,  10.0],
+      hue         = [-180.0, 180.0],
+      saturation  = [   0.0,  10.0],
+    )
+
+    if self.vpp_op in procamp:
+      self.mlevel = mapRange(self.level, [0, 100], procamp[self.vpp_op])
+      opts += " {vpp_op}={mlevel}"
+    elif self.vpp_op in ["scale"]:
       opts += " scaling-mode=1"
     elif self.vpp_op in ["deinterlace"]:
       opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
-    elif self.vpp_op in ["brightness"]:
-      opts += " brightness={mlevel}"
-    elif self.vpp_op in ["contrast"]:
-      opts += " contrast={mlevel}"
     elif self.vpp_op in ["denoise"]:
       opts += " denoise={level}"
-    elif self.vpp_op in ["hue"]:
-      opts += " hue={mlevel}"
-    elif self.vpp_op in ["saturation"]:
-      opts += " saturation={mlevel}"
     elif self.vpp_op in ["sharpen"]:
       opts += " detail={level}"
     elif self.vpp_op in ["transpose"]:
