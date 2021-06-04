@@ -42,10 +42,12 @@ class VppTest(BaseVppTest):
     if self.vpp_op in procamp:
       self.mlevel = mapRange(self.level, [0, 100], procamp[self.vpp_op])
       opts += " {vpp_op}={mlevel}"
-    elif self.vpp_op in ["denoise"]:
-      opts += " denoise={mlevel}"
-    elif self.vpp_op in ["sharpen"]:
-      opts += " sharpen={mlevel}"
+    elif self.vpp_op in ["denoise", "sharpen"]:
+      oprange = dict(
+        i965 = [0.0, 1.0],
+      ).get(get_media()._get_driver_name(), [0.0, 64.0])
+      self.mlevel = mapRange(self.level, [0, 100], oprange)
+      opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
 

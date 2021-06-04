@@ -25,7 +25,6 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [-1.0, 1.0]),
     )
 
     if self.width == 1280 and self.height == 720:
