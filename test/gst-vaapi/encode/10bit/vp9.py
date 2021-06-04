@@ -97,6 +97,6 @@ class vbr_lp(VP9_10EncoderLPTest):
     )
 
   @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['slices'])
-  def test(self, case, gop, bitrate, fps, quality, refmode, looplvl, loopshp):
-    self.init(spec, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp)
+  def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, gop, bitrate, fps, quality, refmode, looplvl, loopshp)
     self.encode()
