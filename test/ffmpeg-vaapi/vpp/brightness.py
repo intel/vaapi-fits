@@ -27,7 +27,9 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [-100.0, 100.0]),
+      mlevel  = mapRangeWithDefault(
+        level, [0.0, 50.0, 100.0], [-100.0, 0.0, 100.0]
+      ),
     )
 
   @slash.parametrize(*gen_vpp_brightness_parameters(spec))

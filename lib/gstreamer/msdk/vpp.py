@@ -11,7 +11,7 @@ from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.msdk.util import using_compatible_driver
 from ....lib.gstreamer.msdk.util import map_best_hw_format, mapformat, mapformatu
-from ....lib.common import get_media, mapRange
+from ....lib.common import get_media, mapRange, mapRangeWithDefault
 
 @slash.requires(*have_gst_element("msdk"))
 @slash.requires(*have_gst_element("msdkvpp"))
@@ -40,14 +40,16 @@ class VppTest(BaseVppTest):
     opts = "hardware=true"
 
     procamp = dict(
-      brightness  = [-100.0, 100.0],
-      contrast    = [   0.0,  10.0],
-      hue         = [-180.0, 180.0],
-      saturation  = [   0.0,  10.0],
+      brightness  = [-100.0,   0.0, 100.0],
+      contrast    = [   0.0,   1.0,  10.0],
+      hue         = [-180.0,   0.0, 180.0],
+      saturation  = [   0.0,   1.0,  10.0],
     )
 
     if self.vpp_op in procamp:
-      self.mlevel = mapRange(self.level, [0, 100], procamp[self.vpp_op])
+      self.mlevel = mapRangeWithDefault(
+        self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op]
+      )
       opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["scale"]:
       opts += " scaling-mode=1"

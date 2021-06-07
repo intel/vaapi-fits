@@ -10,7 +10,7 @@ import slash
 from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.vaapi.util import map_best_hw_format, mapformat, mapformatu
-from ....lib.common import get_media, mapRange
+from ....lib.common import get_media, mapRange, mapRangeWithDefault
 
 @slash.requires(*have_gst_element("vaapi"))
 @slash.requires(*have_gst_element("vaapipostproc"))
@@ -33,14 +33,16 @@ class VppTest(BaseVppTest):
     opts = ""
 
     procamp = dict(
-      brightness  = [  -1.0,   1.0],
-      contrast    = [   0.0,   2.0],
-      hue         = [-180.0, 180.0],
-      saturation  = [   0.0,   2.0],
+      brightness  = [  -1.0,   0.0,   1.0],
+      contrast    = [   0.0,   1.0,   2.0],
+      hue         = [-180.0,   0.0, 180.0],
+      saturation  = [   0.0,   1.0,   2.0],
     )
 
     if self.vpp_op in procamp:
-      self.mlevel = mapRange(self.level, [0, 100], procamp[self.vpp_op])
+      self.mlevel = mapRangeWithDefault(
+        self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op]
+      )
       opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["denoise"]:
       self.mlevel = mapRange(self.level, [0, 100], [0.0, 1.0])

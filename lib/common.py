@@ -193,6 +193,15 @@ def mapRangeInt(value, srcRange, destRange):
   (smin, smax), (dmin, dmax) = srcRange, destRange
   return int(dmin + ((value - smin) * (dmax - dmin) // (smax - smin)))
 
+def mapRangeWithDefault(value, srcRange, dstRange):
+  # Normalizes a value from the source range into the destination range,
+  # taking the midpoint/default of each range into account.
+  smin, smid, smax = srcRange
+  dmin, dmid, dmax = dstRange
+  if value < smid:
+    return (value - smin) / (smid - smin) * (dmid - dmin) + dmin
+  return (value - smid) / (smax - smid) * (dmax - dmid) + dmid
+
 # some path helpers
 def abspath(path):
   return os.path.sep + os.path.abspath(path).lstrip(os.path.sep)

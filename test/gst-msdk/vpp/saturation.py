@@ -17,7 +17,7 @@ class default(VppTest):
     vars(self).update(
       caps        = platform.get_caps("vpp", "saturation"),
       vpp_op = "saturation",
-      NOOP        = 10 # i.e. 1.0 in msdkvpp range should result in no-op result
+      NOOP        = 50 # i.e. 1.0 in msdkvpp range should result in no-op result
     )
     super(default, self).before()
 
