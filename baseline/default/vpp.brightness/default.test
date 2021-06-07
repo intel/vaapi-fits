@@ -1,0 +1,72 @@
+{
+  "vpp.brightness:default.test(case=1080p,level=84)": {
+    "psnr": [
+      12.5314,
+      100.0000,
+      100.0000,
+      12.5316,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=720p,level=12)": {
+    "psnr": [
+      12.0616,
+      100.0000,
+      100.0000,
+      12.0624,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=720p,level=57)": {
+    "psnr": [
+      25.2082,
+      100.0000,
+      100.0000,
+      25.2082,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=QCIF,level=0)": {
+    "psnr": [
+      9.7694,
+      100.0000,
+      100.0000,
+      9.7709,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=QCIF,level=100)": {
+    "psnr": [
+      9.4388,
+      100.0000,
+      100.0000,
+      9.4437,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=QVGA,level=1)": {
+    "psnr": [
+      9.9086,
+      100.0000,
+      100.0000,
+      9.9107,
+      100.0000,
+      100.0000
+    ]
+  },
+  "vpp.brightness:default.test(case=QVGA,level=99)": {
+    "psnr": [
+      9.5907,
+      100.0000,
+      100.0000,
+      9.5926,
+      100.0000,
+      100.0000
+    ]
+  }
+}

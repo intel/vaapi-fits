@@ -1,0 +1,72 @@
+{
+  "vpp.saturation:default.test(case=1080p,level=84)": {
+    "psnr": [
+      100.0000,
+      13.9176,
+      17.7165,
+      100.0000,
+      13.9176,
+      17.7165
+    ]
+  },
+  "vpp.saturation:default.test(case=720p,level=12)": {
+    "psnr": [
+      100.0000,
+      13.6773,
+      13.2219,
+      100.0000,
+      13.6773,
+      13.2219
+    ]
+  },
+  "vpp.saturation:default.test(case=720p,level=57)": {
+    "psnr": [
+      100.0000,
+      19.2187,
+      22.3723,
+      100.0000,
+      19.2187,
+      22.3723
+    ]
+  },
+  "vpp.saturation:default.test(case=QCIF,level=0)": {
+    "psnr": [
+      100.0000,
+      11.5272,
+      11.1117,
+      100.0000,
+      11.5272,
+      11.1117
+    ]
+  },
+  "vpp.saturation:default.test(case=QCIF,level=100)": {
+    "psnr": [
+      100.0000,
+      14.0457,
+      13.4765,
+      100.0000,
+      14.0457,
+      13.4765
+    ]
+  },
+  "vpp.saturation:default.test(case=QVGA,level=1)": {
+    "psnr": [
+      100.0000,
+      11.6733,
+      11.2564,
+      100.0000,
+      11.6733,
+      11.2564
+    ]
+  },
+  "vpp.saturation:default.test(case=QVGA,level=99)": {
+    "psnr": [
+      100.0000,
+      14.1632,
+      13.5250,
+      100.0000,
+      14.1632,
+      13.5250
+    ]
+  }
+}
