@@ -17,7 +17,7 @@ class default(VppTest):
     vars(self).update(
       caps    = platform.get_caps("vpp", "saturation"),
       vpp_op  = "saturation",
-      NOOP    = 10, # i.e. 1.0 in ffmpeg range
+      NOOP    = 50, # i.e. 1.0 in ffmpeg range
     )
     super(default, self).before()
 
@@ -26,7 +26,9 @@ class default(VppTest):
     vars(self).update(
       case    = case,
       level   = level,
-      mlevel  = mapRange(level, [0, 100], [0.0, 10.0]),
+      mlevel  = mapRangeWithDefault(
+        level, [0.0, 50.0, 100.0], [0.0, 1.0, 10.0]
+      ),
     )
 
   @slash.parametrize(*gen_vpp_saturation_parameters(spec))
