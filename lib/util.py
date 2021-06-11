@@ -14,3 +14,15 @@ def skip_test_if_missing_features(test):
         format_value(
           "{platform}.{driver}.feature({feature}) not supported",
           **vars(test), feature = feature))
+
+def load_test_spec(component, *ctx):
+  from .common import get_media
+  import copy
+
+  # get copy of general ctx entries
+  spec = copy.deepcopy(get_media()._get_test_spec(*ctx))
+
+  # component specific entries override general ctx entries
+  spec.update(get_media()._get_test_spec(component, *ctx))
+
+  return spec
