@@ -120,13 +120,5 @@ def mapprofile(codec, profile):
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
-  from ....lib import get_media
-  import copy
-
-  # get copy of general ctx entries
-  spec = copy.deepcopy(get_media()._get_test_spec(*ctx))
-
-  # component specific entries override general ctx entries
-  spec.update(get_media()._get_test_spec("ffmpeg-qsv", *ctx))
-
-  return spec
+  from ....lib import util as libutil
+  return libutil.load_test_spec("ffmpeg-qsv", *ctx)
