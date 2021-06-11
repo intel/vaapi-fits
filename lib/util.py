@@ -22,6 +22,11 @@ def load_test_spec(component, *ctx):
   # get copy of general ctx entries
   spec = copy.deepcopy(get_media()._get_test_spec(*ctx))
 
+  # remove cases that explicitly don't want to use this component
+  for k, v in list(spec.items()):
+    if component in set(v.get("not_components", set())):
+      del spec[k]
+
   # component specific entries override general ctx entries
   spec.update(get_media()._get_test_spec(component, *ctx))
 
