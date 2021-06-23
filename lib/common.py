@@ -106,6 +106,25 @@ def killproc(proc):
 
   return result
 
+def startproc(command, logger = slash.logger.debug):
+  # Without "exec", the shell will launch the "command" in a child process and
+  # proc.pid will represent the shell (not the "command").  And therefore, the
+  # "command" will not get killed with proc.terminate() or proc.kill().
+  #
+  # When we use "exec" to run the "command". This will cause the "command" to
+  # inherit the shell process and proc.pid will represent the actual "command".
+  proc = subprocess.Popen(
+    "exec " + command,
+    stdin = subprocess.PIPE,
+    stdout = subprocess.PIPE,
+    stderr = subprocess.STDOUT,
+    shell = True,
+    universal_newlines = True)
+
+  logger("CALL: {} (pid: {})".format(command, proc.pid))
+
+  return proc
+
 def call(command, withSlashLogger = True):
 
   calls_allowed = get_media()._calls_allowed()
@@ -130,21 +149,7 @@ def call(command, withSlashLogger = True):
   error = False
   message = ""
 
-  # Without "exec", the shell will launch the "command" in a child process and
-  # proc.pid will represent the shell (not the "command").  And therefore, the
-  # "command" will not get killed with proc.terminate() or proc.kill().
-  #
-  # When we use "exec" to run the "command". This will cause the "command" to
-  # inherit the shell process and proc.pid will represent the actual "command".
-  proc = subprocess.Popen(
-    "exec " + command,
-    stdin = subprocess.PIPE,
-    stdout = subprocess.PIPE,
-    stderr = subprocess.STDOUT,
-    shell = True,
-    universal_newlines = True)
-
-  logger("CALL: {} (pid: {})".format(command, proc.pid))
+  proc = startproc(command, logger)
 
   reader = threading.Thread(target = readproc, args = [proc])
   timer = threading.Timer(get_media()._get_call_timeout(), timeout, [proc])
