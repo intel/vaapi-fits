@@ -9,5 +9,5 @@
 ###
 
 info = dict(
-  gpu = dict(gen = 12),
+  gpu = dict(gen = 12.2),
 )
