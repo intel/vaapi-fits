@@ -92,7 +92,7 @@ caps = dict(
     # colorspace conversion
     csc         = dict(
       ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
     ),
   ),
 )
