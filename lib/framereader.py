@@ -177,6 +177,17 @@ def read_frame_BGRA(fd, width, height):
 
   return r, g, b
 
+def read_frame_BGRX(fd, width, height):
+  size = width * height * 4
+
+  bgrx = numpy.fromfile(fd, dtype=numpy.uint8, count=size)
+  x = bgrx[3::4].reshape((height, width))
+  r = bgrx[2::4].reshape((height, width))
+  g = bgrx[1::4].reshape((height, width))
+  b = bgrx[0::4].reshape((height, width))
+
+  return r, g, b
+
 def read_frame_Y210(fd, width, height):
   #https://docs.microsoft.com/en-us/windows/win32/medfound/10-bit-and-16-bit-yuv-video-formats#422-formats
   #Y210 (each pair of pixels is stored as an array of four WORD)
@@ -273,4 +284,5 @@ FrameReaders = {
   "Y410" : read_frame_Y410,
   "Y412" : read_frame_Y412,
   "BGRA" : read_frame_BGRA,
+  "BGRX" : read_frame_BGRX,
 }
