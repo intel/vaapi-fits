@@ -24,6 +24,7 @@ def get_supported_format_map():
     "YUY2"  : ("yuy2", "YUY2"),
     "ARGB"  : ("argb", "ARGB"),
     "BGRA"  : ("bgra", "BGRA"),
+    "BGRX"  : ("bgrx", "BGRx"),
     "422H"  : ("y42b", "Y42B"),
     "444P"  : ("y444", "Y444"),
     "P010"  : ("p010-10le", "P010_10LE"),
