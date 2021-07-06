@@ -33,6 +33,6 @@ class default(DecoderTest):
 
     vars(self).update(
       case        = case,
-      gstdecoder  = "{} ! vaapiav1dec".format(dx),
+      gstdecoder  = "{} ! vaav1dec".format(dx),
     )
     self.decode()
