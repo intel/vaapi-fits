@@ -62,7 +62,7 @@ class DeinterlaceTest(VppTest):
   def check_metrics(self):
     if vars(self).get("reference", None) is not None:
       self.reference = format_value(self.reference, **vars(self))
-    check_metric(decoded = self.ofile, **vars(self))
+    check_metric(**vars(self))
 
 spec_avc      = load_test_spec("vpp", "deinterlace", "avc")
 spec_avc_r2r  = load_test_spec("vpp", "deinterlace", "avc", "r2r")

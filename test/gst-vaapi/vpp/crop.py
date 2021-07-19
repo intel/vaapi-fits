@@ -36,11 +36,10 @@ class default(VppTest):
 
   def check_metrics(self):
     check_filesize(
-      self.ofile, self.crop_width, self.crop_height, self.frames, self.format)
+      self.decoded, self.crop_width, self.crop_height, self.frames, self.format)
 
     params = vars(self).copy()
     params["width"] = self.crop_width
     params["height"] = self.crop_height
-    params["decoded"] = self.ofile
 
     check_metric(**params)

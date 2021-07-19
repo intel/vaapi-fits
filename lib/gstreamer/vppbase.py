@@ -60,7 +60,7 @@ class BaseVppTest(slash.Test):
     if self.ofmt != self.ohwformat and self.vpp_op not in ["csc"]:
       opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu}"
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-    opts += " plane-checksum=false dump-output=true dump-location={ofile} eos-after={frames}"
+    opts += " plane-checksum=false dump-output=true dump-location={decoded} eos-after={frames}"
 
     return opts
 
@@ -134,22 +134,22 @@ class BaseVppTest(slash.Test):
     oopts = self.gen_output_opts()
     name  = self.gen_name().format(**vars(self))
 
-    self.ofile = get_media()._test_artifact("{}.yuv".format(name))
+    self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = md5(self.ofile)
+      md5ref = md5(self.decoded)
       get_media()._set_test_details(md5_ref = md5ref)
 
       for i in range(1, self.r2r):
-        self.ofile = get_media()._test_artifact(
+        self.decoded = get_media()._test_artifact(
           "{}_{}.yuv".format(name, i))
         self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
-        result = md5(self.ofile)
+        result = md5(self.decoded)
         get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})
         assert result == md5ref, "r2r md5 mismatch"
         #delete output file after each iteration
-        get_media()._purge_test_artifact(self.ofile)
+        get_media()._purge_test_artifact(self.decoded)
     else:
       self.check_metrics()
