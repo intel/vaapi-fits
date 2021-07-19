@@ -37,5 +37,4 @@ class default(VppTest):
     self.vpp()
 
   def check_metrics(self):
-    self.decoded = self.ofile
     check_metric(**vars(self))

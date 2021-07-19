@@ -41,13 +41,13 @@ class default(VppTest):
 
   def check_metrics(self):
     check_filesize(
-      self.ofile, self.scale_width, self.scale_height,
+      self.decoded, self.scale_width, self.scale_height,
       self.frames, self.format)
 
     fmtref = format_value(self.reference, **vars(self))
 
     ssim = calculate_ssim(
-      fmtref, self.ofile,
+      fmtref, self.decoded,
       self.scale_width, self.scale_height,
       self.frames, self.format)
 

@@ -34,7 +34,7 @@ class default(VppTest):
 
   def check_metrics(self):
     psnr = calculate_psnr(
-      self.source, self.ofile,
+      self.source, self.decoded,
       self.width, self.height,
       self.frames, self.format)
 

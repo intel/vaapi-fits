@@ -32,7 +32,7 @@ class default(VppTest):
       # If user specified reference, use it.  Otherwise, assume source is the reference.
       reference = format_value(self.reference, **vars(self))
         if vars(self).get("reference") else self.source,
-      decoded = self.ofile,
+      decoded = self.decoded,
       # if user specified reference, then assume it's format is the same as csc output format.
       # Otherwise, the format is the source format
       format = self.format if vars(self).get("reference", None) is None else self.csc,
