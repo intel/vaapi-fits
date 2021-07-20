@@ -14,9 +14,9 @@ spec = load_test_spec("vpp", "transpose")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      caps        = platform.get_caps("vpp", "transpose"),
-      metric      = dict(type = "md5"),
-      vpp_op = "transpose",
+      caps    = platform.get_caps("vpp", "transpose"),
+      metric  = dict(type = "md5"),
+      vpp_op  = "transpose",
     )
     super(default, self).before()
 
@@ -35,6 +35,3 @@ class default(VppTest):
         "{degrees} {method} direction not supported".format(**vars(self)))
 
     self.vpp()
-
-  def check_metrics(self):
-    check_metric(**vars(self))

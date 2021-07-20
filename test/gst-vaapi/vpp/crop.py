@@ -14,9 +14,9 @@ spec = load_test_spec("vpp", "crop")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      caps        = platform.get_caps("vpp", "crop"),
-      metric      = dict(type = "md5"),
-      vpp_op = "crop",
+      caps    = platform.get_caps("vpp", "crop"),
+      metric  = dict(type = "md5"),
+      vpp_op  = "crop",
     )
     super(default, self).before()
 
@@ -33,13 +33,3 @@ class default(VppTest):
       top         = top,
     )
     self.vpp()
-
-  def check_metrics(self):
-    check_filesize(
-      self.decoded, self.crop_width, self.crop_height, self.frames, self.format)
-
-    params = vars(self).copy()
-    params["width"] = self.crop_width
-    params["height"] = self.crop_height
-
-    check_metric(**params)
