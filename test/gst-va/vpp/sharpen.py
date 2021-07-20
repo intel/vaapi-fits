@@ -14,8 +14,8 @@ spec = load_test_spec("vpp", "sharpen")
 class default(VppTest):
   def before(self):
     vars(self).update(
-      caps        = platform.get_caps("vpp", "sharpen"),
-      vpp_op = "sharpen",
+      caps    = platform.get_caps("vpp", "sharpen"),
+      vpp_op  = "sharpen",
     )
     super(default, self).before()
 
@@ -34,19 +34,3 @@ class default(VppTest):
         return
 
     self.vpp()
-
-  def check_metrics(self):
-    psnr = calculate_psnr(
-      self.source, self.decoded,
-      self.width, self.height,
-      self.frames, self.format)
-
-    assert psnr[-2] == 100, "Cb(U) should not be affected by SHARPEN filter"
-    assert psnr[-1] == 100, "Cr(V) should not be affected by SHARPEN filter"
-
-    def compare(k, ref, actual):
-      assert ref is not None, "Invalid reference value"
-      assert abs(ref[-3] - actual[-3]) <  0.2, "Luma (Y) out of baseline range"
-
-    get_media().baseline.check_result(
-      compare = compare, context = self.refctx, psnr = psnr)
