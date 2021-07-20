@@ -9,10 +9,11 @@ import slash
 from ...lib.common import timefn, get_media, call
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.metrics import md5
+from ...lib.mixin.vpp import VppMetricMixin
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("checksumsink2"))
-class BaseVppTest(slash.Test):
+class BaseVppTest(slash.Test, VppMetricMixin):
   def before(self):
     self.refctx = []
 
@@ -29,9 +30,6 @@ class BaseVppTest(slash.Test):
     raise NotImplementedError
 
   def map_formatu(self, format):
-    raise NotImplementedError
-
-  def check_metrics(self):
     raise NotImplementedError
 
   def gen_vpp_opts(self):
