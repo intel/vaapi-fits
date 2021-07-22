@@ -81,6 +81,18 @@ media._get_test_spec("vpp", "deinterlace", "avc").update({
   ),
 })
 
+media._get_test_spec("vpp", "composite").update({
+  "QCIF_2x2" : dict(
+    source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
+    width = 176, height = 144, format = "NV12", frames = 5,
+    comps = [
+      dict(x = 0, y = 0, a = 1), dict(x = 176, y = 0, a = 1),
+      dict(x = 0, y = 144, a = 1), dict(x = 176, y = 144, a = 1),
+    ],
+    refctx = ["key:vpp.composite"],
+  ),
+})
+
 ###
 ### kate: syntax python;
 ###
