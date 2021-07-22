@@ -76,7 +76,7 @@ caps = dict(
     ),
     blend       = dict(
       ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420",         "YUY2", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2", "BGRA"],
     ),
   ),
 )
