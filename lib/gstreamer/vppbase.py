@@ -92,6 +92,8 @@ class BaseVppTest(slash.Test, VppMetricMixin):
       name += "_transpose_{degrees}_{method}"
     elif self.vpp_op in ["crop"]:
       name += "_crop_{left}_{right}_{top}_{bottom}"
+    elif self.vpp_op in ["composite"]:
+      name += "_composite"
     if vars(self).get("r2r", None) is not None:
       name += "_r2r"
     name += "_{format}"

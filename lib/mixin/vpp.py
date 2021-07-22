@@ -137,6 +137,15 @@ class VppMetricMixin:
     get_media().baseline.check_result(
       compare = compare, context = self.refctx, psnr = psnr)
 
+  def check_composite(self):
+    owidth, oheight = self.width, self.height
+    for comp in self.comps:
+      owidth = max(owidth, self.width + comp['x'])
+      oheight = max(oheight, self.height + comp['y'])
+
+    metrics.check_filesize(self.decoded, owidth, oheight, self.frames, self.format)
+    self.check_default()
+
   def check_default(self):
     metrics.check_metric(**vars(self))
 
