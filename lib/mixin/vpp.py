@@ -143,8 +143,12 @@ class VppMetricMixin:
       owidth = max(owidth, self.width + comp['x'])
       oheight = max(oheight, self.height + comp['y'])
 
+    params = vars(self).copy()
+    params["width"] = owidth
+    params["height"] = oheight
+
     metrics.check_filesize(self.decoded, owidth, oheight, self.frames, self.format)
-    self.check_default()
+    metrics.check_metric(**params)
 
   def check_default(self):
     metrics.check_metric(**vars(self))
