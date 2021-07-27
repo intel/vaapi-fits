@@ -19,15 +19,15 @@ class TranscoderTest(BaseTranscoderTest):
   requirements = dict(
     decode = {
       "avc" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("avdec_h264"), "h264parse ! avdec_h264"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("openh264dec"), "h264parse ! openh264dec ! videoconvert"),
         hw = (platform.get_caps("decode", "avc"), have_gst_element("msdkh264dec"), "h264parse ! msdkh264dec"),
       ),
       "hevc-8" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("avdec_h265"), "h265parse ! avdec_h265"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("libde265dec"), "h265parse ! libde265dec ! videoconvert"),
         hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("msdkh265dec"), "h265parse ! msdkh265dec"),
       ),
       "mpeg2" : dict(
-        sw = (dict(maxres = (2048, 2048)), have_gst_element("avdec_mpeg2video"), "mpegvideoparse ! avdec_mpeg2video"),
+        sw = (dict(maxres = (2048, 2048)), have_gst_element("mpeg2dec"), "mpegvideoparse ! mpeg2dec ! videoconvert"),
         hw = (platform.get_caps("decode", "mpeg2"), have_gst_element("msdkmpeg2dec"), "mpegvideoparse ! msdkmpeg2dec"),
       ),
       "mjpeg" : dict(
