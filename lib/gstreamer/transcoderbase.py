@@ -8,7 +8,7 @@ import slash
 
 from ...lib.common import timefn, get_media, call
 from ...lib.metrics import calculate_psnr
-from ...lib.gstreamer.util import have_gst, have_gst_element
+from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("checksumsink2"))
@@ -166,8 +166,17 @@ class BaseTranscoderTest(slash.Test):
         self.call_gst(
           iopts.format(encoded, self.get_decoder(output["codec"], "hw")),
           oopts.format(yuv, frames = self.frames))
+        self.check_resolution(output, encoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)
+
+  def check_resolution(self, output, encoded):
+    props = [l.strip() for l in gst_discover(encoded).split('\n')]
+    width = output.get("width", self.width)
+    height = output.get("height", self.height)
+
+    assert "Width: {}".format(width) in props
+    assert "Height: {}".format(height) in props
 
   def check_metrics(self, yuv, refctx):
     get_media().baseline.check_psnr(
