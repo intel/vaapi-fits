@@ -248,6 +248,12 @@ class TranscoderTest(slash.Test):
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
 
+  def check_resolution(self, output, encoded):
+    actual = ffmpeg_probe_resolution(encoded)
+    expect = "{}x{}".format(
+      output.get("width", self.width), output.get("height", self.height))
+    assert expect == actual
+
   def check_metrics(self, yuv, refctx):
     get_media().baseline.check_psnr(
       psnr = calculate_psnr(

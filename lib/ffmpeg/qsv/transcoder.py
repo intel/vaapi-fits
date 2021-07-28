@@ -240,9 +240,16 @@ class TranscoderTest(slash.Test):
         oopts = "-vf '{}' -pix_fmt yuv420p -f rawvideo -vframes {} -y {}"
         self.call_ffmpeg(
           iopts.format(encoded), oopts.format(vppscale, self.frames, yuv))
+        self.check_resolution(output, encoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
+
+  def check_resolution(self, output, encoded):
+    actual = ffmpeg_probe_resolution(encoded)
+    expect = "{}x{}".format(
+      output.get("width", self.width), output.get("height", self.height))
+    assert expect == actual
 
   def check_metrics(self, yuv, refctx):
     get_media().baseline.check_psnr(

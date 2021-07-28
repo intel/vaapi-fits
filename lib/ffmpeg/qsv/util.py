@@ -4,7 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib.common import memoize, try_call, get_media
+from ....lib.common import memoize, try_call, get_media, call
 from ....lib.formats import match_best_format
 
 def using_compatible_driver():
@@ -32,6 +32,13 @@ def have_ffmpeg_encoder(encoder):
 def have_ffmpeg_decoder(decoder):
   result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
   return result, decoder
+
+def ffmpeg_probe_resolution(filename):
+  return call(
+    "ffprobe -v quiet -select_streams v:0"
+    " -show_entries stream=width,height -of"
+    " csv=s=x:p=0 {}".format(filename)
+  ).strip()
 
 def get_supported_format_map():
   return {
