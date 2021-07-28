@@ -47,7 +47,7 @@ class TranscoderTest(BaseTranscoderTest):
     },
     encode = {
       "avc" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x264enc"), "x264enc ! video/x-h264,profile=main ! h264parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("openh264enc"), "videoconvert ! video/x-raw,format=I420 ! openh264enc ! h264parse"),
         hw = (platform.get_caps("encode", "avc"), have_gst_element("vaapih264enc"), "vaapih264enc ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
@@ -55,7 +55,7 @@ class TranscoderTest(BaseTranscoderTest):
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element("vaapih265enc"), "vaapih265enc ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
-        sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
+        sw = (dict(maxres = (2048, 2048)), have_gst_element("mpeg2enc"), "videoconvert ! video/x-raw,format=I420 ! mpeg2enc ! mpegvideoparse"),
         hw = (platform.get_caps("encode", "mpeg2"), have_gst_element("vaapimpeg2enc"), "vaapimpeg2enc ! mpegvideoparse"),
       ),
       "mjpeg" : dict(
