@@ -27,27 +27,45 @@ class VppTest(slash.Test):
 
   def gen_output_opts(self):
     vfilter = []
-    if self.vpp_op not in ["csc"]:
+    if self.vpp_op in ["composite"]:
+      opts = "-filter_complex"
+
+      vfilter.append("color=black:size={owidth}x{oheight}")
       vfilter.append("format={ihwformat}|qsv")
-    vfilter.append("hwupload=extra_hw_frames=16")
-    vfilter.append(
-      dict(
-        brightness  = "vpp_qsv=procamp=1:brightness={mlevel}",
-        contrast    = "vpp_qsv=procamp=1:contrast={mlevel}",
-        hue         = "vpp_qsv=procamp=1:hue={mlevel}",
-        saturation  = "vpp_qsv=procamp=1:saturation={mlevel}",
-        denoise     = "vpp_qsv=denoise={mlevel}",
-        scale       = "vpp_qsv=w={scale_width}:h={scale_height}",
-        sharpen     = "vpp_qsv=detail={mlevel}",
-        deinterlace = "vpp_qsv=deinterlace={mmethod}",
-        csc         = "vpp_qsv=format={ohwformat}",
-        transpose   = "vpp_qsv=transpose={direction}",
-      )[self.vpp_op]
-    )
+      vfilter.append("hwupload=extra_hw_frames=16")
+
+      for n, comp in enumerate(self.comps):
+        vfilter[-1] += "[out{n}];[0:v]format={ihwformat}|qsv".format(n = n, **vars(self))
+        vfilter.append(
+          "hwupload=extra_hw_frames=16[in{n}];"
+          "[out{n}][in{n}]overlay_qsv=x={x}:y={y}:alpha={alpha}"
+          "".format(n = n, alpha = mapRangeInt(comp["a"], [0., 1.], [0, 255]), **comp)
+        )
+    else:
+      opts = "-vf"
+
+      if self.vpp_op not in ["csc"]:
+        vfilter.append("format={ihwformat}|qsv")
+      vfilter.append("hwupload=extra_hw_frames=16")
+      vfilter.append(
+        dict(
+          brightness  = "vpp_qsv=procamp=1:brightness={mlevel}",
+          contrast    = "vpp_qsv=procamp=1:contrast={mlevel}",
+          hue         = "vpp_qsv=procamp=1:hue={mlevel}",
+          saturation  = "vpp_qsv=procamp=1:saturation={mlevel}",
+          denoise     = "vpp_qsv=denoise={mlevel}",
+          scale       = "vpp_qsv=w={scale_width}:h={scale_height}",
+          sharpen     = "vpp_qsv=detail={mlevel}",
+          deinterlace = "vpp_qsv=deinterlace={mmethod}",
+          csc         = "vpp_qsv=format={ohwformat}",
+          transpose   = "vpp_qsv=transpose={direction}",
+        )[self.vpp_op]
+      )
+
     vfilter.append("hwdownload")
     vfilter.append("format={ohwformat}")
 
-    opts  = "-vf '{}'".format(",".join(vfilter))
+    opts += " '{}'".format(",".join(vfilter))
     if self.vpp_op not in ["csc"]:
       opts += " -pix_fmt {mformat}"
     opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {decoded}"
@@ -67,6 +85,7 @@ class VppTest(slash.Test):
       deinterlace = "_{method}_{rate}_{width}x{height}_{format}",
       csc         = "_{width}x{height}_{format}_to_{csc}",
       transpose   = "_{degrees}_{method}_{width}x{height}_{format}",
+      composite   = "_{owidth}x{oheight}_{format}",
     )[self.vpp_op]
 
     if vars(self).get("r2r", None) is not None:
@@ -105,6 +124,12 @@ class VppTest(slash.Test):
       slash.skip_test("{ifmt} unsupported".format(**vars(self)))
     if self.ohwformat is None:
       slash.skip_test("{ofmt} unsupported".format(**vars(self)))
+
+    if self.vpp_op in ["composite"]:
+      self.owidth, self.oheight = self.width, self.height
+      for comp in self.comps:
+        self.owidth = max(self.owidth, self.width + comp['x'])
+        self.oheight = max(self.oheight, self.height + comp['y'])
 
   def vpp(self):
     self.validate_caps()
