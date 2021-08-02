@@ -57,6 +57,8 @@ class EncoderTest(slash.Test):
     if vars(self).get("ladepth", None) is not None:
       opts += " -look_ahead 1"
       opts += " -look_ahead_depth {ladepth}"
+    if vars(self).get("forced_idr", None) is not None:
+      opts += " -force_key_frames expr:1 -forced_idr 1"
 
     opts += " -vframes {frames} -y {encoded}"
 
@@ -90,6 +92,8 @@ class EncoderTest(slash.Test):
       name += "-{lowpower}"
     if vars(self).get("ladepth", None) is not None:
       name += "-{ladepth}"
+    if vars(self).get("forced_idr", None) is not None:
+      name += "-{forced_idr}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 
@@ -170,6 +174,13 @@ class EncoderTest(slash.Test):
     if vars(self).get("ladepth", None) is not None:
       m = re.search(r"Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
       assert m is not None, "It appears that the lookahead did not load"
+
+    if vars(self).get("forced_idr", None) is not None:
+      output = call(
+        "ffmpeg -v verbose -i {encoded} -c:v copy"
+        " -vframes {frames} -bsf:v trace_headers"
+        " -f null - 2>&1 | grep 'nal_unit_type.*5' | wc -l".format(**vars(self)))
+      assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"
 
   def check_metrics(self):
     iopts = "-c:v {ffdecoder} -i {encoded}"

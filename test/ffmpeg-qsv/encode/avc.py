@@ -220,3 +220,23 @@ class vbr_la(AVCEncoderTest):
       ladepth   = ladepth,
     )
     self.encode()
+
+class forced_idr(AVCEncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, qp, quality, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      quality    = quality,
+      forced_idr = 1,
+    )
+
+  @slash.parametrize(*gen_avc_forced_idr_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, rcmode, bitrate, maxrate, qp, quality, profile):
+    self.init(spec, case, rcmode, bitrate, maxrate, qp, quality, profile)
+    self.encode()

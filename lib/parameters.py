@@ -181,6 +181,34 @@ def gen_avc_vbr_la_parameters(spec, profiles):
   params = gen_avc_vbr_la_variants(spec, profiles)
   return keys, params
 
+def gen_avc_forced_idr_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("forced_idr", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      rcmode  = variant["rcmode"]
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      if "cqp" == rcmode:
+        assert bitrate == None, "We shouldn't set a value to bitrate for CQP."
+        variant.update(maxrate = None)
+      else:
+        assert qp == None, "We shouldn't set a value to qp for CBR/VBR."
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, rcmode, bitrate, variant["maxrate"],
+          qp, variant["quality"], profile
+        ]
+
+def gen_avc_forced_idr_parameters(spec, profiles):
+  keys = ("case", "rcmode", "bitrate", "maxrate", "qp", "quality", "profile")
+  params = gen_avc_forced_idr_variants(spec, profiles)
+  return keys, params
+
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
