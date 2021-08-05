@@ -233,7 +233,7 @@ class forced_idr(AVCEncoderTest):
       profile    = profile,
       qp         = qp,
       quality    = quality,
-      forced_idr = 1,
+      vforced_idr= 1,
     )
 
   @slash.parametrize(*gen_avc_forced_idr_parameters(spec, ['high', 'main', 'baseline']))
