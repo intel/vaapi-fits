@@ -20,7 +20,7 @@ def format_value(value, **params):
 
 def gen_avc_cqp_variants(spec, profiles):
   for case, params in spec.items():
-    variants = copy.deepcopy(params.get("cqp", None))
+    variants = copy.deepcopy(params.get("variants", dict()).get("cqp", None))
     if variants is None:
       keys = ["gop", "slices", "bframes", "qp", "quality", "profile"]
       product  = list(itertools.product([1], [1], [0], [14, 28], [1, 4, 7], profiles))  # I, single-slice
@@ -56,7 +56,7 @@ def gen_avc_cqp_parameters(spec, profiles):
 
 def gen_avc_cbr_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("cbr", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
 
@@ -84,7 +84,7 @@ def gen_avc_cbr_parameters(spec, profiles):
 
 def gen_hevc_cbr_level_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("cbr_level", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr_level", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -100,7 +100,7 @@ def gen_hevc_cbr_level_parameters( spec, profiles):
 
 def gen_avc_vbr_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("vbr", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -117,7 +117,7 @@ def gen_avc_vbr_parameters(spec, profiles):
 
 def gen_avc_cqp_lp_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("cqp_lp", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("cqp_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -133,7 +133,7 @@ def gen_avc_cqp_lp_parameters(spec, profiles):
 
 def gen_avc_cbr_lp_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("cbr_lp", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -149,7 +149,7 @@ def gen_avc_cbr_lp_parameters(spec, profiles):
 
 def gen_avc_vbr_lp_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("vbr_lp", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr_lp", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -166,7 +166,7 @@ def gen_avc_vbr_lp_parameters(spec, profiles):
 
 def gen_avc_vbr_la_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("vbr_la", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr_la", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -183,7 +183,7 @@ def gen_avc_vbr_la_parameters(spec, profiles):
 
 def gen_avc_forced_idr_variants(spec, profiles):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("forced_idr", [])):
+    for variant in copy.deepcopy(params.get("variants", dict()).get("forced_idr", [])):
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       rcmode  = variant["rcmode"]
@@ -218,7 +218,7 @@ gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.items():
-    variants = copy.deepcopy(params.get("cqp", None))
+    variants = copy.deepcopy(params.get("variants", dict()).get("cqp", None))
     if variants is None:
       keys = ["gop", "bframes", "qp", "quality"]
       product  = list(itertools.product([1], [0], [14, 28], [1, 4, 7]))  # I
@@ -248,7 +248,7 @@ def gen_mpeg2_cqp_parameters(spec):
 
 def gen_jpeg_cqp_variants(spec):
   for case, params in spec.items():
-    variants = params.get("cqp", None)
+    variants = params.get("variants", dict()).get("cqp", None)
 
     if variants is None:
       variants = list()
@@ -265,7 +265,7 @@ def gen_jpeg_cqp_parameters(spec):
 
 def gen_vp8_cqp_variants(spec):
   for case, params in spec.items():
-    variants = params.get("cqp", None)
+    variants = params.get("variants", dict()).get("cqp", None)
 
     if variants is None:
       keys = ["ipmode", "qp", "quality", "looplvl", "loopshp"]
@@ -284,7 +284,7 @@ def gen_vp8_cqp_parameters(spec):
 
 def gen_vp8_cbr_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("cbr", []):
+    for variant in params.get("variants", dict()).get("cbr", []):
         # Required: bitrate
         # Optional: gop, fps, looplvl, loopshp
         yield [
@@ -300,7 +300,7 @@ def gen_vp8_cbr_parameters(spec):
 
 def gen_vp8_vbr_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("vbr", []):
+    for variant in params.get("variants", dict()).get("vbr", []):
         # Required: bitrate
         # Optional: gop, fps, quality, looplvl, loopshp
         yield [
@@ -316,7 +316,7 @@ def gen_vp8_vbr_parameters(spec):
 
 def gen_vp9_cqp_variants(spec):
   for case, params in spec.items():
-    variants = params.get("cqp", None)
+    variants = params.get("variants", dict()).get("cqp", None)
 
     if variants is None:
       keys = ["ipmode", "qp", "quality", "refmode", "looplvl", "loopshp"]
@@ -335,7 +335,7 @@ def gen_vp9_cqp_parameters(spec):
 
 def gen_vp9_cbr_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("cbr", []):
+    for variant in params.get("variants", dict()).get("cbr", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
         yield [
@@ -351,7 +351,7 @@ def gen_vp9_cbr_parameters(spec):
 
 def gen_vp9_vbr_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("vbr", []):
+    for variant in params.get("variants", dict()).get("vbr", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, quality, looplvl, loopshp
         yield [
@@ -368,7 +368,7 @@ def gen_vp9_vbr_parameters(spec):
 
 def gen_vp9_cqp_lp_variants(spec):
   for case, params in spec.items():
-    variants = params.get("cqp_lp", [])
+    variants = params.get("variants", dict()).get("cqp_lp", [])
     for variant in variants:
       yield [
         case, variant["ipmode"], variant["qp"], variant["quality"], variant["slices"],
@@ -381,7 +381,7 @@ def gen_vp9_cqp_lp_parameters(spec):
 
 def gen_vp9_cbr_lp_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("cbr_lp", []):
+    for variant in params.get("variants", dict()).get("cbr_lp", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
         yield [
@@ -397,7 +397,7 @@ def gen_vp9_cbr_lp_parameters(spec):
 
 def gen_vp9_vbr_lp_variants(spec):
   for case, params in spec.items():
-    for variant in params.get("vbr_lp", []):
+    for variant in params.get("variants", dict()).get("vbr_lp", []):
         # Required: bitrate
         # Optional: gop, fps, refmode, looplvl, loopshp
         yield [
