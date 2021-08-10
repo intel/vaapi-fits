@@ -136,6 +136,8 @@ class BaseEncoderTest(slash.Test):
   def encode(self):
     self.validate_caps()
 
+    get_media().test_call_timeout = vars(self).get("call_timeout", 0)
+
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
     name  = self.gen_name().format(**vars(self))
