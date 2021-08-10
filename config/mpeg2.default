@@ -32,35 +32,43 @@ media._get_test_spec("mpeg2", "encode").update({
     source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
     width = 176, height = 144, format = "NV12", frames = 50,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
-      dict(gop = 30, bframes = 0, qp = 28, quality = 4, profile = "simple"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
+        dict(gop = 30, bframes = 0, qp = 28, quality = 4, profile = "simple"),
+      ],
+    ),
   ),
   "QVGA" : dict(
     source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
     width = 320, height = 240, format = "NV12", frames = 50,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 30, bframes = 2, qp = 14, quality = 4, profile = "simple"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 30, bframes = 2, qp = 14, quality = 4, profile = "simple"),
+      ],
+    ),
   ),
   "720p" : dict(
     source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
     width = 1280, height = 720, format = "NV12", frames = 50,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 30, bframes = 0, qp = 28, quality = 4, profile = "main"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 30, bframes = 0, qp = 28, quality = 4, profile = "main"),
+      ],
+    ),
   ),
   "1080p" : dict(
     source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
     width = 1920, height = 1080, format = "NV12", frames = 50,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
-      dict(gop = 30, bframes = 2, qp = 28, quality = 4, profile = "simple"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
+        dict(gop = 30, bframes = 2, qp = 28, quality = 4, profile = "simple"),
+      ],
+    ),
   ),
 })
 
