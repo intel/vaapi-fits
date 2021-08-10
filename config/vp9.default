@@ -33,44 +33,52 @@ media._get_test_spec("vp9", "encode", "8bit").update({
     source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
     width = 176, height = 144, format = "NV12", frames = 300,
     refctx = ["driver"],
-    cqp = [
-      dict(ipmode = 0, qp = 14, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
-      dict(ipmode = 1, qp = 28, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
-    ],
-    cbr = [dict(bitrate = 250)],
-    vbr = [dict(bitrate = 250)],
+    variants = dict(
+      cqp = [
+        dict(ipmode = 0, qp = 14, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
+        dict(ipmode = 1, qp = 28, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
+      ],
+      cbr = [dict(bitrate = 250)],
+      vbr = [dict(bitrate = 250)],
+    ),
   ),
   "QVGA" : dict(
     source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
     width = 320, height = 240, format = "NV12", frames = 300,
     refctx = ["driver"],
-    cqp = [
-      dict(ipmode = 1, qp = 14, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
-      dict(ipmode = 0, qp = 28, quality = 4, refmode = 1, looplvl = 16, loopshp = 7),
-    ],
-    cbr = [dict(bitrate = 500)],
-    vbr = [dict(bitrate = 500)],
+    variants = dict(
+      cqp = [
+        dict(ipmode = 1, qp = 14, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
+        dict(ipmode = 0, qp = 28, quality = 4, refmode = 1, looplvl = 16, loopshp = 7),
+      ],
+      cbr = [dict(bitrate = 500)],
+      vbr = [dict(bitrate = 500)],
+    ),
   ),
   "720p" : dict(
     source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
     width = 1280, height = 720, format = "NV12", frames = 150,
     refctx = ["driver"],
-    cqp = [
-      dict(ipmode = 0, qp = 28, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
-    ],
-    cbr = [dict(bitrate = 4000)],
-    vbr = [dict(bitrate = 4000)],
+    variants = dict(
+      cqp = [
+        dict(ipmode = 0, qp = 28, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
+      ],
+      cbr = [dict(bitrate = 4000)],
+      vbr = [dict(bitrate = 4000)],
+    ),
   ),
   "1080p" : dict(
     source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
     width = 1920, height = 1080, format = "NV12", frames = 150,
     refctx = ["driver"],
-    cqp = [
-      dict(ipmode = 1, qp = 14, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
-      dict(ipmode = 1, qp = 28, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
-    ],
-    cbr = [dict(bitrate = 6000)],
-    vbr = [dict(bitrate = 6000)],
+    variants = dict(
+      cqp = [
+        dict(ipmode = 1, qp = 14, quality = 4, refmode = 1, looplvl = 0, loopshp = 0),
+        dict(ipmode = 1, qp = 28, quality = 4, refmode = 0, looplvl = 0, loopshp = 0),
+      ],
+      cbr = [dict(bitrate = 6000)],
+      vbr = [dict(bitrate = 6000)],
+    ),
   ),
 })
 

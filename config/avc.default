@@ -32,76 +32,84 @@ media._get_test_spec("avc", "encode").update({
     source = os.path.join(assets, "yuv", "QCIF_NV12.yuv"),
     width = 176, height = 144, format = "NV12", frames = 300,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
-      dict(gop = 30, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
-    ],
-    cqp_lp = [
-      dict(gop = 1, slices = 1, qp = 28, quality = 4),
-      dict(gop = 30, slices = 1, qp = 14, quality = 4),
-    ],
-    cbr = [
-      dict(gop = 30, slices = 1, bframes = 0, bitrate = 250, fps = 30, profile = "main"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "main"),
+        dict(gop = 30, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
+      ],
+      cqp_lp = [
+        dict(gop = 1, slices = 1, qp = 28, quality = 4),
+        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+      ],
+      cbr = [
+        dict(gop = 30, slices = 1, bframes = 0, bitrate = 250, fps = 30, profile = "main"),
+      ],
+    ),
   ),
   "QVGA" : dict(
     source = os.path.join(assets, "yuv", "QVGA_NV12.yuv"),
     width = 320, height = 240, format = "NV12", frames = 300,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "high"),
-      dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
-    ],
-    cqp_lp = [
-      dict(gop = 1, slices = 1, qp = 28, quality = 4),
-      dict(gop = 30, slices = 1, qp = 14, quality = 4),
-    ],
-    cbr = [
-      dict(gop = 30, slices = 1, bframes = 0, bitrate = 500, fps = 25, profile = "main"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "high"),
+        dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
+      ],
+      cqp_lp = [
+        dict(gop = 1, slices = 1, qp = 28, quality = 4),
+        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+      ],
+      cbr = [
+        dict(gop = 30, slices = 1, bframes = 0, bitrate = 500, fps = 25, profile = "main"),
+      ],
+    ),
   ),
   "720p" : dict(
     source = os.path.join(assets, "yuv", "720p_NV12.yuv"),
     width = 1280, height = 720, format = "NV12", frames = 150,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
-    ],
-    cqp_lp = [
-      dict(gop = 30, slices = 1, qp = 14, quality = 4),
-    ],
-    cbr = [
-      dict(gop = 30, slices = 4, bframes = 2, bitrate = 4000, fps = 30, profile = "main"),
-    ],
-    vbr = [
-      dict(gop = 30, slices = 3, bframes = 0, bitrate = 4000, fps = 30, quality = 4, refs = 1, profile = "high"),
-      dict(gop = 30, slices = 1, bframes = 3, bitrate = 4000, fps = 30, quality = 4, refs = 1, profile = "main"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
+      ],
+      cqp_lp = [
+        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+      ],
+      cbr = [
+        dict(gop = 30, slices = 4, bframes = 2, bitrate = 4000, fps = 30, profile = "main"),
+      ],
+      vbr = [
+        dict(gop = 30, slices = 3, bframes = 0, bitrate = 4000, fps = 30, quality = 4, refs = 1, profile = "high"),
+        dict(gop = 30, slices = 1, bframes = 3, bitrate = 4000, fps = 30, quality = 4, refs = 1, profile = "main"),
+      ],
+    ),
   ),
   "1080p" : dict(
     source = os.path.join(assets, "yuv", "1080p_NV12.yuv"),
     width = 1920, height = 1080, format = "NV12", frames = 150,
     refctx = ["driver"],
-    cqp = [
-      dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "high"),
-      dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
-    ],
-    cqp_lp = [
-      dict(gop = 30, slices = 1, qp = 28, quality = 4),
-    ],
-    cbr = [
-      dict(gop = 30, slices = 1, bframes = 0, bitrate = 6000, fps = 30, profile = "high"),
-    ],
-    vbr = [
-      dict(gop = 30, slices = 3, bframes = 0, bitrate = 6000, fps = 30, quality = 4, refs = 1, profile = "main"),
-      dict(gop = 30, slices = 1, bframes = 3, bitrate = 6000, fps = 30, quality = 4, refs = 1, profile = "main"),
-    ],
+    variants = dict(
+      cqp = [
+        dict(gop = 1, slices = 1, bframes = 0, qp = 14, quality = 4, profile = "high"),
+        dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
+      ],
+      cqp_lp = [
+        dict(gop = 30, slices = 1, qp = 28, quality = 4),
+      ],
+      cbr = [
+        dict(gop = 30, slices = 1, bframes = 0, bitrate = 6000, fps = 30, profile = "high"),
+      ],
+      vbr = [
+        dict(gop = 30, slices = 3, bframes = 0, bitrate = 6000, fps = 30, quality = 4, refs = 1, profile = "main"),
+        dict(gop = 30, slices = 1, bframes = 3, bitrate = 6000, fps = 30, quality = 4, refs = 1, profile = "main"),
+      ],
+    ),
   ),
 })
 
 if media._get_driver_name() == "iHD": # iHD driver supports LP with multi-slice
   for v in media._get_test_spec("avc", "encode").values():
-    v["cqp_lp"].append(dict(gop = 30, slices = 4, qp = 14, quality = 4))
+    v["variants"]["cqp_lp"].append(dict(gop = 30, slices = 4, qp = 14, quality = 4))
 
 media._get_test_spec("avc", "transcode").update({
   "H_H-AVC_QCIF" : dict(
