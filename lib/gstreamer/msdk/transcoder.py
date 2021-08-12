@@ -80,3 +80,25 @@ class TranscoderTest(BaseTranscoderTest):
   def before(self):
     super().before()
     os.environ["GST_MSDK_DRM_DEVICE"] = get_media().render_device
+
+    # The msdk plugins have rank "none (0)".  Thus, they will be skipped by the
+    # gst-discoverer.  If there are no alternative plugins, then gst-discoverer
+    # will fail.  Thus, temporarily change the msdk decode plugins rank to
+    # "primary (256)" so they can be used in gst-discoverer
+    self.__rank_before = os.environ.get("GST_PLUGIN_FEATURE_RANK", None)
+    ranks = [] if self.__rank_before is None else self.__rank_before.split(',')
+    ranks += [
+      "msdkh264dec:primary",
+      "msdkh265dec:primary",
+      "msdkmpeg2dec:primary",
+      "msdkmjpegdec:primary",
+    ]
+    os.environ["GST_PLUGIN_FEATURE_RANK"] = ','.join(ranks)
+
+  def after(self):
+    super().after()
+
+    if None == self.__rank_before:
+      del os.environ["GST_PLUGIN_FEATURE_RANK"]
+    else:
+      os.environ["GST_PLUGIN_FEATURE_RANK"] = self.__rank_before
