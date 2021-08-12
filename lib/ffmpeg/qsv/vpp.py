@@ -96,7 +96,7 @@ class VppTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     call(
-      "ffmpeg -init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -hwaccel qsv -filter_hw_device qsv"
+      "ffmpeg -init_hw_device qsv=qsv:hw_any,child_device={renderDevice} -hwaccel qsv"
       " -v verbose {iopts} {oopts}".format(renderDevice= self.renderDevice, iopts = iopts, oopts = oopts))
 
   def validate_caps(self):

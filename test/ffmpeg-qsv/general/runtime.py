@@ -20,8 +20,9 @@ class detect(MFXRuntimeTest):
 
   def test(self):
     self.check(
-      "ffmpeg -nostats -v verbose -init_hw_device qsv=qsv:hw"
-      " -qsv_device {renderDevice} -hwaccel qsv"
-      " -filter_hw_device qsv -f lavfi -i yuvtestsrc"
+      "ffmpeg -nostats -v verbose"
+      " -init_hw_device qsv=qsv:hw_any,child_device={renderDevice}"
+      " -hwaccel qsv"
+      " -f lavfi -i yuvtestsrc"
       " -f null /dev/null".format(**vars(self))
     )

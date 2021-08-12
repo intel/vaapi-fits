@@ -152,7 +152,7 @@ class TranscoderTest(slash.Test):
         "Missing one or more required ffmpeg elements: {}".format(list(unmet)))
 
   def gen_input_opts(self):
-    opts = "-init_hw_device qsv=qsv:hw -qsv_device {renderDevice} -filter_hw_device qsv"
+    opts = "-init_hw_device qsv=qsv:hw_any,child_device={renderDevice}"
     opts += " -hwaccel_output_format qsv"
     if "hw" == self.mode:
       opts += " -hwaccel qsv"
