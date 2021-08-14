@@ -6,6 +6,7 @@
 
 import slash
 
+from ...lib import *
 from ...lib.common import timefn, get_media, call
 from ...lib.metrics import calculate_psnr
 from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
@@ -112,7 +113,10 @@ class BaseTranscoderTest(slash.Test):
       codec = output["codec"]
       mode  = output["mode"]
       encoder = self.get_encoder(codec, mode)
-      ext = self.get_file_ext(codec)
+      if "avc" == codec and "sw" == mode:
+        ext = "mp4"
+      else:
+        ext = self.get_file_ext(codec)
 
       vppscale = self.get_vpp_scale(
         output.get("width", None), output.get("height", None), mode)
@@ -158,7 +162,10 @@ class BaseTranscoderTest(slash.Test):
         encoded = self.goutputs[n][channel]
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
-        iopts = "filesrc location={} ! {}"
+        if ".mp4" == os.path.splitext(encoded)[1]:
+          iopts = "filesrc location={} ! qtdemux ! {}"
+        else:
+          iopts = "filesrc location={} ! {}"
         oopts = self.get_vpp_scale(self.width, self.height, "hw")
         oopts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
         oopts += " frame-checksum=false plane-checksum=false dump-output=true"

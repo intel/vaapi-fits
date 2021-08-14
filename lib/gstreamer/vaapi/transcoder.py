@@ -47,7 +47,7 @@ class TranscoderTest(BaseTranscoderTest):
     },
     encode = {
       "avc" : dict(
-        sw = (dict(maxres = (16384, 16384)), have_gst_element("x264enc"), "x264enc ! video/x-h264,profile=main ! h264parse"),
+        sw = (dict(maxres = (16384, 16384)), have_gst_element("x264enc"), "x264enc ! video/x-h264,profile=main ! qtmux"),
         hw = (platform.get_caps("encode", "avc"), have_gst_element("vaapih264enc"), "vaapih264enc ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
