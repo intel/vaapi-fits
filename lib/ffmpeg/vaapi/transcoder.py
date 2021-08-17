@@ -9,7 +9,7 @@ from .util import *
 import os
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_vaapi_accel)
+@slash.requires(have_ffmpeg_hwaccel("vaapi"))
 class TranscoderTest(slash.Test):
   requirements = dict(
     # ffmpeg-vaapi HW decoders are built-in

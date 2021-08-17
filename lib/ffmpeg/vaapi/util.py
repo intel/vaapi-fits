@@ -4,68 +4,8 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ....lib.common import memoize, try_call
-from ....lib.formats import match_best_format
-
-@memoize
-def have_ffmpeg():
-  return try_call("which ffmpeg")
-
-@memoize
-def have_ffmpeg_vaapi_accel():
-  return try_call("ffmpeg -hide_banner -hwaccels | grep vaapi")
-
-@memoize
-def have_ffmpeg_filter(name):
-  result = try_call("ffmpeg -hide_banner -filters | awk '{{print $2}}' | grep -w {}".format(name))
-  return result, name
-
-@memoize
-def have_ffmpeg_encoder(encoder):
-  result = try_call("ffmpeg -hide_banner -encoders | awk '{{print $2}}' | grep -w {}".format(encoder))
-  return result, encoder
-
-@memoize
-def have_ffmpeg_decoder(decoder):
-  result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
-  return result, decoder
-
-def ffmpeg_probe_resolution(filename):
-  return call(
-    "ffprobe -v quiet -select_streams v:0"
-    " -show_entries stream=width,height -of"
-    " csv=s=x:p=0 {}".format(filename)
-  ).strip()
-
-def get_supported_format_map():
-  return {
-    "I420"  : "yuv420p",
-    "NV12"  : "nv12",
-    "P010"  : "p010le",
-    "P012"  : "p012",
-    "I010"  : "yuv420p10le",
-    "YUY2"  : "yuyv422",
-    "422H"  : "yuv422p",
-    "422V"  : "yuv440p",
-    "444P"  : "yuv444p",
-    "Y800"  : "gray8",
-    "ARGB"  : "rgb32",
-    "BGRA"  : "bgra",
-    "Y210"  : "y210",
-    "Y212"  : "y212",
-    "Y410"  : "y410",
-    "Y412"  : "y412",
-    "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
-  }
-
-@memoize
-def mapformat(format):
-  return get_supported_format_map().get(format, None)
-
-def map_best_hw_format(format, hwformats):
-  return mapformat(
-    match_best_format(
-      format, set(hwformats) & set(get_supported_format_map().keys())))
+from ....lib.common import memoize
+from ....lib.ffmpeg.util import *
 
 @memoize
 def map_deinterlace_method(method):

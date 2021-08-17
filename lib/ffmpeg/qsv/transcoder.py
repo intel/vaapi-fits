@@ -9,7 +9,7 @@ from .util import *
 import os
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
+@slash.requires(have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class TranscoderTest(slash.Test):
   requirements = dict(
