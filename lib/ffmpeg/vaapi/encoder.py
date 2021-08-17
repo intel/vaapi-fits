@@ -8,7 +8,7 @@ from ....lib import *
 from .util import *
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_vaapi_accel)
+@slash.requires(have_ffmpeg_hwaccel("vaapi"))
 class EncoderTest(slash.Test):
   def gen_input_opts(self):
     opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"

@@ -11,7 +11,7 @@ from ....lib.ffmpeg.qsv.util import *
 from ....lib.mfx.runtime import MFXRuntimeTest
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
+@slash.requires(have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class detect(MFXRuntimeTest):
   def before(self):

@@ -8,7 +8,7 @@ from ....lib import *
 from .util import *
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_qsv_accel)
+@slash.requires(have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class DecoderTest(slash.Test):
   def before(self):
