@@ -59,7 +59,7 @@ def mapprofile(codec, profile):
       "main12"                : "main-12",
     },
     "av1-8"   : {
-      "main"      : "main",
+      "profile0"  : "main",
     },
     "vp9-12" : {
       "profile3"  : "profile3",
