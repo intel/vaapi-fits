@@ -411,6 +411,19 @@ def gen_vp9_vbr_lp_parameters(spec):
   params = gen_vp9_vbr_lp_variants(spec)
   return keys, params
 
+def gen_av1_cqp_lp_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("cqp_lp", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
+
+def gen_av1_cqp_lp_parameters(spec):
+  keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
+  params = gen_av1_cqp_lp_variants(spec)
+  return keys, params
+
 def gen_vpp_sharpen_variants(spec):
   for case, params in spec.items():
     variants = params.get("levels", None) or [0, 1, 20, 50, 59, 99, 100]
