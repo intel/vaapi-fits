@@ -14,16 +14,17 @@ spec = load_test_spec("hevc", "decode", "10bit")
 @slash.requires(*have_gst_element("msdkh265dec"))
 class default(DecoderTest):
   def before(self):
-    # default metric
-    self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
-    self.caps   = platform.get_caps("decode", "hevc_10")
+    vars(self).update(
+      # default metric
+      metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
+      caps        = platform.get_caps("decode", "hevc_10"),
+      gstdecoder  = "msdkh265dec",
+      gstparser   = "h265parse",
+    )
     super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
-    vars(self).update(
-      case        = case,
-      gstdecoder  = "h265parse ! msdkh265dec",
-    )
+    vars(self).update(case = case)
     self.decode()
