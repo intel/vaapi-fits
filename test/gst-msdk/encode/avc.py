@@ -19,7 +19,7 @@ class AVCEncoderBaseTest(EncoderTest):
     vars(self).update(
       codec         = "avc",
       gstencoder    = "msdkh264enc",
-      gstdecoder    = "h264parse ! msdkh264dec hardware=true",
+      gstdecoder    = "msdkh264dec",
       gstmediatype  = "video/x-h264",
       gstparser     = "h264parse",
     )

@@ -19,7 +19,7 @@ class HEVC10EncoderBaseTest(EncoderTest):
     vars(self).update(
       codec         = "hevc-10",
       gstencoder    = "msdkh265enc",
-      gstdecoder    = "h265parse ! msdkh265dec hardware=true",
+      gstdecoder    = "msdkh265dec",
       gstmediatype  = "video/x-h265",
       gstparser     = "h265parse",
     )

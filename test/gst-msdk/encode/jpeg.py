@@ -21,7 +21,7 @@ class JPEGEncoderTest(EncoderTest):
       caps          = platform.get_caps("vdenc", "jpeg"),
       codec         = "jpeg",
       gstencoder    = "msdkmjpegenc",
-      gstdecoder    = "jpegparse ! msdkmjpegdec hardware=true",
+      gstdecoder    = "msdkmjpegdec",
       gstmediatype  = "image/jpeg",
       gstparser     = "jpegparse",
     )
