@@ -16,16 +16,21 @@ from ...lib.properties import PropertyHandler
 
 class Decoder(PropertyHandler):
   #required properties
-  gstdecoder  = property(lambda s: s.props["gstdecoder"])
+  gstdecoder  = property(lambda s: f" ! {s.props['gstdecoder']}")
   frames      = property(lambda s: s.props["frames"])
   format      = property(lambda s: s.props["format"])
   source      = property(lambda s: s.props["source"])
   decoded     = property(lambda s: s.props["decoded"])
 
+  #optional properties
+  gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
+  gstdemuxer  = property(lambda s: s.ifprop("gstdemuxer", " ! {gstdemuxer}"))
+
   @timefn("gst-decode")
   def decode(self):
     return call(
-      f"gst-launch-1.0 -vf filesrc location={self.source} ! {self.gstdecoder}"
+      f"gst-launch-1.0 -vf filesrc location={self.source}"
+      f"{self.gstdemuxer}{self.gstparser}{self.gstdecoder}"
       f" ! videoconvert chroma-mode=none dither=0"
       f" ! video/x-raw,format={self.format} ! checksumsink2 qos=false"
       f" file-checksum=false frame-checksum=false plane-checksum=false"
@@ -48,12 +53,7 @@ class BaseDecoderTest(slash.Test):
     return name
 
   def validate_caps(self):
-    self.decoder = self.DecoderClass(
-      gstdecoder  = self.gstdecoder,
-      frames      = self.frames,
-      format      = self.format,
-      source      = self.source,
-    )
+    self.decoder = self.DecoderClass(**vars(self))
 
     if match_best_format(self.format, self.caps["fmts"]) is None:
       slash.skip_test(
