@@ -15,6 +15,7 @@ spec_r2r = load_test_spec("jpeg", "decode", "r2r")
 @slash.requires(*have_gst_element("msdkmjpegdec"))
 class default(DecoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99),
@@ -22,7 +23,6 @@ class default(DecoderTest):
       gstdecoder  = "msdkmjpegdec",
       gstparser   = "jpegparse",
     )
-    super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):

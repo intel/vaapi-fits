@@ -14,6 +14,7 @@ spec = load_test_spec("avc", "decode")
 @slash.requires(*have_gst_element("vah264dec"))
 class default(DecoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
@@ -21,7 +22,6 @@ class default(DecoderTest):
       gstdecoder  = "vah264dec",
       gstparser   = "h264parse",
     )
-    super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
