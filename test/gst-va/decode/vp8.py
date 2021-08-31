@@ -14,13 +14,13 @@ spec = load_test_spec("vp8", "decode")
 @slash.requires(*have_gst_element("vavp8dec"))
 class default(DecoderTest):
   def before(self):
+    super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
       caps        = platform.get_caps("decode", "vp8"),
       gstdecoder  = "vavp8dec",
     )
-    super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
