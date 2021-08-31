@@ -14,9 +14,13 @@ spec = load_test_spec("vp9", "decode", "8bit")
 @slash.requires(*have_gst_element("vavp9dec"))
 class default(DecoderTest):
   def before(self):
-    # default metric
-    self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
-    self.caps   = platform.get_caps("decode", "vp9_8")
+    vars(self).update(
+      # default metric
+      metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
+      caps        = platform.get_caps("decode", "vp9_8"),
+      gstdecoder  = "vavp9dec",
+      gstparser   = "vp9parse",
+    )
     super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
@@ -29,6 +33,6 @@ class default(DecoderTest):
 
     vars(self).update(
       case        = case,
-      gstdecoder  = "{} ! vp9parse ! vavp9dec".format(dxmap[ext]),
+      gstdemuxer  = dxmap[ext],
     )
     self.decode()

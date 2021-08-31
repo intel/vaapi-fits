@@ -14,9 +14,13 @@ spec = load_test_spec("av1", "decode", "10bit")
 @slash.requires(*have_gst_element("msdkav1dec"))
 class default(DecoderTest):
   def before(self):
-    # default metric
-    self.metric = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0)
-    self.caps   = platform.get_caps("decode", "av1_10")
+    vars(self).update(
+      # default metric
+      metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
+      caps        = platform.get_caps("decode", "av1_10"),
+      gstdecoder  = "msdkav1dec",
+      gstparser   = "av1parse",
+    )
     super(default, self).before()
 
   @slash.parametrize(("case"), sorted(spec.keys()))
@@ -28,11 +32,8 @@ class default(DecoderTest):
     dx = dxmap.get(ext, None)
     assert dx is not None, "Unrecognized source file extension {}".format(ext)
 
-    if "av1parse" not in dx:
-      dx += " ! av1parse"
-
     vars(self).update(
       case        = case,
-      gstdecoder  = "{} ! msdkav1dec".format(dx),
+      gstdemuxer  = dx if self.gstparser not in dx else None,
     )
     self.decode()
