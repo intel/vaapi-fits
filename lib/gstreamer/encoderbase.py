@@ -104,6 +104,8 @@ class BaseEncoderTest(slash.Test):
     self.encoder = self.EncoderClass(**vars(self))
     self.decoder = self.DecoderClass(
       gstdecoder  = self.gstdecoder,
+      gstparser   = vars(self).get("gstparser", None),
+      gstdemuxer  = vars(self).get("gstdemuxer", None),
       frames      = self.frames,
       format      = self.format,
     )
