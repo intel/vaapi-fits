@@ -18,9 +18,11 @@ class VP9_10EncoderBaseTest(EncoderTest):
     vars(self).update(
       codec         = "vp9",
       gstencoder    = "vaapivp9enc",
-      gstdecoder    = "matroskademux ! vaapivp9dec",
+      gstdecoder    = "vaapivp9dec",
       gstmediatype  = "video/x-vp9",
+      gstparser     = "vp9parse",
       gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
     )
 
   def get_file_ext(self):

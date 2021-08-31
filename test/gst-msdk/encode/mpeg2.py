@@ -21,7 +21,7 @@ class MPEG2EncoderTest(EncoderTest):
       caps          = platform.get_caps("encode", "mpeg2"),
       codec         = "mpeg2",
       gstencoder    = "msdkmpeg2enc",
-      gstdecoder    = "mpegvideoparse ! msdkmpeg2dec hardware=true",
+      gstdecoder    = "msdkmpeg2dec",
       gstmediatype  = "video/mpeg,mpegversion=2",
       gstparser     = "mpegvideoparse",
     )

@@ -18,9 +18,10 @@ class VP8EncoderBaseTest(EncoderTest):
     vars(self).update(
       codec         = "vp8",
       gstencoder    = "vaapivp8enc",
-      gstdecoder    = "matroskademux ! vaapivp8dec",
+      gstdecoder    = "vaapivp8dec",
       gstmediatype  = "video/x-vp8",
       gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
     )
 
   def get_file_ext(self):
