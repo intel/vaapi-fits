@@ -67,13 +67,15 @@ class Encoder(GstEncoder):
   refmode = property(lambda s: s.ifprop("refmode", " ref-pic-mode={refmode}"))
   refs    = property(lambda s: s.ifprop("refs", " ref-frames={refs}"))
   ladepth = property(lambda s: s.ifprop("ladepth", " rc-lookahead={ladepth}"))
+  tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
+  tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
 
   @property
   def gstencoder(self):
     return (
       f"{super().gstencoder}"
       f"{self.rcmode}{self.gop}{self.qp}"
-      f"{self.quality}{self.slices}{self.bframes}"
+      f"{self.quality}{self.slices}{self.tilecols}{self.tilerows}{self.bframes}"
       f"{self.maxrate}{self.minrate}{self.refmode}"
       f"{self.refs}{self.lowpower}{self.ladepth}"
     )
