@@ -73,6 +73,10 @@ class BaseEncoderTest(slash.Test):
       name += "-{qp}"
     if vars(self).get("slices", None) is not None:
       name += "-{slices}"
+    if vars(self).get("tilecols", None) is not None:
+      name += "-{tilecols}"
+    if vars(self).get("tilerows", None) is not None:
+      name += "-{tilerows}"
     if vars(self).get("quality", None) is not None:
       name += "-{quality}"
     if vars(self).get("bframes", None) is not None:
