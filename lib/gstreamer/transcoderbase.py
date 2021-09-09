@@ -67,7 +67,7 @@ class BaseTranscoderTest(slash.Test):
     for output in self.outputs:
       codec = output["codec"]
       mode  = output["mode"]
-      assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
+      assert mode in ["sw", "hw", "lp"], "Invalid test case specification as output mode type not valid"
       ocaps, oreq, _ = self.get_requirements_data("encode", codec, mode)
       requires.append(oreq)
 
