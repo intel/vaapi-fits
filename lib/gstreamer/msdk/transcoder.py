@@ -51,10 +51,12 @@ class TranscoderTest(BaseTranscoderTest):
       "avc" : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("x264enc"), "x264enc ! video/x-h264,profile=main ! h264parse"),
         hw = (platform.get_caps("encode", "avc"), have_gst_element("msdkh264enc"), "msdkh264enc ! video/x-h264,profile=main ! h264parse"),
+        lp = (platform.get_caps("vdenc", "avc"), have_gst_element("msdkh264enc"), "msdkh264enc low-power=1 ! video/x-h264,profile=main ! h264parse"),
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("x265enc"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! x265enc ! video/x-h265,profile=main ! h265parse"),
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc ! video/x-h265,profile=main ! h265parse"),
+        lp = (platform.get_caps("vdenc", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc low-power=1 ! video/x-h265,profile=main ! h265parse"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
