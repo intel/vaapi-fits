@@ -39,10 +39,12 @@ class TranscoderTest(slash.Test):
       "avc" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx264"), "libx264"),
         hw = (platform.get_caps("encode", "avc"), have_ffmpeg_encoder("h264_qsv"), "h264_qsv"),
+        lp = (platform.get_caps("vdenc", "avc"), have_ffmpeg_encoder("h264_qsv"), "h264_qsv"),
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx265"), "libx265"),
         hw = (platform.get_caps("encode", "hevc_8"), have_ffmpeg_encoder("hevc_qsv"), "hevc_qsv"),
+        lp = (platform.get_caps("vdenc", "hevc_8"), have_ffmpeg_encoder("hevc_qsv"), "hevc_qsv"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_ffmpeg_encoder("mpeg2video"), "mpeg2video"),
@@ -102,7 +104,7 @@ class TranscoderTest(slash.Test):
 
   def validate_caps(self):
     assert len(self.outputs), "Invalid test case specification, outputs data empty"
-    assert self.mode in ["sw", "hw"], "Invalid test case specification as mode type not valid"
+    assert self.mode in ["sw", "hw", "lp"], "Invalid test case specification as mode type not valid"
 
     icaps, ireq, _ =  self.get_requirements_data("decode", self.codec, self.mode)
     requires = [ireq,]
@@ -119,7 +121,7 @@ class TranscoderTest(slash.Test):
     for output in self.outputs:
       codec = output["codec"]
       mode  = output["mode"]
-      assert mode in ["sw", "hw"], "Invalid test case specification as output mode type not valid"
+      assert mode in ["sw", "hw", "lp"], "Invalid test case specification as output mode type not valid"
       ocaps, oreq, _ = self.get_requirements_data("encode", codec, mode)
       requires.append(oreq)
 
@@ -174,6 +176,8 @@ class TranscoderTest(slash.Test):
 
       filters = []
       tmode = (self.mode, mode)
+      if "lp" == mode:
+        encoder += " -low_power 1"
 
       if ("hw", "sw") == tmode:   # HW to SW transcode
         filters.extend(["hwdownload", "format=nv12"])
