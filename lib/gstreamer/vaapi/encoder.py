@@ -47,12 +47,6 @@ class Encoder(GstEncoder):
       return f" quality-level={quality}"
     return self.ifprop("quality", inner)
 
-  @property
-  def lowpower(self):
-    def inner(lowpower):
-      return f" tune={'low-power' if lowpower else 'none'}"
-    return self.ifprop("lowpower", inner)
-
   gop     = property(lambda s: s.ifprop("gop", " keyframe-period={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " max-bframes={bframes}"))

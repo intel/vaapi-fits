@@ -35,6 +35,12 @@ class Encoder(PropertyHandler):
   fps           = property(lambda s: s.ifprop("fps", " framerate={fps}"))
   profile       = property(lambda s: s.ifprop("profile", ",profile={profile}"))
 
+  @property
+  def lowpower(self):
+    def inner(lowpower):
+      return f" tune={'low-power' if lowpower else 'none'}"
+    return self.ifprop("lowpower", inner)
+
   @timefn("gst-encode")
   def encode(self):
     return call(

@@ -54,12 +54,6 @@ class Encoder(GstEncoder):
       return f" max-vbv-bitrate={self.props['maxrate']}"
     return ""
 
-  @property
-  def lowpower(self):
-    def inner(lowpower):
-      return f" low-power={1 if lowpower else 0}"
-    return self.ifprop("lowpower", inner)
-
   gop     = property(lambda s: s.ifprop("gop", " gop-size={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " b-frames={bframes}"))
