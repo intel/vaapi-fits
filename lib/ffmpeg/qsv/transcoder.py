@@ -39,7 +39,7 @@ class TranscoderTest(slash.Test):
       "avc" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx264"), "libx264"),
         hw = (platform.get_caps("encode", "avc"), have_ffmpeg_encoder("h264_qsv"), "h264_qsv"),
-        lp = (platform.get_caps("vdenc", "avc"), have_ffmpeg_encoder("h264_qsv"), "h264_qsv"),
+        lp = (platform.get_caps("vdenc", "avc"), have_ffmpeg_encoder("h264_qsv"), "h264_qsv -q 20"),
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("libx265"), "libx265"),
