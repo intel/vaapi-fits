@@ -104,7 +104,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
     assert not (args.ctapt != -1 and slash.config.root.parallel.num_workers > 0), "ctapt in parallel mode is not supported"
     assert not (args.ctapr != -1 and slash.config.root.parallel.num_workers > 0), "ctapr in parallel mode is not supported"
 
-    if "NONE" != self.platform.upper():
+    if self._get_os() != 'windows' and "NONE" != self.platform.upper():
       assert os.path.exists(args.device), "Target Device {} not exist".format(args.device)
 
   def _calls_allowed(self):
@@ -213,6 +213,10 @@ class MediaPlugin(slash.plugins.PluginInterface):
        return self.test_call_timeout
     else:
        return self.call_timeout
+
+  def _get_os(self):
+    from lib.platform import info
+    return info()["os"]
 
   def test_start(self):
     test = slash.context.test
