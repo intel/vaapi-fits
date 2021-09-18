@@ -133,6 +133,14 @@ def info():
   except:
     cpu = "unknown"
 
+  # python load from WSL1: 'linux-{kernel_version}-microsoft-{architecture}-with-{glibc_version}'
+  # python load from WSL2: 'linux-{kernel_version}-microsoft-standard-{architecture}-with-{glibc_version}'
+  # python load from OS native: 'windows-{os_family}_{os_version}-{patch_version}'
+  if 'microsoft' in platform.platform().lower() or 'windows' in platform.platform().lower():
+    os='windows'
+  else:
+    os='linux'
+
   from .common import get_media
 
   capsinfo = load_capsinfo() or dict()
@@ -144,5 +152,6 @@ def info():
     cpu = cpu,
     driver = str(get_media()._get_driver_name()),
     platform = str(get_media()._get_platform_name()),
+    os = os,
     **capsinfo,
   )
