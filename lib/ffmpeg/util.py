@@ -4,37 +4,37 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
-from ...lib.common import memoize, try_call, call
+from ...lib.common import memoize, try_call, call, exe2os
 from ...lib.formats import match_best_format
 
 @memoize
 def have_ffmpeg():
-  return try_call("which ffmpeg")
+  return try_call(f"which {exe2os('ffmpeg')}")
 
 @memoize
 def have_ffmpeg_hwaccel(accel):
-  return try_call("ffmpeg -hide_banner -hwaccels | grep {}".format(accel))
+  return try_call(f"{exe2os('ffmpeg')} -hide_banner -hwaccels | grep {accel}")
 
 @memoize
 def have_ffmpeg_filter(name):
-  result = try_call("ffmpeg -hide_banner -filters | awk '{{print $2}}' | grep -w {}".format(name))
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -filters | awk '{{print $2}}' | grep -w {name}")
   return result, name
 
 @memoize
 def have_ffmpeg_encoder(encoder):
-  result = try_call("ffmpeg -hide_banner -encoders | awk '{{print $2}}' | grep -w {}".format(encoder))
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -encoders | awk '{{print $2}}' | grep -w {encoder}")
   return result, encoder
 
 @memoize
 def have_ffmpeg_decoder(decoder):
-  result = try_call("ffmpeg -hide_banner -decoders | awk '{{print $2}}' | grep -w {}".format(decoder))
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -decoders | awk '{{print $2}}' | grep -w {decoder}")
   return result, decoder
 
 def ffmpeg_probe_resolution(filename):
   return call(
-    "ffprobe -v quiet -select_streams v:0"
+    f"{exe2os('ffprobe')} -v quiet -select_streams v:0"
     " -show_entries stream=width,height -of"
-    " csv=s=x:p=0 {}".format(filename)
+    f" csv=s=x:p=0 {filename}"
   ).strip()
 
 def get_supported_format_map():

@@ -217,3 +217,21 @@ def pathexists(path):
 def makepath(path):
   if not pathexists(path):
     os.makedirs(abspath(path))
+
+@memoize
+def exe2os(name):
+  return f"{name}" if "linux" == get_media()._get_os() else f"{name}.exe"
+
+@memoize
+def filepath2os(file_path):
+  if get_media()._get_os() == "wsl":
+    # WSL mounts the windows file system in "/mnt/<DRIVE LETTER>/path/to/file" form.
+    # Here, we convert to native windows file path form "<DRIVE LETTER>:\\path\\to\\file"
+    # wslpath issue: https://github.com/microsoft/WSL/issues/4908
+    # return call(f"wslpath -w {file_path}")
+    # Windows binaray need access absolute path
+    # when command run in WSL shell environment, '\\' -> '\'
+    windows_path = call(f'realpath {file_path}').strip().replace('/mnt/', '').replace('/', '\\\\')
+    return windows_path[0] + ':' + windows_path[1:]
+  else:
+    return file_path
