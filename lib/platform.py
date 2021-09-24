@@ -136,8 +136,8 @@ def info():
   # python load from WSL1: 'linux-{kernel_version}-microsoft-{architecture}-with-{glibc_version}'
   # python load from WSL2: 'linux-{kernel_version}-microsoft-standard-{architecture}-with-{glibc_version}'
   # python load from OS native: 'windows-{os_family}_{os_version}-{patch_version}'
-  if 'microsoft' in platform.platform().lower() or 'windows' in platform.platform().lower():
-    os='windows'
+  if 'microsoft' in platform.platform().lower():
+    os='wsl'
   else:
     os='linux'
 
