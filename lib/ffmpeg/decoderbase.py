@@ -7,7 +7,7 @@
 import re
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, map_best_hw_format, mapformat
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
@@ -24,16 +24,17 @@ class BaseDecoderTest(slash.Test):
   def call_ffmpeg(self):
     return call(
       (
-        "ffmpeg -hwaccel {hwaccel} -init_hw_device {hwaccel}=hw:{renderDevice}"
-        " -hwaccel_output_format {hwformat} -hwaccel_flags allow_profile_mismatch"
-        " -v verbose"
-      ).format(**vars(self)) + (
+        f"{exe2os('ffmpeg')} -hwaccel {self.hwaccel}"
+        f" -init_hw_device {self.hwaccel}=hw:{self.renderDevice}"
+        f" -hwaccel_output_format {self.hwformat}"
+        f" -hwaccel_flags allow_profile_mismatch -v verbose"
+      ) + (
         " -c:v {ffdecoder}" if hasattr(self, "ffdecoder") else ""
       ).format(**vars(self)) + (
-        " -i {source}"
-        " -pix_fmt {mformat} -f rawvideo -vsync passthrough -autoscale 0"
-        " -vframes {frames} -y {decoded}"
-      ).format(**vars(self))
+        f" -i {filepath2os(self.source)}"
+        f" -pix_fmt {self.mformat} -f rawvideo -vsync passthrough -autoscale 0"
+        f" -vframes {self.frames} -y {filepath2os(self.decoded)}"
+      )
     )
 
   def gen_name(self):
