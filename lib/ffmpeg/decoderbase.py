@@ -25,12 +25,12 @@ class BaseDecoderTest(slash.Test):
     return call(
       (
         "ffmpeg -hwaccel {hwaccel} -init_hw_device {hwaccel}=hw:{renderDevice}"
-        " -hwaccel_output_format {hwaccel} -hwaccel_flags allow_profile_mismatch"
+        " -hwaccel_output_format {hwformat} -hwaccel_flags allow_profile_mismatch"
         " -v verbose"
       ).format(**vars(self)) + (
         " -c:v {ffdecoder}" if hasattr(self, "ffdecoder") else ""
       ).format(**vars(self)) + (
-        " -i {source} -vf 'hwdownload,format={hwformat}'"
+        " -i {source}"
         " -pix_fmt {mformat} -f rawvideo -vsync passthrough -autoscale 0"
         " -vframes {frames} -y {decoded}"
       ).format(**vars(self))
