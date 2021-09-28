@@ -13,7 +13,8 @@ def have_ffmpeg():
 
 @memoize
 def have_ffmpeg_hwaccel(accel):
-  return try_call(f"{exe2os('ffmpeg')} -hide_banner -hwaccels | grep {accel}")
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -hwaccels | grep {accel}")
+  return result, accel
 
 @memoize
 def have_ffmpeg_filter(name):

@@ -10,7 +10,7 @@ from ....lib.common import get_media
 from ....lib.ffmpeg.decoderbase import BaseDecoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 
-@slash.requires(have_ffmpeg_hwaccel("vaapi"))
+@slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class DecoderTest(BaseDecoderTest):
   def before(self):
     super().before()

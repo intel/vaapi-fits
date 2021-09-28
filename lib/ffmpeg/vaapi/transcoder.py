@@ -10,7 +10,7 @@ from ....lib import platform
 from ....lib.ffmpeg.transcoderbase import BaseTranscoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_decoder, have_ffmpeg_encoder, have_ffmpeg_hwaccel, have_ffmpeg_filter
 
-@slash.requires(have_ffmpeg_hwaccel("vaapi"))
+@slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class TranscoderTest(BaseTranscoderTest):
   requirements = dict(
     # ffmpeg-vaapi HW decoders are built-in
