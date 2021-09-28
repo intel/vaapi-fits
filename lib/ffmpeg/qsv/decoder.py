@@ -12,7 +12,7 @@ from ....lib.ffmpeg.decoderbase import BaseDecoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.qsv.util import using_compatible_driver
 
-@slash.requires(have_ffmpeg_hwaccel("qsv"))
+@slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class DecoderTest(BaseDecoderTest):
   def before(self):

@@ -8,7 +8,7 @@ from ....lib import *
 from .util import *
 
 @slash.requires(have_ffmpeg)
-@slash.requires(have_ffmpeg_hwaccel("vaapi"))
+@slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class VppTest(slash.Test):
   def before(self):
     self.refctx = []

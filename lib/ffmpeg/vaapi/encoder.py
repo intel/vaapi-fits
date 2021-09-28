@@ -11,7 +11,7 @@ from ....lib.ffmpeg.encoderbase import BaseEncoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.vaapi.util import mapprofile
 
-@slash.requires(have_ffmpeg_hwaccel("vaapi"))
+@slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class EncoderTest(BaseEncoderTest):
   def before(self):
     super().before()

@@ -11,7 +11,7 @@ from ....lib.ffmpeg.encoderbase import BaseEncoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver
 
-@slash.requires(have_ffmpeg_hwaccel("qsv"))
+@slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class EncoderTest(BaseEncoderTest):
   def before(self):
