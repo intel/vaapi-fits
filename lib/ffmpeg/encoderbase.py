@@ -7,7 +7,7 @@
 import os
 import slash
 
-from ...lib.common import get_media, timefn, call
+from ...lib.common import get_media, timefn, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, mapformat, map_best_hw_format
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
@@ -36,7 +36,7 @@ class BaseEncoderTest(slash.Test):
     opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     if vars(self).get("fps", None) is not None:
       opts += " -r:v {fps}"
-    opts += " -i {source}"
+    opts += f" -i {filepath2os(self.source)}"
     return opts
 
   def gen_output_opts(self):
@@ -90,7 +90,7 @@ class BaseEncoderTest(slash.Test):
     if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
       opts += " -b_strategy 1"
 
-    opts += " -vframes {frames} -y {encoded}"
+    opts += " -vframes {frames} -y {osencoded}"
 
     return opts
 
@@ -175,7 +175,8 @@ class BaseEncoderTest(slash.Test):
   def call_ffmpeg(self, iopts, oopts):
     return call(
       (
-        "ffmpeg -hwaccel {hwaccel} -init_hw_device {hwaccel}=hw:{renderDevice}"
+        f"{exe2os('ffmpeg')}"
+        " -hwaccel {hwaccel} -init_hw_device {hwaccel}=hw:{renderDevice}"
         " -hwaccel_output_format {hwaccel}"
       ).format(**vars(self)) + (
         " -v verbose {iopts} {oopts}"
@@ -187,12 +188,15 @@ class BaseEncoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    iopts = self.gen_input_opts()
-    oopts = self.gen_output_opts()
     name  = self.gen_name().format(**vars(self))
     ext   = self.get_file_ext()
 
     self.encoded = get_media()._test_artifact("{}.{}".format(name, ext))
+    self.osencoded = filepath2os(self.encoded)
+
+    iopts = self.gen_input_opts()
+    oopts = self.gen_output_opts()
+
     self.output = self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
@@ -201,6 +205,7 @@ class BaseEncoderTest(slash.Test):
       get_media()._set_test_details(md5_ref = md5ref)
       for i in range(1, self.r2r):
         self.encoded = get_media()._test_artifact("{}_{}.{}".format(name, i, ext))
+        self.osencoded = filepath2os(self.encoded)
         self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
         result = md5(self.encoded)
         get_media()._set_test_details(**{"md5_{:03}".format(i) : result})
@@ -239,13 +244,15 @@ class BaseEncoderTest(slash.Test):
     iopts = ""
     if vars(self).get("ffdecoder", None) is not None:
       iopts += "-c:v {ffdecoder} "
-    iopts += "-i {encoded}"
+    iopts += "-i {osencoded}"
 
-    oopts = (
-      "-vf 'hwdownload,format={hwformat}' -pix_fmt {mformat} -f rawvideo"
-      " -vsync passthrough -vframes {frames} -y {decoded}")
+
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    oopts = (
+      "-vf 'hwdownload,format={hwformat}' -pix_fmt {mformat} -f rawvideo"
+      " -vsync passthrough -vframes {frames}"
+      f" -y {filepath2os(self.decoded)}")
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     get_media().baseline.check_psnr(
@@ -261,7 +268,8 @@ class BaseEncoderTest(slash.Test):
       return
 
     output = call(
-      "ffprobe -i {encoded} -v quiet -show_entries stream=level"
+      f"{exe2os('ffprobe')}"
+      " -i {osencoded} -v quiet -show_entries stream=level"
       " -of default=nk=1:nw=1".format(**vars(self)))
     assert float(output)/30 == self.level, "fail to set target level"
 
@@ -270,7 +278,8 @@ class BaseEncoderTest(slash.Test):
       return
 
     output = call(
-      "ffmpeg -v verbose -i {encoded} -c:v copy"
+      f"{exe2os('ffmpeg')}"
+      " -v verbose -i {osencoded} -c:v copy"
       " -vframes {frames} -bsf:v trace_headers"
       " -f null - 2>&1 | grep 'nal_unit_type.*5' | wc -l".format(**vars(self)))
     assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"
