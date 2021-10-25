@@ -8,7 +8,7 @@ from ....lib.common import memoize, get_media
 from ....lib.ffmpeg.util import *
 
 def using_compatible_driver():
-  return get_media()._get_driver_name() == "iHD"
+  return get_media()._get_driver_name() in ["iHD", "d3d11"]
 
 @memoize
 def map_deinterlace_method(method):
