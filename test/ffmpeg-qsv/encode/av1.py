@@ -52,3 +52,25 @@ class cqp_lp(AV1EncoderLPTest):
   def test(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
     self.encode()
+
+class cbr_lp(AV1EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      gop     = gop,
+      maxrate = bitrate,
+      minrate = bitrate,
+      profile = profile,
+      rcmode  = "cbr",
+      tilerows  = tilerows,
+      tilecols  = tilecols,
+      quality   = quality,
+    )
+
+  @slash.parametrize(*gen_av1_cbr_lp_parameters(spec))
+  def test(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
+    self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
+    self.encode()
