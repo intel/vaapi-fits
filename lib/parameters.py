@@ -424,6 +424,20 @@ def gen_av1_cqp_lp_parameters(spec):
   params = gen_av1_cqp_lp_variants(spec)
   return keys, params
 
+def gen_av1_cbr_lp_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("cbr_lp", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
+        variant.get("profile", "profile0")]
+
+def gen_av1_cbr_lp_parameters(spec):
+  keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
+  params = gen_av1_cbr_lp_variants(spec)
+  return keys, params
+
 def gen_vpp_sharpen_variants(spec):
   for case, params in spec.items():
     variants = params.get("levels", None) or [0, 1, 20, 50, 59, 99, 100]
