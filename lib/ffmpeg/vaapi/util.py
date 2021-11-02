@@ -77,6 +77,7 @@ def mapprofile(codec, profile):
     },
     "av1-8"   : {
       "main"                  : "main",
+      "profile0"              : "main"
     },
   }.get(codec, {}).get(profile, None)
 
