@@ -269,8 +269,11 @@ class BaseEncoderTest(slash.Test):
     if vars(self).get("vforced_idr", None) is None:
       return
 
+    judge = {"hevc-8" : 19, "avc" : 5}.get(self.codec, None)
+    assert judge is not None, f"{self.codec} codec not supported for forced_idr"
+
     output = call(
       "ffmpeg -v verbose -i {encoded} -c:v copy"
       " -vframes {frames} -bsf:v trace_headers"
-      " -f null - 2>&1 | grep 'nal_unit_type.*5' | wc -l".format(**vars(self)))
+      " -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l".format(**vars(self)))
     assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"

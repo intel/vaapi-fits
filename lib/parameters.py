@@ -215,6 +215,7 @@ gen_hevc_vbr_parameters = gen_avc_vbr_parameters
 gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
+gen_hevc_forced_idr_parameters = gen_avc_forced_idr_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.items():
