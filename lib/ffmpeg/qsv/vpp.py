@@ -21,7 +21,7 @@ class VppTest(slash.Test):
       opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     else:
       opts = "-c:v {ffdecoder}"
-    opts += " -i {source}"
+    opts += f" -i {filepath2os(self.source)}"
 
     return opts
 
@@ -68,7 +68,7 @@ class VppTest(slash.Test):
     opts += " '{}'".format(",".join(vfilter))
     if self.vpp_op not in ["csc"]:
       opts += " -pix_fmt {mformat}"
-    opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {decoded}"
+    opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {osdecoded}"
 
     return opts
 
@@ -96,7 +96,8 @@ class VppTest(slash.Test):
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     call(
-      "ffmpeg -init_hw_device qsv=qsv:hw_any,child_device={renderDevice} -hwaccel qsv"
+      f"{exe2os('ffmpeg')}"
+      " -init_hw_device qsv=qsv:hw_any,child_device={renderDevice} -hwaccel qsv"
       " -v verbose {iopts} {oopts}".format(renderDevice= self.renderDevice, iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
@@ -139,6 +140,7 @@ class VppTest(slash.Test):
     name          = self.gen_name().format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.osdecoded = filepath2os(self.decoded)
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
@@ -148,6 +150,7 @@ class VppTest(slash.Test):
 
       for i in range(1, self.r2r):
         self.decoded = get_media()._test_artifact("{}_{}.yuv".format(name, i))
+        self.osdecoded = filepath2os(self.decoded)
         self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
         result = md5(self.decoded)
         get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})
