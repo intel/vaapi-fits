@@ -1,0 +1,88 @@
+###
+### Copyright (C) 2021 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+###
+### kate: syntax python;
+###
+
+caps = dict(
+  decode  = dict(
+    avc     = dict(maxres = res4k , fmts = ["NV12"]),
+    mpeg2   = dict(maxres = res2k , fmts = ["NV12"]),
+    vc1     = dict(maxres = res4k , fmts = ["NV12"]),
+    jpeg    = dict(maxres = res16k, fmts = ["NV12", "411P", "422H", "422V", "444P", "Y800"]),
+    hevc_8  = dict(
+      maxres    = res8k,
+      fmts      = ["NV12", "YUY2", "AYUV"],
+      features  = dict(scc = True, msp = True),
+    ),
+    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y210", "Y410"]),
+    hevc_12 = dict(maxres = res8k , fmts = ["P012", "Y212", "Y412"]),
+    vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
+    vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+    vp9_12  = dict(maxres = res8k , fmts = ["P012", "Y412"]),
+    av1_8   = dict(maxres = res8k , fmts = ["NV12"]),
+    av1_10  = dict(maxres = res8k , fmts = ["P010"]),
+  ),
+  encode  = dict(
+    avc     = dict(maxres = res4k , fmts = ["NV12"]),
+    mpeg2   = dict(maxres = res2k , fmts = ["NV12"]),
+    hevc_8  = dict(
+      maxres    = res8k,
+      fmts      = ["NV12", "AYUV"],
+      features  = dict(scc = True, msp = True),
+    ),
+    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+  ),
+  vpp    = dict(
+    # brightness, contrast, hue and saturation
+    procamp     = dict(
+      ifmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410"],
+      ofmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410", "BGRA"],
+    ),
+    # mirroring and rotation
+    transpose   = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+    ),
+    crop        = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+    ),
+    sharpen     = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+    ),
+    deinterlace = dict(
+      bob             = dict(
+        ifmts = ["NV12", "YV12", "P010", "YUY2"],
+        ofmts = ["NV12", "YV12", "P010", "YUY2"],
+      ),
+      motion_adaptive = dict(
+        ifmts = ["NV12", "P010", "YUY2"],
+        ofmts = ["NV12", "P010", "YUY2"],
+      ),
+    ),
+    denoise     = dict(
+      ifmts = ["NV12", "P010", "YUY2"],
+      ofmts = ["NV12", "P010", "YUY2"],
+      chroma = False,
+    ),
+    scale       = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+    ),
+    # colorspace conversion
+    csc         = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+    ),
+    blend       = dict(
+      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+    ),
+  ),
+)
