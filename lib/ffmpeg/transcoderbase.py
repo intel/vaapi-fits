@@ -7,7 +7,7 @@
 import re
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.metrics import calculate_psnr
 from ...lib.ffmpeg.util import have_ffmpeg, ffmpeg_probe_resolution
 
@@ -106,7 +106,7 @@ class BaseTranscoderTest(slash.Test):
     if "hw" == self.mode:
       opts += " -hwaccel {hwaccel}"
     opts += " -c:v {}".format(self.get_decoder(self.codec, self.mode))
-    opts += " -i {source}"
+    opts += f" -i {filepath2os(self.source)}"
 
     return opts.format(**vars(self))
 
@@ -146,20 +146,22 @@ class BaseTranscoderTest(slash.Test):
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         self.goutputs.setdefault(n, list()).append(ofile)
+        osofile = filepath2os(ofile)
 
         if len(filters):
           opts += " -vf '{}'".format(','.join(filters))
         opts += " -c:v {}".format(encoder)
         opts += " -vframes {frames}"
-        opts += " -y {}".format(ofile)
+        opts += " -y {}".format(osofile)
 
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
+    self.ossrcyuv = filepath2os(self.srcyuv)
     if "hw" == self.mode:
       opts += " -vf 'hwdownload,format=nv12'"
     opts += " -pix_fmt yuv420p -f rawvideo"
-    opts += " -vframes {frames} -y {srcyuv}"
+    opts += " -vframes {frames} -y {ossrcyuv}"
 
     return opts.format(**vars(self))
 
@@ -174,7 +176,8 @@ class BaseTranscoderTest(slash.Test):
 
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
-    return call("ffmpeg -v verbose {} {}".format(iopts, oopts))
+    return call(f"{exe2os('ffmpeg')}"
+                " -v verbose {} {}".format(iopts, oopts))
 
   def transcode(self):
     self.validate_caps()
@@ -190,14 +193,16 @@ class BaseTranscoderTest(slash.Test):
       get_media()._set_test_details(**{"output.{}".format(n) : output})
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
+        osencoded = filepath2os(encoded)
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
+        osyuv = filepath2os(yuv)
         vppscale = self.get_vpp_scale(self.width, self.height, "sw")
         iopts = "-i {}"
         oopts = "-vf '{}' -pix_fmt yuv420p -f rawvideo -vframes {} -y {}"
         self.call_ffmpeg(
-          iopts.format(encoded), oopts.format(vppscale, self.frames, yuv))
-        self.check_resolution(output, encoded)
+          iopts.format(osencoded), oopts.format(vppscale, self.frames, osyuv))
+        self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
