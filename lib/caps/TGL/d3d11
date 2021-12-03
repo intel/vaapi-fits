@@ -1,5 +1,5 @@
 ###
-### Copyright (C) 2020 Intel Corporation
+### Copyright (C) 2021 Intel Corporation
 ###
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
@@ -8,7 +8,6 @@
 ### kate: syntax python;
 ###
 
-# https://github.com/intel/media-driver/blob/master/docs/media_features.md
 caps = dict(
   decode  = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12"]),
