@@ -10,6 +10,9 @@ from ....lib.ffmpeg.util import *
 def using_compatible_driver():
   return get_media()._get_driver_name() in ["iHD", "d3d11", "dxva2"]
 
+def have_encode_main10sp(encoder):
+  return try_call(f"{exe2os('ffmpeg')} -hide_banner -h encoder={encoder} | grep '\-main10sp'")
+
 @memoize
 def map_deinterlace_method(method):
   return {
