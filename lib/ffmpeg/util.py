@@ -36,7 +36,7 @@ def ffmpeg_probe_resolution(filename):
     f"{exe2os('ffprobe')} -v quiet -select_streams v:0"
     " -show_entries stream=width,height -of"
     f" csv=s=x:p=0 {filename}"
-  ).strip()
+  ).strip().strip('x')
 
 def get_supported_format_map():
   return {
