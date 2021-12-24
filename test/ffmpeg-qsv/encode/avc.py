@@ -96,6 +96,7 @@ class cbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
+      frames    = vars(self).get("brframes", self.frames),
       bframes   = bframes,
       bitrate   = bitrate,
       case      = case,
