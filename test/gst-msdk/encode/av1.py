@@ -21,12 +21,15 @@ class AV1EncoderBaseTest(EncoderTest):
       gstencoder    = "msdkav1enc",
       gstdecoder    = "msdkav1dec",
       gstmediatype  = "video/x-av1",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
+      # avoid matroskamux/demux since it writes timestamps to header, and will
+      # be different in each r2r iteration.
+      gstmuxer      = "ivfparse",
+      gstdemuxer    = "ivfparse",
+      gstparser     = "av1parse",
     )
 
   def get_file_ext(self):
-    return "webm"
+    return "ivf"
 
 @slash.requires(*platform.have_caps("vdenc", "av1_8"))
 class AV1EncoderLPTest(AV1EncoderBaseTest):
