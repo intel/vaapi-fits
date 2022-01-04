@@ -9,6 +9,10 @@ import itertools
 
 def format_value(value, **params):
   from .common import get_media
+  import types
+
+  if type(value) is types.FunctionType:
+    return format_value(value(), **params)
 
   augmented = dict(
     driver = get_media()._get_driver_name(),
