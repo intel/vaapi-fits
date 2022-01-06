@@ -159,13 +159,13 @@ class BaseEncoderTest(slash.Test):
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = md5(self.encoder.encoded)
+      md5ref = self.md5_demuxed()
       get_media()._set_test_details(md5_ref = md5ref)
       for i in range(1, self.r2r):
         self.encoder.update(
           encoded = get_media()._test_artifact("{}_{}.{}".format(name, i, ext)))
         self.encoder.encode()
-        result = md5(self.encoder.encoded)
+        result = self.md5_demuxed()
         get_media()._set_test_details(**{"md5_{:03}".format(i): result})
         assert md5ref == result, "r2r md5 mismatch"
         # delete encoded file after each iteration
@@ -207,3 +207,19 @@ class BaseEncoderTest(slash.Test):
     elif self.rcmode in ["vbr", "la_vbr"]:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
+
+  def md5_demuxed(self):
+    # gstreamer muxers write timestamps to container header and will be
+    # different in each r2r iteration.  Thus, extract the elementary video
+    # stream from the container and take md5 on the elementary video stream.
+    if vars(self).get("gstdemuxer", None) is not None:
+      demuxed = get_media()._test_artifact(f"{self.encoder.encoded}.{self.codec}")
+      call(
+        f"gst-launch-1.0 -vf filesrc location={self.encoder.encoded}"
+        f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
+        f" ! filesink location={demuxed}"
+      )
+      result = md5(demuxed)
+      get_media()._purge_test_artifact(demuxed)
+      return result
+    return md5(self.encoder.encoded)
