@@ -34,6 +34,11 @@ caps = dict(
       fmts      = ["NV12"],
       features  = dict(scc = False, msp = True),
     ),
+    hevc_10 = dict(
+      maxres = res8k,
+      fmts = ["P010", "Y410"],
+      features  = dict(msp = True)
+    ),
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"]),
