@@ -47,6 +47,13 @@ class Encoder(GstEncoder):
       return f" quality-level={quality}"
     return self.ifprop("quality", inner)
 
+  @property
+  def minrate(self):
+    if super().rcmode in ["vbr"]:
+      tp = self.props["minrate"] / self.props["maxrate"]
+      return f" target-percentage={int(tp * 100)}"
+    return ""
+
   gop     = property(lambda s: s.ifprop("gop", " keyframe-period={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " max-bframes={bframes}"))
@@ -62,7 +69,7 @@ class Encoder(GstEncoder):
       f"{super().gstencoder}"
       f"{self.rcmode}{self.gop}{self.qp}"
       f"{self.quality}{self.slices}{self.bframes}"
-      f"{self.maxrate}{self.refmode}{self.refs}"
+      f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
       f"{self.lowpower}{self.loopshp}{self.looplvl}"
     )
 
