@@ -80,7 +80,7 @@ class Baseline:
   def check_psnr(self, psnr, context = []):
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"
-      assert all(map(lambda r,a: a+0.2 > r, ref[3:], actual[3:]))
+      assert all(map(lambda r,a: a > (r * 0.98), ref[3:], actual[3:]))
     self.check_result(compare = compare, context = context, psnr = psnr)
 
   def check_md5(self, md5, expect = None, context = []):
