@@ -132,7 +132,7 @@ class VppMetricMixin:
 
     def compare(k, ref, actual):
       assert ref is not None, "Invalid reference value"
-      assert abs(ref[-3] - actual[-3]) <  0.2, "Luma (Y) out of baseline range"
+      assert abs(ref[-3] - actual[-3]) <  0.25, "Luma (Y) out of baseline range"
 
     get_media().baseline.check_result(
       compare = compare, context = self.refctx, psnr = psnr)
