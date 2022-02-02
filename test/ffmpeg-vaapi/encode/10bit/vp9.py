@@ -35,7 +35,7 @@ class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
     )
 
 class cqp_lp(VP9_10EncoderLPTest):
-  def init(self, tspec, case, ipmode, qp, slices, looplvl, loopshp):
+  def init(self, tspec, case, ipmode, qp, quality, slices, looplvl, loopshp):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case      = case,
@@ -43,13 +43,14 @@ class cqp_lp(VP9_10EncoderLPTest):
       looplvl   = looplvl,
       loopshp   = loopshp,
       qp        = qp,
+      quality   = quality,
       rcmode    = "cqp",
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['quality', 'refmode'])
+  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['refmode'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec, case, ipmode, qp, slices, looplvl, loopshp)
+    self.init(spec, case, ipmode, qp, quality, slices, looplvl, loopshp)
     self.encode()
 
 class cbr_lp(VP9_10EncoderLPTest):
@@ -74,7 +75,7 @@ class cbr_lp(VP9_10EncoderLPTest):
     self.encode()
 
 class vbr_lp(VP9_10EncoderLPTest):
-  def init(self, tspec, case, gop, bitrate, fps, slices, loopshp):
+  def init(self, tspec, case, gop, bitrate, fps, quality, slices, loopshp):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bitrate   = bitrate,
@@ -85,13 +86,14 @@ class vbr_lp(VP9_10EncoderLPTest):
       loopshp   = loopshp,
       maxrate   = bitrate * 2, # target percentage 50%
       minrate   = bitrate,
+      quality   = quality,
       rcmode    = "vbr",
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['quality', 'refmode', 'looplvl'])
+  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'looplvl'])
   def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec, case, gop, bitrate, fps, slices, loopshp)
+    self.init(spec, case, gop, bitrate, fps, quality, slices, loopshp)
     self.encode()
 
 
