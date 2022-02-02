@@ -35,7 +35,7 @@ class VP8EncoderTest(VP8EncoderBaseTest):
     )
 
 class cqp(VP8EncoderTest):
-  @parametrize_with_unused(*gen_vp8_cqp_parameters(spec), ['quality'])
+  @slash.parametrize(*gen_vp8_cqp_parameters(spec))
   def test(self, case, ipmode, qp, quality, looplvl, loopshp):
     vars(self).update(spec[case].copy())
     vars(self).update(
@@ -44,6 +44,7 @@ class cqp(VP8EncoderTest):
       looplvl   = looplvl,
       loopshp   = loopshp,
       qp        = qp,
+      quality   = quality,
       rcmode    = "cqp",
     )
     self.encode()
@@ -67,7 +68,7 @@ class cbr(VP8EncoderTest):
     self.encode()
 
 class vbr(VP8EncoderTest):
-  @parametrize_with_unused(*gen_vp8_vbr_parameters(spec), ['quality'])
+  @slash.parametrize(*gen_vp8_vbr_parameters(spec))
   def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
     vars(self).update(spec[case].copy())
     vars(self).update(
@@ -80,6 +81,7 @@ class vbr(VP8EncoderTest):
       loopshp   = loopshp,
       maxrate   = bitrate * 2, # target percentage 50%
       minrate   = bitrate,
+      quality   = quality,
       rcmode    = "vbr",
     )
     self.encode()
