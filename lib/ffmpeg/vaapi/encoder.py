@@ -33,7 +33,7 @@ class EncoderTest(BaseEncoderTest):
   def gen_quality_opts(self):
     if self.codec in ["jpeg"]:
       return " -global_quality {quality}"
-    return " -quality {quality}"
+    return " -compression_level {quality}"
 
   def validate_caps(self):
     super().validate_caps()
