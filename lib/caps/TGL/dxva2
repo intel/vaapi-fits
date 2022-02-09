@@ -84,7 +84,7 @@ caps = dict(
     denoise     = dict(
       ifmts = ["NV12", "P010", "YUY2"],
       ofmts = ["NV12", "P010", "YUY2"],
-      chroma = False,
+      chroma = True,
     ),
     scale       = dict(
       ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
