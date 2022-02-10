@@ -292,7 +292,7 @@ def check_metric(**params):
       params["width"], params["height"],
       params["frames"], params["format"])
     get_media()._set_test_details(nrmse = nrmse)
-    avg_range = metric.get("avg_range", [(0, 0.07), (0, 0.07), (0, 0.07)])
+    avg_range = metric.get("avg_range", [(0, 0.15), (0, 0.15), (0, 0.15)])
     assert avg_range[0][0] <= nrmse[-3] <= avg_range[0][1]
     assert avg_range[1][0] <= nrmse[-2] <= avg_range[1][1]
     assert avg_range[2][0] <= nrmse[-1] <= avg_range[2][1]
