@@ -21,7 +21,7 @@ class default(VppTest):
     )
     super(default, self).before()
 
-  def init(self, tspec, case, scale_width, scale_height):
+  def init(self, tspec, case, scale_width, scale_height, scale_op):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       case          = case,
@@ -30,8 +30,8 @@ class default(VppTest):
     )
 
   @slash.parametrize(*gen_vpp_scale_parameters(spec))
-  def test(self, case, scale_width, scale_height):
-    self.init(spec, case, scale_width, scale_height)
+  def test(self, case, scale_width, scale_height, scale_op):
+    self.init(spec, case, scale_width, scale_height, scale_op)
     self.vpp()
 
   @slash.parametrize(*gen_vpp_scale_parameters(spec_r2r))

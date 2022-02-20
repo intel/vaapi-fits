@@ -527,11 +527,13 @@ def gen_vpp_csc_parameters(spec):
 def gen_vpp_scale_variants(spec):
   for case, params in spec.items():
     variants = params.get("scale_resolutions", None) or []
+    scale_ops= params.get("scale_op", None) or []
     for scale_width, scale_height in variants:
-      yield [case, scale_width, scale_height]
+      for scale_op in scale_ops:
+        yield [case, scale_width, scale_height, scale_op]
 
 def gen_vpp_scale_parameters(spec):
-  keys = ("case", "scale_width", "scale_height")
+  keys = ("case", "scale_width", "scale_height", "scale_op")
   params = gen_vpp_scale_variants(spec)
   return keys, params
 
