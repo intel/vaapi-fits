@@ -14,6 +14,7 @@ import slash
 from slash.utils.traceback_utils import get_traceback_string
 import sys
 import xml.etree.cElementTree as et
+import argparse
 
 __required_slash_version__ = "1.12.0"
 assert slash.__version__ == __required_slash_version__, \
@@ -381,6 +382,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
 media = MediaPlugin()
 slash.plugins.manager.install(media, activate = True, is_internal = True)
+
+parser = argparse.ArgumentParser(add_help = False)
+args = argparse.Namespace()
+media.configure_argument_parser(parser)
+parser.parse_known_args(sys.argv[1:], namespace=args)
+media.configure_from_parsed_args(args)
 
 # Allow user to override test config file via environment variable.
 # NOTE: It would be nice to use the configure_argument_parser mechanism in our
