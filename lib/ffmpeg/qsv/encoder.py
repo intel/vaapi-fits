@@ -36,6 +36,9 @@ class EncoderTest(BaseEncoderTest):
     super().validate_caps()
     if vars(self).get("profile", None) in ["main10sp"] and not have_encode_main10sp(self.ffencoder):
       slash.skip_test(f"{self.ffencoder} main10sp not supported")
+    if self.rcmode in ['cbr','vbr','cbr_lp','vbr_lp']:
+    # "brafames", if specified, overrides "frames" for bitrate control modes
+      self.frames = vars(self).get("brframes", self.frames)
 
   def check_output(self):
     m = re.search("Initialize MFX session", self.output, re.MULTILINE)
