@@ -51,8 +51,6 @@ class VppTest(BaseVppTest):
         self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op]
       )
       opts += " {vpp_op}={mlevel}"
-    elif self.vpp_op in ["scale"]:
-      opts += " scaling-mode=1"
     elif self.vpp_op in ["deinterlace"]:
       opts += " deinterlace-mode=1 deinterlace-method={mmethod}"
     elif self.vpp_op in ["denoise"]:
