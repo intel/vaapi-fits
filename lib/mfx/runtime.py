@@ -38,6 +38,7 @@ class MFXRuntimeTest(slash.Test):
 
     for m in psutil.Process(proc.pid).memory_maps():
       path = os.path.split(m.path)
+      slash.logger.info(path)
       if path[-1].startswith("libmfxhw64.so"):
         runtimes.append("msdk")
       elif path[-1].startswith("libmfx-gen.so"):
