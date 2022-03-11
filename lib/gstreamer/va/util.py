@@ -61,6 +61,19 @@ def map_transpose_direction(degrees, method):
     (270, "horizontal") : "ur-ll",
   }.get((degrees, method), None)
 
+@memoize
+def mapprofile(codec, profile):
+  return {
+    "avc"      : {
+      "high"                  : "high",
+      "main"                  : "main",
+      "baseline"              : "baseline",
+      "constrained-baseline"  : "constrained-baseline",
+      "multiview-high"        : "multiview-high",
+      "stereo-high"           : "stereo-high",
+    },
+  }.get(codec, {}).get(profile, None)
+
 def load_test_spec(*ctx):
   from ....lib import util as libutil
   return libutil.load_test_spec("gst-va", *ctx)
