@@ -43,9 +43,15 @@ class BaseDecoderTest(slash.Test):
       name += "_r2r"
     return name
 
+  def map_best_hw_format(self):
+    return map_best_hw_format(self.format, self.caps["fmts"])
+
+  def mapformat(self):
+    return mapformat(self.format)
+
   def validate_caps(self):
-    self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
-    self.mformat = mapformat(self.format)
+    self.hwformat = self.map_best_hw_format()
+    self.mformat = self.mapformat()
 
     if None in [self.hwformat, self.mformat]:
       slash.skip_test("{format} format not supported".format(**vars(self)))
