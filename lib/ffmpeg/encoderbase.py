@@ -8,13 +8,13 @@ import os
 import slash
 
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import have_ffmpeg, mapformat, map_best_hw_format
+from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.metrics import md5, calculate_psnr
 
 @slash.requires(have_ffmpeg)
-class BaseEncoderTest(slash.Test):
+class BaseEncoderTest(slash.Test, BaseFormatMapper):
   def before(self):
     super().before()
     self.refctx = []
@@ -143,8 +143,8 @@ class BaseEncoderTest(slash.Test):
     if "i965" == get_media()._get_driver_name():
       ifmts = list(set(ifmts) - set(["I420"]))
 
-    self.hwformat = map_best_hw_format(self.format, ifmts)
-    self.mformat = mapformat(self.format)
+    self.hwformat = self.map_best_hw_format(self.format, ifmts)
+    self.mformat = self.map_format(self.format)
     if None in [self.hwformat, self.mformat]:
       slash.skip_test("{format} not supported".format(**vars(self)))
 

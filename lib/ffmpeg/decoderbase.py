@@ -8,13 +8,13 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import have_ffmpeg, map_best_hw_format, mapformat
+from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.metrics import md5, check_metric
 
 @slash.requires(have_ffmpeg)
-class BaseDecoderTest(slash.Test):
+class BaseDecoderTest(slash.Test, BaseFormatMapper):
   def before(self):
     super().before()
     self.refctx = []
@@ -50,8 +50,8 @@ class BaseDecoderTest(slash.Test):
     return name
 
   def validate_caps(self):
-    self.hwformat = map_best_hw_format(self.format, self.caps["fmts"])
-    self.mformat = mapformat(self.format)
+    self.hwformat = self.map_best_hw_format(self.format, self.caps["fmts"])
+    self.mformat = self.map_format(self.format)
 
     if None in [self.hwformat, self.mformat]:
       slash.skip_test("{format} format not supported".format(**vars(self)))
