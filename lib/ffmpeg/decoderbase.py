@@ -8,7 +8,8 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import have_ffmpeg, map_best_hw_format, mapformat
+from ...lib.ffmpeg.util import have_ffmpeg, mapformat, get_supported_format_map
+from ...lib.formats import match_best_format
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.metrics import md5, check_metric
@@ -44,7 +45,9 @@ class BaseDecoderTest(slash.Test):
     return name
 
   def map_best_hw_format(self):
-    return map_best_hw_format(self.format, self.caps["fmts"])
+    return self.mapformat(
+      match_best_format(
+        self.format, set(self.caps["fmts"]) & set(get_supported_format_map().keys())))
 
   def mapformat(self):
     return mapformat(self.format)
