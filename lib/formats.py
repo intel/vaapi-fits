@@ -1,5 +1,5 @@
 ###
-### Copyright (C) 2019 Intel Corporation
+### Copyright (C) 2019-2022 Intel Corporation
 ###
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
@@ -37,3 +37,18 @@ def get_bit_depth(fmt):
   if fmt in ["BGRA", "BGRX", "ARGB"]:
     return 8
   return subsampling[fmt][1]
+
+class FormatMapper:
+  def get_supported_format_map(self):
+    raise NotImplementedError
+
+  def get_supported_formats(self):
+    return set(self.get_supported_format_map().keys())
+
+  def map_format(self, format):
+    return self.get_supported_format_map().get(format, None)
+
+  def map_best_hw_format(self, format, hwformats):
+    return self.map_format(
+      match_best_format(
+        format, set(hwformats) & set(self.get_supported_formats())))
