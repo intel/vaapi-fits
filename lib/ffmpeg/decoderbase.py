@@ -22,6 +22,12 @@ class BaseDecoderTest(slash.Test):
 
   @timefn("ffmpeg")
   def call_ffmpeg(self):
+    # NOTE: If test has requested scale in/out range, then apply it only when
+    # hw and sw formats differ (i.e. when csc is necessary).
+    scale_range = ""
+    if hasattr(self, "ffscale_range") and self.hwformat != self.mformat:
+      scale_range = f"-vf 'scale=in_range={self.ffscale_range}:out_range={self.ffscale_range}'"
+
     return call(
       (
         f"{exe2os('ffmpeg')} -hwaccel {self.hwaccel}"
@@ -31,7 +37,7 @@ class BaseDecoderTest(slash.Test):
       ) + (
         " -c:v {ffdecoder}" if hasattr(self, "ffdecoder") else ""
       ).format(**vars(self)) + (
-        f" -i {filepath2os(self.source)}"
+        f" -i {filepath2os(self.source)} {scale_range}"
         f" -pix_fmt {self.mformat} -f rawvideo -vsync passthrough -autoscale 0"
         f" -vframes {self.frames} -y {filepath2os(self.decoded)}"
       )
