@@ -11,7 +11,7 @@ from .util import *
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(*have_ffmpeg_filter("vpp_qsv"))
 @slash.requires(using_compatible_driver)
-class VppTest(slash.Test):
+class VppTest(slash.Test, BaseFormatMapper):
   def before(self):
     self.refctx = []
     self.renderDevice = get_media().render_device
@@ -105,7 +105,7 @@ class VppTest(slash.Test):
     ofmts         = self.caps.get("ofmts", [])
     self.ifmt     = self.format
     self.ofmt     = self.format if "csc" != self.vpp_op else self.csc
-    self.mformat  = mapformat(self.format)
+    self.mformat  = self.map_format(self.format)
 
     # MSDK does not support I420 and YV12 output formats even though
     # iHD supports it.  Thus, msdkvpp can't output it directly (HW).
@@ -115,11 +115,11 @@ class VppTest(slash.Test):
       slash.skip_test("ffmpeg.{format} unsupported".format(**vars(self)))
 
     if self.vpp_op in ["csc"]:
-      self.ihwformat = mapformat(self.ifmt if self.ifmt in ifmts else None)
-      self.ohwformat = mapformat(self.ofmt if self.ofmt in ofmts else None)
+      self.ihwformat = self.map_format(self.ifmt if self.ifmt in ifmts else None)
+      self.ohwformat = self.map_format(self.ofmt if self.ofmt in ofmts else None)
     else:
-      self.ihwformat = map_best_hw_format(self.ifmt, ifmts)
-      self.ohwformat = map_best_hw_format(self.ofmt, ofmts)
+      self.ihwformat = self.map_best_hw_format(self.ifmt, ifmts)
+      self.ohwformat = self.map_best_hw_format(self.ofmt, ofmts)
 
     if self.ihwformat is None:
       slash.skip_test("{ifmt} unsupported".format(**vars(self)))

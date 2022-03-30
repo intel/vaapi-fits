@@ -5,7 +5,7 @@
 ###
 
 from ...lib.common import memoize, try_call, call, exe2os
-from ...lib.formats import match_best_format
+from ...lib.formats import FormatMapper
 
 @memoize
 def have_ffmpeg():
@@ -38,32 +38,24 @@ def ffmpeg_probe_resolution(filename):
     f" csv=s=x:p=0 {filename}"
   ).strip().strip('x')
 
-def get_supported_format_map():
-  return {
-    "I420"  : "yuv420p",
-    "NV12"  : "nv12",
-    "P010"  : "p010le",
-    "P012"  : "p012",
-    "I010"  : "yuv420p10le",
-    "YUY2"  : "yuyv422",
-    "422H"  : "yuv422p",
-    "422V"  : "yuv440p",
-    "444P"  : "yuv444p",
-    "Y800"  : "gray8",
-    "ARGB"  : "rgb32",
-    "BGRA"  : "bgra",
-    "Y210"  : "y210",
-    "Y212"  : "y212",
-    "Y410"  : "y410",
-    "Y412"  : "y412",
-    "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
-  }
-
-@memoize
-def mapformat(format):
-  return get_supported_format_map().get(format, None)
-
-def map_best_hw_format(format, hwformats):
-  return mapformat(
-    match_best_format(
-      format, set(hwformats) & set(get_supported_format_map().keys())))
+class BaseFormatMapper(FormatMapper):
+  def get_supported_format_map(self):
+    return {
+      "I420"  : "yuv420p",
+      "NV12"  : "nv12",
+      "P010"  : "p010le",
+      "P012"  : "p012",
+      "I010"  : "yuv420p10le",
+      "YUY2"  : "yuyv422",
+      "422H"  : "yuv422p",
+      "422V"  : "yuv440p",
+      "444P"  : "yuv444p",
+      "Y800"  : "gray8",
+      "ARGB"  : "rgb32",
+      "BGRA"  : "bgra",
+      "Y210"  : "y210",
+      "Y212"  : "y212",
+      "Y410"  : "y410",
+      "Y412"  : "y412",
+      "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
+    }
