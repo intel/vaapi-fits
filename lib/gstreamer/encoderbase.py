@@ -60,6 +60,7 @@ class BaseEncoderTest(slash.Test):
   def before(self):
     super().before()
     self.refctx = []
+    self.post_validate = lambda: None
 
   def map_profile(self):
     raise NotImplementedError
@@ -144,6 +145,8 @@ class BaseEncoderTest(slash.Test):
       if self.mprofile is None:
         slash.skip_test("{profile} profile is not supported".format(**vars(self)))
       self.encoder.update(profile = self.mprofile)
+
+    self.post_validate()
 
   def encode(self):
     self.validate_caps()

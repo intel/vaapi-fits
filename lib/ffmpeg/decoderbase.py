@@ -19,6 +19,7 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
     super().before()
     self.refctx = []
     self.renderDevice = get_media().render_device
+    self.post_validate = lambda: None
 
   @timefn("ffmpeg")
   def call_ffmpeg(self):
@@ -63,6 +64,8 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
 
     skip_test_if_missing_features(self)
+
+    self.post_validate()
 
   def decode(self):
     self.validate_caps()

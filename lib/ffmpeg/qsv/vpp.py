@@ -15,6 +15,7 @@ class VppTest(slash.Test, BaseFormatMapper):
   def before(self):
     self.refctx = []
     self.renderDevice = get_media().render_device
+    self.post_validate = lambda: None
 
   def gen_input_opts(self):
     if self.vpp_op not in ["deinterlace"]:
@@ -131,6 +132,8 @@ class VppTest(slash.Test, BaseFormatMapper):
       for comp in self.comps:
         self.owidth = max(self.owidth, self.width + comp['x'])
         self.oheight = max(self.oheight, self.height + comp['y'])
+
+    self.post_validate()
 
   def vpp(self):
     self.validate_caps()

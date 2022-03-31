@@ -45,6 +45,7 @@ class BaseDecoderTest(slash.Test):
   def before(self):
     super().before()
     self.refctx = []
+    self.post_validate = lambda: None
 
   def gen_name(self):
     name = "{case}_{width}x{height}_{format}"
@@ -71,6 +72,8 @@ class BaseDecoderTest(slash.Test):
         "gstreamer.{format} not supported".format(**vars(self)))
 
     skip_test_if_missing_features(self)
+
+    self.post_validate()
 
   def decode(self):
     self.validate_caps()
