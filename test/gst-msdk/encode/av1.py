@@ -23,6 +23,7 @@ class AV1EncoderBaseTest(EncoderTest):
       gstmediatype  = "video/x-av1",
       gstmuxer      = "matroskamux",
       gstdemuxer    = "matroskademux",
+      gstparser     = "av1parse",
     )
 
   def get_file_ext(self):
