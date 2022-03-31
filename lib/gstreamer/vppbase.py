@@ -16,6 +16,7 @@ from ...lib.mixin.vpp import VppMetricMixin
 class BaseVppTest(slash.Test, VppMetricMixin):
   def before(self):
     self.refctx = []
+    self.post_validate = lambda: None
 
   def get_input_formats(self):
     return self.caps.get("ifmts", [])
@@ -126,6 +127,8 @@ class BaseVppTest(slash.Test, VppMetricMixin):
       slash.skip_test("{ifmt} unsupported".format(**vars(self)))
     if self.ohwformat is None:
       slash.skip_test("{ofmt} unsupported".format(**vars(self)))
+
+    self.post_validate()
 
   def vpp(self):
     self.validate_caps()

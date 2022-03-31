@@ -19,6 +19,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     super().before()
     self.refctx = []
     self.renderDevice = get_media().render_device
+    self.post_validate = lambda: None
 
   def map_profile(self):
     raise NotImplementedError
@@ -170,6 +171,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       self.mprofile = self.map_profile()
       if self.mprofile is None:
         slash.skip_test("{profile} profile is not supported".format(**vars(self)))
+
+    self.post_validate()
 
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
