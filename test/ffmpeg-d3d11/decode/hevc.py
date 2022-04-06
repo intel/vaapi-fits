@@ -21,5 +21,7 @@ class default(DecoderTest):
   @slash.parametrize(("case"), sorted(spec.keys()))
   def test(self, case):
     vars(self).update(spec[case].copy())
+    if "scc" in vars(self).get("features", list()):
+      slash.skip_test("SCC cases not supported")
     self.case = case
     self.decode()
