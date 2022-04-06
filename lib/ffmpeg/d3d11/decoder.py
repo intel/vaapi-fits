@@ -15,3 +15,10 @@ class DecoderTest(BaseDecoderTest):
   def before(self):
     super().before()
     self.hwaccel = "d3d11va"
+
+  def get_supported_format_map(self):
+    return {
+      "I420"  : "yuv420p",
+      "NV12"  : "nv12",
+      "P010"  : "p010le",
+    }
