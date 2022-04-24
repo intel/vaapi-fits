@@ -5,9 +5,10 @@
 ###
 
 import os
+import re
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.decoderbase import Decoder
 from ...lib.metrics import md5, calculate_psnr
@@ -176,6 +177,7 @@ class BaseEncoderTest(slash.Test):
     else:
       self.check_bitrate()
       self.check_metrics()
+      self.check_max_frame_size()
 
   def check_metrics(self):
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
@@ -207,7 +209,7 @@ class BaseEncoderTest(slash.Test):
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif self.rcmode in ["vbr", "la_vbr"]:
+    elif self.rcmode in ["vbr", "la_vbr"] and self.maxFrameSize is None:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
@@ -226,3 +228,15 @@ class BaseEncoderTest(slash.Test):
       get_media()._purge_test_artifact(demuxed)
       return result
     return md5(self.encoder.encoded)
+
+  def check_max_frame_size(self):
+    if vars(self).get("maxFrameSize", None) is None:
+      return
+
+    output = call(
+      f"{exe2os('ffprobe')}"
+      " -i {encoder.encoded} -show_frames | grep pkt_size".format(**vars(self)))
+    frameSizes = re.findall(r'(?<=pkt_size=).[0-9]*', output)
+    for frameSize in frameSizes:
+      assert (self.maxFrameSize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
+
