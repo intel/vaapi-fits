@@ -234,3 +234,23 @@ class vbr_la(AVCEncoderTest):
     self.init(spec_r2r, case, bframes, bitrate, fps, quality, refs, profile, ladepth)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class max_frame_size(AVCEncoderTest):
+  def init(self, tspec, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode       = "vbr",
+      bitrate      = bitrate,
+      case         = case,
+      maxrate      = maxrate,
+      fps          = fps,
+      minrate      = bitrate,
+      profile      = profile,
+      maxFrameSize = maxFrameSize,
+    )
+
+  @slash.parametrize(*gen_avc_max_frame_size_parameters(spec, ['main', 'high', 'constrained-baseline']))
+  def test(self, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    self.init(spec, case, bitrate, maxrate, fps, maxFrameSize, profile)
+    self.encode()
+
