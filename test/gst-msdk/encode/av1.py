@@ -81,6 +81,7 @@ class cbr_lp(AV1EncoderLPTest):
       tilerows  = tilerows,
       tilecols  = tilecols,
       quality   = quality,
+      bframes   = bframes,
     )
 
   @slash.parametrize(*gen_av1_cbr_lp_parameters(spec))
