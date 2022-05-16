@@ -52,5 +52,20 @@ class VppTest(BaseVppTest):
       opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
+    elif self.vpp_op in ["composite"]:
+      opts += " ! tee name=source vacompositor name=composite"
+      for n, comp in enumerate(self.comps):
+        opts += (
+          " sink_{n}::xpos={x}"
+          " sink_{n}::ypos={y}"
+          " sink_{n}::alpha={a}"
+          "".format(n = n, **comp)
+        )
 
+    return opts
+
+  def gen_output_opts(self):
+    opts = super().gen_output_opts()
+    if self.vpp_op in ["composite"]:
+      opts += " source. ! queue ! composite. " * len(self.comps)
     return opts
