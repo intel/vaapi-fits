@@ -86,6 +86,10 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       opts += " -look_ahead_depth {ladepth}"
     if vars(self).get("vforced_idr", None) is not None:
       opts += " -force_key_frames expr:1 -forced_idr 1"
+    if vars(self).get("intref", None) is not None:
+      opts += " -int_ref_type {intref[type]}"
+      opts += " -int_ref_cycle_size {intref[size]}"
+      opts += " -int_ref_cycle_dist {intref[dist]}"
 
     # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
     if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):

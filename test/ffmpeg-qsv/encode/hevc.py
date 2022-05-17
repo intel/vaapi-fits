@@ -221,3 +221,24 @@ class forced_idr(HEVC8EncoderTest):
   def test(self, case, rcmode, bitrate, maxrate, qp, quality, profile):
     self.init(spec, case, rcmode, bitrate, maxrate, qp, quality, profile)
     self.encode()
+
+class intref_lp(HEVC8EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      intref     = dict(type = reftype, size = refsize, dist = refdist),
+    )
+
+  @slash.parametrize(*gen_hevc_intref_lp_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist)
+    self.encode()
