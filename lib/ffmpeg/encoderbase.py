@@ -69,7 +69,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     if vars(self).get("minrate", None) is not None:
       opts += " -b:v {minrate}k"
     if vars(self).get("maxrate", None) is not None:
-      opts += " -maxrate {maxrate}k"
+      if "vbr_default" != self.rcmode:
+        opts += " -maxrate {maxrate}k"
     if vars(self).get("refs", None) is not None:
       opts += " -refs {refs}"
     if vars(self).get("lowpower", None) is not None:
@@ -89,7 +90,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
     if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
-      opts += " -b_strategy 1"
+      if vars(self).get("default", None) is None:
+        opts += " -b_strategy 1"
 
     opts += " -vframes {frames} -y {osencoded}"
 
