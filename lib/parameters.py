@@ -468,11 +468,32 @@ def gen_vpp_sharpen_parameters(spec):
   params = gen_vpp_sharpen_variants(spec)
   return keys, params
 
+def gen_avc_max_frame_size_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("max_frame_size", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      bitrate_max_frame_size = variant["bitrate_max_frame_size"]
+      bitrate = bitrate_max_frame_size[0]
+      maxFrameSize = bitrate_max_frame_size[1]
+      variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, bitrate, variant["maxrate"],
+          variant["fps"], maxFrameSize, profile
+        ]
+
+def gen_avc_max_frame_size_parameters(spec, profiles):
+  keys = ("case", "bitrate", "maxrate", "fps", "maxFrameSize", "profile")
+  params = gen_avc_max_frame_size_variants(spec, profiles)
+  return keys, params
+
 gen_vpp_denoise_parameters = gen_vpp_sharpen_parameters
 gen_vpp_brightness_parameters = gen_vpp_sharpen_parameters
 gen_vpp_contrast_parameters = gen_vpp_sharpen_parameters
 gen_vpp_hue_parameters = gen_vpp_sharpen_parameters
 gen_vpp_saturation_parameters = gen_vpp_sharpen_parameters
+gen_hevc_max_frame_size_parameters = gen_avc_max_frame_size_parameters
 
 def gen_vpp_deinterlace_variants(spec, default_modes):
   for case, params in spec.items():
@@ -581,3 +602,4 @@ def gen_vpp_crop_parameters(spec):
   keys = ("case", "left", "right", "top", "bottom")
   params = gen_vpp_crop_variants(spec)
   return keys, params
+

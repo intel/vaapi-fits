@@ -221,3 +221,23 @@ class forced_idr(HEVC8EncoderTest):
   def test(self, case, rcmode, bitrate, maxrate, qp, quality, profile):
     self.init(spec, case, rcmode, bitrate, maxrate, qp, quality, profile)
     self.encode()
+
+class max_frame_size(HEVC8EncoderTest):
+  def init(self, tspec, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode       = "vbr",
+      bitrate      = bitrate,
+      case         = case,
+      maxrate      = maxrate,
+      fps          = fps,
+      minrate      = bitrate,
+      profile      = profile,
+      maxFrameSize = maxFrameSize,            
+    )
+
+  @slash.parametrize(*gen_hevc_max_frame_size_parameters(spec, ['main']))
+  def test(self, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    self.init(spec, case, bitrate, maxrate, fps, maxFrameSize, profile)
+    self.encode()
+

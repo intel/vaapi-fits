@@ -240,3 +240,22 @@ class forced_idr(AVCEncoderTest):
   def test(self, case, rcmode, bitrate, maxrate, qp, quality, profile):
     self.init(spec, case, rcmode, bitrate, maxrate, qp, quality, profile)
     self.encode()
+
+class max_frame_size(AVCEncoderTest):
+  def init(self, tspec, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode       = "vbr",
+      bitrate      = bitrate,
+      case         = case,
+      maxrate      = maxrate,
+      fps          = fps,
+      minrate      = bitrate,
+      profile      = profile,
+      maxFrameSize = maxFrameSize,
+    )
+
+  @slash.parametrize(*gen_avc_max_frame_size_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, bitrate, maxrate, fps, maxFrameSize, profile):
+    self.init(spec, case, bitrate, maxrate, fps, maxFrameSize, profile)
+    self.encode()

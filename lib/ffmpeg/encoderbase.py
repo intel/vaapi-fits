@@ -5,6 +5,7 @@
 ###
 
 import os
+import re
 import slash
 
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
@@ -86,6 +87,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       opts += " -look_ahead_depth {ladepth}"
     if vars(self).get("vforced_idr", None) is not None:
       opts += " -force_key_frames expr:1 -forced_idr 1"
+    if vars(self).get("maxFrameSize", None) is not None:
+      opts += " -max_frame_size {maxFrameSize}k"
 
     # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
     if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
@@ -221,6 +224,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       self.check_metrics()
       self.check_level()
       self.check_forced_idr()
+      self.check_max_frame_size()
 
   def check_output(self):
     pass
@@ -239,7 +243,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif "vbr" == self.rcmode:
+    elif "vbr" == self.rcmode and vars(self).get("maxFrameSize", None) is None:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
@@ -289,3 +293,14 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       " -vframes {frames} -bsf:v trace_headers"
       " -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l".format(**vars(self)))
     assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"
+
+  def check_max_frame_size(self):
+    if vars(self).get("maxFrameSize", None) is None:
+      return
+
+    output = call(
+      f"{exe2os('ffprobe')}"
+      " -i {osencoded} -show_frames | grep pkt_size".format(**vars(self)))
+    frameSizes = re.findall(r'(?<=pkt_size=).[0-9]*', output)
+    for frameSize in frameSizes:
+      assert (self.maxFrameSize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
