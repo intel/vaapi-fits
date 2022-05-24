@@ -135,6 +135,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-{vforced_idr}"
     if vars(self).get("level", None) is not None:
       name += "-{level}"
+    if vars(self).get("intref", None) is not None:
+      name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 
