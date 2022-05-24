@@ -51,3 +51,14 @@ class EncoderTest(BaseEncoderTest):
     if vars(self).get("profile", None) in ["main10sp"]:
       m = re.search(r"Main10sp.*: enable", self.output, re.MULTILINE)
       assert m is not None, "It appears that main10sp did not get enabled"
+
+    if vars(self).get("intref", None) is not None:
+      patterns = [
+        f"IntRefType: {self.intref['type']};",
+        f"IntRefCycleSize: {self.intref['size']};",
+        f"IntRefCycleDist: {self.intref['dist']}",
+      ]
+
+      for pattern in patterns:
+        m = re.search(pattern, self.output, re.MULTILINE)
+        assert m is not None, f"'{pattern}' missing in output"
