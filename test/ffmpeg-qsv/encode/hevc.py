@@ -238,7 +238,7 @@ class intref_lp(HEVC8EncoderLPTest):
       intref     = dict(type = reftype, size = refsize, dist = refdist),
     )
 
-  @slash.parametrize(*gen_hevc_intref_lp_parameters(spec, ['high', 'main', 'baseline']))
+  @slash.parametrize(*gen_hevc_intref_lp_parameters(spec, ['main']))
   def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
     self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist)
     self.encode()
