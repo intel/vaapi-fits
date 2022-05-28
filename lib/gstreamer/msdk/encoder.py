@@ -63,12 +63,13 @@ class Encoder(GstEncoder):
   ladepth = property(lambda s: s.ifprop("ladepth", " rc-lookahead={ladepth}"))
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
+  maxFrameSize = property(lambda s: s.ifprop("maxFrameSize", " max-frame-size={maxFrameSize}"))
 
   @property
   def gstencoder(self):
     return (
       f"{super().gstencoder}"
-      f"{self.rcmode}{self.gop}{self.qp}"
+      f"{self.rcmode}{self.gop}{self.qp}{self.maxFrameSize}"
       f"{self.quality}{self.slices}{self.tilecols}{self.tilerows}{self.bframes}"
       f"{self.maxrate}{self.minrate}{self.refmode}"
       f"{self.refs}{self.lowpower}{self.ladepth}"

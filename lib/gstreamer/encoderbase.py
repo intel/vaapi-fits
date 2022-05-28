@@ -5,9 +5,10 @@
 ###
 
 import os
+import re
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.decoderbase import Decoder
 from ...lib.metrics import md5, calculate_psnr
@@ -176,6 +177,7 @@ class BaseEncoderTest(slash.Test):
     else:
       self.check_bitrate()
       self.check_metrics()
+      self.check_max_frame_size()
 
   def check_metrics(self):
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
@@ -207,9 +209,24 @@ class BaseEncoderTest(slash.Test):
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif self.rcmode in ["vbr", "la_vbr"]:
+    elif self.rcmode in ["vbr", "la_vbr"] and vars(self).get("maxFrameSize", None) is None:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
+
+  def check_max_frame_size(self):
+    if vars(self).get("maxFrameSize", None) is None:
+      return
+
+    output = call(
+#      f"{exe2os('ffprobe')}"
+#      " -i {osencoded} -show_frames | grep pkt_size".format(**vars(self)))
+      f"{exe2os('gst-launch-1.0')}"
+      " -vf filesrc location={encoder.encoded} !"
+      " {gstparser} ! {gstmediatype},alignment=\\(string\\)au !"
+      " identity silent=false ! fakesink".format(**vars(self)))
+    frameSizes = re.findall(r'(?<=identity0:sink\) \().[0-9]*', output)
+    for frameSize in frameSizes:
+      assert (self.maxFrameSize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
 
   def md5_demuxed(self):
     # gstreamer muxers write timestamps to container header and will be
