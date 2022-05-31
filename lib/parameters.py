@@ -535,6 +535,19 @@ def gen_vpp_scale_parameters(spec):
   params = gen_vpp_scale_variants(spec)
   return keys, params
 
+def gen_vpp_hwmap_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("scale_resolutions", None) or []
+    ops = params.get("hwmap_ops", None) or []
+    for scale_width, scale_height in variants:
+      for vpp_op, encoder in ops:  
+        yield [case, scale_width, scale_height, vpp_op, encoder]
+
+def gen_vpp_hwmap_parameters(spec):
+  keys = ("case", "scale_width", "scale_height", "vpp_op", "encoder")
+  params = gen_vpp_hwmap_variants(spec)
+  return keys, params
+
 def gen_vpp_mirroring_variants(spec):
   for case, params in spec.items():
     variants = params.get("methods", None) or ["vertical", "horizontal"]

@@ -16,10 +16,13 @@ class VppTest(slash.Test, BaseFormatMapper):
     self.post_validate = lambda: None
 
   def gen_input_opts(self):
-    if self.vpp_op not in ["deinterlace"]:
-      opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
+    opts = ""  
+    if self.vpp_op not in ["deinterlace", "scale_qsv", "scale_vulkan"]:
+      opts += "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
+    elif self.vpp_op in ["deinterlace"]:
+      opts += "-c:v {ffdecoder}"
     else:
-      opts = "-c:v {ffdecoder}"
+      opts += "-hwaccel_output_format vaapi"
     opts += " -i {source}"
 
     return opts
@@ -42,9 +45,19 @@ class VppTest(slash.Test, BaseFormatMapper):
     else:
       opts = "-vf"
 
-      if self.vpp_op not in ["csc"]:
+      if self.vpp_op not in ["csc", "scale_qsv", "scale_vulkan"]:
         vfilter.append("format={ihwformat}|vaapi")
-      vfilter.append("hwupload")
+      
+      if self.vpp_op not in ["scale_qsv", "scale_vulkan"]:
+        vfilter.append("hwupload")
+      elif self.vpp_op in ["scale_qsv"]:
+        # self.vpp_op == "scale_qsv"
+        vfilter.append("hwmap=derive_device=qsv,format=qsv")
+      else:
+        # self.vpp_op == "scale_vulkan"
+        vfilter.append("hwmap=derive_device=vulkan,format=vulkan")
+
+
       vfilter.append(
         dict(
           brightness  = "procamp_vaapi=b={mlevel}",
@@ -53,6 +66,8 @@ class VppTest(slash.Test, BaseFormatMapper):
           saturation  = "procamp_vaapi=s={mlevel}",
           denoise     = "denoise_vaapi=denoise={mlevel}",
           scale       = "scale_vaapi=w={scale_width}:h={scale_height}",
+          scale_qsv   = "vpp_qsv=w={scale_width}:h={scale_height}",
+          scale_vulkan= "scale_vulkan=w={scale_width}:h={scale_height}",
           sharpen     = "sharpness_vaapi=sharpness={mlevel}",
           deinterlace = "deinterlace_vaapi=mode={mmethod}:rate={rate}",
           csc         = "scale_vaapi=format={ohwformat}",
@@ -60,13 +75,25 @@ class VppTest(slash.Test, BaseFormatMapper):
         )[self.vpp_op]
       )
 
-    vfilter.append("hwdownload")
-    vfilter.append("format={ohwformat}")
+    if vars(self).get("encoder", None) is not None:
+      if "scale_qsv" != self.vpp_op or "h264_qsv" != self.encoder:
+        if "scale_qsv" == self.vpp_op and "h264_vaapi" == self.encoder:
+          vfilter.append("hwmap=derive_device=vaapi,format=vaapi")
+        elif "scale_vulkan" == self.vpp_op:
+          vfilter.append("hwmap=derive_device=vaapi,format=vaapi")
+          if "h264_qsv" == self.encoder:
+            vfilter.append("hwmap=derive_device=qsv,format=qsv")
+          
+      opts += " '{}'".format(",".join(vfilter))
+      opts += " -c:v {encoder} -vframes {frames} -y {encoded}"
+    else:
+      vfilter.append("hwdownload")
+      vfilter.append("format={ohwformat}")
 
-    opts += " '{}'".format(",".join(vfilter))
-    if self.vpp_op not in ["csc"]:
-      opts += " -pix_fmt {mformat}"
-    opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {decoded}"
+      opts += " '{}'".format(",".join(vfilter))
+      if self.vpp_op not in ["csc"]:
+        opts += " -pix_fmt {mformat}"
+      opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {decoded}"
 
     return opts
 
@@ -79,6 +106,8 @@ class VppTest(slash.Test, BaseFormatMapper):
       saturation  = "_{level}_{width}x{height}_{format}",
       denoise     = "_{level}_{width}x{height}_{format}",
       scale       = "_{scale_width}x{scale_height}_{format}",
+      scale_qsv   = "_{scale_width}x{scale_height}_{format}_{encoder}",
+      scale_vulkan= "_{scale_width}x{scale_height}_{format}_{encoder}",
       sharpen     = "_{level}_{width}x{height}_{format}",
       deinterlace = "_{method}_{rate}_{width}x{height}_{format}",
       csc         = "_{width}x{height}_{format}_to_{csc}",
@@ -135,6 +164,7 @@ class VppTest(slash.Test, BaseFormatMapper):
     name          = self.gen_name().format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.encoded = get_media()._test_artifact("{}.h264".format(name))
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:

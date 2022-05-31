@@ -18,7 +18,7 @@ class VppTest(slash.Test, BaseFormatMapper):
     self.post_validate = lambda: None
 
   def gen_input_opts(self):
-    if self.vpp_op not in ["deinterlace"]:
+    if self.vpp_op not in ["deinterlace", "scale_vaapi", "scale_vulkan"]:
       opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     else:
       opts = "-c:v {ffdecoder}"
@@ -45,9 +45,18 @@ class VppTest(slash.Test, BaseFormatMapper):
     else:
       opts = "-vf"
 
-      if self.vpp_op not in ["csc"]:
+      if self.vpp_op not in ["csc", "scale_vaapi", "scale_vulkan"]:
         vfilter.append("format={ihwformat}|qsv")
-      vfilter.append("hwupload=extra_hw_frames=16")
+
+      if self.vpp_op not in ["scale_vaapi", "scale_vulkan"]:
+        vfilter.append("hwupload=extra_hw_frames=16")
+      else:
+        # For vulkan, we should do hwmap like: qsv --> vaapi --> vulkan.
+        vfilter.append("hwmap=derive_device=vaapi,format=vaapi")
+
+      if self.vpp_op in ["scale_vulkan"]:
+        vfilter.append("hwmap=derive_device=vulkan,format=vulkan")
+
       vfilter.append(
         dict(
           brightness  = "vpp_qsv=procamp=1:brightness={mlevel}",
@@ -57,6 +66,8 @@ class VppTest(slash.Test, BaseFormatMapper):
           denoise     = "vpp_qsv=denoise={mlevel}",
           scale       = "vpp_qsv=w={scale_width}:h={scale_height}",
           scale_qsv   = "scale_qsv=w={scale_width}:h={scale_height}",
+          scale_vaapi = "scale_vaapi=w={scale_width}:h={scale_height}",
+          scale_vulkan= "scale_vulkan=w={scale_width}:h={scale_height}",
           sharpen     = "vpp_qsv=detail={mlevel}",
           deinterlace = "vpp_qsv=deinterlace={mmethod}",
           csc         = "vpp_qsv=format={ohwformat}",
@@ -64,13 +75,25 @@ class VppTest(slash.Test, BaseFormatMapper):
         )[self.vpp_op]
       )
 
-    vfilter.append("hwdownload")
-    vfilter.append("format={ohwformat}")
+    if vars(self).get("encoder", None) is not None:
+      if "scale_vaapi" != self.vpp_op or "h264_vaapi" != self.encoder:
+        if "scale_vaapi" == self.vpp_op and "h264_qsv" == self.encoder:
+          vfilter.append("hwmap=derive_device=qsv,format=qsv")
+        elif "scale_vulkan" == self.vpp_op:
+          vfilter.append("hwmap=derive_device=vaapi,format=vaapi")
+          if "h264_qsv" == self.encoder:
+            vfilter.append("hwmap=derive_device=qsv,format=qsv")
 
-    opts += " '{}'".format(",".join(vfilter))
-    if self.vpp_op not in ["csc"]:
-      opts += " -pix_fmt {mformat}"
-    opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {osdecoded}"
+      opts += " '{}'".format(",".join(vfilter))
+      opts += " -c:v {encoder} -vframes {frames} -y {encoded}"
+    else:
+      vfilter.append("hwdownload")
+      vfilter.append("format={ohwformat}")
+
+      opts += " '{}'".format(",".join(vfilter))
+      if self.vpp_op not in ["csc"]:
+        opts += " -pix_fmt {mformat}"
+      opts += " -f rawvideo -vsync passthrough -an -vframes {frames} -y {osdecoded}"
 
     return opts
 
@@ -84,6 +107,8 @@ class VppTest(slash.Test, BaseFormatMapper):
       denoise     = "_{level}_{width}x{height}_{format}",
       scale       = "_{scale_width}x{scale_height}_{format}",
       scale_qsv   = "_{scale_width}x{scale_height}_{format}",
+      scale_vaapi = "_{scale_width}x{scale_height}_{format}_{encoder}",
+      scale_vulkan= "_{scale_width}x{scale_height}_{format}_{encoder}",
       sharpen     = "_{level}_{width}x{height}_{format}",
       deinterlace = "_{method}_{rate}_{width}x{height}_{format}",
       csc         = "_{width}x{height}_{format}_to_{csc}",
@@ -145,6 +170,7 @@ class VppTest(slash.Test, BaseFormatMapper):
     name          = self.gen_name().format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.encoded = get_media()._test_artifact("{}.h264".format(name))
     self.osdecoded = filepath2os(self.decoded)
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
