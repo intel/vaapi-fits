@@ -205,3 +205,23 @@ class vbr_lp(HEVC8EncoderLPTest):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class max_frame_size(HEVC8EncoderTest):
+  def init(self, tspec, case, bitrate, maxrate, fps, maxframesize, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      # target percentage 50%
+      maxrate = bitrate * 2,
+      minrate = bitrate,
+      profile = profile,
+      rcmode  = "vbr",
+      maxframesize = maxframesize,
+    )
+
+  @slash.parametrize(*gen_avc_max_frame_size_parameters(spec, ['main', 'high', 'constrained-baseline']))
+  def test(self, case, bitrate, maxrate, fps, maxframesize, profile):
+    self.init(spec, case, bitrate, maxrate, fps, maxframesize, profile)
+    self.encode()
