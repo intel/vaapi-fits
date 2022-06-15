@@ -120,7 +120,8 @@ def load_capsinfo():
 def info():
   import platform
   try:
-    from distro import linux_distribution as linux_dist
+    import distro
+    linux_dist = lambda: (distro.name(), distro.version(), distro.os_release_attr('release_codename'))
   except:
     try:
       from platform import dist as linux_dist
