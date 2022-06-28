@@ -11,14 +11,12 @@ from ....lib.gstreamer.va.encoder import EncoderTest
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
 
-@slash.requires(*have_gst_element("vah264enc"))
 @slash.requires(*have_gst_element("vah264dec"))
 class AVCEncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
       codec         = "avc",
-      gstencoder    = "vah264enc",
       gstdecoder    = "vah264dec",
       gstmediatype  = "video/x-h264",
       gstparser     = "h264parse",
@@ -27,21 +25,25 @@ class AVCEncoderBaseTest(EncoderTest):
   def get_file_ext(self):
     return "h264"
 
+@slash.requires(*have_gst_element("vah264enc"))
 @slash.requires(*platform.have_caps("encode", "avc"))
 class AVCEncoderTest(AVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
       caps      = platform.get_caps("encode", "avc"),
+      gstencoder= "vah264enc",
       lowpower  = False,
     )
 
+@slash.requires(*have_gst_element("vah264lpenc"))
 @slash.requires(*platform.have_caps("vdenc", "avc"))
 class AVCEncoderLPTest(AVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
       caps      = platform.get_caps("vdenc", "avc"),
+      gstencoder= "vah264lpenc",
       lowpower  = True,
     )
 
