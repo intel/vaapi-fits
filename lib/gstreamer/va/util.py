@@ -64,13 +64,19 @@ def map_transpose_direction(degrees, method):
 @memoize
 def mapprofile(codec, profile):
   return {
-    "avc"      : {
+    "avc"       : {
       "high"                  : "high",
       "main"                  : "main",
       "baseline"              : "baseline",
       "constrained-baseline"  : "constrained-baseline",
       "multiview-high"        : "multiview-high",
       "stereo-high"           : "stereo-high",
+    },
+    "hevc-8"    : {
+      "main"                  : "main",
+      "scc"                   : "screen-extended-main",
+      "scc-444"               : "screen-extended-main-444",
+      "main444"               : "main-444",
     },
   }.get(codec, {}).get(profile, None)
 
