@@ -54,6 +54,15 @@ class Encoder(GstEncoder):
       return f" target-percentage={int(tp * 100)}"
     return ""
 
+  @property # overrides base
+  def lowpower(self):
+    # gst-va implements lowpower as a separate element instead of using a gst property
+    if self.props.get('lowpower', False):
+      assert super().gstencoder.endswith("lpenc")
+    else:
+      assert not super().gstencoder.endswith("lpenc")
+    return ""
+
   gop     = property(lambda s: s.ifprop("gop", " key-int-max={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " b-frames={bframes}"))
@@ -70,7 +79,7 @@ class Encoder(GstEncoder):
       f"{self.rcmode}{self.gop}{self.qp}"
       f"{self.quality}{self.slices}{self.bframes}"
       f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
-      #f"{self.lowpower}{self.loopshp}{self.looplvl}", gst-va not support lowpoer and vp8/vp9 enc
+      f"{self.lowpower}{self.loopshp}{self.looplvl}"
     )
 
 @slash.requires(*have_gst_element("va"))
