@@ -78,6 +78,10 @@ def mapprofile(codec, profile):
       "scc-444"               : "screen-extended-main-444",
       "main444"               : "main-444",
     },
+    "hevc-10"   : {
+      "main10"                : "main-10",
+      "main444-10"            : "main-444-10",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
