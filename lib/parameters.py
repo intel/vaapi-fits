@@ -279,6 +279,26 @@ def gen_avc_intref_lp_parameters(spec, profiles):
   params = gen_avc_intref_lp_variants(spec, profiles)
   return keys, params
 
+def gen_avc_max_frame_size_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("max_frame_size", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      bitrate_max_frame_size = variant["bitrate_max_frame_size"]
+      bitrate = bitrate_max_frame_size[0]
+      maxframesize = bitrate_max_frame_size[1]
+      variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, bitrate, variant["maxrate"],
+          variant["fps"], maxframesize, profile
+        ]
+
+def gen_avc_max_frame_size_parameters(spec, profiles):
+  keys = ("case", "bitrate", "maxrate", "fps", "maxframesize", "profile")
+  params = gen_avc_max_frame_size_variants(spec, profiles)
+  return keys, params
+
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
@@ -287,6 +307,7 @@ gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
 gen_hevc_forced_idr_parameters = gen_avc_forced_idr_parameters
 gen_hevc_intref_lp_parameters = gen_avc_intref_lp_parameters
+gen_hevc_max_frame_size_parameters = gen_avc_max_frame_size_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.items():
