@@ -72,6 +72,13 @@ def mapprofile(codec, profile):
       "multiview-high"        : "multiview-high",
       "stereo-high"           : "stereo-high",
     },
+    "hevc-8"   : {
+      "main"                  : "main",
+      "main-10"               : "main-10",
+      "main-12"               : "main-12",
+      "main-422-10"           : "main-422-10",
+      "main-422-12"           : "main-422-12",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
