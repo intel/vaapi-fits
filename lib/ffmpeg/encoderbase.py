@@ -93,6 +93,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       opts += " -int_ref_cycle_dist {intref[dist]}"
     if vars(self).get("maxframesize", None) is not None:
       opts += " -max_frame_size {maxframesize}k"
+    if vars(self).get("vpict", None) is not None:
+      opts += " -pic_timing_sei 0"
 
     # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
     if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
@@ -140,6 +142,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-{level}"
     if vars(self).get("intref", None) is not None:
       name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
+    if vars(self).get("vpict", None) is not None:
+      name += "-pict-0"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 

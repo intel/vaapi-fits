@@ -202,3 +202,44 @@ class vbr_lp(HEVC10EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class pict(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      vpict      = 1,
+    )
+
+  @slash.parametrize(*gen_hevc_pict_parameters(spec, ['main10']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode)
+    self.encode()
+
+class pict_lp(HEVC10EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      vpict      = 1,
+    )
+
+  @slash.parametrize(*gen_hevc_pict_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode)
+    self.encode()
