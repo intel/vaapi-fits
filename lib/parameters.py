@@ -299,6 +299,66 @@ def gen_avc_max_frame_size_parameters(spec, profiles):
   params = gen_avc_max_frame_size_variants(spec, profiles)
   return keys, params
 
+def gen_hevc_pict_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("pict", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      rcmode  = variant["rcmode"]
+      if "cqp" == rcmode:
+        assert bitrate == None, "We shouldn't set a value to bitrate for CQP."
+        variant.update(maxrate = None)
+      else:
+        assert qp == None, "We shouldn't set a value to qp for CBR/VBR."
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode,
+        ]
+
+def gen_hevc_pict_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode")
+  params = gen_hevc_pict_variants(spec, profiles)
+  return keys, params
+
+def gen_hevc_pict_lp_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("pict_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      rcmode  = variant["rcmode"]
+      if "cqp" == rcmode:
+        assert bitrate == None, "We shouldn't set a value to bitrate for CQP."
+        variant.update(maxrate = None)
+      else:
+        assert qp == None, "We shouldn't set a value to qp for CBR/VBR."
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode,
+        ]
+
+def gen_hevc_pict_lp_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode")
+  params = gen_hevc_pict_lp_variants(spec, profiles)
+  return keys, params
+
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
