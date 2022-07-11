@@ -8,16 +8,17 @@ import re
 import slash
 
 from ....lib.common import get_media
-from ....lib.ffmpeg.decoderbase import BaseDecoderTest
+from ....lib.ffmpeg.decoderbase import BaseDecoderTest, Decoder as FFDecoder
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.qsv.util import using_compatible_driver
+
+class Decoder(FFDecoder):
+  hwaccel = property(lambda s: "qsv")
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class DecoderTest(BaseDecoderTest):
-  def before(self):
-    super().before()
-    self.hwaccel = "qsv"
+  DecoderClass = Decoder
 
   def check_output(self):
     super().check_output()
