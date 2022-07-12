@@ -7,15 +7,42 @@
 import re
 import slash
 
-from ....lib.ffmpeg.encoderbase import BaseEncoderTest
+from ....lib.ffmpeg.encoderbase import BaseEncoderTest, Encoder as FFEncoder
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.vaapi.util import mapprofile
+from ....lib.ffmpeg.vaapi.decoder import Decoder
+from ....lib.common import mapRangeInt
+
+class Encoder(FFEncoder):
+  hwaccel = property(lambda s: "vaapi")
+
+  @property
+  def rcmode(self):
+    return "" if self.codec in ["jpeg"] else super().rcmode
+
+  @property
+  def qp(self):
+    def inner(qp):
+      if self.codec in ["vp8", "vp9"]:
+        return f" -global_quality {qp}"
+      if self.codec in ["mpeg2"]:
+        mqp = mapRangeInt(qp, [0, 100], [1, 31])
+        return f" -global_quality {mqp}"
+      return " -qp {qp}"
+    return self.ifprop("qp", inner)
+
+  @property
+  def quality(self):
+    def inner(quality):
+      if self.codec in ["jpeg"]:
+        return " -global_quality {quality}"
+      return " -compression_level {quality}"
+    return self.ifprop("quality", inner)
 
 @slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class EncoderTest(BaseEncoderTest):
-  def before(self):
-    super().before()
-    self.hwaccel = "vaapi"
+  EncoderClass = Encoder
+  DecoderClass = Decoder
 
   def get_vaapi_profile(self):
     raise NotImplementedError
@@ -23,23 +50,9 @@ class EncoderTest(BaseEncoderTest):
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
 
-  def gen_qp_opts(self):
-    if self.codec in ["vp8", "vp9",]:
-      return " -global_quality {qp}"
-    if self.codec in ["mpeg2"]:
-      return " -global_quality {mqp}"
-    return " -qp {qp}"
-
-  def gen_quality_opts(self):
-    if self.codec in ["jpeg"]:
-      return " -global_quality {quality}"
-    return " -compression_level {quality}"
-
   def validate_caps(self):
-    super().validate_caps()
     self.ffencoder = self.ffenc
-    if self.codec not in ["jpeg"]:
-      self.rcmodeu = self.rcmode.upper()
+    super().validate_caps()
 
   def check_output(self):
     # profile
