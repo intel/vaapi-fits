@@ -7,38 +7,55 @@
 import re
 import slash
 
-from ....lib.ffmpeg.encoderbase import BaseEncoderTest
+from ....lib.ffmpeg.encoderbase import BaseEncoderTest, Encoder as FFEncoder
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver, have_encode_main10sp
+from ....lib.ffmpeg.qsv.decoder import Decoder
+from ....lib.common import mapRangeInt
+
+class Encoder(FFEncoder):
+  hwaccel = property(lambda s: "qsv")
+
+  @property
+  def hwupload(self):
+    return f"{super().hwupload}=extra_hw_frames=120"
+
+  @property
+  def qp(self):
+    def inner(qp):
+      if self.codec in ["mpeg2"]:
+        mqp = mapRangeInt(qp, [0, 100], [1, 51])
+        return f" -q {mqp}"
+      return f" -q {qp}"
+    return self.ifprop("qp", inner)
+
+  @property
+  def quality(self):
+    def inner(quality):
+      if self.codec in ["jpeg"]:
+        return f" -global_quality {quality}"
+      return f" -preset {quality}"
+    return self.ifprop("quality", inner)
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class EncoderTest(BaseEncoderTest):
-  def before(self):
-    super().before()
-    self.hwaccel = "qsv"
-    self.hwframes = 120
+  EncoderClass = Encoder
+  DecoderClass = Decoder
 
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
 
-  def gen_qp_opts(self):
-    if self.codec in ["mpeg2"]:
-      return " -q {mqp}"
-    return " -q {qp}"
-
-  def gen_quality_opts(self):
-    if self.codec in ["jpeg"]:
-      return " -global_quality {quality}"
-    return " -preset {quality}"
-
   def validate_caps(self):
-    super().validate_caps()
     if vars(self).get("profile", None) in ["main10sp"] and not have_encode_main10sp(self.ffencoder):
       slash.skip_test(f"{self.ffencoder} main10sp not supported")
-    if self.rcmode in ['cbr','vbr','cbr_lp','vbr_lp']:
-    # "brafames", if specified, overrides "frames" for bitrate control modes
+
+    # FIXME: this should go into BaseEncoderTest
+    if self.rcmode in ["cbr", "vbr"]:
+      # brframes, if specified, overrides "frames" for bitrate control modes
       self.frames = vars(self).get("brframes", self.frames)
+
+    super().validate_caps()
 
   def check_output(self):
     m = re.search("Initialize MFX session", self.output, re.MULTILINE)
