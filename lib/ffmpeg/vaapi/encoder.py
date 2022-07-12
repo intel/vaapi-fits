@@ -16,6 +16,8 @@ class EncoderTest(BaseEncoderTest):
   def before(self):
     super().before()
     self.hwaccel = "vaapi"
+    self.hwupload = True
+    self.hwdownload = True
 
   def get_vaapi_profile(self):
     raise NotImplementedError

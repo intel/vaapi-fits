@@ -42,9 +42,11 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     return opts
 
   def gen_output_opts(self):
-    opts = "-vf 'format={hwformat},hwupload"
-    if vars(self).get("hwframes", None) is not None:
-      opts += "=extra_hw_frames={hwframes}"
+    opts = "-vf 'format={hwformat}"
+    if vars(self).get("hwupload", False):
+      opts += ",hwupload"
+      if vars(self).get("hwframes", None) is not None:
+        opts += "=extra_hw_frames={hwframes}"
     opts += "' -an -c:v {ffencoder}"
 
     if vars(self).get("profile", None) is not None:
@@ -263,7 +265,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     oopts = (
-      "-vf 'hwdownload,format={hwformat}' -pix_fmt {mformat} -f rawvideo"
+      f"-vf '{'hwdownload,' if vars(self).get('hwdownload', False) else ''}"
+      "format={hwformat}' -pix_fmt {mformat} -f rawvideo"
       " -vsync passthrough -vframes {frames}"
       f" -y {filepath2os(self.decoded)}")
     self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
