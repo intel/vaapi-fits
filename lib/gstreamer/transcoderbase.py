@@ -6,7 +6,7 @@
 
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.metrics import calculate_psnr
 from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
 
@@ -99,7 +99,8 @@ class BaseTranscoderTest(slash.Test):
         "Missing one or more required gstreamer elements: {}".format(list(unmet)))
 
   def gen_input_opts(self):
-    opts = "filesrc location={source}"
+    self.ossource = filepath2os(self.source)
+    opts =  "filesrc location={ossource}"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     opts += " ! video/x-raw,format={format}"
     return opts.format(**vars(self))
@@ -121,26 +122,29 @@ class BaseTranscoderTest(slash.Test):
         ofile = get_media()._test_artifact(
           "{}_{}_{}.{}".format(self.case, n, channel, ext))
         self.goutputs.setdefault(n, list()).append(ofile)
+        osofile = filepath2os(ofile)
 
         opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
         if vppscale is not None:
           opts += " ! {}".format(vppscale)
         opts += " ! {}".format(encoder)
-        opts += " ! filesink location={} transcoder.".format(ofile)
+        opts += " ! filesink location={} transcoder.".format(osofile)
 
     # dump decoded source to yuv for reference comparison
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
+    self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
     opts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
-    opts += " dump-location={srcyuv}"
+    opts += " dump-location={ossrcyuv}"
 
     return opts.format(**vars(self))
 
   @timefn("gst")
   def call_gst(self, iopts, oopts):
-    call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(
+    call(f"{exe2os('gst-launch-1.0')}"
+         " -vf {iopts} ! {oopts}".format(
       iopts = iopts, oopts = oopts))
 
   def transcode(self):
@@ -156,17 +160,19 @@ class BaseTranscoderTest(slash.Test):
       get_media()._set_test_details(**{"output.{}".format(n) : output})
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
+        osencoded = filepath2os(encoded)
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
+        osyuv = filepath2os(yuv)
         iopts = "filesrc location={} ! {}"
         oopts = self.get_vpp_scale(self.width, self.height, "hw")
         oopts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
         oopts += " frame-checksum=false plane-checksum=false dump-output=true"
         oopts += " dump-location={}"
         self.call_gst(
-          iopts.format(encoded, self.get_decoder(output["codec"], "hw")),
-          oopts.format(yuv, frames = self.frames))
-        self.check_resolution(output, encoded)
+          iopts.format(osencoded, self.get_decoder(output["codec"], "hw")),
+          oopts.format(osyuv, frames = self.frames))
+        self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
         get_media()._purge_test_artifact(yuv)
 

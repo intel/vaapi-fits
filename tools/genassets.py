@@ -9,6 +9,7 @@
 import subprocess
 import os
 import sys
+from ..lib.common import exe2os
 
 
 resolutions = [(176, 144), (320, 240), (1280, 720), (1920,1080),]
@@ -70,7 +71,7 @@ for codec, params in spec.items():
     p.update(width = width, height = height, resname = res_std[(width, height)])
     p.update(encoded = "{resname}.{extension}".format(**p))
     subprocess.check_call(
-      "gst-launch-1.0 videotestsrc num-buffers=50 pattern=smpte"
+      f"{exe2os('gst-launch-1.0')} videotestsrc num-buffers=50 pattern=smpte"
         " ! video/x-raw,width={width},height={height}"
         " ! {encoder}"
         " ! filesink location={path}/{encoded}"
@@ -82,7 +83,8 @@ for codec, params in spec.items():
       p.update(format = format)
       p.update(decoded = "{encoded}_ref.{format}.yuv".format(**p))
       subprocess.check_call(
-        "gst-launch-1.0 filesrc location={path}/{encoded}"
+        f"{exe2os('gst-launch-1.0')}"
+          " filesrc location={path}/{encoded}"
           " ! {decoder}"
           " ! videoconvert ! video/x-raw,format={format},width={width},height={height}"
           " ! checksumsink2 file-checksum=false"
@@ -94,7 +96,7 @@ for codec, params in spec.items():
 for width, height in resolutions:
   for format in formats:
     subprocess.check_call(
-      "gst-launch-1.0 videotestsrc num-buffers=300 pattern=smpte"
+      f"{exe2os('gst-launch-1.0')} videotestsrc num-buffers=300 pattern=smpte"
         " ! video/x-raw,width={width},height={height},format={format}"
         " ! checksumsink2 file-checksum=false frame-checksum=false"
         " plane-checksum=false dump-output=true"
