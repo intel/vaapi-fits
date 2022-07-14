@@ -64,6 +64,7 @@ class Encoder(GstEncoder):
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
   maxframesize = property(lambda s: s.ifprop("maxframesize", " max-frame-size={maxframesize}"))
+  intref   = property(lambda s: s.ifprop("intref", " intra-refresh-type={intref[type]} intra-refresh-cycle-size={intref[size]} intra-refresh-cycle-dist={intref[dist]}"))
 
   @property
   def gstencoder(self):
@@ -73,6 +74,7 @@ class Encoder(GstEncoder):
       f"{self.quality}{self.slices}{self.tilecols}{self.tilerows}{self.bframes}"
       f"{self.maxrate}{self.minrate}{self.refmode}"
       f"{self.refs}{self.lowpower}{self.ladepth}"
+      f"{self.intref}"
     )
 
 @slash.requires(*have_gst_element("msdk"))

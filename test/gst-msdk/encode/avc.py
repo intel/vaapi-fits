@@ -253,3 +253,45 @@ class max_frame_size(AVCEncoderTest):
   def test(self, case, bitrate, maxrate, fps, maxframesize, profile):
     self.init(spec, case, bitrate, maxrate, fps, maxframesize, profile)
     self.encode()
+
+class intref(AVCEncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      intref     = dict(type = reftype, size = refsize, dist = refdist),
+    )
+
+  @slash.parametrize(*gen_avc_intref_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist)
+    self.encode()
+
+class intref_lp(AVCEncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      intref     = dict(type = reftype, size = refsize, dist = refdist),
+    )
+
+  @slash.parametrize(*gen_avc_intref_lp_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist)
+    self.encode()
