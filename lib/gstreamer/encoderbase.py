@@ -105,6 +105,8 @@ class BaseEncoderTest(slash.Test):
       name += "-{looplvl}"
     if vars(self).get("ladepth", None) is not None:
       name += "-{ladepth}"
+    if vars(self).get("intref", None) is not None:
+      name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 
