@@ -7,7 +7,7 @@
 import os
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.decoderbase import Decoder
 from ...lib.metrics import md5, calculate_psnr
@@ -44,11 +44,11 @@ class Encoder(PropertyHandler):
   @timefn("gst-encode")
   def encode(self):
     return call(
-      f"gst-launch-1.0 -vf filesrc location={self.source} num-buffers={self.frames}"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)} num-buffers={self.frames}"
       f" ! rawvideoparse format={self.format} width={self.width} height={self.height}{self.fps}"
       f" ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={self.hwformat}"
       f" ! {self.gstencoder} ! {self.gstmediatype}{self.profile}{self.gstparser}{self.gstmuxer}"
-      f" ! filesink location={self.encoded}"
+      f" ! filesink location={filepath2os(self.encoded)}"
     )
 
 @slash.requires(have_gst)
@@ -218,9 +218,9 @@ class BaseEncoderTest(slash.Test):
     if vars(self).get("gstdemuxer", None) is not None:
       demuxed = get_media()._test_artifact(f"{self.encoder.encoded}.{self.codec}")
       call(
-        f"gst-launch-1.0 -vf filesrc location={self.encoder.encoded}"
+        f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.encoder.encoded)}"
         f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
-        f" ! filesink location={demuxed}"
+        f" ! filesink location={filepath2os(demuxed)}"
       )
       result = md5(demuxed)
       get_media()._purge_test_artifact(demuxed)

@@ -6,7 +6,7 @@
 
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.formats import match_best_format
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.parameters import format_value
@@ -29,12 +29,12 @@ class Decoder(PropertyHandler):
   @timefn("gst-decode")
   def decode(self):
     return call(
-      f"gst-launch-1.0 -vf filesrc location={self.source}"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)}"
       f"{self.gstdemuxer}{self.gstparser}{self.gstdecoder}"
       f" ! videoconvert chroma-mode=none dither=0"
       f" ! video/x-raw,format={self.format} ! checksumsink2 qos=false"
       f" file-checksum=false frame-checksum=false plane-checksum=false"
-      f" eos-after={self.frames} dump-output=true dump-location={self.decoded}"
+      f" eos-after={self.frames} dump-output=true dump-location={filepath2os(self.decoded)}"
     )
 
 @slash.requires(have_gst)

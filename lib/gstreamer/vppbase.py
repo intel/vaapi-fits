@@ -6,7 +6,7 @@
 
 import slash
 
-from ...lib.common import timefn, get_media, call
+from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.metrics import md5
 from ...lib.mixin.vpp import VppMetricMixin
@@ -38,10 +38,10 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
   def gen_input_opts(self):
     if self.vpp_op not in ["deinterlace"]:
-      opts =  "filesrc location={source} num-buffers={frames}"
+      opts = "filesrc location={ossource} num-buffers={frames}"
       opts += " ! rawvideoparse format={mformat} width={width} height={height}"
     else:
-      opts =  "filesrc location={source}"
+      opts =  "filesrc location={ossource}"
       opts += " ! {gstdecoder}"
     if self.vpp_op not in ["csc", "deinterlace"]:
       if self.ifmt != self.ihwformat:
@@ -59,7 +59,7 @@ class BaseVppTest(slash.Test, VppMetricMixin):
     if self.ofmt != self.ohwformat and self.vpp_op not in ["csc"]:
       opts += " ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={mformatu}"
     opts += " ! checksumsink2 file-checksum=false qos=false frame-checksum=false"
-    opts += " plane-checksum=false dump-output=true dump-location={decoded} eos-after={frames}"
+    opts += " plane-checksum=false dump-output=true dump-location={osdecoded} eos-after={frames}"
 
     return opts
 
@@ -103,7 +103,8 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
   @timefn("gst")
   def call_gst(self, iopts, oopts):
-    call("gst-launch-1.0 -vf {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts))
+    call(f"{exe2os('gst-launch-1.0')}"
+         " -vf {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts))
 
   def validate_caps(self):
     ifmts         = self.get_input_formats()
@@ -135,9 +136,12 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
+
     name  = self.gen_name().format(**vars(self))
 
     self.decoded = get_media()._test_artifact("{}.yuv".format(name))
+    self.ossource = filepath2os(self.source)
+    self.osdecoded = filepath2os(self.decoded)
     self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
 
     if vars(self).get("r2r", None) is not None:
@@ -148,6 +152,7 @@ class BaseVppTest(slash.Test, VppMetricMixin):
       for i in range(1, self.r2r):
         self.decoded = get_media()._test_artifact(
           "{}_{}.yuv".format(name, i))
+        self.osdecoded = filepath2os(self.decoded)
         self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
         result = md5(self.decoded)
         get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})

@@ -15,5 +15,5 @@ from ....lib.mfx.runtime import MFXRuntimeTest
 class detect(MFXRuntimeTest):
   def test(self):
     self.check(
-      "gst-launch-1.0 --no-position -vf videotestsrc ! msdkvpp ! fakesink"
+      f"{exe2os('gst-launch-1.0')} --no-position -vf videotestsrc ! msdkvpp ! fakesink"
     )
