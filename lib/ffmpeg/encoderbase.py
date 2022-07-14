@@ -301,7 +301,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       f"{exe2os('ffmpeg')}"
       " -v verbose -i {osencoded} -c:v copy"
       " -vframes {frames} -bsf:v trace_headers"
-      " -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l".format(**vars(self)))
+      f" -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l".format(**vars(self)))
     assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"
 
   def check_max_frame_size(self):
