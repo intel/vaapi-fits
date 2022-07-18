@@ -158,8 +158,6 @@ class vbr(AVCEncoderTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      ## target percentage 70% (hard-coded in gst-va)
-      ## gst-va sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
       maxrate   = int(bitrate / 0.7),
       minrate   = bitrate,
       profile   = profile,
@@ -188,8 +186,6 @@ class vbr_lp(AVCEncoderLPTest):
       case      = case,
       fps       = fps,
       gop       = gop,
-      ## target percentage 70% (hard-coded in gst-va)
-      ## gst-va sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
       maxrate   = int(bitrate / 0.7),
       minrate   = bitrate,
       profile   = profile,
