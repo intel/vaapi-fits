@@ -58,17 +58,42 @@ class EncoderTest(BaseEncoderTest):
     super().validate_caps()
 
   def check_output(self):
+    # init
     m = re.search("Initialize MFX session", self.output, re.MULTILINE)
     assert m is not None, "It appears that the QSV plugin did not load"
 
+    # rate control mode
+    if self.codec not in ["jpeg"]:
+      m = re.search(f"RateControlMethod: {self.rcmode.upper()}", self.output, re.MULTILINE)
+      assert m is not None, "Possible incorrect RC mode used"
+
+    # lowpower
+    if self.codec not in ["jpeg", "mpeg2"]:
+      vdenc = "ON" if vars(self).get("lowpower", 0) else "OFF"
+      m = re.search(f"VDENC: {vdenc}", self.output, re.MULTILINE)
+      assert m is not None, "Possible incorrect VDENC/VME mode used"
+
+    # fps
+    if vars(self).get("fps", None) is not None:
+      m = re.search(f"FrameRateExtD: 1; FrameRateExtN: {self.fps}", self.output, re.MULTILINE)
+      assert m is not None, "Possible incorrect FPS used"
+
+    # slices
+    if vars(self).get("slices", None) is not None and self.codec not in ["vp9"]:
+      m = re.search(f"NumSlice: {self.slices};", self.output, re.MULTILINE)
+      assert m is not None, "Possible incorrect slices used"
+
+    # ladepth
     if vars(self).get("ladepth", None) is not None:
       m = re.search(r"Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
       assert m is not None, "It appears that the lookahead did not load"
 
+    # main10sp
     if vars(self).get("profile", None) in ["main10sp"]:
       m = re.search(r"Main10sp.*: enable", self.output, re.MULTILINE)
       assert m is not None, "It appears that main10sp did not get enabled"
 
+    # intref
     if vars(self).get("intref", None) is not None:
       patterns = [
         f"IntRefType: {self.intref['type']};",
