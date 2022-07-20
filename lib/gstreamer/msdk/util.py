@@ -9,7 +9,7 @@ from ....lib.formats import match_best_format
 from ....lib.gstreamer.util import *
 
 def using_compatible_driver():
-  return get_media()._get_driver_name() == "iHD"
+  return get_media()._get_driver_name() in ["iHD", "d3d11", "dxva2"]
 
 def get_supported_format_map():
   #The map first entry is for gst element properties;the second entry is for gst caps filters
