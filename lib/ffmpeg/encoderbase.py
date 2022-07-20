@@ -28,7 +28,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   ossource      = property(lambda s: filepath2os(s.source))
   width         = property(lambda s: s.props["width"])
   height        = property(lambda s: s.props["height"])
-  rcmode        = property(lambda s: f" -rc_mode {s.props['rcmode'].upper()}")
+  rcmode        = property(lambda s: s.props['rcmode'].upper())
   encoded       = property(lambda s: s.props["encoded"])
   osencoded     = property(lambda s: filepath2os(s.encoded))
 
@@ -91,7 +91,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   @property
   def encparams(self):
     return (
-      f"{self.profile}{self.rcmode}{self.qp}{self.quality}{self.gop}"
+      f"{self.profile}{self.qp}{self.quality}{self.gop}"
       f"{self.bframes}{self.slices}{self.minrate}{self.maxrate}{self.refs}"
       f"{self.extbrc}{self.loopshp}{self.looplvl}{self.tilecols}{self.tilerows}"
       f"{self.level}{self.ladepth}{self.forced_idr}{self.intref}{self.lowpower}"
