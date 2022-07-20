@@ -17,10 +17,6 @@ class Encoder(FFEncoder):
   hwaccel = property(lambda s: "vaapi")
 
   @property
-  def rcmode(self):
-    return "" if self.codec in ["jpeg"] else super().rcmode
-
-  @property
   def qp(self):
     def inner(qp):
       if self.codec in ["vp8", "vp9"]:
@@ -38,6 +34,12 @@ class Encoder(FFEncoder):
         return " -global_quality {quality}"
       return " -compression_level {quality}"
     return self.ifprop("quality", inner)
+
+  @property
+  def encparams(self):
+    if self.codec not in ["jpeg"]:
+      return f"-rc_mode {self.rcmode}{super().encparams}"
+    return super().encparams
 
 @slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class EncoderTest(BaseEncoderTest):
