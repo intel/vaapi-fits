@@ -69,6 +69,7 @@ class cbr_lp(AV1EncoderLPTest):
       case    = case,
       fps     = fps,
       gop     = gop,
+      bframes = bframes,
       maxrate = bitrate,
       minrate = bitrate,
       profile = profile,
