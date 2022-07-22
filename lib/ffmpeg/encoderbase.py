@@ -47,8 +47,6 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   gop           = property(lambda s: s.ifprop("gop", " -g {gop}"))
   extbrc        = property(lambda s: s.ifprop("extbrc", " -extbrc {extbrc}"))
   slices        = property(lambda s: s.ifprop("slices", " -slices {slices}"))
-  tilecols      = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
-  tilerows      = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
   bframes       = property(lambda s: s.ifprop("bframes", " -bf {bframes}"))
   minrate       = property(lambda s: s.ifprop("minrate", " -b:v {minrate}k"))
   maxrate       = property(lambda s: s.ifprop("maxrate", " -maxrate {maxrate}k"))
