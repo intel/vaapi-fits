@@ -66,7 +66,8 @@ class EncoderTest(BaseEncoderTest):
 
     # rate control mode
     if self.codec not in ["jpeg"]:
-      m = re.search(f"RateControlMethod: {self.rcmode.upper()}", self.output, re.MULTILINE)
+      mode = "LA" if vars(self).get("ladepth", None) is not None else self.rcmode
+      m = re.search(f"RateControlMethod: {mode.upper()}", self.output, re.MULTILINE)
       assert m is not None, "Possible incorrect RC mode used"
 
     # lowpower
@@ -87,8 +88,8 @@ class EncoderTest(BaseEncoderTest):
 
     # ladepth
     if vars(self).get("ladepth", None) is not None:
-      m = re.search(r"Using the VBR with lookahead \(LA\) ratecontrol method", self.output, re.MULTILINE)
-      assert m is not None, "It appears that the lookahead did not load"
+      m = re.search(f"LookAheadDepth: {self.ladepth}", self.output, re.MULTILINE)
+      assert m is not None, "The lookahead depth does not match test parameter"
 
     # main10sp
     if vars(self).get("profile", None) in ["main10sp"]:
