@@ -299,6 +299,54 @@ def gen_avc_max_frame_size_parameters(spec, profiles):
   params = gen_avc_max_frame_size_variants(spec, profiles)
   return keys, params
 
+def gen_avc_roi_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("roi", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      rcmode  = variant["rcmode"]
+      if "cbr" == rcmode:
+        variant.update(maxrate = bitrate)
+      elif "vbr" == rcmode:
+        variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, variant["maxrate"],
+          profile, rcmode,
+        ]
+
+def gen_avc_roi_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "maxrate", "profile", "rcmode")
+  params = gen_avc_roi_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_roi_lp_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("roi_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      rcmode  = variant["rcmode"]
+      if "cbr" == rcmode:
+        variant.update(maxrate = bitrate)
+      elif "vbr" == rcmode:
+        variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, variant["maxrate"],
+          profile, rcmode,
+        ]
+
+def gen_avc_roi_lp_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "maxrate", "profile", "rcmode")
+  params = gen_avc_roi_lp_variants(spec, profiles)
+  return keys, params
+
 def gen_hevc_pict_variants(spec, profiles):
   for case, params in spec.items():
     for variant in copy.deepcopy(params.get("variants", dict()).get("pict", [])):
@@ -362,9 +410,11 @@ def gen_hevc_pict_lp_parameters(spec, profiles):
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
+gen_hevc_roi_parameters = gen_avc_roi_parameters
 gen_hevc_cqp_lp_parameters = gen_avc_cqp_lp_parameters
 gen_hevc_cbr_lp_parameters = gen_avc_cbr_lp_parameters
 gen_hevc_vbr_lp_parameters = gen_avc_vbr_lp_parameters
+gen_hevc_roi_lp_parameters = gen_avc_roi_lp_parameters
 gen_hevc_forced_idr_parameters = gen_avc_forced_idr_parameters
 gen_hevc_intref_lp_parameters = gen_avc_intref_lp_parameters
 gen_hevc_max_frame_size_parameters = gen_avc_max_frame_size_parameters

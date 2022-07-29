@@ -301,3 +301,43 @@ class max_frame_size(AVCEncoderTest):
   def test(self, case, bitrate, maxrate, fps, maxframesize, profile):
     self.init(spec, case, bitrate, maxrate, fps, maxframesize, profile)
     self.encode()
+
+class roi(AVCEncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      gop        = gop,
+      vroi      = 1,
+    )
+
+  @slash.parametrize(*gen_avc_roi_parameters(spec, ['main']))
+  def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
+    self.encode()
+
+class roi_lp(AVCEncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      gop        = gop,
+      vroi      = 1,
+    )
+
+  @slash.parametrize(*gen_avc_roi_lp_parameters(spec, ['main']))
+  def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
+    self.encode()
