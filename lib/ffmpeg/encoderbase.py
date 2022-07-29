@@ -59,7 +59,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   forced_idr    = property(lambda s: s.ifprop("vforced_idr", " -forced_idr 1 -force_key_frames expr:1"))
   maxframesize  = property(lambda s: s.ifprop("maxframesize", " -max_frame_size {maxframesize}k"))
   pict          = property(lambda s: s.ifprop("vpict", " -pic_timing_sei 0"))
-  roi           = property(lambda s: s.ifprop("vroi", ",addroi=0:0:{width}/2:{height}/2:-1/3"))
+  roi           = property(lambda s: s.ifprop("roi", ",addroi=0:0:{width}/2:{height}/2:-1/3"))
   hwupload      = property(lambda s: ",hwupload")
 
   @property
@@ -164,7 +164,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
     if vars(self).get("vpict", None) is not None:
       name += "-pict-0"
-    if vars(self).get("vroi", None) is not None:
+    if vars(self).get("roi", None) is not None:
       name += "-roi"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"

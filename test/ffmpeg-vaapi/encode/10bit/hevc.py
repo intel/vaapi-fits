@@ -205,3 +205,44 @@ class vbr_lp(HEVC10EncoderLPTest):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class roi(HEVC10EncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      gop        = gop,
+      roi        = 1,
+    )
+
+  @slash.parametrize(*gen_hevc_roi_parameters(spec, ['main10']))
+  def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
+    self.encode()
+
+class roi_lp(HEVC10EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      gop        = gop,
+      roi        = 1,
+    )
+
+  @slash.parametrize(*gen_hevc_roi_lp_parameters(spec, ['main10']))
+  def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
+    self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
+    self.encode()
+

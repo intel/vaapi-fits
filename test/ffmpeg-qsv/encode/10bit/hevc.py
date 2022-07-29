@@ -256,7 +256,7 @@ class roi(HEVC10EncoderTest):
       minrate    = bitrate,
       profile    = profile,
       gop        = gop,
-      vroi      = 1,
+      roi        = 1,
     )
 
   @slash.parametrize(*gen_hevc_roi_parameters(spec, ['main10']))
@@ -276,7 +276,7 @@ class roi_lp(HEVC10EncoderLPTest):
       minrate    = bitrate,
       profile    = profile,
       gop        = gop,
-      vroi      = 1,
+      roi        = 1,
     )
 
   @slash.parametrize(*gen_hevc_roi_lp_parameters(spec, ['main10']))
