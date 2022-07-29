@@ -59,6 +59,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   forced_idr    = property(lambda s: s.ifprop("vforced_idr", " -forced_idr 1 -force_key_frames expr:1"))
   maxframesize  = property(lambda s: s.ifprop("maxframesize", " -max_frame_size {maxframesize}k"))
   pict          = property(lambda s: s.ifprop("vpict", " -pic_timing_sei 0"))
+  roi           = property(lambda s: s.ifprop("vroi", ",addroi=0:0:{width}/2:{height}/2:-1/3"))
   hwupload      = property(lambda s: ",hwupload")
 
   @property
@@ -102,7 +103,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
       f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
       f" {self.fps} -i {self.ossource}"
-      f" -vf 'format={self.hwformat}{self.hwupload}'"
+      f" -vf 'format={self.hwformat}{self.hwupload}{self.roi}'"
       f" -an -c:v {self.ffencoder} {self.encparams}"
       f" -vframes {self.frames} -y {self.osencoded}"
     )
@@ -163,6 +164,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
     if vars(self).get("vpict", None) is not None:
       name += "-pict-0"
+    if vars(self).get("vroi", None) is not None:
+      name += "-roi"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 
