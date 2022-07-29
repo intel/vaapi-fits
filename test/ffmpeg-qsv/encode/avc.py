@@ -314,7 +314,7 @@ class roi(AVCEncoderTest):
       minrate    = bitrate,
       profile    = profile,
       gop        = gop,
-      vroi      = 1,
+      roi        = 1,
     )
 
   @slash.parametrize(*gen_avc_roi_parameters(spec, ['main']))
@@ -334,7 +334,7 @@ class roi_lp(AVCEncoderLPTest):
       minrate    = bitrate,
       profile    = profile,
       gop        = gop,
-      vroi      = 1,
+      roi        = 1,
     )
 
   @slash.parametrize(*gen_avc_roi_lp_parameters(spec, ['main']))
