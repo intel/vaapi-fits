@@ -235,3 +235,15 @@ def filepath2os(file_path):
     return os.sep.join(path[1:])
   else:
     return file_path
+
+class Singleton(type):
+  _instances = {}
+  _lock = threading.RLock()
+  def __call__(cls, *args, **kwargs):
+    try:
+      cls._lock.acquire()
+      if cls not in cls._instances:
+        cls._instances[cls] = super().__call__(*args, **kwargs)
+      return cls._instances[cls]
+    finally:
+      cls._lock.release()
