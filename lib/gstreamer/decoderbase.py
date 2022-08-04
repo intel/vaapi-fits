@@ -11,8 +11,9 @@ from ...lib.formats import match_best_format
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
-from ...lib.metrics import md5, check_metric
 from ...lib.properties import PropertyHandler
+
+from ...lib import metrics2
 
 class Decoder(PropertyHandler):
   #required properties
@@ -26,7 +27,7 @@ class Decoder(PropertyHandler):
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
   gstdemuxer  = property(lambda s: s.ifprop("gstdemuxer", " ! {gstdemuxer}"))
 
-  @timefn("gst-decode")
+  @timefn("gst:decode")
   def decode(self):
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)}"
@@ -81,21 +82,26 @@ class BaseDecoderTest(slash.Test):
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
     name = self.gen_name().format(**vars(self))
-    self.decoder.update(
-      decoded = get_media()._test_artifact("{}.yuv".format(name)))
+    self.decoder.update(decoded = get_media()._test_artifact(f"{name}.yuv"))
     self.output = self.decoder.decode()
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = md5(self.decoder.decoded)
-      get_media()._set_test_details(md5_ref = md5ref)
+
+      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
+      metric.update(filetest = self.decoder.decoded)
+      metric.expect = metric.actual # the first run is our reference for r2r
+      metric.check()
+
+      get_media()._purge_test_artifact(self.decoder.decoded)
+
       for i in range(1, self.r2r):
-        self.decoder.update(
-          decoded = get_media()._test_artifact("{}_{}.yuv".format(name, i)))
+        self.decoder.update(decoded = get_media()._test_artifact(f"{name}_{i}.yuv"))
         self.decoder.decode()
-        result = md5(self.decoder.decoded)
-        get_media()._set_test_details(**{"md5_{:03}".format(i): result})
-        assert result == md5ref, "r2r md5 mismatch"
+
+        metric.update(filetest = self.decoder.decoded)
+        metric.check()
+
         # delete decoded file after each iteration
         get_media()._purge_test_artifact(self.decoder.decoded)
     else:
@@ -103,4 +109,4 @@ class BaseDecoderTest(slash.Test):
       self.check_metrics()
 
   def check_metrics(self):
-    check_metric(**vars(self))
+    metrics2.factory.create(**vars(self)).check()
