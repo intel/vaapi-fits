@@ -123,10 +123,8 @@ def read_frame_AYUV(fd, width, height):
   # For yuv 444 8bit format:
   #   1) on test cases define in vaapi-fits-full/vaapi-fits, we follow to use mircosoft ayuv 
   #   2) on iHD, it uses as ayuv, and follows Mircosoft definition ayuv;
-  #   3) on ffmpeg, it uses as 0yuv, which is same as microsoft AYUV except the alpha channel. 
-  #      Actually FFmpeg doesn't define AYUV pixel format, but it defined AYUV decoder and 
-  #      encoder which follows microsoft AYUV definition
-  #   4) on gstreamer, it use as yuva, it is byte order define; 
+  #   3) on ffmpeg, it uses as vuya, which is same as microsoft AYUV except the alpha channel.
+  #   4) on gstreamer, it use as vuya, it is byte order define;
   #      so we will do map from ayuv->vuya  
   a = ayuv[3::4].reshape((height, width))
   y = ayuv[2::4].reshape((height, width))

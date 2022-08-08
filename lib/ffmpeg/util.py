@@ -57,5 +57,5 @@ class BaseFormatMapper(FormatMapper):
       "Y212"  : "y212",
       "Y410"  : "y410",
       "Y412"  : "y412",
-      "AYUV"  : "0yuv", # 0yuv is same as microsoft AYUV except the alpha channel
+      "AYUV"  : "vuya", # vuya is same as microsoft AYUV except the alpha channel
     }
