@@ -73,13 +73,6 @@ class Encoder(PropertyHandler, BaseFormatMapper):
     return self.ifprop("intref", inner)
 
   @property
-  def bstrategy(self):
-    ## WA: LDB is not enabled by default for HEVCe on gen11+, yet.
-    if get_media()._get_gpu_gen() >= 11 and self.codec.startswith("hevc"):
-      return " -b_strategy 1"
-    return ""
-
-  @property
   def hwinit(self):
     return (
       f"-hwaccel {self.hwaccel}"
@@ -94,7 +87,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.bframes}{self.slices}{self.minrate}{self.maxrate}{self.refs}"
       f"{self.extbrc}{self.loopshp}{self.looplvl}{self.tilecols}{self.tilerows}"
       f"{self.level}{self.ladepth}{self.forced_idr}{self.intref}{self.lowpower}"
-      f"{self.maxframesize}{self.bstrategy}{self.pict}"
+      f"{self.maxframesize}{self.pict}"
     )
 
   @timefn("ffmpeg-encode")
