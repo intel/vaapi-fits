@@ -11,10 +11,11 @@ import slash
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
 from ...lib.ffmpeg.decoderbase import Decoder
-from ...lib.metrics import md5, calculate_psnr
 from ...lib.parameters import format_value
 from ...lib.properties import PropertyHandler
 from ...lib.util import skip_test_if_missing_features
+
+from ...lib import metrics2
 
 class Encoder(PropertyHandler, BaseFormatMapper):
   # required properties
@@ -103,7 +104,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.maxframesize}{self.pict}{self.rqp}"
     )
 
-  @timefn("ffmpeg-encode")
+  @timefn("ffmpeg:encode")
   def encode(self):
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
@@ -236,23 +237,30 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = md5(self.encoder.encoded)
-      get_media()._set_test_details(md5_ref = md5ref)
+
+      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
+      metric.update(filetest = self.encoder.encoded)
+      metric.expect = metric.actual # the first run is our reference for r2r
+      metric.check()
+
+      get_media()._purge_test_artifact(self.encoder.encoded)
+
       for i in range(1, self.r2r):
         self.encoder.update(encoded = get_media()._test_artifact(f"{name}_{i}.{ext}"))
         self.encoder.encode()
-        result = md5(self.encoder.encoded)
-        get_media()._set_test_details(**{f"md5_{i:03}" : result})
-        assert result == md5ref, "r2r md5 mismatch"
+
+        metric.update(filetest = self.encoder.encoded)
+        metric.check()
+
         # delete encoded file after each iteration
         get_media()._purge_test_artifact(self.encoder.encoded)
     else:
       self.check_output()
       self.check_bitrate()
-      self.check_metrics()
       self.check_level()
       self.check_forced_idr()
       self.check_max_frame_size()
+      self.check_metrics()
 
   def check_output(self):
     pass
@@ -283,13 +291,12 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     )
     self.decoder.decode()
 
-    get_media().baseline.check_psnr(
-      psnr = calculate_psnr(
-        self.source, self.decoder.decoded,
-        self.width, self.height,
-        self.frames, self.format),
-      context = self.refctx,
-    )
+    metrics2.factory.create(
+      metric = dict(type = "psnr"),
+      filetrue = self.source, filetest = self.decoder.decoded,
+      width = self.width, height = self.height, frames = self.frames,
+      format = self.format, refctx = self.refctx
+    ).check()
 
   def check_level(self):
     if vars(self).get("level", None) is None:
