@@ -11,10 +11,11 @@ import slash
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.decoderbase import Decoder
-from ...lib.metrics import md5, calculate_psnr
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.properties import PropertyHandler
+
+from ...lib import metrics2
 
 class Encoder(PropertyHandler):
   # required properties
@@ -42,7 +43,7 @@ class Encoder(PropertyHandler):
       return f" tune={'low-power' if lowpower else 'none'}"
     return self.ifprop("lowpower", inner)
 
-  @timefn("gst-encode")
+  @timefn("gst:encode")
   def encode(self):
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)} num-buffers={self.frames}"
@@ -159,22 +160,29 @@ class BaseEncoderTest(slash.Test):
     name  = self.gen_name().format(**vars(self))
     ext   = self.get_file_ext()
 
-    self.encoder.update(
-      encoded = get_media()._test_artifact("{}.{}".format(name, ext)))
+    self.encoder.update(encoded = get_media()._test_artifact(f"{name}.{ext}"))
     self.encoder.encode()
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = self.md5_demuxed()
-      get_media()._set_test_details(md5_ref = md5ref)
+
+      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
+      metric.update(filetest = self.demux())
+      metric.expect = metric.actual # the first run is our reference for r2r
+      metric.check()
+
+      get_media()._purge_test_artifact(metric.filetest)
+      get_media()._purge_test_artifact(self.encoder.encoded)
+
       for i in range(1, self.r2r):
-        self.encoder.update(
-          encoded = get_media()._test_artifact("{}_{}.{}".format(name, i, ext)))
+        self.encoder.update(encoded = get_media()._test_artifact(f"{name}_{i}.{ext}"))
         self.encoder.encode()
-        result = self.md5_demuxed()
-        get_media()._set_test_details(**{"md5_{:03}".format(i): result})
-        assert md5ref == result, "r2r md5 mismatch"
+
+        metric.update(filetest = self.demux())
+        metric.check()
+
         # delete encoded file after each iteration
+        get_media()._purge_test_artifact(metric.filetest)
         get_media()._purge_test_artifact(self.encoder.encoded)
     else:
       self.check_bitrate()
@@ -189,13 +197,12 @@ class BaseEncoderTest(slash.Test):
     )
     self.decoder.decode()
 
-    get_media().baseline.check_psnr(
-      psnr = calculate_psnr(
-        self.source, self.decoder.decoded,
-        self.width, self.height,
-        self.frames, self.format),
-      context = self.refctx,
-    )
+    metrics2.factory.create(
+      metric = dict(type = "psnr"),
+      filetrue = self.source, filetest = self.decoder.decoded,
+      width = self.width, height = self.height, frames = self.frames,
+      format = self.format, refctx = self.refctx
+    ).check()
 
   def check_bitrate(self):
     encsize = os.path.getsize(self.encoder.encoded)
@@ -228,18 +235,20 @@ class BaseEncoderTest(slash.Test):
     for frameSize in frameSizes:
       assert (self.maxframesize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
 
-  def md5_demuxed(self):
+  @timefn("gst:demux")
+  def _demux(self, demuxed):
+    call(
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.encoder.encoded)}"
+      f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
+      f" ! filesink location={filepath2os(demuxed)}"
+    )
+    return demuxed
+
+  def demux(self):
     # gstreamer muxers write timestamps to container header and will be
     # different in each r2r iteration.  Thus, extract the elementary video
-    # stream from the container and take md5 on the elementary video stream.
+    # stream from the container to be used in metrics.
     if vars(self).get("gstdemuxer", None) is not None:
-      demuxed = get_media()._test_artifact(f"{self.encoder.encoded}.{self.codec}")
-      call(
-        f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.encoder.encoded)}"
-        f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
-        f" ! filesink location={filepath2os(demuxed)}"
-      )
-      result = md5(demuxed)
-      get_media()._purge_test_artifact(demuxed)
-      return result
-    return md5(self.encoder.encoded)
+      return self._demux(
+        get_media()._test_artifact(f"{self.encoder.encoded}.{self.codec}"))
+    return self.encoder.encoded
