@@ -241,6 +241,25 @@ class forced_idr(AVCEncoderTest):
     self.init(spec, case, rcmode, bitrate, maxrate, qp, quality, profile)
     self.encode()
 
+class tcbrc(AVCEncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, quality, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      quality    = quality,
+      vtcbrc= 1,
+    )
+
+  @slash.parametrize(*gen_avc_tcbrc_parameters(spec, ['high', 'main', 'baseline']))
+  def test(self, case, rcmode, bitrate, maxrate, quality, profile):
+    self.init(spec, case, rcmode, bitrate, maxrate, quality, profile)
+    self.encode()
+
 class intref(AVCEncoderTest):
   def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, reftype, refsize, refdist):
     vars(self).update(tspec[case].copy())
