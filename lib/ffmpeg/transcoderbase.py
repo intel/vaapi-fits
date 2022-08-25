@@ -16,6 +16,7 @@ class BaseTranscoderTest(slash.Test):
   def before(self):
     super().before()
     self.refctx = []
+    self.post_validate = lambda: None
     self.renderDevice = get_media().render_device
 
   def get_requirements_data(self, ttype, codec, mode):
@@ -99,6 +100,8 @@ class BaseTranscoderTest(slash.Test):
     if len(unmet) != 0:
       slash.skip_test(
         "Missing one or more required ffmpeg elements: {}".format(list(unmet)))
+
+    self.post_validate()
 
   def gen_input_opts(self):
     opts = "-init_hw_device {hwaccel}=hw:{renderDevice}"

@@ -15,6 +15,7 @@ from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
 class BaseTranscoderTest(slash.Test):
   def before(self):
     self.refctx = []
+    self.post_validate = lambda: None
     vars(self).setdefault("format", "NV12")
 
   def get_requirements_data(self, ttype, codec, mode):
@@ -97,6 +98,8 @@ class BaseTranscoderTest(slash.Test):
     if len(unmet) != 0:
       slash.skip_test(
         "Missing one or more required gstreamer elements: {}".format(list(unmet)))
+
+    self.post_validate()
 
   def gen_input_opts(self):
     self.ossource = filepath2os(self.source)
