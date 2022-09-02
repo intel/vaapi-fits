@@ -341,3 +341,23 @@ class roi_lp(AVCEncoderLPTest):
   def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
     self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
     self.encode()
+
+class rqp(AVCEncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, maxrate, profile, rcmode, maxi, mini, maxp, minp, maxb, minb):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      gop        = gop,
+      rqp        = dict(MaxQPI = maxi, MinQPI = mini, MaxQPP = maxp, MinQPP = minp, MaxQPB = maxb, MinQPB = minb),
+    )
+
+  @slash.parametrize(*gen_avc_rqp_parameters(spec, ['main']))
+  def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode, maxi, mini, maxp, minp, maxb, minb):
+    self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode, maxi, mini, maxp, minp, maxb, minb)
+    self.encode()

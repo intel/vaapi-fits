@@ -63,6 +63,19 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   hwupload      = property(lambda s: ",hwupload")
 
   @property
+  def rqp(self):
+    def inner(rqp):
+      return (
+        f" -max_qp_i {rqp['MaxQPI']}"
+        f" -min_qp_i {rqp['MinQPI']}"
+        f" -max_qp_p {rqp['MaxQPP']}"
+        f" -min_qp_p {rqp['MinQPP']}"
+        f" -max_qp_b {rqp['MaxQPB']}"
+        f" -min_qp_b {rqp['MinQPB']}"
+      )
+    return self.ifprop("rqp", inner)
+
+  @property
   def intref(self):
     def inner(intref):
       return (
@@ -87,7 +100,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.bframes}{self.slices}{self.minrate}{self.maxrate}{self.refs}"
       f"{self.extbrc}{self.loopshp}{self.looplvl}{self.tilecols}{self.tilerows}"
       f"{self.level}{self.ladepth}{self.forced_idr}{self.intref}{self.lowpower}"
-      f"{self.maxframesize}{self.pict}"
+      f"{self.maxframesize}{self.pict}{self.rqp}"
     )
 
   @timefn("ffmpeg-encode")
@@ -159,6 +172,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-pict-0"
     if vars(self).get("roi", None) is not None:
       name += "-roi"
+    if vars(self).get("rqp", None) is not None:
+      name += "-rqp"
     if vars(self).get("r2r", None) is not None:
       name += "-r2r"
 

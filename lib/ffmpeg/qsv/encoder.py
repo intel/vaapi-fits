@@ -107,3 +107,19 @@ class EncoderTest(BaseEncoderTest):
       for pattern in patterns:
         m = re.search(pattern, self.output, re.MULTILINE)
         assert m is not None, f"'{pattern}' missing in output"
+
+    # Max/min qp
+    if vars(self).get("rqp", None) is not None:
+      patterns = [
+        f"MinQPI: {self.rqp['MinQPI']};",
+        f"MaxQPI: {self.rqp['MaxQPI']};",
+        f"MinQPP: {self.rqp['MinQPP']};",
+        f"MaxQPP: {self.rqp['MaxQPP']};",
+        f"MinQPB: {self.rqp['MinQPB']};",
+        f"MaxQPB: {self.rqp['MaxQPB']}",
+      ]
+
+      for pattern in patterns:
+        m = re.search(pattern, self.output, re.MULTILINE)
+        assert m is not None, f"'{pattern}' missing in output"
+
