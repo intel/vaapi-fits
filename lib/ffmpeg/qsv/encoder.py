@@ -17,6 +17,7 @@ class Encoder(FFEncoder):
   hwaccel = property(lambda s: "qsv")
   tilecols = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
+  tcbrc    = property(lambda s: s.ifprop("tcbrc", " -tc_brc {tcbrc}"))
 
   @property
   def hwupload(self):

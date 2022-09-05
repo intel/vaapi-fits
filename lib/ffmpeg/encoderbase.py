@@ -57,7 +57,6 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   level         = property(lambda s: s.ifprop("level", " -level {level}"))
   ladepth       = property(lambda s: s.ifprop("ladepth", " -look_ahead 1 -look_ahead_depth {ladepth}"))
   forced_idr    = property(lambda s: s.ifprop("vforced_idr", " -forced_idr 1 -force_key_frames expr:1"))
-  tcbrc         = property(lambda s: s.ifprop("vtcbrc", " low_delay_brc 1 -low_power 1"))
   maxframesize  = property(lambda s: s.ifprop("maxframesize", " -max_frame_size {maxframesize}k"))
   pict          = property(lambda s: s.ifprop("vpict", " -pic_timing_sei 0"))
   roi           = property(lambda s: s.ifprop("roi", ",addroi=0:0:{width}/2:{height}/2:-1/3"))
@@ -88,7 +87,6 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.bframes}{self.slices}{self.minrate}{self.maxrate}{self.refs}"
       f"{self.extbrc}{self.loopshp}{self.looplvl}{self.tilecols}{self.tilerows}"
       f"{self.level}{self.ladepth}{self.forced_idr}{self.intref}{self.lowpower}"
-      f"{self.level}{self.ladepth}{self.tcbrc}{self.intref}{self.lowpower}"
       f"{self.maxframesize}{self.pict}"
     )
 
@@ -153,8 +151,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       name += "-{ladepth}"
     if vars(self).get("vforced_idr", None) is not None:
       name += "-{vforced_idr}"
-    if vars(self).get("vtcbrc", None) is not None:
-      name += "-{vtcbrc}"
     if vars(self).get("level", None) is not None:
       name += "-{level}"
     if vars(self).get("intref", None) is not None:
@@ -241,7 +237,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       self.check_metrics()
       self.check_level()
       self.check_forced_idr()
-      self.check_tcbrc()
       self.check_max_frame_size()
 
   def check_output(self):
@@ -318,28 +313,3 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     for frameSize in frameSizes:
       assert (self.maxframesize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
 
-  def check_tcbrc(self):
-    if vars(self).get("vtcbrc", None) is None:
-      return
-
-    judge = {"hevc-8" : 19, "avc" : 5}.get(self.codec, None)
-    assert judge is not None, f"{self.codec} codec not supported for tcbrc"
-
-    output = call(
-      f"{exe2os('ffmpeg')}"
-      f" -v verbose -i {self.encoder.osencoded} -c:v copy -bsf:v trace_headers"
-      f" -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l"
-    )
-    assert str(self.frames) == output.strip(), "It appears that the tcbrc did not work"
-
-  def check_max_frame_size(self):
-    if vars(self).get("maxframesize", None) is None:
-      return
-
-    output = call(
-      f"{exe2os('ffprobe')}"
-      f" -i {self.encoder.osencoded} -show_frames | grep pkt_size"
-    )
-    frameSizes = re.findall(r'(?<=pkt_size=).[0-9]*', output)
-    for frameSize in frameSizes:
-      assert (self.maxframesize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"      
