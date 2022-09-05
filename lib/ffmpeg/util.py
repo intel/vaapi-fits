@@ -55,7 +55,7 @@ class BaseFormatMapper(FormatMapper):
       "BGRA"  : "bgra",
       "Y210"  : "y210",
       "Y212"  : "y212",
-      "Y410"  : "y410",
-      "Y412"  : "y412",
+      "Y410"  : "xv30",
+      "Y412"  : "xv36",
       "AYUV"  : "vuyx", # vuyx is same as microsoft AYUV except the alpha channel
     }
