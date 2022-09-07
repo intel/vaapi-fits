@@ -175,6 +175,10 @@ class vbr(AVCEncoderTest):
     self.encode()
 
 class vbr_lp(AVCEncoderLPTest):
+  def before(self):
+    super().before()
+    vars(self).update(rcmode = "vbr")
+
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -186,7 +190,6 @@ class vbr_lp(AVCEncoderLPTest):
       minrate   = bitrate,
       profile   = profile,
       quality   = quality,
-      rcmode    = "vbr",
       refs      = refs,
       slices    = slices,
     )
@@ -199,6 +202,22 @@ class vbr_lp(AVCEncoderLPTest):
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec_r2r, ['high', 'main']))
   def test_r2r(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
+    self.encode()
+
+  # TCBRC is VBR LP + LDB + Strict(-1)
+  @slash.parametrize(*gen_avc_tcbrc_parameters(spec, ['high', 'main']))
+  def test_tcbrc(self, case, bitrate, fps, profile):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      ldb     = 1, # required
+      maxrate = bitrate * 1.5,
+      minrate = bitrate,
+      profile = profile,
+      strict  = -1, # required
+    )
     self.encode()
 
 # TODO: This can be moved into the vbr test class in a test_la method

@@ -168,6 +168,19 @@ def gen_avc_vbr_lp_parameters(spec, profiles):
   params = gen_avc_vbr_lp_variants(spec, profiles)
   return keys, params
 
+def gen_avc_tcbrc_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("tcbrc", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [case, variant["bitrate"], variant.get("fps", 30), profile]
+
+def gen_avc_tcbrc_parameters(spec, profiles):
+  keys = ("case", "bitrate", "fps", "profile")
+  params = gen_avc_tcbrc_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_vbr_la_variants(spec, profiles):
   for case, params in spec.items():
     for variant in copy.deepcopy(params.get("variants", dict()).get("vbr_la", [])):
@@ -448,6 +461,7 @@ gen_hevc_roi_lp_parameters = gen_avc_roi_lp_parameters
 gen_hevc_forced_idr_parameters = gen_avc_forced_idr_parameters
 gen_hevc_intref_lp_parameters = gen_avc_intref_lp_parameters
 gen_hevc_max_frame_size_parameters = gen_avc_max_frame_size_parameters
+gen_hevc_tcbrc_parameters = gen_avc_tcbrc_parameters
 
 def gen_mpeg2_cqp_variants(spec):
   for case, params in spec.items():

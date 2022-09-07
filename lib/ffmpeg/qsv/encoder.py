@@ -11,12 +11,13 @@ from ....lib.ffmpeg.encoderbase import BaseEncoderTest, Encoder as FFEncoder
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver, have_encode_main10sp
 from ....lib.ffmpeg.qsv.decoder import Decoder
-from ....lib.common import mapRangeInt
+from ....lib.common import mapRangeInt, get_media, call, exe2os
 
 class Encoder(FFEncoder):
-  hwaccel = property(lambda s: "qsv")
-  tilecols = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
-  tilerows = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
+  hwaccel   = property(lambda s: "qsv")
+  tilecols  = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
+  tilerows  = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
+  ldb       = property(lambda s: s.ifprop("ldb", " -low_delay_brc {ldb}"))
 
   @property
   def hwupload(self):
@@ -39,6 +40,10 @@ class Encoder(FFEncoder):
       return f" -preset {quality}"
     return self.ifprop("quality", inner)
 
+  @property
+  def encparams(self):
+    return f"{super().encparams}{self.ldb}"
+
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class EncoderTest(BaseEncoderTest):
@@ -58,6 +63,38 @@ class EncoderTest(BaseEncoderTest):
       self.frames = vars(self).get("brframes", self.frames)
 
     super().validate_caps()
+
+  def check_metrics(self):
+    # TCBRC check
+    is_tcbrc = all([
+      self.rcmode in ["vbr"],
+      vars(self).get("lowpower", 0),
+      vars(self).get("ldb", 0),
+      vars(self).get("strict", 0) == -1,
+    ])
+
+    if is_tcbrc:
+      output = call(
+        f"{exe2os('ffprobe')} -i {self.encoder.osencoded}"
+        f" -show_entries frame=pkt_size,pict_type -of compact"
+      )
+
+      actual = re.findall(r'(?<=pkt_size=).[0-9]*(?=\|pict_type=[IPB])', output)
+      assert len(actual) == self.frames, "Probe failed for frame pkt_size"
+
+      target = self.bitrate * 1000 / 8 / self.fps # target bytes per frame
+      results = [int(frmsize) < target * 1.2 for frmsize in actual]
+      failed = results.count(False)
+      rate = failed / len(results)
+
+      get_media()._set_test_details(**{
+        "tcbrc:frame:target (bytes)" : f"{target:0.2f}",
+        "tcbrc:frame:fails" : f"{failed} ({rate:0.2%})",
+      })
+
+      assert rate < 0.2, "Too many TCBRC frames exceed target frame size"
+
+    super().check_metrics()
 
   def check_output(self):
     # init

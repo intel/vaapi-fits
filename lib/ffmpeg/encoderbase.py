@@ -61,6 +61,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   maxframesize  = property(lambda s: s.ifprop("maxframesize", " -max_frame_size {maxframesize}k"))
   pict          = property(lambda s: s.ifprop("vpict", " -pic_timing_sei 0"))
   roi           = property(lambda s: s.ifprop("roi", ",addroi=0:0:{width}/2:{height}/2:-1/3"))
+  strict        = property(lambda s: s.ifprop("strict", " -strict {strict}"))
   hwupload      = property(lambda s: ",hwupload")
 
   @property
@@ -101,7 +102,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.bframes}{self.slices}{self.minrate}{self.maxrate}{self.refs}"
       f"{self.extbrc}{self.loopshp}{self.looplvl}{self.tilecols}{self.tilerows}"
       f"{self.level}{self.ladepth}{self.forced_idr}{self.intref}{self.lowpower}"
-      f"{self.maxframesize}{self.pict}{self.rqp}"
+      f"{self.maxframesize}{self.pict}{self.rqp}{self.strict}"
     )
 
   @timefn("ffmpeg:encode")
