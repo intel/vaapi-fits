@@ -201,6 +201,12 @@ class vbr_lp(AVCEncoderLPTest):
     self.init(spec_r2r, case, gop, slices, bitrate, fps, quality, refs, profile)
     self.encode()
 
+  @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main']))
+  def test_tcbrc(self, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
+    vars(self).update(ldb = 1)
+    self.encode()
+
 # TODO: This can be moved into the vbr test class in a test_la method
 class vbr_la(AVCEncoderTest):
   @slash.parametrize(*gen_avc_vbr_la_parameters(spec, ['high', 'main', 'baseline']))

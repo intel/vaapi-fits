@@ -202,6 +202,12 @@ class vbr_lp(HEVC10EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main10']))
+  def test_tcbrc(self, case, gop, slices, bitrate, fps, quality, refs, profile):
+    self.init(spec, case, gop, slices, bitrate, fps, quality, refs, profile)
+    vars(self).update(ldb = 1)
+    self.encode()
+
 class pict(HEVC10EncoderTest):
   def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode):
     vars(self).update(tspec[case].copy())

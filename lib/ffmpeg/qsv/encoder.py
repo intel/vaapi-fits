@@ -17,7 +17,7 @@ class Encoder(FFEncoder):
   hwaccel = property(lambda s: "qsv")
   tilecols = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
-  tcbrc    = property(lambda s: s.ifprop("tcbrc", " -tc_brc {tcbrc}"))
+  ldb = property(lambda s: s.ifprop("ldb", " -low_delay_brc {ldb}"))
 
   @property
   def hwupload(self):
@@ -39,6 +39,10 @@ class Encoder(FFEncoder):
         return f" -global_quality {quality}"
       return f" -preset {quality}"
     return self.ifprop("quality", inner)
+
+  @property
+  def encparams(self):
+    return f"{super().encparams}{self.ldb}"
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
