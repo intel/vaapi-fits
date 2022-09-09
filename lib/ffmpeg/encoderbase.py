@@ -312,4 +312,3 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     frameSizes = re.findall(r'(?<=pkt_size=).[0-9]*', output)
     for frameSize in frameSizes:
       assert (self.maxframesize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
-
