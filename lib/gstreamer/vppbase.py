@@ -8,8 +8,9 @@ import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
-from ...lib.metrics import md5
 from ...lib.mixin.vpp import VppMetricMixin
+
+from ...lib import metrics2
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("checksumsink2"))
@@ -146,17 +147,23 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-      md5ref = md5(self.decoded)
-      get_media()._set_test_details(md5_ref = md5ref)
+
+      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
+      metric.update(filetest = self.decoded)
+      metric.expect = metric.actual # the first run is our reference for r2r
+      metric.check()
+
+      get_media()._purge_test_artifact(self.decoded)
 
       for i in range(1, self.r2r):
         self.decoded = get_media()._test_artifact(
           "{}_{}.yuv".format(name, i))
         self.osdecoded = filepath2os(self.decoded)
         self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
-        result = md5(self.decoded)
-        get_media()._set_test_details(**{ "md5_{:03}".format(i) : result})
-        assert result == md5ref, "r2r md5 mismatch"
+
+        metric.update(filetest = self.decoded)
+        metric.check()
+
         #delete output file after each iteration
         get_media()._purge_test_artifact(self.decoded)
     else:
