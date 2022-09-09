@@ -26,12 +26,3 @@ class default(VppTest):
     vars(self).update(spec[case].copy())
     vars(self).update(case = case)
     self.vpp()
-
-  def check_metrics(self):
-    params = vars(self).copy()
-    params["width"] = self.owidth
-    params["height"] = self.oheight
-
-    check_filesize(
-      self.decoded, self.owidth, self.oheight, self.frames, self.format)
-    check_metric(**params)

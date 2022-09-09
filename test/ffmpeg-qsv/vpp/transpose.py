@@ -18,7 +18,7 @@ class default(VppTest):
       metric  = dict(type = "md5"),
       vpp_op  = "transpose",
     )
-    super(default, self).before()
+    super().before()
 
   @slash.parametrize(*gen_vpp_transpose_parameters(spec))
   def test(self, case, degrees, method):
@@ -31,10 +31,6 @@ class default(VppTest):
     )
 
     if self.direction is None:
-      slash.skip_test(
-        "{degrees} {method} direction not supported".format(**vars(self)))
+      slash.skip_test(f"{degrees} {method} direction not supported")
 
     self.vpp()
-
-  def check_metrics(self):
-    check_metric(**vars(self))

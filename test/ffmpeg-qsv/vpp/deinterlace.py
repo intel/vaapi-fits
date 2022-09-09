@@ -28,15 +28,11 @@ class DeinterlaceTest(VppTest):
       metric  = dict(type = "md5"), # default metric
       vpp_op  = "deinterlace",
     )
-    super(DeinterlaceTest, self).before()
+    super().before()
 
   def init(self, tspec, case, method, rate):
     vars(self).update(tspec[case].copy())
-    vars(self).update(
-      case    = case,
-      method  = method,
-      rate    = rate,
-    )
+    vars(self).update(case = case, method = method, rate = rate)
 
   def validate_caps(self):
     self.caps = platform.get_caps(
@@ -57,14 +53,7 @@ class DeinterlaceTest(VppTest):
     if self.mmethod is None:
       slash.skip_test("{method} method not supported".format(**vars(self)))
 
-    super(DeinterlaceTest, self).validate_caps()
-
-  def check_metrics(self):
-    check_filesize(
-      self.decoded, self.width, self.height, self.frames, self.format)
-    if vars(self).get("reference", None) is not None:
-      self.reference = format_value(self.reference, **vars(self))
-    check_metric(**vars(self))
+    super().validate_caps()
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
 @slash.requires(*platform.have_caps("decode", "avc"))

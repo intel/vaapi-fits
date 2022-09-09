@@ -121,6 +121,9 @@ class VppMetricMixin:
     assert 1.0 >= ssim[1] >= 0.97
     assert 1.0 >= ssim[2] >= 0.97
 
+  # FIXME: HACK: "generic" class should not have concept of "qsv"
+  check_scale_qsv = check_scale
+
   def check_sharpen(self):
     psnr = metrics.calculate_psnr(
       self.source, self.decoded,
