@@ -19,7 +19,7 @@ class default(VppTest):
       metric  = dict(type = "md5"),
       vpp_op  = "transpose",
     )
-    super(default, self).before()
+    super().before()
 
   @slash.parametrize(*gen_vpp_rotation_parameters(spec))
   def test(self, case, degrees):
@@ -32,10 +32,6 @@ class default(VppTest):
     )
 
     if self.direction is None:
-      slash.skip_test(
-        "{degrees} rotation unsupported".format(**vars(self)))
+      slash.skip_test(f"{degrees} rotation unsupported")
 
     self.vpp()
-
-  def check_metrics(self):
-    check_metric(**vars(self))

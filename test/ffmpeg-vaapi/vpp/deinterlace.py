@@ -31,15 +31,11 @@ class DeinterlaceTest(VppTest):
       metric = dict(type = "md5"), # default metric
       vpp_op = "deinterlace",
     )
-    super(DeinterlaceTest, self).before()
+    super().before()
 
   def init(self, tspec, case, method, rate):
     vars(self).update(tspec[case].copy())
-    vars(self).update(
-      case    = case,
-      method  = method,
-      rate    = rate,
-    )
+    vars(self).update(case = case, method = method, rate = rate)
     self.frames *= 2 if "field" == rate else 1
 
   def validate_caps(self):
@@ -52,18 +48,10 @@ class DeinterlaceTest(VppTest):
           "{platform}.{driver}.{method} not supported", **vars(self)))
 
     self.mmethod = map_deinterlace_method(self.method)
-
     if self.mmethod is None:
       slash.skip_test("{method} not supported".format(**vars(self)))
 
-    super(DeinterlaceTest, self).validate_caps()
-
-  def check_metrics(self):
-    check_filesize(
-      self.decoded, self.width, self.height, self.frames, self.format)
-    if vars(self).get("reference", None) is not None:
-      self.reference = format_value(self.reference, **vars(self))
-    check_metric(**vars(self))
+    super().validate_caps()
 
 spec_avc = load_test_spec("vpp", "deinterlace", "avc")
 @slash.requires(*platform.have_caps("decode", "avc"))
@@ -71,7 +59,7 @@ spec_avc = load_test_spec("vpp", "deinterlace", "avc")
 class avc(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "h264"
-    super(avc, self).before()
+    super().before()
 
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
@@ -86,7 +74,7 @@ spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
 class mpeg2(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "mpeg2video"
-    super(mpeg2, self).before()
+    super().before()
 
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
@@ -101,7 +89,7 @@ spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
 class vc1(DeinterlaceTest):
   def before(self):
     self.ffdecoder = "vc1"
-    super(vc1, self).before()
+    super().before()
 
   @slash.parametrize(
     *gen_vpp_deinterlace_parameters(
