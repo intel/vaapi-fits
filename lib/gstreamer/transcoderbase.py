@@ -7,8 +7,9 @@
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.metrics import calculate_psnr
 from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
+
+from ...lib import metrics2
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("checksumsink2"))
@@ -188,10 +189,9 @@ class BaseTranscoderTest(slash.Test):
     assert "Height: {}".format(height) in props
 
   def check_metrics(self, yuv, refctx):
-    get_media().baseline.check_psnr(
-      psnr = calculate_psnr(
-        self.srcyuv, yuv,
-        self.width, self.height,
-        self.frames, self.format),
-      context = self.refctx + refctx,
-    )
+    metrics2.check(
+      metric = dict(type = "psnr"),
+      filetrue = self.srcyuv, filetest = yuv,
+      width = self.width, height = self.height,
+      frames = self.frames, format = self.format,
+      refctx = self.refctx + refctx)
