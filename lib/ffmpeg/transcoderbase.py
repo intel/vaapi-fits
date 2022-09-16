@@ -8,8 +8,9 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.metrics import calculate_psnr
 from ...lib.ffmpeg.util import have_ffmpeg, ffmpeg_probe_resolution
+
+from ...lib import metrics2
 
 @slash.requires(have_ffmpeg)
 class BaseTranscoderTest(slash.Test):
@@ -217,10 +218,9 @@ class BaseTranscoderTest(slash.Test):
     assert expect == actual
 
   def check_metrics(self, yuv, refctx):
-    get_media().baseline.check_psnr(
-      psnr = calculate_psnr(
-        self.srcyuv, yuv,
-        self.width, self.height,
-        self.frames),
-      context = self.refctx + refctx,
-    )
+    metrics2.check(
+      metric = dict(type = "psnr"),
+      filetrue = self.srcyuv, filetest = yuv,
+      width = self.width, height = self.height,
+      frames = self.frames, format = "I420",
+      refctx = self.refctx + refctx)
