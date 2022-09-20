@@ -61,6 +61,7 @@ class TranscoderTest(BaseTranscoderTest):
       "scale" : dict(
         sw = (True, have_ffmpeg_filter("scale"), "scale=w={width}:h={height}"),
         hw = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("vpp_qsv"), "vpp_qsv=w={width}:h={height}"),
+        lp = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("vpp_qsv"), "vpp_qsv=w={width}:h={height}"),
       ),
     },
   )
