@@ -29,7 +29,8 @@ class Encoder(PropertyHandler):
   width         = property(lambda s: s.props["width"])
   height        = property(lambda s: s.props["height"])
   source        = property(lambda s: s.props["source"])
-  encoded       = property(lambda s: s.props["encoded"])
+  encoded       = property(lambda s: s._encoded)
+  encoded_ext   = property(lambda s: s.props["encoded_ext"])
 
   # optional properties
   gstparser     = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
@@ -45,6 +46,10 @@ class Encoder(PropertyHandler):
 
   @timefn("gst:encode")
   def encode(self):
+    if vars(self).get("_encoded", None) is not None:
+      get_media()._purge_test_artifact(self._encoded)
+    self._encoded = get_media()._test_artifact2(f"{self.encoded_ext}")
+
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)} num-buffers={self.frames}"
       f" ! rawvideoparse format={self.format} width={self.width} height={self.height}{self.fps}"
@@ -70,53 +75,10 @@ class BaseEncoderTest(slash.Test):
   def get_file_ext(self):
     raise NotImplementedError
 
-  def gen_name(self):
-    name = "{case}-{rcmode}"
-    if vars(self).get("profile", None) is not None:
-      name += "-{profile}"
-    if vars(self).get("fps", None) is not None:
-      name += "-{fps}"
-    if vars(self).get("gop", None) is not None:
-      name += "-{gop}"
-    if vars(self).get("qp", None) is not None:
-      name += "-{qp}"
-    if vars(self).get("slices", None) is not None:
-      name += "-{slices}"
-    if vars(self).get("tilecols", None) is not None:
-      name += "-{tilecols}"
-    if vars(self).get("tilerows", None) is not None:
-      name += "-{tilerows}"
-    if vars(self).get("quality", None) is not None:
-      name += "-{quality}"
-    if vars(self).get("bframes", None) is not None:
-      name += "-{bframes}"
-    if vars(self).get("minrate", None) is not None:
-      name += "-{minrate}k"
-    if vars(self).get("maxrate", None) is not None:
-      name += "-{maxrate}k"
-    if vars(self).get("refmode", None) is not None:
-      name += "-{refmode}"
-    if vars(self).get("refs", None) is not None:
-      name += "-{refs}"
-    if vars(self).get("lowpower", False):
-      name += "-low-power"
-    if vars(self).get("loopshp", None) is not None:
-      name += "-{loopshp}"
-    if vars(self).get("looplvl", None) is not None:
-      name += "-{looplvl}"
-    if vars(self).get("ladepth", None) is not None:
-      name += "-{ladepth}"
-    if vars(self).get("intref", None) is not None:
-      name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
-    if vars(self).get("r2r", None) is not None:
-      name += "-r2r"
-
-    return name
-
   def validate_caps(self):
     skip_test_if_missing_features(self)
 
-    self.encoder = self.EncoderClass(**vars(self))
+    self.encoder = self.EncoderClass(encoded_ext = self.get_file_ext(), **vars(self))
     self.decoder = self.DecoderClass(
       gstdecoder  = self.gstdecoder,
       gstparser   = vars(self).get("gstparser", None),
@@ -157,10 +119,6 @@ class BaseEncoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    name  = self.gen_name().format(**vars(self))
-    ext   = self.get_file_ext()
-
-    self.encoder.update(encoded = get_media()._test_artifact(f"{name}.{ext}"))
     self.encoder.encode()
 
     if vars(self).get("r2r", None) is not None:
@@ -172,29 +130,19 @@ class BaseEncoderTest(slash.Test):
       metric.check()
 
       get_media()._purge_test_artifact(metric.filetest)
-      get_media()._purge_test_artifact(self.encoder.encoded)
 
       for i in range(1, self.r2r):
-        self.encoder.update(encoded = get_media()._test_artifact(f"{name}_{i}.{ext}"))
         self.encoder.encode()
-
         metric.update(filetest = self.demux())
         metric.check()
-
-        # delete encoded file after each iteration
         get_media()._purge_test_artifact(metric.filetest)
-        get_media()._purge_test_artifact(self.encoder.encoded)
     else:
       self.check_bitrate()
       self.check_metrics()
       self.check_max_frame_size()
 
   def check_metrics(self):
-    name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
-    self.decoder.update(
-      source      = self.encoder.encoded,
-      decoded     = get_media()._test_artifact("{}.yuv".format(name)),
-    )
+    self.decoder.update(source = self.encoder.encoded)
     self.decoder.decode()
 
     metrics2.factory.create(
@@ -249,6 +197,5 @@ class BaseEncoderTest(slash.Test):
     # different in each r2r iteration.  Thus, extract the elementary video
     # stream from the container to be used in metrics.
     if vars(self).get("gstdemuxer", None) is not None:
-      return self._demux(
-        get_media()._test_artifact(f"{self.encoder.encoded}.{self.codec}"))
+      return self._demux(get_media()._test_artifact2(f"{self.codec}"))
     return self.encoder.encoded
