@@ -30,8 +30,9 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   width         = property(lambda s: s.props["width"])
   height        = property(lambda s: s.props["height"])
   rcmode        = property(lambda s: s.props['rcmode'].upper())
-  encoded       = property(lambda s: s.props["encoded"])
+  encoded       = property(lambda s: s._encoded)
   osencoded     = property(lambda s: filepath2os(s.encoded))
+  encoded_ext   = property(lambda s: s.props["encoded_ext"])
 
   @property
   def hwformat(self):
@@ -107,6 +108,10 @@ class Encoder(PropertyHandler, BaseFormatMapper):
 
   @timefn("ffmpeg:encode")
   def encode(self):
+    if vars(self).get("_encoded", None) is not None:
+      get_media()._purge_test_artifact(self._encoded)
+    self._encoded = get_media()._test_artifact2(f"{self.encoded_ext}")
+
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
       f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
@@ -132,55 +137,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
   def get_file_ext(self):
     raise NotImplementedError
 
-  def gen_name(self):
-    name = "{case}-{rcmode}"
-    if vars(self).get("profile", None) is not None:
-      name += "-{profile}"
-    if vars(self).get("fps", None) is not None:
-      name += "-{fps}"
-    if vars(self).get("gop", None) is not None:
-      name += "-{gop}"
-    if vars(self).get("extbrc", None) is not None:
-      name += "-extbrc{extbrc}"
-    if vars(self).get("qp", None) is not None:
-      name += "-{qp}"
-    if vars(self).get("slices", None) is not None:
-      name += "-{slices}"
-    if vars(self).get("quality", None) is not None:
-      name += "-{quality}"
-    if vars(self).get("bframes", None) is not None:
-      name += "-{bframes}"
-    if vars(self).get("minrate", None) is not None:
-      name += "-{minrate}k"
-    if vars(self).get("maxrate", None) is not None:
-      name += "-{maxrate}k"
-    if vars(self).get("refs", None) is not None:
-      name += "-{refs}"
-    if vars(self).get("lowpower", None) is not None:
-      name += "-{lowpower}"
-    if vars(self).get("loopshp", None) is not None:
-      name += "-{loopshp}"
-    if vars(self).get("looplvl", None) is not None:
-      name += "-{looplvl}"
-    if vars(self).get("ladepth", None) is not None:
-      name += "-{ladepth}"
-    if vars(self).get("vforced_idr", None) is not None:
-      name += "-{vforced_idr}"
-    if vars(self).get("level", None) is not None:
-      name += "-{level}"
-    if vars(self).get("intref", None) is not None:
-      name += "-intref-{intref[type]}-{intref[size]}-{intref[dist]}"
-    if vars(self).get("vpict", None) is not None:
-      name += "-pict-0"
-    if vars(self).get("roi", None) is not None:
-      name += "-roi"
-    if vars(self).get("rqp", None) is not None:
-      name += "-rqp"
-    if vars(self).get("r2r", None) is not None:
-      name += "-r2r"
-
-    return name
-
   def validate_caps(self):
     skip_test_if_missing_features(self)
 
@@ -190,7 +146,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     # FIXME: handle brframes for bitrate rcmodes (see ffmpeg/qsv/encoder.py)
     # May require rebaseline for other components/elements
 
-    self.encoder = self.EncoderClass(**vars(self))
+    self.encoder = self.EncoderClass(encoded_ext = self.get_file_ext(), **vars(self))
     self.decoder = self.DecoderClass(
       caps      = self.caps,
       ffdecoder = vars(self).get("ffdecoder", None),
@@ -230,10 +186,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    name  = self.gen_name().format(**vars(self))
-    ext   = self.get_file_ext()
-
-    self.encoder.update(encoded = get_media()._test_artifact(f"{name}.{ext}"))
     self.output = self.encoder.encode()
 
     if vars(self).get("r2r", None) is not None:
@@ -244,17 +196,10 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       metric.expect = metric.actual # the first run is our reference for r2r
       metric.check()
 
-      get_media()._purge_test_artifact(self.encoder.encoded)
-
       for i in range(1, self.r2r):
-        self.encoder.update(encoded = get_media()._test_artifact(f"{name}_{i}.{ext}"))
         self.encoder.encode()
-
         metric.update(filetest = self.encoder.encoded)
         metric.check()
-
-        # delete encoded file after each iteration
-        get_media()._purge_test_artifact(self.encoder.encoded)
     else:
       self.check_output()
       self.check_bitrate()
@@ -285,11 +230,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
   def check_metrics(self):
-    name = (self.gen_name() + "-{width}x{height}-{format}").format(**vars(self))
-    self.decoder.update(
-      source  = self.encoder.encoded,
-      decoded = get_media()._test_artifact(f"{name}.yuv"),
-    )
+    self.decoder.update(source  = self.encoder.encoded)
     self.decoder.decode()
 
     metrics2.factory.create(
