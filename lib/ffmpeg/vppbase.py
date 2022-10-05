@@ -49,30 +49,16 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
 
     return opts
 
-  def gen_name(self):
-    name = "{case}_{vpp_op}"
-    name += dict(
-      brightness  = "_{level}_{width}x{height}_{format}",
-      contrast    = "_{level}_{width}x{height}_{format}",
-      hue         = "_{level}_{width}x{height}_{format}",
-      saturation  = "_{level}_{width}x{height}_{format}",
-      denoise     = "_{level}_{width}x{height}_{format}",
-      scale       = "_{scale_width}x{scale_height}_{format}",
-      scale_qsv   = "_{scale_width}x{scale_height}_{format}",
-      sharpen     = "_{level}_{width}x{height}_{format}",
-      deinterlace = "_{method}_{rate}_{width}x{height}_{format}",
-      csc         = "_{width}x{height}_{format}_to_{csc}",
-      transpose   = "_{degrees}_{method}_{width}x{height}_{format}",
-      composite   = "_{owidth}x{oheight}_{format}",
-    )[self.vpp_op]
-
-    if vars(self).get("r2r", None) is not None:
-      name += "_r2r"
-
-    return name
-
   @timefn("ffmpeg:vpp")
   def call_ffmpeg(self, iopts, oopts):
+    if vars(self).get("decoded", None) is not None:
+      get_media()._purge_test_artifact(self.decoded)
+    self.decoded = get_media()._test_artifact2("yuv")
+    self.osdecoded  = filepath2os(self.decoded)
+
+    iopts = iopts.format(**vars(self))
+    oopts = oopts.format(**vars(self))
+
     call(
       f"{exe2os('ffmpeg')} -hwaccel {self.hwaccel}"
       f" -init_hw_device {self.hwaccel}=hw:{self.hwdevice}"
@@ -115,12 +101,9 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
-    name  = self.gen_name().format(**vars(self))
+    self.ossource = filepath2os(self.source)
 
-    self.decoded    = get_media()._test_artifact(f"{name}.yuv")
-    self.ossource   = filepath2os(self.source)
-    self.osdecoded  = filepath2os(self.decoded)
-    self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
+    self.call_ffmpeg(iopts, oopts)
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
@@ -130,17 +113,9 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
       metric.expect = metric.actual # the first run is our reference for r2r
       metric.check()
 
-      get_media()._purge_test_artifact(self.decoded)
-
       for i in range(1, self.r2r):
-        self.decoded = get_media()._test_artifact(f"{name}_{i}.yuv")
-        self.osdecoded = filepath2os(self.decoded)
-        self.call_ffmpeg(iopts.format(**vars(self)), oopts.format(**vars(self)))
-
+        self.call_ffmpeg(iopts, oopts)
         metric.update(filetest = self.decoded)
         metric.check()
-
-        #delete output file after each iteration
-        get_media()._purge_test_artifact(self.decoded)
     else:
       self.check_metrics()
