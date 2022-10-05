@@ -64,48 +64,17 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
     return opts
 
-  def gen_name(self):
-    name = "{case}"
-    if self.vpp_op in ["scale"]:
-      name += "_{scale_width}x{scale_height}"
-    elif self.vpp_op in ["crop"]:
-      name += "_{crop_width}x{crop_height}"
-    else:
-      name += "_{width}x{height}"
-    if self.vpp_op in ["contrast"]:
-      name += "_contrast_{level}"
-    elif self.vpp_op in ["saturation"]:
-      name += "_saturation_{level}"
-    elif self.vpp_op in ["hue"]:
-      name += "_hue_{level}"
-    elif self.vpp_op in ["brightness"]:
-      name += "_brightness_{level}"
-    elif self.vpp_op in ["denoise"]:
-      name += "_denoise_{level}"
-    elif self.vpp_op in ["sharpen"]:
-      name += "_sharpen_{level}"
-    elif self.vpp_op in ["scale"]:
-      name += "_scaled"
-    elif self.vpp_op in ["csc"]:
-      name += "_csc_{csc}"
-    elif self.vpp_op in ["deinterlace"]:
-      name += "_deinterlace_{method}_{rate}"
-    elif self.vpp_op in ["transpose"]:
-      name += "_transpose_{degrees}_{method}"
-    elif self.vpp_op in ["crop"]:
-      name += "_crop_{left}_{right}_{top}_{bottom}"
-    elif self.vpp_op in ["composite"]:
-      name += "_composite"
-    if vars(self).get("r2r", None) is not None:
-      name += "_r2r"
-    name += "_{format}"
-
-    return name
-
-  @timefn("gst")
+  @timefn("gst:vpp")
   def call_gst(self, iopts, oopts):
-    call(f"{exe2os('gst-launch-1.0')}"
-         " -vf {iopts} ! {oopts}".format(iopts = iopts, oopts = oopts))
+    if vars(self).get("decoded", None) is not None:
+      get_media()._purge_test_artifact(self.decoded)
+    self.decoded = get_media()._test_artifact2("yuv")
+    self.osdecoded = filepath2os(self.decoded)
+
+    iopts = iopts.format(**vars(self))
+    oopts = oopts.format(**vars(self))
+
+    call(f"{exe2os('gst-launch-1.0')} -vf {iopts} ! {oopts}")
 
   def validate_caps(self):
     ifmts         = self.get_input_formats()
@@ -137,13 +106,9 @@ class BaseVppTest(slash.Test, VppMetricMixin):
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
-
-    name  = self.gen_name().format(**vars(self))
-
-    self.decoded = get_media()._test_artifact("{}.yuv".format(name))
     self.ossource = filepath2os(self.source)
-    self.osdecoded = filepath2os(self.decoded)
-    self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
+
+    self.call_gst(iopts, oopts)
 
     if vars(self).get("r2r", None) is not None:
       assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
@@ -153,18 +118,9 @@ class BaseVppTest(slash.Test, VppMetricMixin):
       metric.expect = metric.actual # the first run is our reference for r2r
       metric.check()
 
-      get_media()._purge_test_artifact(self.decoded)
-
       for i in range(1, self.r2r):
-        self.decoded = get_media()._test_artifact(
-          "{}_{}.yuv".format(name, i))
-        self.osdecoded = filepath2os(self.decoded)
-        self.call_gst(iopts.format(**vars(self)), oopts.format(**vars(self)))
-
+        self.call_gst(iopts, oopts)
         metric.update(filetest = self.decoded)
         metric.check()
-
-        #delete output file after each iteration
-        get_media()._purge_test_artifact(self.decoded)
     else:
       self.check_metrics()
