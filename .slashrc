@@ -180,6 +180,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
       os.remove(tstfile)
     return tstfile
 
+  def _test_artifact2(self, ext):
+    count = self._test_state_value((self._test_artifact2, ext), 0)
+    count.value += 1
+    filename = f"{slash.context.test.id}_{count.value}.{ext}"
+    return self._test_artifact(filename)
+
   def _purge_test_artifact(self, filename):
     result = slash.context.result
 
