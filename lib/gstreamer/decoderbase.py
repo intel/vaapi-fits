@@ -21,7 +21,7 @@ class Decoder(PropertyHandler):
   frames      = property(lambda s: s.props["frames"])
   format      = property(lambda s: s.props["format"])
   source      = property(lambda s: s.props["source"])
-  decoded     = property(lambda s: s.props["decoded"])
+  decoded     = property(lambda s: s._decoded)
 
   #optional properties
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
@@ -29,6 +29,10 @@ class Decoder(PropertyHandler):
 
   @timefn("gst:decode")
   def decode(self):
+    if vars(self).get("_decoded", None) is not None:
+      get_media()._purge_test_artifact(self._decoded)
+    self._decoded = get_media()._test_artifact2("yuv")
+
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)}"
       f"{self.gstdemuxer}{self.gstparser}{self.gstdecoder}"
@@ -47,12 +51,6 @@ class BaseDecoderTest(slash.Test):
     super().before()
     self.refctx = []
     self.post_validate = lambda: None
-
-  def gen_name(self):
-    name = "{case}_{width}x{height}_{format}"
-    if vars(self).get("r2r", None) is not None:
-      name += "_r2r"
-    return name
 
   def validate_caps(self):
     self.decoder = self.DecoderClass(**vars(self))
@@ -81,8 +79,6 @@ class BaseDecoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    name = self.gen_name().format(**vars(self))
-    self.decoder.update(decoded = get_media()._test_artifact(f"{name}.yuv"))
     self.output = self.decoder.decode()
 
     if vars(self).get("r2r", None) is not None:
@@ -93,17 +89,10 @@ class BaseDecoderTest(slash.Test):
       metric.expect = metric.actual # the first run is our reference for r2r
       metric.check()
 
-      get_media()._purge_test_artifact(self.decoder.decoded)
-
       for i in range(1, self.r2r):
-        self.decoder.update(decoded = get_media()._test_artifact(f"{name}_{i}.yuv"))
         self.decoder.decode()
-
         metric.update(filetest = self.decoder.decoded)
         metric.check()
-
-        # delete decoded file after each iteration
-        get_media()._purge_test_artifact(self.decoder.decoded)
     else:
       self.decoded = self.decoder.decoded
       self.check_metrics()
