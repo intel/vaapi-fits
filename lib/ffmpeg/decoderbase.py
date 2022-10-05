@@ -22,7 +22,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   hwformat  = property(lambda s: s.map_best_hw_format(s.props["format"], s.props["caps"]["fmts"]))
   source    = property(lambda s: s.props["source"])
   ossource  = property(lambda s: filepath2os(s.source))
-  decoded   = property(lambda s: s.props["decoded"])
+  decoded   = property(lambda s: s._decoded)
   osdecoded = property(lambda s: filepath2os(s.decoded))
   hwaccel   = property(lambda s: s.props["hwaccel"])
   hwdevice  = property(lambda s: get_media().render_device)
@@ -50,6 +50,10 @@ class Decoder(PropertyHandler, BaseFormatMapper):
 
   @timefn("ffmpeg:decode")
   def decode(self):
+    if vars(self).get("_decoded", None) is not None:
+      get_media()._purge_test_artifact(self._decoded)
+    self._decoded = get_media()._test_artifact2("yuv")
+
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
       f" {self.ffdecoder} -i {self.ossource} {self.scale_range}"
@@ -65,12 +69,6 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
     super().before()
     self.refctx = []
     self.post_validate = lambda: None
-
-  def gen_name(self):
-    name = "{case}_{width}x{height}_{format}"
-    if vars(self).get("r2r", None) is not None:
-      name += "_r2r"
-    return name
 
   def validate_caps(self):
     self.decoder = self.DecoderClass(**vars(self))
@@ -93,8 +91,6 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    name = self.gen_name().format(**vars(self))
-    self.decoder.update(decoded = get_media()._test_artifact(f"{name}.yuv"))
     self.output = self.decoder.decode()
 
     if vars(self).get("r2r", None) is not None:
@@ -105,17 +101,10 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
       metric.expect = metric.actual # the first run is our reference for r2r
       metric.check()
 
-      get_media()._purge_test_artifact(self.decoder.decoded)
-
       for i in range(1, self.r2r):
-        self.decoder.update(decoded = get_media()._test_artifact(f"{name}_{i}.yuv"))
         self.decoder.decode()
-
         metric.update(filetest = self.decoder.decoded)
         metric.check()
-
-        # delete decoded file after each iteration
-        get_media()._purge_test_artifact(self.decoder.decoded)
     else:
       self.decoded = self.decoder.decoded
       self.check_output()
