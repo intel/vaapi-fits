@@ -10,6 +10,7 @@ import slash
 
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
+from ...lib.ffmpeg.util import parse_inline_md5
 from ...lib.ffmpeg.decoderbase import Decoder
 from ...lib.parameters import format_value
 from ...lib.properties import PropertyHandler
@@ -106,6 +107,12 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f"{self.maxframesize}{self.pict}{self.rqp}{self.strict}"
     )
 
+  @property
+  def ffoutput(self):
+    if self.props.get("metric", dict()).get("type", None) == "md5":
+      return f"-f tee -map 0:v '{self.osencoded}|[f=md5]pipe:1'"
+    return f"{self.osencoded}"
+
   @timefn("ffmpeg:encode")
   def encode(self):
     if vars(self).get("_encoded", None) is not None:
@@ -118,7 +125,7 @@ class Encoder(PropertyHandler, BaseFormatMapper):
       f" {self.fps} -i {self.ossource}"
       f" -vf 'format={self.hwformat}{self.hwupload}{self.roi}'"
       f" -an -c:v {self.ffencoder} {self.encparams}"
-      f" -vframes {self.frames} -y {self.osencoded}"
+      f" -vframes {self.frames} -y {self.ffoutput}"
     )
 
 @slash.requires(have_ffmpeg)
@@ -181,32 +188,37 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     self.post_validate()
 
+  def _encode_r2r(self):
+    assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+
+    vars(self).update(metric = dict(type = "md5"))
+    self.encoder.update(metric = self.metric)
+
+    metric = metrics2.factory.create(**vars(self))
+    metric.actual = parse_inline_md5(self.encoder.encode())
+    metric.expect = metric.actual # the first run is our reference for r2r
+    metric.check()
+
+    for i in range(1, self.r2r):
+      metric.actual = parse_inline_md5(self.encoder.encode())
+      metric.check()
+
   def encode(self):
     self.validate_caps()
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
+    if vars(self).get("r2r", None) is not None:
+      return self._encode_r2r()
+
     self.output = self.encoder.encode()
 
-    if vars(self).get("r2r", None) is not None:
-      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-
-      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
-      metric.update(filetest = self.encoder.encoded)
-      metric.expect = metric.actual # the first run is our reference for r2r
-      metric.check()
-
-      for i in range(1, self.r2r):
-        self.encoder.encode()
-        metric.update(filetest = self.encoder.encoded)
-        metric.check()
-    else:
-      self.check_output()
-      self.check_bitrate()
-      self.check_level()
-      self.check_forced_idr()
-      self.check_max_frame_size()
-      self.check_metrics()
+    self.check_output()
+    self.check_bitrate()
+    self.check_level()
+    self.check_forced_idr()
+    self.check_max_frame_size()
+    self.check_metrics()
 
   def check_output(self):
     pass
