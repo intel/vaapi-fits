@@ -8,7 +8,7 @@ import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.formats import match_best_format
-from ...lib.gstreamer.util import have_gst, have_gst_element
+from ...lib.gstreamer.util import have_gst, have_gst_element, parse_inline_md5
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.properties import PropertyHandler
@@ -27,19 +27,31 @@ class Decoder(PropertyHandler):
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
   gstdemuxer  = property(lambda s: s.ifprop("gstdemuxer", " ! {gstdemuxer}"))
 
-  @timefn("gst:decode")
-  def decode(self):
+  @property
+  def gstoutput(self):
+    if self.props.get("metric", dict()).get("type", None) == "md5":
+      return (
+        f"checksumsink2 qos=false eos-after={self.frames} file-checksum=false"
+        f" frame-checksum=false plane-checksum=false dump-output=false"
+      )
+
     if vars(self).get("_decoded", None) is not None:
       get_media()._purge_test_artifact(self._decoded)
     self._decoded = get_media()._test_artifact2("yuv")
 
+    return (
+      f"checksumsink2 qos=false eos-after={self.frames}"
+      f" file-checksum=false frame-checksum=false plane-checksum=false"
+      f" dump-output=true dump-location={filepath2os(self.decoded)}"
+    )
+
+  @timefn("gst:decode")
+  def decode(self):
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)}"
       f"{self.gstdemuxer}{self.gstparser}{self.gstdecoder}"
       f" ! videoconvert chroma-mode=none dither=0"
-      f" ! video/x-raw,format={self.format} ! checksumsink2 qos=false"
-      f" file-checksum=false frame-checksum=false plane-checksum=false"
-      f" eos-after={self.frames} dump-output=true dump-location={filepath2os(self.decoded)}"
+      f" ! video/x-raw,format={self.format} ! {self.gstoutput}"
     )
 
 @slash.requires(have_gst)
@@ -74,28 +86,37 @@ class BaseDecoderTest(slash.Test):
 
     self.post_validate()
 
+  def _decode_r2r(self):
+    assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+
+    vars(self).update(metric = dict(type = "md5"))
+    self.decoder.update(metric = self.metric)
+
+    metric = metrics2.factory.create(**vars(self))
+    metric.actual = parse_inline_md5(self.decoder.decode())
+    metric.expect = metric.actual # the first run is our reference for r2r
+    metric.check()
+
+    for i in range(1, self.r2r):
+      metric.actual = parse_inline_md5(self.decoder.decode())
+      metric.check()
+
   def decode(self):
     self.validate_caps()
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
+    if vars(self).get("r2r", None) is not None:
+      return self._decode_r2r()
+
     self.output = self.decoder.decode()
 
-    if vars(self).get("r2r", None) is not None:
-      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
-
-      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
-      metric.update(filetest = self.decoder.decoded)
-      metric.expect = metric.actual # the first run is our reference for r2r
-      metric.check()
-
-      for i in range(1, self.r2r):
-        self.decoder.decode()
-        metric.update(filetest = self.decoder.decoded)
-        metric.check()
-    else:
-      self.decoded = self.decoder.decoded
-      self.check_metrics()
+    self.check_metrics()
 
   def check_metrics(self):
-    metrics2.factory.create(**vars(self)).check()
+    metric = metrics2.factory.create(**vars(self))
+    if metric.__class__ is metrics2.md5.MD5:
+      metric.actual = parse_inline_md5(self.output)
+    else:
+      metric.update(filetest = self.decoder.decoded)
+    metric.check()

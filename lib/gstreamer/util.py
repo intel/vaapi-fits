@@ -4,7 +4,13 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+import re
+
 from ...lib.common import memoize, try_call, call, exe2os
+
+def parse_inline_md5(msglog):
+  return parse_inline_md5.pattern.search(msglog).group("actual")
+parse_inline_md5.pattern = re.compile("md5 = (?P<actual>[0-9a-fA-F]{32})$", re.MULTILINE)
 
 @memoize
 def have_gst():
