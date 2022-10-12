@@ -8,8 +8,8 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
-from ...lib.ffmpeg.util import parse_inline_md5
+from ...lib.ffmpeg.util import have_ffmpeg, ffmpeg_probe_fps, BaseFormatMapper
+from ...lib.ffmpeg.util import parse_inline_md5, parse_ssim_stats
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.properties import PropertyHandler
@@ -31,14 +31,21 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   # optional properties
   ffdecoder   = property(lambda s: s.ifprop("ffdecoder", "-c:v {ffdecoder}"))
 
+  width       = property(lambda s: s.props["width"])
+  height      = property(lambda s: s.props["height"])
+  statsfile   = property(lambda s: s._statsfile)
+  osstatsfile = property(lambda s: filepath2os(s.statsfile))
+  reference   = property(lambda s: s.props["reference"])
+  osreference = property(lambda s: filepath2os(s.reference))
+
   @property
   def scale_range(self):
     # NOTE: If test has requested scale in/out range, then apply it only when
     # hw and sw formats differ (i.e. when csc is necessary).
     if self.hwformat != self.format:
       return self.ifprop("ffscale_range",
-        "-vf 'scale=in_range={ffscale_range}:out_range={ffscale_range}'")
-    return ""
+        "scale=in_range={ffscale_range}:out_range={ffscale_range}") or "null"
+    return "null"
 
   @property
   def hwinit(self):
@@ -61,9 +68,27 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       get_media()._purge_test_artifact(self._decoded)
     self._decoded = get_media()._test_artifact2("yuv")
 
+    mtype = self.props.get("metric", dict()).get("type", None)
+    if mtype in ["ssim"]:
+      fps = ffmpeg_probe_fps(self.ossource)
+
+      if vars(self).get("_statsfile", None) is not None:
+        get_media()._purge_test_artifact(self._statsfile)
+      self._statsfile = get_media()._test_artifact2(mtype)
+
+      return call(
+        f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
+        f" {self.ffdecoder} -r:v {fps} -i {self.ossource}"
+        f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
+        f" -r:v {fps} -i {self.osreference}"
+        f" -lavfi '{self.scale_range},{mtype}=f={self.osstatsfile}:shortest=1'"
+        f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
+        f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
+      )
+
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
-      f" {self.ffdecoder} -i {self.ossource} {self.scale_range}"
+      f" {self.ffdecoder} -i {self.ossource} -lavfi '{self.scale_range}'"
       f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
       f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
     )
@@ -128,8 +153,11 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
 
   def check_metrics(self):
     metric = metrics2.factory.create(**vars(self))
+    metric.update(filetest = self.decoder.decoded)
+
     if metric.__class__ is metrics2.md5.MD5:
       metric.actual = parse_inline_md5(self.output)
-    else:
-      metric.update(filetest = self.decoder.decoded)
+    elif metric.__class__ is metrics2.ssim.SSIM:
+      metric.actual = parse_ssim_stats(self.decoder.statsfile, self.frames)
+
     metric.check()
