@@ -32,6 +32,29 @@ def parse_ssim_stats(filename, frames):
   ]
 parse_ssim_stats.pattern = re.compile(r"Y:(?P<y>\d+.\d+) U:(?P<u>\d+.\d+) V:(?P<v>\d+.\d+)", re.M)
 
+def parse_psnr_stats(filename, frames):
+  with open(filename, "r") as f:
+    # replace inf with 100.0 to match metrics2 averages
+    data = f.read().replace(":inf", ":100.0")
+  m = parse_psnr_stats.pattern.findall(data)
+  assert len(m) == frames
+  result = [float(v) for v in itertools.chain(*m)]
+  return [
+    float(round(v, 4)) for v in (
+      min(result[0::3]),
+      min(result[1::3]),
+      min(result[2::3]),
+      sum(result[0::3]) / frames,
+      sum(result[1::3]) / frames,
+      sum(result[2::3]) / frames,
+    )
+  ]
+parse_psnr_stats.pattern = re.compile(
+  r"psnr_y:(?P<y>\d+\.\d+) "
+  r"psnr_u:(?P<u>\d+\.\d+) "
+  r"psnr_v:(?P<v>\d+\.\d+)", re.M
+)
+
 @memoize
 def have_ffmpeg():
   return try_call(f"which {exe2os('ffmpeg')}")

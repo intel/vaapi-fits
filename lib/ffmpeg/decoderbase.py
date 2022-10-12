@@ -9,7 +9,7 @@ import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, ffmpeg_probe_fps, BaseFormatMapper
-from ...lib.ffmpeg.util import parse_inline_md5, parse_ssim_stats
+from ...lib.ffmpeg.util import parse_inline_md5, parse_ssim_stats, parse_psnr_stats
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.properties import PropertyHandler
@@ -69,7 +69,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
     self._decoded = get_media()._test_artifact2("yuv")
 
     mtype = self.props.get("metric", dict()).get("type", None)
-    if mtype in ["ssim"]:
+    if mtype in ["ssim", "psnr"]:
       fps = ffmpeg_probe_fps(self.ossource)
 
       if vars(self).get("_statsfile", None) is not None:
@@ -159,5 +159,7 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
       metric.actual = parse_inline_md5(self.output)
     elif metric.__class__ is metrics2.ssim.SSIM:
       metric.actual = parse_ssim_stats(self.decoder.statsfile, self.frames)
+    elif metric.__class__ is metrics2.ssim.PSNR:
+      metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
 
     metric.check()
