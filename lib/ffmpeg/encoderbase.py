@@ -10,7 +10,7 @@ import slash
 
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
-from ...lib.ffmpeg.util import parse_inline_md5
+from ...lib.ffmpeg.util import parse_inline_md5, parse_psnr_stats
 from ...lib.ffmpeg.decoderbase import Decoder
 from ...lib.parameters import format_value
 from ...lib.properties import PropertyHandler
@@ -159,6 +159,9 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       ffdecoder = vars(self).get("ffdecoder", None),
       frames    = self.frames,
       format    = self.format,
+      width     = self.width,
+      height    = self.height,
+      reference = self.source,
     )
 
     if None in [self.encoder.hwformat, self.encoder.format, self.decoder.hwformat, self.decoder.format]:
@@ -242,15 +245,14 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
   def check_metrics(self):
-    self.decoder.update(source  = self.encoder.encoded)
+    vars(self).update(metric = dict(type = "psnr"))
+    self.decoder.update(source = self.encoder.encoded, metric = self.metric)
     self.decoder.decode()
 
-    metrics2.factory.create(
-      metric = dict(type = "psnr"),
-      filetrue = self.source, filetest = self.decoder.decoded,
-      width = self.width, height = self.height, frames = self.frames,
-      format = self.format, refctx = self.refctx
-    ).check()
+    metric = metrics2.factory.create(**vars(self))
+    metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
+
+    metric.check()
 
   def check_level(self):
     if vars(self).get("level", None) is None:
