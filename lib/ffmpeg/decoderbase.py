@@ -81,7 +81,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
         f" {self.ffdecoder} -r:v {fps} -i {self.ossource}"
         f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
         f" -r:v {fps} -i {self.osreference}"
-        f" -lavfi '{self.scale_range},{mtype}=f={self.osstatsfile}:shortest=1'"
+        f" -lavfi \"{self.scale_range},{mtype}=f=\\'{self.osstatsfile}\\':shortest=1\""
         f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
         f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
       )
