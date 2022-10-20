@@ -164,6 +164,9 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       reference = self.source,
     )
 
+    if self.codec in ["jpeg"]:
+      self.decoder.update(ffscale_range = "jpeg")
+
     if None in [self.encoder.hwformat, self.encoder.format, self.decoder.hwformat, self.decoder.format]:
       slash.skip_test("{format} not supported".format(**vars(self)))
 

@@ -40,12 +40,8 @@ class Decoder(PropertyHandler, BaseFormatMapper):
 
   @property
   def scale_range(self):
-    # NOTE: If test has requested scale in/out range, then apply it only when
-    # hw and sw formats differ (i.e. when csc is necessary).
-    if self.hwformat != self.format:
-      return self.ifprop("ffscale_range",
-        "scale=in_range={ffscale_range}:out_range={ffscale_range}") or "null"
-    return "null"
+    return self.ifprop("ffscale_range",
+      "scale=in_range={ffscale_range}:out_range={ffscale_range}") or "null"
 
   @property
   def hwinit(self):
