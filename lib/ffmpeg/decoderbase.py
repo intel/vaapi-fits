@@ -55,7 +55,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   @property
   def ffoutput(self):
     if self.props.get("metric", dict()).get("type", None) == "md5":
-      return f"-f tee -map 0:v '{self.osdecoded}|[f=md5]pipe:1'"
+      return f"-f tee '{self.osdecoded}|[f=md5]pipe:1'"
     return f"{self.osdecoded}"
 
   @timefn("ffmpeg:decode")
