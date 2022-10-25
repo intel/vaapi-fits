@@ -82,9 +82,12 @@ class Decoder(PropertyHandler, BaseFormatMapper):
         f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
       )
 
+    srange = self.scale_range
+    lavfi = f"-lavfi '{srange}'" if srange != "null" else ""
+
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
-      f" {self.ffdecoder} -i {self.ossource} -lavfi '{self.scale_range}'"
+      f" {self.ffdecoder} -i {self.ossource} {lavfi}"
       f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
       f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
     )
