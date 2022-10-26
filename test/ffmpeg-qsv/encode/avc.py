@@ -213,10 +213,11 @@ class vbr_lp(AVCEncoderLPTest):
       case    = case,
       fps     = fps,
       ldb     = 1, # required
-      maxrate = bitrate * 1.5,
+      maxrate = bitrate * 1.01,
       minrate = bitrate,
       profile = profile,
       strict  = -1, # required
+      bframes = 0,
     )
     self.encode()
 
