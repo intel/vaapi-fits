@@ -24,6 +24,10 @@ class Encoder(FFEncoder):
     return f"{super().hwupload}=extra_hw_frames=120"
 
   @property
+  def hwdevice(self):
+    return f'qsv,child_device={get_media().render_device}'
+
+  @property
   def qp(self):
     def inner(qp):
       if self.codec in ["mpeg2"]:

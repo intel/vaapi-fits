@@ -26,7 +26,6 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   decoded   = property(lambda s: s._decoded)
   osdecoded = property(lambda s: filepath2os(s.decoded))
   hwaccel   = property(lambda s: s.props["hwaccel"])
-  hwdevice  = property(lambda s: get_media().render_device)
 
   # optional properties
   ffdecoder   = property(lambda s: s.ifprop("ffdecoder", "-c:v {ffdecoder}"))
@@ -44,10 +43,14 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       "scale=in_range={ffscale_range}:out_range={ffscale_range}") or "null"
 
   @property
+  def hwdevice(self):
+    return f'hw:{get_media().render_device}'
+
+  @property
   def hwinit(self):
     return (
       f"-hwaccel {self.hwaccel}"
-      f" -init_hw_device {self.hwaccel}=hw:{self.hwdevice}"
+      f" -init_hw_device {self.hwaccel}={self.hwdevice}"
       f" -hwaccel_output_format {self.hwformat}"
       f" -hwaccel_flags allow_profile_mismatch"
     )

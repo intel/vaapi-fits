@@ -10,6 +10,7 @@ from ....lib import platform
 from ....lib.ffmpeg.transcoderbase import BaseTranscoderTest
 from ....lib.ffmpeg.util import have_ffmpeg_decoder, have_ffmpeg_encoder, have_ffmpeg_hwaccel, have_ffmpeg_filter
 from ....lib.ffmpeg.qsv.util import using_compatible_driver
+from ....lib.common import get_media
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
@@ -74,3 +75,4 @@ class TranscoderTest(BaseTranscoderTest):
     super().before()
     self.hwaccel = "qsv"
     self.hwframes = 64
+    self.hwdevice = f'qsv,child_device={get_media().render_device}'
