@@ -15,6 +15,10 @@ from ....lib.ffmpeg.qsv.util import using_compatible_driver
 class Decoder(FFDecoder):
   hwaccel = property(lambda s: "qsv")
 
+  @property
+  def hwdevice(self):
+    return f'qsv,child_device={get_media().render_device}'
+
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
 class DecoderTest(BaseDecoderTest):

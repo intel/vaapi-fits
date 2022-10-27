@@ -18,7 +18,7 @@ class VppTest(BaseVppTest):
   def before(self):
     super().before()
     self.hwaccel = "qsv"
-    self.hwdevice = f"hw_any,child_device={self.renderDevice}"
+    self.hwdevice = f'qsv,child_device={get_media().render_device}'
 
   def get_output_formats(self):
     # MSDK does not support I420 and YV12 output formats even though

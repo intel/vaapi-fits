@@ -25,7 +25,6 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   frames        = property(lambda s: s.props["frames"])
   format        = property(lambda s: s.map_format(s.props["format"]))
   hwaccel       = property(lambda s: s.props["hwaccel"])
-  hwdevice      = property(lambda s: get_media().render_device)
   source        = property(lambda s: s.props["source"])
   ossource      = property(lambda s: filepath2os(s.source))
   width         = property(lambda s: s.props["width"])
@@ -90,10 +89,14 @@ class Encoder(PropertyHandler, BaseFormatMapper):
     return self.ifprop("intref", inner)
 
   @property
+  def hwdevice(self):
+    return f'hw:{get_media().render_device}'
+
+  @property
   def hwinit(self):
     return (
       f"-hwaccel {self.hwaccel}"
-      f" -init_hw_device {self.hwaccel}=hw:{self.hwdevice}"
+      f" -init_hw_device {self.hwaccel}={self.hwdevice}"
       f" -hwaccel_output_format {self.hwaccel}"
     )
 

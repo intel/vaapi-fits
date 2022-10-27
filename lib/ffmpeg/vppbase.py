@@ -16,8 +16,8 @@ from ...lib import metrics2
 class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def before(self):
     self.refctx = []
-    self.renderDevice = get_media().render_device
     self.post_validate = lambda: None
+    self.hwdevice = f"hw:{get_media().render_device}"
 
   def get_input_formats(self):
     return self.caps.get("ifmts", [])
@@ -61,7 +61,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
 
     call(
       f"{exe2os('ffmpeg')} -hwaccel {self.hwaccel}"
-      f" -init_hw_device {self.hwaccel}=hw:{self.hwdevice}"
+      f" -init_hw_device {self.hwaccel}={self.hwdevice}"
       f" -hwaccel_output_format {self.hwaccel}"
       f" -v verbose {iopts} {oopts}"
     )

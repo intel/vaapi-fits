@@ -18,7 +18,7 @@ class BaseTranscoderTest(slash.Test):
     super().before()
     self.refctx = []
     self.post_validate = lambda: None
-    self.renderDevice = get_media().render_device
+    self.hwdevice = f"hw:{get_media().render_device}"
 
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(
@@ -105,7 +105,7 @@ class BaseTranscoderTest(slash.Test):
     self.post_validate()
 
   def gen_input_opts(self):
-    opts = "-init_hw_device {hwaccel}=hw:{renderDevice}"
+    opts = "-init_hw_device {hwaccel}={hwdevice}"
     opts += " -hwaccel_output_format {hwaccel}"
     if "hw" == self.mode:
       opts += " -hwaccel {hwaccel}"

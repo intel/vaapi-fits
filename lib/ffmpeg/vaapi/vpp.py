@@ -18,7 +18,6 @@ class VppTest(BaseVppTest):
   def before(self):
     super().before()
     self.hwaccel = "vaapi"
-    self.hwdevice = self.renderDevice
 
   def gen_vpp_opts(self):
     vpfilter = []

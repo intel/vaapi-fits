@@ -16,13 +16,14 @@ from ....lib.mfx.runtime import MFXRuntimeTest
 class detect(MFXRuntimeTest):
   def before(self):
     super().before()
-    self.renderDevice = get_media().render_device
+    self.hwaccel = 'qsv'
+    self.hwdevice = f'qsv,child_device={get_media().render_device}'
 
   def test(self):
     self.check(
       "ffmpeg -nostats -v verbose"
-      " -init_hw_device qsv=qsv:hw_any,child_device={renderDevice}"
-      " -hwaccel qsv"
+      " -init_hw_device {hwaccel}={hwdevice}"
+      " -hwaccel {hwaccel}"
       " -f lavfi -i yuvtestsrc"
       " -f null /dev/null".format(**vars(self))
     )
