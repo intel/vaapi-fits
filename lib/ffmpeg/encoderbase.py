@@ -245,7 +245,10 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     elif "vbr" == self.rcmode and vars(self).get("maxframesize", None) is None:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
-      assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
+      if vars(self).get("maxrate", None) is not None:
+        assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
+      else:
+        assert(self.minrate * 0.75 <= bitrate_actual <= self.minrate * 1.10)
 
   def check_metrics(self):
     vars(self).update(metric = dict(type = "psnr"))
