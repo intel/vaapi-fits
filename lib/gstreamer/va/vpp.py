@@ -15,10 +15,14 @@ from ....lib.common import get_media, mapRange, mapRangeWithDefault
 @slash.requires(*have_gst_element("va"))
 @slash.requires(*have_gst_element("vapostproc"))
 class VppTest(BaseVppTest):
+  @property
+  def hwdevice(self):
+    return get_media().render_device.split('/')[-1]
+
   def before(self):
     super().before()
-    # TODO: need gst-va to fix target render device
-    vars(self).update(gstvpp = "vapostproc")
+    #TODO: windows hwdevice > 0 is not test
+    vars(self).update(gstvpp = 'vapostproc' if self.hwdevice in ['renderD128' , '0'] else f"va{self.hwdevice}postproc")
 
   def map_best_hw_format(self, format, hwformats):
     return map_best_hw_format(format, hwformats)
@@ -53,7 +57,9 @@ class VppTest(BaseVppTest):
     elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
     elif self.vpp_op in ["composite"]:
-      opts += " ! tee name=source vacompositor name=composite"
+      #TODO: windows hwdevice > 0 is not test
+      vacompositor = 'vacompositor' if self.hwdevice in ['renderD128' , '0'] else f"va{self.hwdevice}compositor"
+      opts += f" ! tee name=source {vacompositor} name=composite"
       for n, comp in enumerate(self.comps):
         opts += (
           " sink_{n}::xpos={x}"
