@@ -80,9 +80,14 @@ class Encoder(GstEncoder):
   looplvl = property(lambda s: s.ifprop("looplvl", " loop-filter-level={looplvl}"))
 
   @property
+  def hwdevice(self):
+    return get_media().render_device.split('/')[-1]
+
+  @property
   def gstencoder(self):
+    #TODO: windows hwdevice >0 is not test
     return (
-      f"{super().gstencoder}"
+      f"{super().gstencoder if self.hwdevice in ['renderD128', '0'] else super.gstencoder.replace('va', f'va{self.hwdevice}')}"
       f"{self.rcmode}{self.gop}{self.qp}"
       f"{self.quality}{self.slices}{self.bframes}"
       f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
@@ -96,7 +101,6 @@ class EncoderTest(BaseEncoderTest):
 
   def before(self):
     super().before()
-    os.environ["GST_VA_DRM_DEVICE"] = get_media().render_device
 
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
