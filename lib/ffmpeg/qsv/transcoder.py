@@ -57,6 +57,9 @@ class TranscoderTest(BaseTranscoderTest):
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("mjpeg"), "mjpeg -global_quality 60"),
         hw = (platform.get_caps("vdenc", "jpeg"), have_ffmpeg_encoder("mjpeg_qsv"), "mjpeg_qsv -global_quality 60"),
       ),
+      "vp9" : dict(
+        lp = (platform.get_caps("vdenc", "vp9_8"), have_ffmpeg_encoder("vp9_qsv"), "vp9_qsv"),
+      ),
     },
     vpp = {
       "scale" : dict(

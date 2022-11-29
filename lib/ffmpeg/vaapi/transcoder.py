@@ -55,11 +55,15 @@ class TranscoderTest(BaseTranscoderTest):
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_encoder("mjpeg"), "mjpeg"),
         hw = (platform.get_caps("vdenc", "jpeg"), have_ffmpeg_encoder("mjpeg_vaapi"), "mjpeg_vaapi"),
       ),
+      "vp9" : dict(
+        lp = (platform.get_caps("vdenc", "vp9_8"), have_ffmpeg_encoder("vp9_vaapi"), "vp9_vaapi"),
+      ),
     },
     vpp = {
       "scale" : dict(
         sw = (True, have_ffmpeg_filter("scale"), "scale=w={width}:h={height}"),
         hw = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("scale_vaapi"), "scale_vaapi=w={width}:h={height}"),
+        lp = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("scale_vaapi"), "scale_vaapi=w={width}:h={height}"),
       ),
     },
   )
