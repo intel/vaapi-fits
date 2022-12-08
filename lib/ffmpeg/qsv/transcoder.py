@@ -37,6 +37,9 @@ class TranscoderTest(BaseTranscoderTest):
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_decoder("vc1"), "vc1"),
         hw = (platform.get_caps("decode", "vc1"), have_ffmpeg_decoder("vc1_qsv"), "vc1_qsv"),
       ),
+      "av1" : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_ffmpeg_decoder("av1_qsv"), "av1_qsv"),
+      ),
     },
     encode = {
       "avc" : dict(
@@ -59,6 +62,9 @@ class TranscoderTest(BaseTranscoderTest):
       ),
       "vp9" : dict(
         lp = (platform.get_caps("vdenc", "vp9_8"), have_ffmpeg_encoder("vp9_qsv"), "vp9_qsv"),
+      ),
+      "av1" : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_ffmpeg_encoder("av1_qsv"), "av1_qsv"),
       ),
     },
     vpp = {

@@ -50,6 +50,7 @@ class BaseTranscoderTest(slash.Test):
       "mpeg2"          : "m2v",
       "mjpeg"          : "mjpeg",
       "vp9"            : "ivf",
+      "av1"            : "ivf"
     }.get(codec, "???")
 
   def validate_caps(self):
