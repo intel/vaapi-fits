@@ -87,7 +87,7 @@ class Encoder(GstEncoder):
   def gstencoder(self):
     #TODO: windows hwdevice >0 is not test
     return (
-      f"{super().gstencoder if self.hwdevice in ['renderD128', '0'] else super.gstencoder.replace('va', f'va{self.hwdevice}')}"
+      f"{super().gstencoder if self.hwdevice in ['renderD128', '0'] else super().gstencoder.replace('va', f'va{self.hwdevice}')}"
       f"{self.rcmode}{self.gop}{self.qp}"
       f"{self.quality}{self.slices}{self.bframes}"
       f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
