@@ -58,16 +58,16 @@ caps = dict(
     ),
     # mirroring and rotation
     transpose   = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
     crop        = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),
     sharpen     = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),
     deinterlace = dict(
       bob             = dict(
@@ -85,17 +85,17 @@ caps = dict(
       chroma = True,
     ),
     scale       = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
     # colorspace conversion
     csc         = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
     ),
     blend       = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
     ),
   ),
 )
