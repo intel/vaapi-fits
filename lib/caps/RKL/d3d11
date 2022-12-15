@@ -41,6 +41,18 @@ caps = dict(
       features  = dict(msp = True)
     ),
   ),
+  vdenc   = dict(
+    avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"]),
+    jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
+    hevc_8  = dict(
+      maxres    = res8k,
+      fmts      = ["NV12", "AYUV"],
+      features  = dict(scc = True),
+    ),
+    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+    vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
+    vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+  ),
   vpp    = dict(
     # brightness, contrast, hue and saturation
     procamp     = dict(
@@ -49,16 +61,16 @@ caps = dict(
     ),
     # mirroring and rotation
     transpose   = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
     crop        = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),
     sharpen     = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),
     deinterlace = dict(
       bob             = dict(
@@ -76,17 +88,17 @@ caps = dict(
       chroma = True,
     ),
     scale       = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
     # colorspace conversion
     csc         = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
     ),
     blend       = dict(
-      ifmts = ["NV12", "YV12", "I420", "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA", "BGRX"],
     ),
   ),
 )
