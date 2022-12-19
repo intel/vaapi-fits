@@ -56,11 +56,6 @@ caps = dict(
       ifmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410"],
       ofmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410", "BGRA"],
     ),
-    # mirroring and rotation
-    transpose   = dict(
-      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
-    ),
     crop        = dict(
       ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
       ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
