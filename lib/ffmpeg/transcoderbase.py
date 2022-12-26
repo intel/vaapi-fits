@@ -8,12 +8,12 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import have_ffmpeg, ffmpeg_probe_resolution
+from ...lib.ffmpeg.util import BaseFormatMapper, have_ffmpeg, ffmpeg_probe_resolution
 
 from ...lib import metrics2
 
 @slash.requires(have_ffmpeg)
-class BaseTranscoderTest(slash.Test):
+class BaseTranscoderTest(slash.Test,BaseFormatMapper):
   def before(self):
     super().before()
     self.refctx = []
@@ -135,11 +135,12 @@ class BaseTranscoderTest(slash.Test):
 
       filters = []
       tmode = (self.mode, mode)
-
+      format = vars(self).get("format", "NV12")
+    
       if ("hw", "sw") == tmode:   # HW to SW transcode
-        filters.extend(["hwdownload", "format=nv12"])
+        filters.extend(["hwdownload", f"format={self.map_format(format)}"])
       elif ("sw", "hw") == tmode: # SW to HW transcode
-        filters.extend(["format=nv12", "hwupload"])
+        filters.extend([f"format={self.map_format(format)}", "hwupload"])
         if vars(self).get("hwframes", None) is not None:
           filters[-1] += "=extra_hw_frames={hwframes}"
 
@@ -165,7 +166,7 @@ class BaseTranscoderTest(slash.Test):
       "src_{case}.yuv".format(**vars(self)))
     self.ossrcyuv = filepath2os(self.srcyuv)
     if "hw" == self.mode:
-      opts += " -vf 'hwdownload,format=nv12'"
+      opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
     opts += " -pix_fmt yuv420p -f rawvideo"
     opts += " -vframes {frames} -y {ossrcyuv}"
 
@@ -210,6 +211,32 @@ class BaseTranscoderTest(slash.Test):
           iopts.format(osencoded), oopts.format(vppscale, self.frames, osyuv))
         self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
+
+        is_hdr = output.get("hdr", 0)
+        if is_hdr:
+          output = call(
+            f"{exe2os('ffprobe')} -i {filepath2os(self.source)}"
+            f" -show_streams"
+          )
+          input_color_range_info = re.findall(r'(?<=color_range=)\w*', output)
+          input_color_space_info = re.findall(r'(?<=color_space=)\w*', output)
+          input_color_transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
+          input_color_primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+          assert len(input_color_range_info) > 0 and len(input_color_space_info) > 0 and len(input_color_transfer_info) > 0 and len(input_color_primaries_info) > 0, "Find no HDR information in input video"
+
+          output = call(
+            f"{exe2os('ffprobe')} -i {osencoded}"
+            f" -show_streams"
+          )
+          output_color_range_info = re.findall(r'(?<=color_range=)\w*', output)
+          output_color_space_info = re.findall(r'(?<=color_space=)\w*', output)
+          output_color_transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
+          output_color_primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+          assert len(output_color_range_info) > 0 and len(output_color_space_info) > 0 and len(output_color_transfer_info) > 0 and len(output_color_primaries_info) > 0, "Find no HDR information in output video"
+
+          assert output_color_range_info[0] == input_color_range_info[0] and output_color_space_info[0] == input_color_space_info[0] and \
+                 output_color_transfer_info[0] == input_color_transfer_info[0] and output_color_primaries_info[0] == input_color_primaries_info[0], "HDR info is different between input and output"
+
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
 
