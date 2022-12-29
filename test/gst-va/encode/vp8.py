@@ -1,0 +1,89 @@
+###
+### Copyright (C) 2022-2023 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+from ....lib import *
+from ....lib.gstreamer.va.util import *
+from ....lib.gstreamer.va.encoder import EncoderTest
+
+spec = load_test_spec("vp8", "encode")
+
+@slash.requires(*have_gst_element("vavp8dec"))
+@slash.requires(*have_gst_element("vavp8enc"))
+class VP8EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = "vp8",
+      gstencoder    = "vavp8enc",
+      gstdecoder    = "vavp8dec",
+      gstmediatype  = "video/x-vp8",
+      gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
+    )
+
+  def get_file_ext(self):
+    return "webm"
+
+@slash.requires(*platform.have_caps("encode", "vp8"))
+class VP8EncoderTest(VP8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp8"),
+      lowpower  = False,
+    )
+
+class cqp(VP8EncoderTest):
+  @slash.parametrize(*gen_vp8_cqp_parameters(spec))
+  def test(self, case, ipmode, qp, quality, looplvl, loopshp):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      case      = case,
+      gop       = 30 if ipmode != 0 else 1,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      qp        = qp,
+      quality   = quality,
+      rcmode    = "cqp",
+    )
+    self.encode()
+
+class cbr(VP8EncoderTest):
+  @slash.parametrize(*gen_vp8_cbr_parameters(spec))
+  def test(self, case, gop, bitrate, fps, looplvl, loopshp):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      maxrate   = bitrate,
+      minrate   = bitrate,
+      rcmode    = "cbr",
+    )
+    self.encode()
+
+class vbr(VP8EncoderTest):
+  @slash.parametrize(*gen_vp8_vbr_parameters(spec))
+  def test(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
+    vars(self).update(spec[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      maxrate   = bitrate,
+      minrate   = bitrate,
+      quality   = quality,
+      rcmode    = "vbr",
+    )
+    self.encode()

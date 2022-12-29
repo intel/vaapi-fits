@@ -36,6 +36,8 @@ class Encoder(GstEncoder):
         return f" qpi={mqp} qpp={mqp} qpb={mqp}"
       if self.codec in ["vp8", "vp9"]:
         return f" qpi={qp}"
+      if self.codec in ["av1-8"]:
+        return f" max-qp={qp} min-qp={qp} qp={qp}"
       return f" qpi={qp} qpp={qp} qpb={qp}"
     return self.ifprop("qp", inner)
 
@@ -72,7 +74,7 @@ class Encoder(GstEncoder):
 
   gop     = property(lambda s: s.ifprop("gop", " key-int-max={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
-  bframes = property(lambda s: s.ifprop("bframes", " b-frames={bframes}"))
+  bframes = property(lambda s: s.ifprop("bframes", " gf-group-size={bframes}"))
   minrate = property(lambda s: s.ifprop("minrate", " bitrate={minrate}"))
   refmode = property(lambda s: s.ifprop("refmode", " ref-pic-mode={refmode}"))
   refs    = property(lambda s: s.ifprop("refs", " ref-frames={refs}"))

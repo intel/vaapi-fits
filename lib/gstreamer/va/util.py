@@ -82,6 +82,9 @@ def mapprofile(codec, profile):
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
     },
+    "av1-8"     : {
+      "profile0"               : "main",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
