@@ -11,7 +11,7 @@ from ....lib.ffmpeg.encoderbase import BaseEncoderTest, Encoder as FFEncoder
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.vaapi.util import mapprofile
 from ....lib.ffmpeg.vaapi.decoder import Decoder
-from ....lib.common import mapRangeInt
+from ....lib.common import mapRangeInt, get_media
 
 class Encoder(FFEncoder):
   hwaccel = property(lambda s: "vaapi")
@@ -88,8 +88,13 @@ class EncoderTest(BaseEncoderTest):
     m = re.search(rcmsgs[self.rcmode], self.output, re.MULTILINE)
     assert m is not None, "Possible incorrect RC mode used"
 
-    # ipb mode
-    ipbmode = 0 if vars(self).get("gop", 0) <= 1 else 1 if vars(self).get("bframes", 0) < 1 else 2
+    # ipb mode 
+    if vars(self).get("gop", 0) <= 1:
+        ipbmode = 0 
+    elif vars(self).get("bframes", 0) < 1 or (self.codec in ["avc"] and get_media()._get_gpu_gen() <= 12.7 and vars(self).get("lowpower", 0) == 1):
+        ipbmode = 1
+    else:
+        ipbmode = 2     
     ipbmsgs = [
       "Using intra frames only",
       "Using intra and P-frames|[L|l]ow delay|forward-prediction"
