@@ -823,3 +823,30 @@ def gen_vpp_crop_parameters(spec):
   keys = ("case", "left", "right", "top", "bottom")
   params = gen_vpp_crop_variants(spec)
   return keys, params
+
+def gen_av1_vbr_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("vbr", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
+        variant.get("profile", "profile0")]
+
+def gen_av1_vbr_parameters(spec):
+  keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
+  params = gen_av1_vbr_variants(spec)
+  return keys, params
+
+def gen_av1_cqp_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("cqp", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
+
+def gen_av1_cqp_parameters(spec):
+  keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
+  params = gen_av1_cqp_variants(spec)
+  return keys, params
