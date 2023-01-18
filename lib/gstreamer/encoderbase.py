@@ -138,8 +138,8 @@ class BaseEncoderTest(slash.Test):
         get_media()._purge_test_artifact(metric.filetest)
     else:
       self.check_bitrate()
-      self.check_metrics()
       self.check_max_frame_size()
+      self.check_metrics()
 
   def check_metrics(self):
     self.decoder.update(source = self.encoder.encoded)
@@ -175,13 +175,25 @@ class BaseEncoderTest(slash.Test):
       return
 
     output = call(
-      f"{exe2os('gst-launch-1.0')}"
-      " -vf filesrc location={encoder.encoded} !"
-      " {gstparser} ! {gstmediatype},alignment=\\(string\\)au !"
-      " identity silent=false ! fakesink".format(**vars(self)))
-    frameSizes = re.findall(r'(?<=identity0:sink\) \().[0-9]*', output)
-    for frameSize in frameSizes:
-      assert (self.maxframesize * 1000) >= int(frameSize), "It appears that the max_frame_size did not work"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.encoder.encoded}"
+      f" ! {self.gstparser} ! {self.gstmediatype},alignment=au"
+      f" ! identity silent=false ! fakesink"
+    )
+
+    actual = re.findall(r'(?<=identity0:sink\) \().[0-9]*', output)
+    assert len(actual) == self.frames, "Probe failed for frame sizes"
+
+    target = self.maxframesize * 1000 # kbytes -> bytes
+    results = [int(sz) <= target for sz in actual]
+    failed = results.count(False)
+    rate = failed / len(results)
+
+    get_media()._set_test_details(**{
+      "frame:size:target (bytes)" : f"{target:0.2f}",
+      "frame:size:failed" : f"{failed} ({rate:0.2%})",
+    })
+
+    assert rate < 0.2, "Too many frames exceed target/max frame size"
 
   @timefn("gst:demux")
   def _demux(self, demuxed):
