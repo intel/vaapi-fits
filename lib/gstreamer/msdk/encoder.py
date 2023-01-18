@@ -64,6 +64,20 @@ class Encoder(GstEncoder):
     return self.ifprop("maxframesize", inner)
 
   @property
+  def maxframesize_i(self):
+    #kbyte, int
+    def inner(maxframesize_i):
+      return f" max-frame-size-i={math.ceil(maxframesize_i)}"
+    return self.ifprop("maxframesize_i", inner)
+
+  @property
+  def maxframesize_p(self):
+    #kbyte, int
+    def inner(maxframesize_p):
+      return f" max-frame-size-p={math.ceil(maxframesize_p)}"
+    return self.ifprop("maxframesize_p", inner)
+
+  @property
   def intref(self):
     def inner(intref):
       return (
@@ -82,6 +96,7 @@ class Encoder(GstEncoder):
   ladepth = property(lambda s: s.ifprop("ladepth", " rc-lookahead={ladepth}"))
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
+  ldb     = property(lambda s: s.ifprop("ldb", " lowdelay-brc={ldb}"))
 
   @property
   def gstencoder(self):
@@ -91,7 +106,7 @@ class Encoder(GstEncoder):
       f"{self.quality}{self.slices}{self.tilecols}{self.tilerows}{self.bframes}"
       f"{self.maxrate}{self.minrate}{self.refmode}"
       f"{self.refs}{self.lowpower}{self.ladepth}"
-      f"{self.intref}"
+      f"{self.intref}{self.ldb}{self.maxframesize_i}{self.maxframesize_p}"
     )
 
 @slash.requires(*have_gst_element("msdk"))
