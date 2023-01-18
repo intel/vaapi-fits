@@ -63,6 +63,16 @@ class Encoder(GstEncoder):
       return f" max-frame-size={math.ceil(maxframesize)}"
     return self.ifprop("maxframesize", inner)
 
+  @property
+  def intref(self):
+    def inner(intref):
+      return (
+        f" intra-refresh-type={intref['type']}"
+        f" intra-refresh-cycle-size={intref['size']}"
+        f" intra-refresh-cycle-dist={intref['dist']}"
+      )
+    return self.ifprop("intref", inner)
+
   gop     = property(lambda s: s.ifprop("gop", " gop-size={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " b-frames={bframes}"))
@@ -72,7 +82,6 @@ class Encoder(GstEncoder):
   ladepth = property(lambda s: s.ifprop("ladepth", " rc-lookahead={ladepth}"))
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
-  intref  = property(lambda s: s.ifprop("intref", " intra-refresh-type={intref[type]} intra-refresh-cycle-size={intref[size]} intra-refresh-cycle-dist={intref[dist]}"))
 
   @property
   def gstencoder(self):
