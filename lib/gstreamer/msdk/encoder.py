@@ -108,7 +108,7 @@ class EncoderTest(BaseEncoderTest):
     return mapprofile(self.codec, self.profile)
 
   def validate_caps(self):
-    if self.rcmode in ['cbr','vbr','cbr_lp','vbr_lp']:
-    # "brafames", if specified, overrides "frames" for bitrate control modes
+    if self.rcmode in ['cbr','vbr',]:
+    # "brframes", if specified, overrides "frames" for bitrate control modes
       self.frames = vars(self).get("brframes", self.frames)
     super().validate_caps()
