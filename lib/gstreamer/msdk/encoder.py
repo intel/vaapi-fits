@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+import math
 import os
 import slash
 
@@ -50,9 +51,17 @@ class Encoder(GstEncoder):
 
   @property
   def maxrate(self):
+    # kbit/sec, int
     if super().rcmode in ["vbr"]:
       return f" max-vbv-bitrate={self.props['maxrate']}"
     return ""
+
+  @property
+  def maxframesize(self):
+    # kbyte, int
+    def inner(maxframesize):
+      return f" max-frame-size={math.ceil(maxframesize)}"
+    return self.ifprop("maxframesize", inner)
 
   gop     = property(lambda s: s.ifprop("gop", " gop-size={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
@@ -63,8 +72,7 @@ class Encoder(GstEncoder):
   ladepth = property(lambda s: s.ifprop("ladepth", " rc-lookahead={ladepth}"))
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
-  maxframesize = property(lambda s: s.ifprop("maxframesize", " max-frame-size={maxframesize}"))
-  intref   = property(lambda s: s.ifprop("intref", " intra-refresh-type={intref[type]} intra-refresh-cycle-size={intref[size]} intra-refresh-cycle-dist={intref[dist]}"))
+  intref  = property(lambda s: s.ifprop("intref", " intra-refresh-type={intref[type]} intra-refresh-cycle-size={intref[size]} intra-refresh-cycle-dist={intref[dist]}"))
 
   @property
   def gstencoder(self):
