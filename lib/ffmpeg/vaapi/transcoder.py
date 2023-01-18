@@ -36,7 +36,7 @@ class TranscoderTest(BaseTranscoderTest):
         hw = (platform.get_caps("decode", "vc1"), have_ffmpeg_decoder("vc1"), "vc1"),
       ),
       "av1" : dict(
-        hw = (platform.get_caps("decode", "av1_8"), have_ffmpeg_decoder("av1"), "av1"),
+        hw = (platform.get_caps("decode", "av1_8"), have_ffmpeg_decoder("av1_qsv"), "av1_qsv"),
       ),
     },
     encode = {

@@ -205,7 +205,15 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
           "{}_{}_{}.yuv".format(self.case, n, channel))
         osyuv = filepath2os(yuv)
         vppscale = self.get_vpp_scale(self.width, self.height, "sw")
-        iopts = "-i {}"
+        iopts = ""
+        if output["codec"] in ["av1"]:
+          # WA: no SW decoder for AV1 in ffmpeg, currently
+          ###
+          # TODO: setup hwaccel stuff
+          ###
+          decoder = self.get_decoder(output["codec"], "hw")
+          iopts += f"-c:v {decoder}"
+        iopts += " -i {}"
         oopts = "-vf '{}' -pix_fmt yuv420p -f rawvideo -vframes {} -y {}"
         self.call_ffmpeg(
           iopts.format(osencoded), oopts.format(vppscale, self.frames, osyuv))
