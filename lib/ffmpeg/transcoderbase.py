@@ -181,6 +181,11 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       "hwaccel initialisation returned error", self.output, re.MULTILINE)
     assert m is None, "Failed to use hardware decode"
 
+    m = re.search(
+      "Your platform doesn't support hardware accelerated .* decoding",
+      self.output, re.MULTILINE)
+    assert m is None, "Failed to use hardware decode"
+
   @timefn("ffmpeg")
   def call_ffmpeg(self, iopts, oopts):
     return call(f"{exe2os('ffmpeg')}"
