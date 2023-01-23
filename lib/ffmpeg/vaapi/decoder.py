@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+import re
 import slash
 
 from ....lib.common import get_media
@@ -16,3 +17,11 @@ class Decoder(FFDecoder):
 @slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class DecoderTest(BaseDecoderTest):
   DecoderClass = Decoder
+
+  def check_output(self):
+    super().check_output()
+
+    m = re.search(
+      "Your platform doesn't support hardware accelerated .* decoding",
+      self.output, re.MULTILINE)
+    assert m is None, "Failed to use hardware decode"
