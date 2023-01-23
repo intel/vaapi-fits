@@ -201,14 +201,31 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
         osencoded = filepath2os(encoded)
+        iopts = ""
+
+        # WA: FFMpeg does not have an AV1 SW decoder
+        ocodec = output["codec"]
+        if ocodec in ["av1"]:
+          format = vars(self).get("format", "NV12")
+          iopts = (
+            f"-hwaccel {self.hwaccel}"
+            f" -init_hw_device {self.hwaccel}={self.hwdevice}"
+            f" -hwaccel_output_format {self.map_format(format)}"
+            f" -c:v {self.get_decoder(ocodec, 'hw')}"
+          )
+
+        iopts += f" -i {osencoded}"
+
         yuv = get_media()._test_artifact(
           "{}_{}_{}.yuv".format(self.case, n, channel))
         osyuv = filepath2os(yuv)
         vppscale = self.get_vpp_scale(self.width, self.height, "sw")
-        iopts = "-i {}"
-        oopts = "-vf '{}' -pix_fmt yuv420p -f rawvideo -vframes {} -y {}"
-        self.call_ffmpeg(
-          iopts.format(osencoded), oopts.format(vppscale, self.frames, osyuv))
+        oopts = (
+          f"-vf '{vppscale}' -pix_fmt yuv420p -f rawvideo"
+          f" -vframes {self.frames} -y {osyuv}"
+        )
+
+        self.call_ffmpeg(iopts, oopts)
         self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
 
