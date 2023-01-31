@@ -9,6 +9,7 @@ from ....lib.gstreamer.msdk.util import *
 from ....lib.gstreamer.msdk.encoder import EncoderTest
 
 spec = load_test_spec("vp9", "encode", "8bit")
+spec_r2r  = load_test_spec("vp9", "encode", "8bit", "r2r")
 
 @slash.requires(*have_gst_element("msdkvp9enc"))
 @slash.requires(*have_gst_element("msdkvp9dec"))
@@ -55,6 +56,12 @@ class cqp_lp(VP9EncoderLPTest):
     self.init(spec, case, ipmode, qp, quality, slices)
     self.encode()
 
+  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  def test_r2r(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec_r2r, case, ipmode, qp, quality, slices)
+    vars(self).setdefault("r2r", 5)
+    self.encode()
+
 class cbr_lp(VP9EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, slices):
     vars(self).update(tspec[case].copy())
@@ -73,6 +80,12 @@ class cbr_lp(VP9EncoderLPTest):
   @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices)
+    self.encode()
+
+  @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  def test_r2r(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
+    self.init(spec_r2r, case, gop, bitrate, fps, slices)
+    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class vbr_lp(VP9EncoderLPTest):
@@ -95,4 +108,10 @@ class vbr_lp(VP9EncoderLPTest):
   @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, quality, slices)
+    self.encode()
+
+  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  def test_r2r(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec_r2r, case, gop, bitrate, fps, quality, slices)
+    vars(self).setdefault("r2r", 5)
     self.encode()
