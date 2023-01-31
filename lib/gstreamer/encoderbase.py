@@ -29,7 +29,9 @@ class Encoder(PropertyHandler):
   width         = property(lambda s: s.props["width"])
   height        = property(lambda s: s.props["height"])
   source        = property(lambda s: s.props["source"])
+  ossource      = property(lambda s: filepath2os(s.source))
   encoded       = property(lambda s: s._encoded)
+  osencoded     = property(lambda s: filepath2os(s.encoded))
   encoded_ext   = property(lambda s: s.props["encoded_ext"])
 
   # optional properties
@@ -51,11 +53,11 @@ class Encoder(PropertyHandler):
     self._encoded = get_media()._test_artifact2(f"{self.encoded_ext}")
 
     return call(
-      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)} num-buffers={self.frames}"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.ossource} num-buffers={self.frames}"
       f" ! rawvideoparse format={self.format} width={self.width} height={self.height}{self.fps}"
       f" ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={self.hwformat}"
       f" ! {self.gstencoder} ! {self.gstmediatype}{self.profile}{self.gstparser}{self.gstmuxer}"
-      f" ! filesink location={filepath2os(self.encoded)}"
+      f" ! filesink location={self.osencoded}"
     )
 
 @slash.requires(have_gst)
@@ -198,7 +200,7 @@ class BaseEncoderTest(slash.Test):
   @timefn("gst:demux")
   def _demux(self, demuxed):
     call(
-      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.encoder.encoded)}"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.encoder.osencoded}"
       f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
       f" ! filesink location={filepath2os(demuxed)}"
     )
