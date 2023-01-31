@@ -49,8 +49,11 @@ class Encoder(PropertyHandler):
   @property
   def gstoutput(self):
     if self.props.get("metric", dict()).get("type", None) == "md5":
-      return "testsink sync=false"
-    return f"filesink location={self.osencoded}"
+      # gstreamer muxers write timestamps to container header and produce
+      # a different md5 each time.  Thus, don't use the muxer when checking
+      # md5.
+      return " ! testsink sync=false"
+    return f"{self.gstmuxer} ! filesink location={self.osencoded}"
 
   @timefn("gst:encode")
   def encode(self):
@@ -62,8 +65,8 @@ class Encoder(PropertyHandler):
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.ossource} num-buffers={self.frames}"
       f" ! rawvideoparse format={self.format} width={self.width} height={self.height}{self.fps}"
       f" ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={self.hwformat}"
-      f" ! {self.gstencoder} ! {self.gstmediatype}{self.profile}{self.gstparser}{self.gstmuxer}"
-      f" ! {self.gstoutput}"
+      f" ! {self.gstencoder} ! {self.gstmediatype}{self.profile}{self.gstparser}"
+      f"{self.gstoutput}"
     )
 
 @slash.requires(have_gst)
@@ -204,20 +207,3 @@ class BaseEncoderTest(slash.Test):
     })
 
     assert rate < 0.2, "Too many frames exceed target/max frame size"
-
-  @timefn("gst:demux")
-  def _demux(self, demuxed):
-    call(
-      f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.encoder.osencoded}"
-      f" ! queue ! {self.gstdemuxer} name=dmux dmux.video_0 ! queue"
-      f" ! filesink location={filepath2os(demuxed)}"
-    )
-    return demuxed
-
-  def demux(self):
-    # gstreamer muxers write timestamps to container header and will be
-    # different in each r2r iteration.  Thus, extract the elementary video
-    # stream from the container to be used in metrics.
-    if vars(self).get("gstdemuxer", None) is not None:
-      return self._demux(get_media()._test_artifact2(f"{self.codec}"))
-    return self.encoder.encoded
