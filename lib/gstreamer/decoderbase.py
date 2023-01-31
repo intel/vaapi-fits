@@ -21,7 +21,9 @@ class Decoder(PropertyHandler):
   frames      = property(lambda s: s.props["frames"])
   format      = property(lambda s: s.props["format"])
   source      = property(lambda s: s.props["source"])
+  ossource    = property(lambda s: filepath2os(s.source))
   decoded     = property(lambda s: s._decoded)
+  osdecoded   = property(lambda s: filepath2os(s.decoded))
 
   #optional properties
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
@@ -42,13 +44,13 @@ class Decoder(PropertyHandler):
     return (
       f"checksumsink2 qos=false eos-after={self.frames}"
       f" file-checksum=false frame-checksum=false plane-checksum=false"
-      f" dump-output=true dump-location={filepath2os(self.decoded)}"
+      f" dump-output=true dump-location={self.osdecoded}"
     )
 
   @timefn("gst:decode")
   def decode(self):
     return call(
-      f"{exe2os('gst-launch-1.0')} -vf filesrc location={filepath2os(self.source)}"
+      f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.ossource}"
       f"{self.gstdemuxer}{self.gstparser}{self.gstdecoder}"
       f" ! videoconvert chroma-mode=none dither=0"
       f" ! video/x-raw,format={self.format} ! {self.gstoutput}"
