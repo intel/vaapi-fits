@@ -116,6 +116,22 @@ class BaseEncoderTest(slash.Test):
 
     self.post_validate()
 
+  def _encode_r2r(self):
+    assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+
+    metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
+    metric.update(filetest = self.demux())
+    metric.expect = metric.actual # the first run is our reference for r2r
+    metric.check()
+
+    get_media()._purge_test_artifact(metric.filetest)
+
+    for i in range(1, self.r2r):
+      self.encoder.encode()
+      metric.update(filetest = self.demux())
+      metric.check()
+      get_media()._purge_test_artifact(metric.filetest)
+
   def encode(self):
     self.validate_caps()
 
@@ -124,24 +140,11 @@ class BaseEncoderTest(slash.Test):
     self.encoder.encode()
 
     if vars(self).get("r2r", None) is not None:
-      assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
+      return self._encode_r2r()
 
-      metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
-      metric.update(filetest = self.demux())
-      metric.expect = metric.actual # the first run is our reference for r2r
-      metric.check()
-
-      get_media()._purge_test_artifact(metric.filetest)
-
-      for i in range(1, self.r2r):
-        self.encoder.encode()
-        metric.update(filetest = self.demux())
-        metric.check()
-        get_media()._purge_test_artifact(metric.filetest)
-    else:
-      self.check_bitrate()
-      self.check_max_frame_size()
-      self.check_metrics()
+    self.check_bitrate()
+    self.check_max_frame_size()
+    self.check_metrics()
 
   def check_metrics(self):
     self.decoder.update(source = self.encoder.encoded)
