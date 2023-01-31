@@ -9,7 +9,7 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import have_gst, have_gst_element
+from ...lib.gstreamer.util import have_gst, have_gst_element, parse_inline_md5
 from ...lib.gstreamer.decoderbase import Decoder
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
@@ -46,6 +46,12 @@ class Encoder(PropertyHandler):
       return f" tune={'low-power' if lowpower else 'none'}"
     return self.ifprop("lowpower", inner)
 
+  @property
+  def gstoutput(self):
+    if self.props.get("metric", dict()).get("type", None) == "md5":
+      return "testsink sync=false"
+    return f"filesink location={self.osencoded}"
+
   @timefn("gst:encode")
   def encode(self):
     if vars(self).get("_encoded", None) is not None:
@@ -57,7 +63,7 @@ class Encoder(PropertyHandler):
       f" ! rawvideoparse format={self.format} width={self.width} height={self.height}{self.fps}"
       f" ! videoconvert chroma-mode=none dither=0 ! video/x-raw,format={self.hwformat}"
       f" ! {self.gstencoder} ! {self.gstmediatype}{self.profile}{self.gstparser}{self.gstmuxer}"
-      f" ! filesink location={self.osencoded}"
+      f" ! {self.gstoutput}"
     )
 
 @slash.requires(have_gst)
@@ -119,28 +125,27 @@ class BaseEncoderTest(slash.Test):
   def _encode_r2r(self):
     assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
 
-    metric = metrics2.factory.create(metric = dict(type = "md5", numbytes = -1))
-    metric.update(filetest = self.demux())
+    vars(self).update(metric = dict(type = "md5"))
+    self.encoder.update(metric = self.metric)
+
+    metric = metrics2.factory.create(**vars(self))
+    metric.actual = parse_inline_md5(self.encoder.encode())
     metric.expect = metric.actual # the first run is our reference for r2r
     metric.check()
 
-    get_media()._purge_test_artifact(metric.filetest)
-
     for i in range(1, self.r2r):
-      self.encoder.encode()
-      metric.update(filetest = self.demux())
+      metric.actual = parse_inline_md5(self.encoder.encode())
       metric.check()
-      get_media()._purge_test_artifact(metric.filetest)
 
   def encode(self):
     self.validate_caps()
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
-    self.encoder.encode()
-
     if vars(self).get("r2r", None) is not None:
       return self._encode_r2r()
+
+    self.encoder.encode()
 
     self.check_bitrate()
     self.check_max_frame_size()
