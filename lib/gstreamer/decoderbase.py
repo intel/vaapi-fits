@@ -8,7 +8,8 @@ import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.formats import match_best_format
-from ...lib.gstreamer.util import have_gst, have_gst_element, parse_inline_md5
+from ...lib.gstreamer.util import have_gst, have_gst_element
+from ...lib.gstreamer.util import parse_inline_md5, gst_discover_fps
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
 from ...lib.properties import PropertyHandler
@@ -29,17 +30,48 @@ class Decoder(PropertyHandler):
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
   gstdemuxer  = property(lambda s: s.ifprop("gstdemuxer", " ! {gstdemuxer}"))
 
+  #additional properties needed for some inline metrics
+  width       = property(lambda s: s.props["width"])
+  height      = property(lambda s: s.props["height"])
+  statsfile   = property(lambda s: s._statsfile)
+  osstatsfile = property(lambda s: filepath2os(s.statsfile))
+  reference   = property(lambda s: s.props["reference"])
+  osreference = property(lambda s: filepath2os(s.reference))
+
   @property
   def gstoutput(self):
-    if self.props.get("metric", dict()).get("type", None) == "md5":
-      return (
-        f"checksumsink2 qos=false eos-after={self.frames} file-checksum=false"
-        f" frame-checksum=false plane-checksum=false dump-output=false"
-      )
+    mtype = self.props.get("metric", dict()).get("type", None)
 
     if vars(self).get("_decoded", None) is not None:
       get_media()._purge_test_artifact(self._decoded)
     self._decoded = get_media()._test_artifact2("yuv")
+
+    if vars(self).get("_statsfile", None) is not None:
+      get_media()._purge_test_artifact(self._statsfile)
+    self._statsfile = get_media()._test_artifact2(mtype)
+
+    # WA: avvideocompare has some current limitations
+    def can_inline_libav():
+      return all([
+        have_gst_element("avvideocompare")[0],
+        "jpeg" not in self.gstdecoder,
+        self.format not in ["AYUV", "VUYA"],
+      ])
+
+    if "md5" == mtype:
+      return (
+        f"checksumsink2 qos=false eos-after={self.frames} file-checksum=false"
+        f" frame-checksum=false plane-checksum=false dump-output=false"
+      )
+    elif mtype in ["psnr"] and can_inline_libav():
+      fps = gst_discover_fps(self.ossource)
+      return (
+        f"avvideocompare method={mtype} stats-file={self.osstatsfile} name=cmp"
+        f" ! fakesink filesrc location={self.osreference} num-buffers={self.frames}"
+        f" ! rawvideoparse format={self.pformat} width={self.width}"
+        f" height={self.height} framerate={fps} ! videoconvert chroma-mode=none"
+        f" dither=0 ! video/x-raw,format={self.format} ! cmp."
+      )
 
     return (
       f"checksumsink2 qos=false eos-after={self.frames}"

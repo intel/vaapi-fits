@@ -9,7 +9,8 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import have_gst, have_gst_element, parse_inline_md5
+from ...lib.gstreamer.util import have_gst, have_gst_element
+from ...lib.gstreamer.util import parse_inline_md5, parse_psnr_stats
 from ...lib.gstreamer.decoderbase import Decoder
 from ...lib.parameters import format_value
 from ...lib.util import skip_test_if_missing_features
@@ -96,6 +97,9 @@ class BaseEncoderTest(slash.Test):
       gstdemuxer  = vars(self).get("gstdemuxer", None),
       frames      = self.frames,
       format      = self.format,
+      width       = self.width,
+      height      = self.height,
+      reference   = self.source,
     )
 
     if None in [self.encoder.hwformat, self.encoder.format, self.decoder.format]:
@@ -155,15 +159,15 @@ class BaseEncoderTest(slash.Test):
     self.check_metrics()
 
   def check_metrics(self):
-    self.decoder.update(source = self.encoder.encoded)
+    vars(self).update(metric = dict(type = "psnr"))
+    self.decoder.update(source = self.encoder.encoded, metric = self.metric)
     self.decoder.decode()
 
-    metrics2.factory.create(
-      metric = dict(type = "psnr"),
-      filetrue = self.source, filetest = self.decoder.decoded,
-      width = self.width, height = self.height, frames = self.frames,
-      format = self.format, refctx = self.refctx
-    ).check()
+    metric = metrics2.factory.create(**vars(self))
+    metric.update(filetest = self.decoder.decoded, reference = self.source)
+    if os.path.exists(self.decoder.statsfile):
+      metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
+    metric.check()
 
   def check_bitrate(self):
     encsize = os.path.getsize(self.encoder.encoded)
