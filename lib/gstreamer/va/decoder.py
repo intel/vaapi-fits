@@ -10,10 +10,11 @@ import slash
 from ....lib.common import get_media
 from ....lib.gstreamer.decoderbase import BaseDecoderTest, Decoder as GstDecoder
 from ....lib.gstreamer.util import have_gst_element
-from ....lib.gstreamer.va.util import mapformatu
+from ....lib.gstreamer.va.util import mapformat, mapformatu
 
 class Decoder(GstDecoder):
-  format = property(lambda s: mapformatu(super().format))
+  format  = property(lambda s: mapformatu(super().format))
+  pformat = property(lambda s: mapformat(super().format))
 
   @property
   def hwdevice(self):
