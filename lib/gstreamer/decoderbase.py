@@ -55,7 +55,6 @@ class Decoder(PropertyHandler):
       return all([
         have_gst_element("avvideocompare")[0],
         "jpeg" not in self.gstdecoder,
-        self.format not in ["AYUV", "VUYA"],
       ])
 
     if "md5" == mtype:
