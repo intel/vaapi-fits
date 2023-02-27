@@ -38,6 +38,11 @@ class VppTest(BaseVppTest):
           "[out{n}][in{n}]overlay_qsv=x={x}:y={y}:alpha={alpha}"
           "".format(n = n, alpha = mapRangeInt(comp["a"], [0., 1.], [0, 255]), **comp)
         )
+    elif self.vpp_op in ["stack"]:
+      finputs = "[0:v]" * self.inputs
+      vpfilter.append(f"{finputs}{self.stack}_qsv=inputs={self.inputs}")
+      if self.stack in ["xstack"]:
+        vpfilter[-1] += f":grid={self.cols}x{self.rows}:grid_tile_size={self.tilew}x{self.tileh}"
     else:
       procamp = dict(
         brightness  = [-100.0,   0.0, 100.0],
