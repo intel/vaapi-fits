@@ -29,20 +29,23 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     raise NotImplementedError
 
   def gen_input_opts(self):
-    if self.vpp_op not in ["deinterlace"]:
-      opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
-    else:
+    if self.vpp_op in ["deinterlace"]:
       opts = "-c:v {ffdecoder}"
+    elif self.vpp_op in ["stack"]:
+      opts = ""
+    else:
+      opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     opts += " -i {ossource}"
 
     return opts
 
   def gen_output_opts(self):
+    fcomplex = ["composite", "stack"]
     vpfilter = self.gen_vpp_opts()
     vpfilter.append("hwdownload")
     vpfilter.append("format={ohwformat}")
 
-    opts = "-filter_complex" if self.vpp_op in ["composite"] else "-vf"
+    opts = "-filter_complex" if self.vpp_op in fcomplex else "-vf"
     opts += f" '{','.join(vpfilter)}'"
     opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc"] else ""
     opts += " -f rawvideo -fps_mode passthrough -an -vframes {frames} -y {osdecoded}"
