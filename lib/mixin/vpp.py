@@ -146,6 +146,29 @@ class VppMetricMixin:
 
     metrics2.check(**params)
 
+  def check_stack(self):
+    if self.stack in ["xstack"]:
+      owidth  = self.cols * self.tilew
+      oheight = self.rows * self.tileh
+    elif self.stack in ["hstack"]:
+      owidth = self.inputs * self.width
+      oheight = self.height
+    elif self.stack in ["vstack"]:
+      owidth = self.width
+      oheight = self.height * self.inputs
+    else:
+      assert False, f"unknown stack operation: '{self.stack}'"
+
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded, width = owidth, height = oheight,
+      frames = self.frames, format = self.format)
+
+    params = vars(self).copy()
+    params.update(width = owidth, height = oheight)
+
+    metrics2.check(**params)
+
   def check_default(self):
     metrics2.check(**vars(self))
 

@@ -824,6 +824,36 @@ def gen_vpp_crop_parameters(spec):
   params = gen_vpp_crop_variants(spec)
   return keys, params
 
+def gen_vpp_hvstack_variants(spec, mode):
+  for case, params in spec.items():
+    variants = filter(lambda s: mode == s["mode"], params.get("stacks", []))
+    for variant in variants:
+      yield [case, variant["inputs"]]
+
+def gen_vpp_hstack_parameters(spec):
+  keys = ("case", "inputs")
+  params = gen_vpp_hvstack_variants(spec, "hstack")
+  return keys, params
+
+def gen_vpp_vstack_parameters(spec):
+  keys = ("case", "inputs")
+  params = gen_vpp_hvstack_variants(spec, "vstack")
+  return keys, params
+
+def gen_vpp_xstack_variants(spec):
+  for case, params in spec.items():
+    variants = filter(lambda s: "xstack" == s["mode"], params.get("stacks", []))
+    for variant in variants:
+      yield [
+        case, variant["rows"], variant["cols"],
+        variant["tilew"], variant["tileh"],
+      ]
+
+def gen_vpp_xstack_parameters(spec):
+  keys = ("case", "rows", "cols", "tilew", "tileh")
+  params = gen_vpp_xstack_variants(spec)
+  return keys, params
+
 def gen_av1_vbr_variants(spec):
   for case, params in spec.items():
     variants = params.get("variants", dict()).get("vbr", [])
