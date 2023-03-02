@@ -226,6 +226,7 @@ class vbr_lp(AVCEncoderLPTest):
       maxrate         = bitrate * 2,
       minrate         = bitrate,
       profile         = profile,
+      bframes         = 0,
     )
     self.encode()
 
