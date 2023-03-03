@@ -44,6 +44,9 @@ class TranscoderTest(BaseTranscoderTest):
           ",width={width},height={height},framerate=14/1 ! vaapivc1dec"
         ),
       ),
+      "av1" : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element("vaapiav1dec"), "av1parse ! vaapiav1dec"),
+      )
     },
     encode = {
       "avc" : dict(
@@ -64,6 +67,9 @@ class TranscoderTest(BaseTranscoderTest):
         sw = (dict(maxres = (16384, 16384)), have_gst_element("jpegenc"), "jpegenc ! jpegparse"),
         hw = (platform.get_caps("vdenc", "jpeg"), have_gst_element("vaapijpegenc"), "vaapijpegenc ! jpegparse"),
       ),
+      "av1" : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element("vaapiav1enc"), "vaapiav1enc tune=low-power ! video/x-av1,profile=main ! av1parse"),
+      )
     },
     vpp = {
       "scale" : dict(
