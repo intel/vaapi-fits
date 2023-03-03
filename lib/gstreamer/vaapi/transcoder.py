@@ -69,6 +69,7 @@ class TranscoderTest(BaseTranscoderTest):
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
         hw = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! video/x-raw,width={width},height={height}"),
+        lp = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! video/x-raw,width={width},height={height}"),
       ),
     },
   )
