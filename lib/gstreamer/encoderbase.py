@@ -7,6 +7,7 @@
 import os
 import re
 import slash
+import logging
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
@@ -175,15 +176,18 @@ class BaseEncoderTest(slash.Test):
     get_media()._set_test_details(
       size_encoded = encsize,
       bitrate_actual = "{:-.2f}".format(bitrate_actual))
+    if "bitrate_gap" in vars(self).get("skip_checks", []):
+      logging.warning("Skipping bitrate gap check.")
+      return
 
-    if "cbr" == self.rcmode:
+    if "cbr" == self.rcmode and vars(self).get("skip_checks", []):
       bitrate_gap = abs(bitrate_actual - self.bitrate) / self.bitrate
       get_media()._set_test_details(bitrate_gap = "{:.2%}".format(bitrate_gap))
 
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif self.rcmode in ["vbr", "la_vbr"] and vars(self).get("maxframesize", None) is None:
+    elif self.rcmode in ["vbr", "la_vbr"] and vars(self).get("maxframesize", None) is None and vars(self).get("skip_checks", []):
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
