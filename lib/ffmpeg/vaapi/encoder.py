@@ -60,10 +60,11 @@ class EncoderTest(BaseEncoderTest):
 
   def check_output(self):
     # profile
+    vaapi_profile = self.get_vaapi_profile()
     m = re.search(
-      "Using VAAPI profile {} ([0-9]*)".format(self.get_vaapi_profile()),
+      "Using VAAPI profile {} ([0-9]*)".format(vaapi_profile),
       self.output, re.MULTILINE)
-    assert m is not None, "Possible incorrect profile used"
+    assert vaapi_profile is None or m is not None, "Possible incorrect profile used"
 
     # entrypoint
     entrypointmsgs = [
@@ -89,13 +90,15 @@ class EncoderTest(BaseEncoderTest):
     assert m is not None, "Possible incorrect RC mode used"
 
     # ipb mode
-    ipbmode = 0 if vars(self).get("gop", 0) <= 1 else 1 if vars(self).get("bframes", 0) < 1 else 2
-    ipbmsgs = [
-      "Using intra frames only",
-      "Using intra and P-frames|[L|l]ow delay|forward-prediction"
-      "|not support P-frames, replacing them with B-frames",
-      "Using intra, P- and B-frames|[L|l]ow delay|forward-prediction"
-      "|not support P-frames, replacing them with B-frames",
-    ]
-    m = re.search(ipbmsgs[ipbmode], self.output, re.MULTILINE)
-    assert m is not None, "Possible incorrect IPB mode used"
+    # do not check ipb mode when use default setting
+    if "gop" in vars(self) and "bframes" in vars(self):
+      ipbmode = 0 if vars(self).get("gop", 0) <= 1 else 1 if vars(self).get("bframes", 0) < 1 else 2
+      ipbmsgs = [
+        "Using intra frames only",
+        "Using intra and P-frames|[L|l]ow delay|forward-prediction"
+        "|not support P-frames, replacing them with B-frames",
+        "Using intra, P- and B-frames|[L|l]ow delay|forward-prediction"
+        "|not support P-frames, replacing them with B-frames",
+      ]
+      m = re.search(ipbmsgs[ipbmode], self.output, re.MULTILINE)
+      assert m is not None, "Possible incorrect IPB mode used"
