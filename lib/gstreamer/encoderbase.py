@@ -176,6 +176,11 @@ class BaseEncoderTest(slash.Test):
       size_encoded = encsize,
       bitrate_actual = "{:-.2f}".format(bitrate_actual))
 
+    if "bitrate_gap" in vars(self).get("skip_checks", []):
+      if "cqp" != self.rcmode: # only warn for brc modes
+        slash.logger.warn("skipped bitrate gap check")
+      return
+
     if "cbr" == self.rcmode:
       bitrate_gap = abs(bitrate_actual - self.bitrate) / self.bitrate
       get_media()._set_test_details(bitrate_gap = "{:.2%}".format(bitrate_gap))
