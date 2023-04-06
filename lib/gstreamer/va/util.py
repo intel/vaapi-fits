@@ -28,7 +28,7 @@ def get_supported_format_map():
     "Y210"  : ("y210", "Y210"),
     "Y212"  : ("y212-le", "Y212_LE"),
     "Y410"  : ("y410", "Y410"),
-    "Y412"  : ("y412", "Y412_LE"),
+    "Y412"  : ("y412-le", "Y412_LE"),
   }
 
 @memoize
@@ -81,6 +81,11 @@ def mapprofile(codec, profile):
     "hevc-10"   : {
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
+    },
+    "hevc-12"   : {
+      "main12"                : "main-12",
+      "main422-12"            : "main-422-12",
+      "main444-12"            : "main-444-12",
     },
   }.get(codec, {}).get(profile, None)
 
