@@ -57,7 +57,8 @@ def mapprofile(codec, profile):
       "main444-10"            : "rext",
     },
     "hevc-12" : {
-      "main12"                : "main-12",
+      "main12"                : "rext",
+      "main422-12"            : "rext",
     },
     "jpeg"     : {
       "baseline"              : "baseline",
