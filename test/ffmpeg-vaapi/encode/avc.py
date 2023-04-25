@@ -77,6 +77,9 @@ class cqp_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, qp, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
+      # WA: media-driver 89c6167 support B frame
+      # default option will insert B frame for venc
+      bframes   = 0,
       case      = case,
       gop       = gop,
       profile   = profile,
@@ -128,6 +131,9 @@ class cbr_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
+      # WA: media-driver 89c6167 support B frame
+      # default option will insert B frame for venc
+      bframes   = 0,
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
@@ -183,6 +189,9 @@ class vbr_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, fps, quality, refs, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
+      # WA: media-driver 89c6167 support B frame
+      # default option will insert B frame for venc
+      bframes   = 0,
       bitrate   = bitrate,
       case      = case,
       fps       = fps,
