@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+import math
 import os
 import slash
 
@@ -45,7 +46,8 @@ class VppTest(BaseVppTest):
       )
       opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["denoise"]:
-      self.mlevel = mapRange(self.level, [0, 100], [0.0, 1.0])
+      ilevel = math.floor(mapRange(self.level, [0, 100], [0.0, 64.0]) + 0.5)
+      self.mlevel = mapRange(ilevel, [0, 64], [0.0, 1.0])
       opts += " denoise={mlevel}"
     elif self.vpp_op in ["sharpen"]:
       self.mlevel = mapRange(self.level, [0, 100], [-1.0, 1.0])

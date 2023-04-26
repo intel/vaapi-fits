@@ -9,7 +9,7 @@ from .util import *
 
 import slash
 
-from ....lib.common import get_media, mapRangeInt, mapRangeWithDefault
+from ....lib.common import get_media, mapRange, mapRangeInt, mapRangeWithDefault
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.vppbase import BaseVppTest
 
@@ -47,7 +47,9 @@ class VppTest(BaseVppTest):
       if self.vpp_op in procamp:
         self.mlevel = mapRangeWithDefault(
           self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op])
-      elif self.vpp_op in ["denoise", "sharpen"]:
+      elif self.vpp_op in ["denoise"]:
+        self.mlevel = mapRange(self.level, [0.0, 100.0], [0.0, 64.0])
+      elif self.vpp_op in ["sharpen"]:
         self.mlevel = mapRangeInt(self.level, [0, 100], [0, 64])
 
       if self.vpp_op not in ["csc"]:
