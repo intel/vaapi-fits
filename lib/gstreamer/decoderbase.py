@@ -66,7 +66,7 @@ class Decoder(PropertyHandler):
       fps = gst_discover_fps(self.ossource)
       return (
         f"avvideocompare method={mtype} stats-file={self.osstatsfile} name=cmp"
-        f" ! fakevideosink qos=false num-buffers={self.frames} max-lateness=-1"
+        f" ! fakevideosink qos=false num-buffers={self.frames} sync=0"
         f" filesrc location={self.osreference} num-buffers={self.frames}"
         f" ! rawvideoparse format={self.pformat} width={self.width}"
         f" height={self.height} framerate={fps} ! videoconvert chroma-mode=none"
