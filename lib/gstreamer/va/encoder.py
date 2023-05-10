@@ -87,6 +87,8 @@ class Encoder(GstEncoder):
   refs    = property(lambda s: s.ifprop("refs", " ref-frames={refs}"))
   loopshp = property(lambda s: s.ifprop("loopshp", " sharpness-level={loopshp}"))
   looplvl = property(lambda s: s.ifprop("looplvl", " loop-filter-level={looplvl}"))
+  tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
+  tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
 
   @property
   def hwdevice(self):
@@ -97,7 +99,7 @@ class Encoder(GstEncoder):
     #TODO: windows hwdevice >0 is not test
     return (
       f"{super().gstencoder if self.hwdevice in ['renderD128', '0'] else super().gstencoder.replace('va', f'va{self.hwdevice}')}"
-      f"{self.rcmode}{self.gop}{self.qp}"
+      f"{self.rcmode}{self.gop}{self.qp}{self.tilecols}{self.tilerows}"
       f"{self.quality}{self.slices}{self.bframes}"
       f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
       f"{self.lowpower}{self.loopshp}{self.looplvl}"
