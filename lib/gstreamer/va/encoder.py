@@ -42,9 +42,7 @@ class Encoder(GstEncoder):
       if self.codec in ["mpeg2"]:
         mqp = mapRangeInt(qp, [0, 100], [0, 51])
         return f" qpi={mqp} qpp={mqp} qpb={mqp}"
-      if self.codec in ["vp8", "vp9"]:
-        return f" qpi={qp}"
-      if self.codec in ["av1-8", "av1-10"]:
+      if self.codec in ["av1-8", "av1-10", "vp9"]:
         return f" max-qp={qp} min-qp={qp} qp={qp}"
       return f" qpi={qp} qpp={qp} qpb={qp}"
     return self.ifprop("qp", inner)
