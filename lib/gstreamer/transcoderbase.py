@@ -46,6 +46,8 @@ class BaseTranscoderTest(slash.Test):
       "avc"            : "h264",
       "hevc"           : "h265",
       "hevc-8"         : "h265",
+      "av1"            : "webm",
+      "av1-8"          : "webm",
       "mpeg2"          : "m2v",
       "mjpeg"          : "mjpeg",
     }.get(codec, "???")
