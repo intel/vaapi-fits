@@ -880,3 +880,16 @@ def gen_av1_cqp_parameters(spec):
   keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
   params = gen_av1_cqp_variants(spec)
   return keys, params
+
+def gen_vpp_h2s_variants(spec):
+  for case, params in spec.items():
+    variants = filter(lambda s: "h2s" == s["mode"], params.get("tonemap", []))
+    for variant in variants:
+      yield [
+        case, variant["csc"]
+      ];
+
+def gen_vpp_h2s_parameters(spec):
+  keys = ("case", "csc")
+  params = gen_vpp_h2s_variants(spec)
+  return keys, params

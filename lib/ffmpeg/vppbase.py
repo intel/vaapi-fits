@@ -29,7 +29,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     raise NotImplementedError
 
   def gen_input_opts(self):
-    if self.vpp_op in ["deinterlace"]:
+    if self.vpp_op in ["deinterlace", "tonemap"]:
       opts = "-c:v {ffdecoder}"
     elif self.vpp_op in ["stack"]:
       opts = ""
@@ -47,7 +47,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
 
     opts = "-filter_complex" if self.vpp_op in fcomplex else "-vf"
     opts += f" '{','.join(vpfilter)}'"
-    opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc"] else ""
+    opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc", "tonemap"] else ""
     opts += " -f rawvideo -fps_mode passthrough -an -vframes {frames} -y {osdecoded}"
 
     return opts
@@ -73,13 +73,13 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     ifmts         = self.get_input_formats()
     ofmts         = self.get_output_formats()
     self.ifmt     = self.format
-    self.ofmt     = self.format if "csc" != self.vpp_op else self.csc
+    self.ofmt     = self.format if  self.vpp_op not in ["csc", "tonemap"] else self.csc
     self.mformat  = self.map_format(self.format)
 
     if self.mformat is None:
       slash.skip_test(f"ffmpeg.{self.format} unsupported")
 
-    if self.vpp_op in ["csc"]:
+    if self.vpp_op in ["csc", "tonemap"]:
       self.ihwformat = self.map_format(self.ifmt if self.ifmt in ifmts else None)
       self.ohwformat = self.map_format(self.ofmt if self.ofmt in ofmts else None)
     else:
