@@ -169,6 +169,19 @@ class VppMetricMixin:
 
     metrics2.check(**params)
 
+  def check_tonemap(self):
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded,
+      width = self.width, height = self.height,
+      frames = self.frames, format = self.csc)
+
+    metrics2.check(
+      metric = vars(self).get("metric", dict(type = "ssim", miny = 0.97, minu = 0.97, minv = 0.97)),
+      filetrue = format_value(self.reference, **vars(self)),
+      filetest = self.decoded,
+      width = self.width, height = self.height, frames = self.frames, format = self.csc)
+
   def check_default(self):
     metrics2.check(**vars(self))
 
