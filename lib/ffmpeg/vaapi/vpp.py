@@ -52,10 +52,12 @@ class VppTest(BaseVppTest):
       elif self.vpp_op in ["sharpen"]:
         self.mlevel = mapRangeInt(self.level, [0, 100], [0, 64])
 
-      if self.vpp_op not in ["csc"]:
+      if self.vpp_op not in ["csc", "tonemap"]:
         vpfilter.append("format={ihwformat}|vaapi")
 
-      vpfilter.append("hwupload")
+      if self.vpp_op not in ["tonemap"]:
+        vpfilter.append("hwupload")
+
       vpfilter.append(
         dict(
           brightness  = "procamp_vaapi=b={mlevel}",
@@ -68,6 +70,7 @@ class VppTest(BaseVppTest):
           deinterlace = "deinterlace_vaapi=mode={mmethod}:rate={rate}",
           csc         = "scale_vaapi=format={ohwformat}",
           transpose   = "transpose_vaapi=dir={direction}",
+          tonemap     = "tonemap_vaapi=format={ohwformat}",
         )[self.vpp_op]
       )
 
