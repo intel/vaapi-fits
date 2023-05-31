@@ -55,10 +55,12 @@ class VppTest(BaseVppTest):
         self.mlevel = mapRangeWithDefault(
           self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op])
 
-      if self.vpp_op not in ["csc"]:
+      if self.vpp_op not in ["csc", "tonemap"]:
         vpfilter.append("format={ihwformat}|qsv")
 
-      vpfilter.append("hwupload=extra_hw_frames=16")
+      if self.vpp_op not in ["tonemap"]:
+        vpfilter.append("hwupload=extra_hw_frames=16")
+
       vpfilter.append(
         dict(
           brightness  = "vpp_qsv=procamp=1:brightness={mlevel}",
@@ -72,6 +74,7 @@ class VppTest(BaseVppTest):
           deinterlace = "vpp_qsv=deinterlace={mmethod}",
           csc         = "vpp_qsv=format={ohwformat}",
           transpose   = "vpp_qsv=transpose={direction}",
+          tonemap     = "vpp_qsv=tonemap=1:format={ohwformat}",
         )[self.vpp_op]
       )
 
