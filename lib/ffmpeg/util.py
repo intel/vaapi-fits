@@ -70,6 +70,17 @@ def have_ffmpeg_filter(name):
   return result, name
 
 @memoize
+def have_ffmpeg_filter_options(name, *args):
+  failmsg = "{0}.{1}".format(name, '.'.join(args))
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -filters | awk '{{print $2}}' | grep -w {name}")
+  if result is True:
+    for key in args:
+      result = try_call(f"{exe2os('ffmpeg')} -hide_banner -h filter={name} | grep -e '^   {key} '")
+      if result is False:
+        break
+  return result, failmsg
+
+@memoize
 def have_ffmpeg_encoder(encoder):
   result = try_call(f"{exe2os('ffmpeg')} -hide_banner -encoders | awk '{{print $2}}' | grep -w {encoder}")
   return result, encoder
