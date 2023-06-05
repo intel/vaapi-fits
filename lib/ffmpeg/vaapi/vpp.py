@@ -36,6 +36,9 @@ class VppTest(BaseVppTest):
       vpfilter.append(f"{finputs}{self.stack}_vaapi=inputs={self.inputs}")
       if self.stack in ["xstack"]:
         vpfilter[-1] += f":grid={self.cols}x{self.rows}:grid_tile_size={self.tilew}x{self.tileh}"
+    elif self.vpp_op in ["overlay"]:
+      vpfilter.append("[1:v]hwupload[v1];")
+      vpfilter[-1] += "[0:v][v1]overlay_vaapi=alpha={a}".format(a = mapRange(self.alpha, [0.0, 255.0], [0.0, 1.0]))
     else:
       procamp = dict(
         brightness  = [-100.0,   0.0, 100.0],
