@@ -187,3 +187,14 @@ class VppMetricMixin:
 
   def check_metrics(self):
     getattr(self, "check_{vpp_op}".format(**vars(self)), self.check_default)()
+
+  def check_overlay(self):
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded,
+      width = self.width, height = self.height,
+      frames = self.frames, format = self.format)
+
+    params = vars(self).copy()
+    params.update(reference = format_value(self.reference, **params))
+    metrics2.check(**params)

@@ -893,3 +893,14 @@ def gen_vpp_h2s_parameters(spec):
   keys = ("case", "csc")
   params = gen_vpp_h2s_variants(spec)
   return keys, params
+
+def gen_vpp_overlay_variants(spec):
+  for case, params in spec.items():
+    alphas = params.get("alphas", [])
+    for alpha in alphas:
+        yield [case, alpha]
+
+def gen_vpp_overlay_parameters(spec):
+  keys = ("case", "alpha")
+  params = gen_vpp_overlay_variants(spec)
+  return keys, params
