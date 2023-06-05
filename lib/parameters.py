@@ -887,7 +887,7 @@ def gen_vpp_h2s_variants(spec):
     for variant in variants:
       yield [
         case, variant["csc"]
-      ];
+      ]
 
 def gen_vpp_h2s_parameters(spec):
   keys = ("case", "csc")
