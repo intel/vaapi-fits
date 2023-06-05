@@ -31,23 +31,26 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def gen_input_opts(self):
     if self.vpp_op in ["deinterlace", "tonemap"]:
       opts = "-c:v {ffdecoder}"
-    elif self.vpp_op in ["stack"]:
+    elif self.vpp_op in ["stack", "overlay"]:
       opts = ""
     else:
       opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
     opts += " -i {ossource}"
 
+    if self.vpp_op in ["overlay"]:
+      opts += " -i {ossource1}"
+
     return opts
 
   def gen_output_opts(self):
-    fcomplex = ["composite", "stack"]
+    fcomplex = ["composite", "stack", "overlay"]
     vpfilter = self.gen_vpp_opts()
     vpfilter.append("hwdownload")
     vpfilter.append("format={ohwformat}")
 
     opts = "-filter_complex" if self.vpp_op in fcomplex else "-vf"
     opts += f" '{','.join(vpfilter)}'"
-    opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc", "tonemap"] else ""
+    opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc", "tonemap", "overlay"] else ""
     opts += " -f rawvideo -fps_mode passthrough -an -vframes {frames} -y {osdecoded}"
 
     return opts
@@ -105,6 +108,9 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
     self.ossource = filepath2os(self.source)
+
+    if self.vpp_op in ["overlay"]:
+      self.ossource1 = filepath2os(self.source1)
 
     self.call_ffmpeg(iopts, oopts)
 
