@@ -108,5 +108,9 @@ caps = dict(
         ofmts = ["NV12", "P010"],
       ),
     ),
+    range     = dict(
+      ifmts = ["NV12", "P010"],
+      ofmts = ["NV12", "P010"],
+    ),
   ),
 )
