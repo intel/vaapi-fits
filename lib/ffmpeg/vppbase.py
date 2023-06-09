@@ -31,7 +31,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def gen_input_opts(self):
     if self.vpp_op in ["deinterlace", "tonemap"]:
       opts = "-c:v {ffdecoder}"
-    elif self.vpp_op in ["stack", "overlay"]:
+    elif self.vpp_op in ["stack", "overlay", "range"]:
       opts = ""
     else:
       opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"

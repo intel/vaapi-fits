@@ -198,3 +198,16 @@ class VppMetricMixin:
     params = vars(self).copy()
     params.update(reference = format_value(self.reference, **params))
     metrics2.check(**params)
+
+  def check_color_props(self):
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded,
+      width = self.width, height = self.height,
+      frames = self.frames, format = self.format)
+
+    params = vars(self).copy()
+    params.update(reference = format_value(self.reference, **params))
+    metrics2.check(**params)
+
+  check_range  = check_color_props
