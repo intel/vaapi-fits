@@ -55,10 +55,10 @@ class VppTest(BaseVppTest):
       elif self.vpp_op in ["sharpen"]:
         self.mlevel = mapRangeInt(self.level, [0, 100], [0, 64])
 
-      if self.vpp_op not in ["csc", "tonemap"]:
+      if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|vaapi")
 
-      if self.vpp_op not in ["tonemap"]:
+      if self.vpp_op not in ["tonemap", "range"]:
         vpfilter.append("hwupload")
 
       vpfilter.append(
@@ -74,6 +74,7 @@ class VppTest(BaseVppTest):
           csc         = "scale_vaapi=format={ohwformat}",
           transpose   = "transpose_vaapi=dir={direction}",
           tonemap     = "tonemap_vaapi=format={ohwformat}",
+          range       = "scale_vaapi=out_range={rng}",
         )[self.vpp_op]
       )
 
