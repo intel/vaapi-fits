@@ -904,3 +904,14 @@ def gen_vpp_overlay_parameters(spec):
   keys = ("case", "alpha")
   params = gen_vpp_overlay_variants(spec)
   return keys, params
+
+def gen_vpp_color_range_variants(spec):
+  for case, params in spec.items():
+    ranges = params.get("ranges", [])
+    for rng in ranges:
+        yield [case, rng]
+
+def gen_vpp_color_range_parameters(spec):
+  keys = ("case", "rng")
+  params = gen_vpp_color_range_variants(spec)
+  return keys, params
