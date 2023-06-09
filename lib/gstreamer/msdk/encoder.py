@@ -111,6 +111,7 @@ class Encoder(GstEncoder):
   tilecols = property(lambda s: s.ifprop("tilecols", " num-tile-cols={tilecols}"))
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
   ldb     = property(lambda s: s.ifprop("ldb", " lowdelay-brc={ldb}"))
+  pict    = property(lambda s: s.ifprop("pict", " pic-timing-sei={pict}"))
 
   @property
   def gstencoder(self):
@@ -119,7 +120,7 @@ class Encoder(GstEncoder):
       f"{self.rcmode}{self.gop}{self.qp}{self.maxframesize}"
       f"{self.quality}{self.slices}{self.tilecols}{self.tilerows}{self.bframes}"
       f"{self.maxrate}{self.minrate}{self.refmode}"
-      f"{self.refs}{self.lowpower}{self.ladepth}"
+      f"{self.refs}{self.lowpower}{self.ladepth}{self.pict}"
       f"{self.intref}{self.ldb}{self.maxframesize_i}{self.maxframesize_p}"
       f"{self.rqp}"
     )
