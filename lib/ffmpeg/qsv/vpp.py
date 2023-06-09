@@ -58,10 +58,10 @@ class VppTest(BaseVppTest):
         self.mlevel = mapRangeWithDefault(
           self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op])
 
-      if self.vpp_op not in ["csc", "tonemap"]:
+      if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|qsv")
 
-      if self.vpp_op not in ["tonemap"]:
+      if self.vpp_op not in ["tonemap", "range"]:
         vpfilter.append("hwupload=extra_hw_frames=16")
 
       vpfilter.append(
@@ -78,6 +78,7 @@ class VppTest(BaseVppTest):
           csc         = "vpp_qsv=format={ohwformat}",
           transpose   = "vpp_qsv=transpose={direction}",
           tonemap     = "vpp_qsv=tonemap=1:format={ohwformat}",
+          range       = "vpp_qsv=out_range={rng}",
         )[self.vpp_op]
       )
 
