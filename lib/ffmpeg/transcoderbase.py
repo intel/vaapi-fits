@@ -55,7 +55,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
   def validate_caps(self):
     assert len(self.outputs), "Invalid test case specification, outputs data empty"
-    assert self.mode in ["sw", "hw", "lp"], "Invalid test case specification as mode type not valid"
+    assert self.mode in ["sw", "hw", "lp", "va_hw", "d3d11_hw"], "Invalid test case specification as mode type not valid"
 
     icaps, ireq, _ =  self.get_requirements_data("decode", self.codec, self.mode)
     requires = [ireq,]
@@ -107,8 +107,20 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     self.post_validate()
 
   def gen_input_opts(self):
-    opts = "-init_hw_device {hwaccel}={hwdevice}"
-    opts += " -hwaccel_output_format {hwaccel}"
+    if self.mode in ["va_hw", "d3d11_hw"]:
+      if "va_hw" == self.mode:
+        hw = "vaapi"
+        hwformat = "vaapi"
+      else:
+        hw = "d3d11va"
+        hwformat = "d3d11"
+      opts = f"-init_hw_device {hw}={hw},child_device={get_media().render_device}"
+      opts += f" -init_hw_device {self.hwaccel}={self.hwaccel}@{hw}"
+      opts += f" -hwaccel_output_format {hwformat}"
+      opts += f" -hwaccel {hw}"
+    else:
+      opts = "-init_hw_device {hwaccel}={hwdevice}"
+      opts += " -hwaccel_output_format {hwaccel}"
     if "hw" == self.mode:
       opts += " -hwaccel {hwaccel}"
     opts += " -c:v {}".format(self.get_decoder(self.codec, self.mode))
@@ -165,7 +177,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     self.srcyuv = get_media()._test_artifact(
       "src_{case}.yuv".format(**vars(self)))
     self.ossrcyuv = filepath2os(self.srcyuv)
-    if "hw" == self.mode:
+    if self.mode in ["hw", "va_hw", "d3d11_hw"]:
       opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
     opts += " -pix_fmt yuv420p -f rawvideo"
     opts += " -vframes {frames} -y {ossrcyuv}"
