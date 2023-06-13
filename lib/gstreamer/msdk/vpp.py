@@ -12,6 +12,7 @@ from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.msdk.util import using_compatible_driver
 from ....lib.gstreamer.msdk.util import map_best_hw_format, mapformat, mapformatu
 from ....lib.common import get_media, mapRange, mapRangeWithDefault
+from ....lib.mfx.util import mapsharp
 
 @slash.requires(*have_gst_element("msdk"))
 @slash.requires(*have_gst_element("msdkvpp"))
@@ -56,7 +57,8 @@ class VppTest(BaseVppTest):
     elif self.vpp_op in ["denoise"]:
       opts += " denoise={level}"
     elif self.vpp_op in ["sharpen"]:
-      opts += " detail={level}"
+      self.mlevel = mapsharp(self.level)
+      opts += " detail={mlevel}"
     elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
     elif self.vpp_op in ["crop"]:

@@ -10,6 +10,7 @@ from ....lib.common import get_media, mapRangeInt, mapRangeWithDefault
 from ....lib.ffmpeg.qsv.util import using_compatible_driver
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel, have_ffmpeg_filter
 from ....lib.ffmpeg.vppbase import BaseVppTest
+from ....lib.mfx.util import mapsharp
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(*have_ffmpeg_filter("vpp_qsv"))
@@ -57,6 +58,8 @@ class VppTest(BaseVppTest):
       if self.vpp_op in procamp:
         self.mlevel = mapRangeWithDefault(
           self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op])
+      elif self.vpp_op in ["sharpen"]:
+        self.mlevel = mapsharp(self.level)
 
       if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|qsv")
@@ -73,7 +76,7 @@ class VppTest(BaseVppTest):
           denoise     = "vpp_qsv=denoise={level}",
           scale       = "vpp_qsv=w={scale_width}:h={scale_height}",
           scale_qsv   = "scale_qsv=w={scale_width}:h={scale_height}",
-          sharpen     = "vpp_qsv=detail={level}",
+          sharpen     = "vpp_qsv=detail={mlevel}",
           deinterlace = "vpp_qsv=deinterlace={mmethod}",
           csc         = "vpp_qsv=format={ohwformat}",
           transpose   = "vpp_qsv=transpose={direction}",

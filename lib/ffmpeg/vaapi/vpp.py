@@ -53,7 +53,8 @@ class VppTest(BaseVppTest):
       elif self.vpp_op in ["denoise"]:
         self.mlevel = mapRange(self.level, [0.0, 100.0], [0.0, 64.0])
       elif self.vpp_op in ["sharpen"]:
-        self.mlevel = mapRangeInt(self.level, [0, 100], [0, 64])
+        self.mlevel = int(mapRangeWithDefault(
+          self.level, [0, 50, 100], [0, 44, 64]))
 
       if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|vaapi")

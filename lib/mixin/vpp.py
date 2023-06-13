@@ -118,17 +118,27 @@ class VppMetricMixin:
   check_scale_qsv = check_scale
 
   def check_sharpen(self):
-    def compare(k, ref, actual):
-      assert actual[-2] == 100, "Cb(U) should not be affected by SHARPEN filter"
-      assert actual[-1] == 100, "Cr(V) should not be affected by SHARPEN filter"
-      assert ref is not None, "Invalid reference value"
-      assert abs(ref[-3] - actual[-3]) <  0.25, "Luma (Y) out of baseline range"
+    if self.level in [0, 50]: # 0 and default are passthrough
+      metric = metrics2.factory.create(
+        metric = dict(type = "md5"),
+        width = self.width, height = self.height,
+        frames = self.frames, format = self.format)
+      metric.update(filetest = self.source)
+      metric.expect = metric.actual
+      metric.update(filetest = self.decoded)
+      metric.check()
+    else:
+      def compare(k, ref, actual):
+        assert actual[-2] == 100, "Cb(U) should not be affected by SHARPEN filter"
+        assert actual[-1] == 100, "Cr(V) should not be affected by SHARPEN filter"
+        assert ref is not None, "Invalid reference value"
+        assert abs(ref[-3] - actual[-3]) < 0.25, "Luma (Y) out of baseline range"
 
-    metrics2.check(
-      metric = dict(type = "psnr"), compare = compare,
-      filetrue = self.source, filetest = self.decoded,
-      width = self.width, height = self.height, frames = self.frames,
-      format = self.format, refctx = self.refctx)
+      metrics2.check(
+        metric = dict(type = "psnr"), compare = compare,
+        filetrue = self.source, filetest = self.decoded,
+        width = self.width, height = self.height, frames = self.frames,
+        format = self.format, refctx = self.refctx)
 
   def check_composite(self):
     owidth, oheight = self.width, self.height
