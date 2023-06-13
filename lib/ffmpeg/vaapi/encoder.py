@@ -15,8 +15,8 @@ from ....lib.common import mapRangeInt
 
 class Encoder(FFEncoder):
   hwaccel = property(lambda s: "vaapi")
-  tilecols = property(lambda s: s.ifprop("tilecols", " -tile_cols_log2 {tilecols}"))
-  tilerows = property(lambda s: s.ifprop("tilerows", " -tile_rows_log2 {tilerows}"))
+  tilecols = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
+  tilerows = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
 
   @property
   def qp(self):
