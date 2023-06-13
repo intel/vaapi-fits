@@ -20,10 +20,14 @@ class TranscoderTest(BaseTranscoderTest):
       "avc" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_decoder("h264"), "h264"),
         hw = (platform.get_caps("decode", "avc"), have_ffmpeg_decoder("h264_qsv"), "h264_qsv"),
+        va_hw = (platform.get_caps("decode", "avc"), have_ffmpeg_decoder("h264"), "h264"),
+        d3d11_hw = (platform.get_caps("decode", "avc"), have_ffmpeg_decoder("h264"), "h264"),
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_ffmpeg_decoder("hevc"), "hevc"),
         hw = (platform.get_caps("decode", "hevc_8"), have_ffmpeg_decoder("hevc_qsv"), "hevc_qsv"),
+        va_hw = (platform.get_caps("decode", "hevc_8"), have_ffmpeg_decoder("hevc"), "hevc"),
+        d3d11_hw = (platform.get_caps("decode", "hevc_8"), have_ffmpeg_decoder("hevc"), "hevc"),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_ffmpeg_decoder("mpeg2video"), "mpeg2video"),
