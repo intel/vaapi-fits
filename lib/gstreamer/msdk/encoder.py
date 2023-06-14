@@ -87,6 +87,20 @@ class Encoder(GstEncoder):
       )
     return self.ifprop("intref", inner)
 
+  # Max/min qp
+  @property
+  def rqp(self):
+    def inner(rqp):
+      return (
+        f" min-qp-i={rqp['MinQPI']}"
+        f" max-qp-i={rqp['MaxQPI']}"
+        f" min-qp-p={rqp['MinQPP']}"
+        f" max-qp-p={rqp['MaxQPP']}"
+        f" min-qp-b={rqp['MinQPB']}"
+        f" max-qp-b={rqp['MaxQPB']}"
+      )
+    return self.ifprop("rqp", inner)
+
   gop     = property(lambda s: s.ifprop("gop", " gop-size={gop}"))
   slices  = property(lambda s: s.ifprop("slices", " num-slices={slices}"))
   bframes = property(lambda s: s.ifprop("bframes", " b-frames={bframes}"))
@@ -107,6 +121,7 @@ class Encoder(GstEncoder):
       f"{self.maxrate}{self.minrate}{self.refmode}"
       f"{self.refs}{self.lowpower}{self.ladepth}"
       f"{self.intref}{self.ldb}{self.maxframesize_i}{self.maxframesize_p}"
+      f"{self.rqp}"
     )
 
 @slash.requires(*have_gst_element("msdk"))
