@@ -56,6 +56,8 @@ class VppTest(BaseVppTest):
       opts += " {vpp_op}={mlevel}"
     elif self.vpp_op in ["transpose"]:
       opts += " video-direction={direction}"
+    elif self.vpp_op in ["crop"]:
+      opts += " disable-passthrough=true"
     elif self.vpp_op in ["composite"]:
       #TODO: windows hwdevice > 0 is not test
       vacompositor = 'vacompositor' if self.hwdevice in ['renderD128' , '0'] else f"va{self.hwdevice}compositor"
@@ -71,7 +73,10 @@ class VppTest(BaseVppTest):
     return opts
 
   def gen_output_opts(self):
+    vpp_crop_filter = " videocrop left={left} right={right} top={top} bottom={bottom} ! "
     opts = super().gen_output_opts()
+    if self.vpp_op in ["crop"]:
+      opts = vpp_crop_filter + opts
     if self.vpp_op in ["composite"]:
       opts += " source. ! queue ! composite. " * len(self.comps)
     return opts
