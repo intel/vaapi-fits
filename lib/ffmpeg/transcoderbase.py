@@ -231,24 +231,10 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         is_hdr = output.get("hdr", 0)
         if is_hdr:
-          output = call(
-            f"{exe2os('ffprobe')} -i {filepath2os(self.source)}"
-            f" -show_streams"
-          )
-          input_color_range_info = re.findall(r'(?<=color_range=)\w*', output)
-          input_color_space_info = re.findall(r'(?<=color_space=)\w*', output)
-          input_color_transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
-          input_color_primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+          input_color_range_info, input_color_space_info, input_color_transfer_info, input_color_primaries_info = self.get_hdr_info(filepath2os(self.source))
           assert len(input_color_range_info) > 0 and len(input_color_space_info) > 0 and len(input_color_transfer_info) > 0 and len(input_color_primaries_info) > 0, "Find no HDR information in input video"
 
-          output = call(
-            f"{exe2os('ffprobe')} -i {osencoded}"
-            f" -show_streams"
-          )
-          output_color_range_info = re.findall(r'(?<=color_range=)\w*', output)
-          output_color_space_info = re.findall(r'(?<=color_space=)\w*', output)
-          output_color_transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
-          output_color_primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+          output_color_range_info, output_color_space_info, output_color_transfer_info, output_color_primaries_info = self.get_hdr_info(osencoded)
           assert len(output_color_range_info) > 0 and len(output_color_space_info) > 0 and len(output_color_transfer_info) > 0 and len(output_color_primaries_info) > 0, "Find no HDR information in output video"
 
           assert output_color_range_info[0] == input_color_range_info[0] and output_color_space_info[0] == input_color_space_info[0] and \
@@ -270,3 +256,16 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       width = self.width, height = self.height,
       frames = self.frames, format = "I420",
       refctx = self.refctx + refctx)
+
+  def get_hdr_info(self, osfile):
+    output = call(
+      f"{exe2os('ffprobe')} -i {osfile}"
+      f" -show_streams"
+    )
+
+    range_info = re.findall(r'(?<=color_range=)\w*', output)
+    space_info = re.findall(r'(?<=color_space=)\w*', output)
+    transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
+    primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+
+    return range_info, space_info, transfer_info, primaries_info
