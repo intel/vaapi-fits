@@ -231,14 +231,14 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         is_hdr = output.get("hdr", 0)
         if is_hdr:
-          input_color_range_info, input_color_space_info, input_color_transfer_info, input_color_primaries_info = self.get_hdr_info(filepath2os(self.source))
-          assert len(input_color_range_info) > 0 and len(input_color_space_info) > 0 and len(input_color_transfer_info) > 0 and len(input_color_primaries_info) > 0, "Find no HDR information in input video"
+          input_mdm_info, input_cll_info = self.get_hdr_info(filepath2os(self.source))
+          assert len(input_mdm_info) + len(input_cll_info) > 0, "Find no HDR information in input video"
 
-          output_color_range_info, output_color_space_info, output_color_transfer_info, output_color_primaries_info = self.get_hdr_info(osencoded)
-          assert len(output_color_range_info) > 0 and len(output_color_space_info) > 0 and len(output_color_transfer_info) > 0 and len(output_color_primaries_info) > 0, "Find no HDR information in output video"
+          output_mdm_info, output_cll_info = self.get_hdr_info(osencoded)
+          assert len(output_mdm_info) + len(output_cll_info) > 0, "Find no HDR information in output video"
 
-          assert output_color_range_info[0] == input_color_range_info[0] and output_color_space_info[0] == input_color_space_info[0] and \
-                 output_color_transfer_info[0] == input_color_transfer_info[0] and output_color_primaries_info[0] == input_color_primaries_info[0], "HDR info is different between input and output"
+          assert (len(input_mdm_info) == 0 or (len(input_mdm_info) == len(output_mdm_info) and input_mdm_info[0] == output_mdm_info[0])) and \
+            (len(input_cll_info) == 0 or (len(input_cll_info) == len(output_cll_info) and input_cll_info[0] == output_cll_info[0])), "HDR info is different between input and output"
 
         # delete yuv file after each iteration
         get_media()._purge_test_artifact(yuv)
@@ -259,13 +259,11 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
   def get_hdr_info(self, osfile):
     output = call(
-      f"{exe2os('ffprobe')} -i {osfile}"
-      f" -show_streams"
+      f"{exe2os('ffmpeg')} -i {osfile}"
+      f" -vf 'showinfo' -vframes 1 -f null -"
     )
 
-    range_info = re.findall(r'(?<=color_range=)\w*', output)
-    space_info = re.findall(r'(?<=color_space=)\w*', output)
-    transfer_info = re.findall(r'(?<=color_transfer=)\w*', output)
-    primaries_info = re.findall(r'(?<=color_primaries=)\w*', output)
+    mdm_info = re.findall(r'(?<=side data - Mastering display metadata: ).*', output)
+    cll_info = re.findall(r'(?<=side data - Content light level metadata: ).*', output)
 
-    return range_info, space_info, transfer_info, primaries_info
+    return mdm_info, cll_info
