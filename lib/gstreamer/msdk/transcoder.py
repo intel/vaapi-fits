@@ -23,12 +23,14 @@ class TranscoderTest(BaseTranscoderTest):
         hw = (platform.get_caps("decode", "avc"), have_gst_element("msdkh264dec"), "h264parse ! msdkh264dec"),
         va_hw = (platform.get_caps("decode", "avc"), have_gst_element("vah264dec"), "h264parse ! vah264dec"),
         d3d11_hw = (platform.get_caps("decode", "avc"), have_gst_element("d3d11h264dec"), "h264parse ! d3d11h264dec"),
+        dma = (platform.get_caps("decode", "avc"), have_gst_element("msdkh264dec"), "h264parse ! msdkh264dec ! \"video/x-raw(memory:DMABuf)\""),
       ),
       "hevc-8" : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("libde265dec"), "h265parse ! libde265dec ! videoconvert"),
         hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("msdkh265dec"), "h265parse ! msdkh265dec"),
         va_hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("vah265dec"), "h265parse ! vah265dec"),
         d3d11_hw = (platform.get_caps("decode", "hevc_8"), have_gst_element("d3d11h265dec"), "h265parse ! d3d11h265dec"),
+        dma = (platform.get_caps("decode", "hevc_8"), have_gst_element("msdkh265dec"), "h265parse ! msdkh265dec ! \"video/x-raw(memory:DMABuf)\""),
       ),
       "mpeg2" : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("mpeg2dec"), "mpegvideoparse ! mpeg2dec ! videoconvert"),

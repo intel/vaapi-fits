@@ -54,7 +54,11 @@ class BaseTranscoderTest(slash.Test):
 
   def validate_caps(self):
     assert len(self.outputs), "Invalid test case specification, outputs data empty"
-    assert self.mode in ["sw", "hw", "va_hw", "d3d11_hw"], "Invalid test case specification as mode type not valid"
+    assert self.mode in ["sw", "hw", "va_hw", "d3d11_hw", "dma"], "Invalid test case specification as mode type not valid"
+
+    if self.mode == "dma" and get_media()._get_driver_name() == "d3d11":
+      slash.skip_test(
+        "d3d11 does not support dma caps")
 
     icaps, ireq, _ = self.get_requirements_data("decode", self.codec, self.mode)
     requires = [ireq,]
@@ -108,7 +112,7 @@ class BaseTranscoderTest(slash.Test):
     self.ossource = filepath2os(self.source)
     opts =  "filesrc location={ossource}"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
-    if self.mode not in ["va_hw", "d3d11_hw"]:
+    if self.mode in ["hw", "sw"]:
       opts += " ! video/x-raw,format={format}"
     return opts.format(**vars(self))
 
@@ -142,7 +146,7 @@ class BaseTranscoderTest(slash.Test):
       "src_{case}.yuv".format(**vars(self)))
     self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
-    if self.mode == "va_hw":
+    if self.mode in ["va_hw", "dma"]:
       opts += " ! vapostproc ! video/x-raw,format={format}"
     elif self.mode == "d3d11_hw":
       opts += " ! d3d11download ! video/x-raw,format={format}"
