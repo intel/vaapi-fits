@@ -45,6 +45,14 @@ def map_best_hw_format(format, hwformats):
       format, set(hwformats) & set(get_supported_format_map().keys())))
 
 @memoize
+def map_deinterlace_method(method):
+  return {
+    "bob"               : "bob",
+    "motion-adaptive"   : "adaptive",
+    "motion-compensated": "compensated",
+  }.get(method, None)
+
+@memoize
 def map_transpose_direction(degrees, method):
   return {
     (  0,         None) : "identity",
