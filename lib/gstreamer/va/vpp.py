@@ -79,9 +79,12 @@ class VppTest(BaseVppTest):
 
   def gen_output_opts(self):
     vpp_crop_filter = " videocrop left={left} right={right} top={top} bottom={bottom} ! "
+    vpp_di_filter   = ' vadeinterlace method={mmethod} ! ' if self.hwdevice in ['renderD128' , '0'] else f" va{self.hwdevice}deinterlace method={mmethod} ! "
     opts = super().gen_output_opts()
     if self.vpp_op in ["crop"]:
       opts = vpp_crop_filter + opts
+    if self.vpp_op in ["deinterlace"]:
+      opts = vpp_di_filter + opts
     if self.vpp_op in ["composite"]:
       opts += " source. ! queue ! composite. " * len(self.comps)
     return opts
