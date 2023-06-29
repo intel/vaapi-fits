@@ -184,6 +184,11 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
         format_value(
           "{platform}.{driver}.slice > 1 unsupported in this mode", **vars(self)))
 
+    if vars(self).get("bframes", 0) > 0 and not self.caps.get("bframes", True):
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.bframes > 0 unsupported in this mode", **vars(self)))
+
     if not self.caps.get(self.rcmode, True):
       slash.skip_test(
         format_value(
