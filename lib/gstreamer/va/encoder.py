@@ -8,7 +8,7 @@ import os
 import slash
 
 from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
-from ....lib.gstreamer.util import have_gst_element
+from ....lib.gstreamer.util import have_gst_element, get_elements
 from ....lib.gstreamer.va.util import mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.va.decoder import Decoder
 from ....lib.common import get_media, mapRangeInt
@@ -110,6 +110,20 @@ class EncoderTest(BaseEncoderTest):
 
   def before(self):
     super().before()
+
+    # WA: https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/2736
+    # Maximize all gst-va plugin elements rank
+    self.__rank_before = os.environ.get("GST_PLUGIN_FEATURE_RANK", None)
+    ranks = [] if self.__rank_before is None else self.__rank_before.split(',')
+    ranks += [f"{e}:MAX" for e in get_elements("va")]
+    os.environ["GST_PLUGIN_FEATURE_RANK"] = ','.join(ranks)
+
+  def after(self):
+    super().after()
+    if None == self.__rank_before:
+      del os.environ["GST_PLUGIN_FEATURE_RANK"]
+    else:
+      os.environ["GST_PLUGIN_FEATURE_RANK"] = self.__rank_before
 
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
