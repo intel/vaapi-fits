@@ -11,6 +11,7 @@ from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import BaseFormatMapper, have_ffmpeg, ffmpeg_probe_resolution
 
 from ...lib import metrics2
+from ...lib.parameters import format_value
 
 @slash.requires(have_ffmpeg)
 class BaseTranscoderTest(slash.Test,BaseFormatMapper):
@@ -20,6 +21,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     self.post_validate = lambda: None
     self.hwdevice = f"hw:{get_media().render_device}"
     self.csc = "I420"
+    self.tonemap = None
 
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(
@@ -42,6 +44,11 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     _, _, scale = self.get_requirements_data("vpp", "scale", mode)
     assert scale is not None, "failed to find a suitable vpp scaler: {}".format(mode)
     return scale.format(width = width or self.width, height = height or self.height)
+
+  def get_tonemap(self, tm, oformat):
+    _, _, tonemap = self.get_requirements_data("tonemap", tm, "hw")
+    assert tonemap is not None, "failed to find a suitable tonemapping method: {}".format(tm)
+    return tonemap.format(format = oformat)
 
   def get_file_ext(self, codec):
     return {
@@ -149,8 +156,12 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       filters = []
       tmode = (self.mode, mode)
       format = vars(self).get("format", "NV12")
-    
-      if ("hw", "sw") == tmode:   # HW to SW transcode
+
+      if self.tonemap in ["h2s"]:
+        tonemap = self.get_tonemap(self.tonemap, self.map_format(output.get("format", format)))
+        if tonemap is not None:
+          filters.append(tonemap)
+      elif ("hw", "sw") == tmode:   # HW to SW transcode
         filters.extend(["hwdownload", f"format={self.map_format(format)}"])
       elif ("sw", "hw") == tmode: # SW to HW transcode
         filters.extend([f"format={self.map_format(format)}", "hwupload"])
@@ -174,14 +185,17 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         opts += " -vframes {frames}"
         opts += " -y {}".format(osofile)
 
-    # dump decoded source to yuv for reference comparison
-    self.srcyuv = get_media()._test_artifact(
-      "src_{case}.yuv".format(**vars(self)))
-    self.ossrcyuv = filepath2os(self.srcyuv)
-    if self.mode in ["hw", "va_hw", "d3d11_hw"]:
-      opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
-    opts += " -pix_fmt yuv420p -f rawvideo"
-    opts += " -vframes {frames} -y {ossrcyuv}"
+    if self.tonemap in ["h2s"]:
+      self.srcyuv = format_value(self.reference, **vars(self))
+    else:
+      # dump decoded source to yuv for reference comparison
+      self.srcyuv = get_media()._test_artifact(
+        "src_{case}.yuv".format(**vars(self)))
+      self.ossrcyuv = filepath2os(self.srcyuv)
+      if self.mode in ["hw", "va_hw", "d3d11_hw"]:
+        opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
+      opts += " -pix_fmt yuv420p -f rawvideo"
+      opts += " -vframes {frames} -y {ossrcyuv}"
 
     return opts.format(**vars(self))
 
@@ -242,8 +256,11 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
 
-        is_hdr = output.get("hdr", 0)
-        if is_hdr:
+        if self.tonemap in ["h2s"]:
+          # make sure the output is a SDR file
+          output_mdm_info, output_cll_info = self.get_hdr_info(osencoded)
+          assert len(output_mdm_info) == 0 and len(output_cll_info) == 0, "Find HDR information in output video, h2s failed"
+        elif (output.get("hdr", 0)):
           input_mdm_info, input_cll_info = self.get_hdr_info(filepath2os(self.source))
           assert len(input_mdm_info) + len(input_cll_info) > 0, "Find no HDR information in input video"
 
