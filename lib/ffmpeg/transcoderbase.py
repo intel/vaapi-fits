@@ -19,6 +19,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     self.refctx = []
     self.post_validate = lambda: None
     self.hwdevice = f"hw:{get_media().render_device}"
+    self.csc = "I420"
 
   def get_requirements_data(self, ttype, codec, mode):
     return  self.requirements[ttype].get(
@@ -233,7 +234,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         osyuv = filepath2os(yuv)
         vppscale = self.get_vpp_scale(self.width, self.height, "sw")
         oopts = (
-          f"-vf '{vppscale}' -pix_fmt yuv420p -f rawvideo"
+          f"-vf '{vppscale}' -pix_fmt {self.map_format(self.csc)} -f rawvideo"
           f" -vframes {self.frames} -y {osyuv}"
         )
 
@@ -266,7 +267,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       metric = dict(type = "psnr"),
       filetrue = self.srcyuv, filetest = yuv,
       width = self.width, height = self.height,
-      frames = self.frames, format = "I420",
+      frames = self.frames, format = self.csc,
       refctx = self.refctx + refctx)
 
   def get_hdr_info(self, osfile):
