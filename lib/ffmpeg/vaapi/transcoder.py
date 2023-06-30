@@ -8,7 +8,7 @@ import slash
 
 from ....lib import platform
 from ....lib.ffmpeg.transcoderbase import BaseTranscoderTest
-from ....lib.ffmpeg.util import have_ffmpeg_decoder, have_ffmpeg_encoder, have_ffmpeg_hwaccel, have_ffmpeg_filter
+from ....lib.ffmpeg.util import have_ffmpeg_decoder, have_ffmpeg_encoder, have_ffmpeg_hwaccel, have_ffmpeg_filter, have_ffmpeg_filter_options
 
 @slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class TranscoderTest(BaseTranscoderTest):
@@ -70,6 +70,11 @@ class TranscoderTest(BaseTranscoderTest):
         sw = (True, have_ffmpeg_filter("scale"), "scale=w={width}:h={height}"),
         hw = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("scale_vaapi"), "scale_vaapi=w={width}:h={height}"),
         lp = (platform.get_caps("vpp", "scale"), have_ffmpeg_filter("scale_vaapi"), "scale_vaapi=w={width}:h={height}"),
+      ),
+    },
+    tonemap = {
+      "h2s" : dict(
+        hw = (platform.get_caps("tonemap", "h2s"), have_ffmpeg_filter_options("tonemap_vaapi", "format"), "tonemap_vaapi=format={format}"),
       ),
     },
   )
