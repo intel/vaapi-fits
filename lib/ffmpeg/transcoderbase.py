@@ -271,7 +271,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
   def get_hdr_info(self, osfile):
     output = call(
-      f"{exe2os('ffmpeg')} -i {osfile}"
+      f"{exe2os('ffmpeg')} -an -i {osfile}"
       f" -vf 'showinfo' -vframes 1 -f null -"
     )
 
