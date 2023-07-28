@@ -100,6 +100,7 @@ class BaseVppTest(slash.Test, VppMetricMixin):
       slash.skip_test("{ofmt} unsupported".format(**vars(self)))
 
     self.post_validate()
+    self.prepare_asset()
 
   def vpp(self):
     self.validate_caps()

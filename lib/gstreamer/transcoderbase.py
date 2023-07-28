@@ -16,6 +16,7 @@ from ...lib import metrics2
 class BaseTranscoderTest(slash.Test):
   def before(self):
     self.refctx = []
+    self.prepare_asset = lambda: None
     self.post_validate = lambda: None
     vars(self).setdefault("format", "NV12")
 
@@ -107,6 +108,7 @@ class BaseTranscoderTest(slash.Test):
         "Missing one or more required gstreamer elements: {}".format(list(unmet)))
 
     self.post_validate()
+    self.prepare_asset()
 
   def gen_input_opts(self):
     self.ossource = filepath2os(self.source)

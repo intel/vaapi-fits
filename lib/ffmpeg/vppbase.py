@@ -16,6 +16,7 @@ from ...lib import metrics2
 class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def before(self):
     self.refctx = []
+    self.prepare_asset = lambda: None
     self.post_validate = lambda: None
     self.hwdevice = f"hw:{get_media().render_device}"
 
@@ -101,6 +102,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
         self.oheight = max(self.oheight, self.height + comp['y'])
 
     self.post_validate()
+    self.prepare_asset()
 
   def vpp(self):
     self.validate_caps()

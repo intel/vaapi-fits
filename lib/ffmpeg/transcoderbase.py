@@ -18,6 +18,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
   def before(self):
     super().before()
     self.refctx = []
+    self.prepare_asset = lambda: None
     self.post_validate = lambda: None
     self.hwdevice = f"hw:{get_media().render_device}"
     self.csc = "I420"
@@ -113,6 +114,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         "Missing one or more required ffmpeg elements: {}".format(list(unmet)))
 
     self.post_validate()
+    self.prepare_asset()
 
   def gen_input_opts(self):
     if self.mode in ["va_hw", "d3d11_hw"]:

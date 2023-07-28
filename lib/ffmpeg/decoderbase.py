@@ -98,6 +98,7 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
   def before(self):
     super().before()
     self.refctx = []
+    self.prepare_asset = lambda: None
     self.post_validate = lambda: None
 
   def validate_caps(self):
@@ -115,6 +116,7 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
     skip_test_if_missing_features(self)
 
     self.post_validate()
+    self.prepare_asset()
 
   def _decode_r2r(self):
     assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"

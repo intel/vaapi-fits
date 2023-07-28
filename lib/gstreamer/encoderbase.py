@@ -79,6 +79,7 @@ class BaseEncoderTest(slash.Test):
   def before(self):
     super().before()
     self.refctx = []
+    self.prepare_asset = lambda: None
     self.post_validate = lambda: None
 
   def map_profile(self):
@@ -133,6 +134,7 @@ class BaseEncoderTest(slash.Test):
       self.encoder.update(profile = self.mprofile)
 
     self.post_validate()
+    self.prepare_asset()
 
   def _encode_r2r(self):
     assert type(self.r2r) is int and self.r2r > 1, "invalid r2r value"
