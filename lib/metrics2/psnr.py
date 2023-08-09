@@ -10,10 +10,23 @@ try:
 except:
   from skimage.measure import compare_psnr as skimage_psnr
 
+import math
+import os
+import statistics
+
 from ..common import get_media, timefn
 from ..formats import get_bit_depth
 from .util import RawFileFrameReader, RawMetricAggregator, MetricWithDataRange
 from . import factory
+
+trend_models = dict(
+  power   = lambda x, a, k: a*x**k,
+  powern  = lambda x, a, k: a*x**-k,
+  powerc  = lambda x, a, k, c: a*x**k + c,
+  powernc = lambda x, a, k, c: a*x**-k + c,
+  cubic   = lambda x, a, b, c, d: d*x**3 + c*x**2 + b*x + a,
+  quartic = lambda x, a, b, c, d, e: e*x**4 + d*x**3 + c*x**2 + b*x + a,
+)
 
 @timefn("psnr:calculate")
 def calculate(filetrue, filetest, width, height, frames, fmttrue, fmttest):
@@ -37,9 +50,23 @@ def compare_actual(k, ref, actual):
   assert ref is not None, "Invalid reference value"
   assert all(map(lambda r,a: a > (r * 0.98), ref[3:], actual[3:]))
 
+def compare_ge(k, ref, actual):
+  assert ref is not None, "Invalid reference value"
+  assert actual >= ref
+
 class PSNR(factory.Metric):
   filetrue  = property(lambda self: self.ifprop("filetrue", "{filetrue}") or self.props["reference"])
   compare   = property(lambda self: self.props.get("compare", compare_actual))
+  mode      = property(lambda self: self.props["metric"].get("mode", "default"))
+
+  # mode = trendline
+  tolerance = property(lambda self: self.props["metric"].get("tolerance", 5.0))
+  filecoded = property(lambda self: self.ifprop("filecoded", "{filecoded}") or self.props["encoder"].encoded)
+  codedsize = property(lambda self: os.path.getsize(self.filecoded)) # bytes
+  rawsize   = property(lambda self: self.framesize * self.frames) # bytes
+  compratio = property(lambda self: self.rawsize / self.codedsize)
+  logratio  = property(lambda self: math.log(self.compratio))
+  average   = property(lambda self: statistics.mean(self.actual[-3:]))
 
   def calculate(self):
     return calculate(
@@ -47,7 +74,36 @@ class PSNR(factory.Metric):
       self.frames, self.format, self.format)
 
   def check(self):
+    if self.mode == "trendline":
+      self.check_trendline()
+    else:
+      get_media().baseline.check_result(
+        psnr = self.actual, compare = self.compare, context = self.context)
+
+  def check_trendline(self):
+    gopkey = 30 if self.props.get("gop", 30) > 1 else 1
+    model = get_media().baseline.lookup(
+      f"model.encode:trend.test(case={self.props['case']})",
+      self.props["codec"], f"gop.{gopkey}")
+
+    assert model is not None, "Trendline model reference not found"
+
+    fname = model["fx"]
+    fopts = model["popt"]
+    get_media()._set_test_details(**{
+      "size:raw"          : self.rawsize,
+      "compression:ratio" : self.compratio,
+      "compression:log"   : self.logratio,
+      "model:trend:name"  : fname,
+      "model:trend:opts"  : fopts,
+      "psnr:stats"        : self.actual,
+      "psnr:tolerance"    : self.tolerance,
+    })
+
+    fx = trend_models[fname]
+    expect = max(20.0, fx(self.logratio, *fopts) - self.tolerance)
+
     get_media().baseline.check_result(
-      psnr = self.actual, compare = self.compare, context = self.context)
+      psnr = self.average, reference = {"psnr" : expect}, compare = compare_ge)
 
 factory.register(PSNR)
