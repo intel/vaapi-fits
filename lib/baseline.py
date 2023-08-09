@@ -40,6 +40,13 @@ class Baseline:
         with open(self.filename, "r") as fd:
           self.references = json.load(fd)
 
+  def lookup(self, key, *context):
+    reference = self.references.get(key, None)
+    for c in get_media()._expand_context(context):
+      if reference is None: break
+      reference = reference.get(c, None)
+    return reference
+
   def __get_reference(self, context = []):
     addr = get_media()._get_ref_addr(context)
     reference = self.references.setdefault(addr, dict())
