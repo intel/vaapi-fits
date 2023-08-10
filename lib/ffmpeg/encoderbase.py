@@ -264,11 +264,17 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
         assert(self.minrate * 0.75 <= bitrate_actual <= self.minrate * 1.10)
 
   def check_metrics(self):
-    vars(self).update(metric = dict(type = "psnr"))
+    vars(self).setdefault("metric", dict(type = "psnr"))
+
     self.decoder.update(source = self.encoder.encoded, metric = self.metric)
     self.decoder.decode()
 
     metric = metrics2.factory.create(**vars(self))
+    metric.update(
+      filecoded = self.encoder.encoded,
+      filetest  = self.decoder.decoded,
+      filetrue  = self.source,
+    )
     metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
 
     metric.check()
