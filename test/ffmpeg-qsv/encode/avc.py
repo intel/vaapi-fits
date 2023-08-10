@@ -6,42 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
-from ....lib.ffmpeg.qsv.encoder import EncoderTest
+from ....lib.ffmpeg.qsv.encoder import AVCEncoderTest, AVCEncoderLPTest
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("h264_qsv"))
-@slash.requires(*have_ffmpeg_decoder("h264_qsv"))
-class AVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "avc",
-      ffencoder = "h264_qsv",
-      ffdecoder = "h264_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h264"
-
-@slash.requires(*platform.have_caps("encode", "avc"))
-class AVCEncoderTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "avc"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class AVCEncoderLPTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "avc"),
-      lowpower  = 1,
-    )
 
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):

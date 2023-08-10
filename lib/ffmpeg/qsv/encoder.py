@@ -7,8 +7,9 @@
 import re
 import slash
 
+from ....lib import platform
 from ....lib.ffmpeg.encoderbase import BaseEncoderTest, Encoder as FFEncoder
-from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
+from ....lib.ffmpeg.util import have_ffmpeg_hwaccel, have_ffmpeg_encoder, have_ffmpeg_decoder
 from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver, have_encode_main10sp
 from ....lib.ffmpeg.qsv.decoder import Decoder
 from ....lib.common import mapRangeInt, get_media, call, exe2os
@@ -164,3 +165,34 @@ class EncoderTest(BaseEncoderTest):
         m = re.search(pattern, self.output, re.MULTILINE)
         assert m is not None, f"'{pattern}' missing in output"
 
+@slash.requires(*have_ffmpeg_encoder("h264_qsv"))
+@slash.requires(*have_ffmpeg_decoder("h264_qsv"))
+class AVCEncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "avc",
+      ffencoder = "h264_qsv",
+      ffdecoder = "h264_qsv",
+    )
+
+  def get_file_ext(self):
+    return "h264"
+
+@slash.requires(*platform.have_caps("encode", "avc"))
+class AVCEncoderTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "avc"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "avc"))
+class AVCEncoderLPTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "avc"),
+      lowpower  = 1,
+    )
