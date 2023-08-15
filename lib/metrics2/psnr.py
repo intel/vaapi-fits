@@ -83,8 +83,8 @@ class PSNR(factory.Metric):
   def check_trendline(self):
     gopkey = 30 if self.props.get("gop", 30) > 1 else 1
     model = get_media().baseline.lookup(
-      f"model.encode:trend.test(case={self.props['case']})",
-      self.props["codec"], f"gop.{gopkey}")
+      f"model/encode/{self.props['codec']}"
+      f":trend.test(case={self.props['case']})", f"gop.{gopkey}")
 
     assert model is not None, "Trendline model reference not found"
 
