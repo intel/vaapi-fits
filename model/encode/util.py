@@ -81,7 +81,7 @@ class TrendModelMixin:
 
         get_media().baseline.update_reference(
           fx = fn, popt = list(popt), rsq = rsq,
-          context = ["key:model.encode", f"{self.codec}", f"gop.{gop}"],
+          context = [f"key:model/encode/{self.codec}", f"gop.{gop}"],
         )
 
         power_x = np.linspace(min(self.xdata), max(self.xdata), 100)
