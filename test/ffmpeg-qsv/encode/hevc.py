@@ -6,42 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
-from ....lib.ffmpeg.qsv.encoder import EncoderTest
+from ....lib.ffmpeg.qsv.encoder import HEVC8EncoderTest, HEVC8EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "8bit")
 spec_r2r  = load_test_spec("hevc", "encode", "8bit", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
-@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC8EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "hevc-8",
-      ffencoder = "hevc_qsv",
-      ffdecoder = "hevc_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_8"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_8"),
-      lowpower  = 1,
-    )
 
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
