@@ -54,14 +54,20 @@ def compare_ge(k, ref, actual):
   assert ref is not None, "Invalid reference value"
   assert actual >= ref
 
+def eval_value(val):
+  import types
+  if type(val) is types.FunctionType:
+    return val()
+  return val
+
 class PSNR(factory.Metric):
   filetrue  = property(lambda self: self.ifprop("filetrue", "{filetrue}") or self.props["reference"])
   compare   = property(lambda self: self.props.get("compare", compare_actual))
   mode      = property(lambda self: self.props["metric"].get("mode", "default"))
 
   # mode = trendline
-  tolerance = property(lambda self: self.props["metric"].get("tolerance", 5.0)) # vertical shift
-  bias      = property(lambda self: self.props["metric"].get("bias", 0.0)) # horizontal shift
+  tolerance = property(lambda self: eval_value(self.props["metric"].get("tolerance", 5.0))) # vertical shift
+  bias      = property(lambda self: eval_value(self.props["metric"].get("bias", 0.0))) # horizontal shift
   filecoded = property(lambda self: self.ifprop("filecoded", "{filecoded}") or self.props["encoder"].encoded)
   codedsize = property(lambda self: os.path.getsize(self.filecoded)) # bytes
   rawsize   = property(lambda self: self.framesize * self.frames) # bytes
