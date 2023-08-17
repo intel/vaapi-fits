@@ -60,7 +60,8 @@ class PSNR(factory.Metric):
   mode      = property(lambda self: self.props["metric"].get("mode", "default"))
 
   # mode = trendline
-  tolerance = property(lambda self: self.props["metric"].get("tolerance", 5.0))
+  tolerance = property(lambda self: self.props["metric"].get("tolerance", 5.0)) # vertical shift
+  bias      = property(lambda self: self.props["metric"].get("bias", 0.0)) # horizontal shift
   filecoded = property(lambda self: self.ifprop("filecoded", "{filecoded}") or self.props["encoder"].encoded)
   codedsize = property(lambda self: os.path.getsize(self.filecoded)) # bytes
   rawsize   = property(lambda self: self.framesize * self.frames) # bytes
@@ -94,6 +95,7 @@ class PSNR(factory.Metric):
       "size:raw"          : self.rawsize,
       "compression:ratio" : self.compratio,
       "compression:log"   : self.logratio,
+      "compression:bias"  : self.bias,
       "model:trend:name"  : fname,
       "model:trend:opts"  : fopts,
       "psnr:stats"        : self.actual,
@@ -101,7 +103,7 @@ class PSNR(factory.Metric):
     })
 
     fx = trend_models[fname]
-    expect = max(20.0, fx(self.logratio, *fopts) - self.tolerance)
+    expect = max(20.0, fx(self.logratio + self.bias, *fopts) - self.tolerance)
 
     get_media().baseline.check_result(
       psnr = self.average, reference = {"psnr" : expect}, compare = compare_ge)
