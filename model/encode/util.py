@@ -43,6 +43,14 @@ class TrendModelMixin:
     tolerance = vars(self).get("metric", dict()).get("tolerance", 5.0)
     qps = [1, 2, 4, 7, 10, 13, 16, 23, 31, 40, 42, 45, 48, 49, 51]
 
+    get_media().baseline.update_reference(
+      driver = get_media()._get_driver_name(),
+      platform = platform,
+      encoder = self.ffencoder,
+      profile = self.profile,
+      context = [f"key:model/encode/{self.codec}", "base.origin"],
+    )
+
     for gop, bf, tu in itertools.product([1, 30], [2], [4]):
       get_media()._set_test_details(gop = gop, bframes = bf, tu = tu)
       vars(self).update(gop = gop, bframes = bf, quality = tu)
