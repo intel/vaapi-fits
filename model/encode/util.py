@@ -70,7 +70,9 @@ class TrendModelMixin:
 
       plt.scatter(self.xdata, self.ydata, label = label)
 
-      for fn in ["powernc", "powerc", "powern", "power"]:
+
+      best_model = [0, None, None]
+      for fn in ["cubic", "powernc", "powerc", "powern", "power"]:
         try:
           popt, pcov = curve_fit(trend_models[fn], self.xdata, self.ydata)
         except:
@@ -87,22 +89,25 @@ class TrendModelMixin:
 
         if rsq < 0.9: continue # not a very good fit
 
-        get_media().baseline.update_reference(
-          fx = fn, popt = list(popt), rsq = rsq,
-          context = [f"key:model/encode/{self.codec}", f"gop.{gop}"],
-        )
+        if rsq > best_model[0]:
+          best_model = [rsq, fn, popt]
 
-        power_x = np.linspace(min(self.xdata), max(self.xdata), 100)
-        power_y = trend_models[fn](power_x, *popt)
-        power_y = [max(20, p - tolerance) for p in power_y]
-        sopt = tuple(float(f"{p:.2f}") for p in popt)
+      rsq, fn, popt = best_model
 
-        plt.plot(
-          power_x, power_y,
-          label = f"{label}.{fn}{sopt}(r2={rsq:.4f}, T={tolerance})"
-        )
+      get_media().baseline.update_reference(
+        fx = fn, popt = list(popt), rsq = rsq,
+        context = [f"key:model/encode/{self.codec}", f"gop.{gop}"],
+      )
 
-        break # only need one trend model function
+      power_x = np.linspace(min(self.xdata), max(self.xdata), 100)
+      power_y = trend_models[fn](power_x, *popt)
+      power_y = [max(20, p - tolerance) for p in power_y]
+      sopt = tuple(float(f"{p:.2f}") for p in popt)
+
+      plt.plot(
+        power_x, power_y,
+        label = f"{label}.{fn}{sopt}(r2={rsq:.4f}, T={tolerance})"
+      )
 
     plt.ylim([15, 100])
     plt.legend()
