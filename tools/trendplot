@@ -1,0 +1,161 @@
+#!/usr/bin/env python3
+
+###
+### Copyright (C) 2023 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+###
+### kate: syntax python;
+###
+
+import argparse
+import glob
+import lxml.etree as et
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+import re
+import sys
+
+__MYPATH__ = os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__MYPATH__))
+
+from lib.metrics2.psnr import trend_models
+
+def loadxml(filenames):
+  for filename in filenames:
+    if os.path.isdir(filename):
+      search = os.path.join(filename, "**", "results.xml")
+      yield from loadxml(glob.glob(search, recursive = True))
+    else:
+      yield et.parse(filename).getroot()
+
+# script command-line options
+parser = argparse.ArgumentParser()
+parser.add_argument("files", nargs = "+", type = str)
+parser.add_argument("--case", nargs = "+", default = [])
+parser.add_argument("--codec", nargs="+", default = [])
+parser.add_argument("--rc", nargs="+", default = [])
+parser.add_argument("--gop", nargs="+", type = int, default = [])
+parser.add_argument("--bf", nargs="+", type = int, default = [])
+parser.add_argument("--tu", nargs="+", type = int, default = [])
+parser.add_argument("--component", nargs="+", default = [])
+parser.add_argument("--platform", nargs="+", default = [])
+parser.add_argument("--bias", type = float, default = 0.0)
+parser.add_argument("--tolerance", type = float, default = 0.0)
+parser.add_argument("--failures", action = "store_true")
+parser.add_argument("--add-trendline", nargs="+", type = str, default = [])
+
+# initialize
+plt.rcParams['figure.figsize'] = [20, 10]
+args        = parser.parse_args()
+trendlines  = dict()
+plotdata    = dict()
+minx        = 10000
+maxx        = 0
+roots       = loadxml(args.files)
+
+# add user defined trendline
+if len(args.add_trendline):
+  trendname = args.add_trendline[0] # model function name
+  trendopts = [float(o) for o in args.add_trendline[1:]] # model function opts
+  trendlines.setdefault(trendname, set()).add(
+    tuple(["", "", "", args.tolerance+5.0]) + tuple(trendopts))
+
+# filter and aggregate test results from xml
+for root in roots:
+  platform  = root.get("platform")
+  driver    = root.get("driver")
+  suite     = root.get("name")
+
+  if len(args.platform) and platform not in args.platform:
+    continue
+
+  for testcase in root:
+    if testcase.get("skipped") == "1": continue
+
+    # disassemble test case name and classname
+    name      = testcase.get("name")
+    rc        = name.split('.')[0]
+    pattern   = re.compile("(?P<key>[\w]+)=(?P<value>[\S\s]*?)(,|\))", re.VERBOSE)
+    params    = {m.group("key"): m.group("value") for m in pattern.finditer(name)}
+    case      = params["case"]
+    tu        = int(params.get("quality", -1))
+    bf        = int(params.get("bframes", -1))
+    gop       = int(params.get("gop", -1))
+    classname = testcase.get("classname")
+    parts     = classname.split('.')
+    component = parts[2]
+    codec     = '.'.join(parts[4:])
+
+    # check for failure tag
+    failure   = testcase.xpath("failure")
+
+    # filter testcase
+    if len(args.codec) and codec not in args.codec:
+      continue
+    if len(args.rc) and rc not in args.rc:
+      continue
+    if len(args.case) and params["case"] not in args.case:
+      continue
+    if len(args.component) and component not in args.component:
+      continue
+    if len(args.gop) and gop not in args.gop:
+      continue
+    if len(args.tu) and tu not in args.tu:
+      continue
+    if len(args.bf) and bf not in args.bf:
+      continue
+    if args.failures and len(failure) < 1:
+      continue
+
+    # convert details to key:value
+    details = dict()
+    for detail in testcase.iter("detail"):
+      details[detail.get("name")] = detail.get("value")
+
+    # find necessary trendline datapoints
+    bias      = float(details.get("compression:bias", 0.0)) + args.bias
+    tolerance = float(details.get("psnr:tolerance", 5.0)) + args.tolerance
+    psnr      = float(details.get("psnr:actual", -1.0))
+    log       = float(details.get("compression:log", -1.0))
+    label     = f"{platform}:{rc}:{codec}:{case}:{component}:gop={gop}:bf={bf}:tu={tu}:bias={bias}"
+
+    # missing datapoints
+    if psnr < 0 or log < 0: continue
+
+    minx = min(minx, log+bias)
+    maxx = max(maxx, log+bias)
+
+    data = plotdata.setdefault(label, dict())
+    data.setdefault("ydata", list()).append(psnr)
+    data.setdefault("xdata", list()).append(log+bias)
+
+    trendname = details.get("model:trend:name", None)
+    trendopts = details.get("model:trend:opts", None)
+    if trendname is not None and trendopts is not None:
+      trendlines.setdefault(trendname, set()).add(tuple([case, codec, gop, tolerance]) + tuple(eval(trendopts)))
+
+for label, data in plotdata.items():
+  plt.scatter(data["xdata"], data["ydata"], label = label)
+
+for fn, trendline in trendlines.items():
+  for opts in trendline:
+    case, codec, gop, tolerance, *opt = opts
+    sopt    = tuple(float(f"{p:.2f}") for p in opt)
+    label   = f"REF:{codec}:{case}:gop={gop} {fn}{sopt} T={tolerance}"
+    xpower  = np.linspace(min(0, minx), max(maxx, 10), 100)
+    ypower  = trend_models[fn](xpower, *opt)
+    ypower  = [y-tolerance for y in ypower]
+    plt.plot(xpower, ypower, label = label, linestyle = "dashed", linewidth = 3)
+
+plt.ylim([15, 80])
+plt.xlim([0, 11])
+plt.ylabel("PSNR")
+plt.xlabel("Compression Ratio (ln x)")
+plt.legend()
+plt.show()
+
+
