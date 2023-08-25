@@ -6,42 +6,10 @@
 
 from .....lib import *
 from .....lib.ffmpeg.qsv.util import *
-from .....lib.ffmpeg.qsv.encoder import EncoderTest
+from .....lib.ffmpeg.qsv.encoder import HEVC10EncoderTest, HEVC10EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
-@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "hevc-10",
-      ffencoder = "hevc_qsv",
-      ffdecoder = "hevc_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_10"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_10"),
-      lowpower  = 1,
-    )
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
