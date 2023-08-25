@@ -165,6 +165,10 @@ class EncoderTest(BaseEncoderTest):
         m = re.search(pattern, self.output, re.MULTILINE)
         assert m is not None, f"'{pattern}' missing in output"
 
+############################
+## AVC Encoders           ##
+############################
+
 @slash.requires(*have_ffmpeg_encoder("h264_qsv"))
 @slash.requires(*have_ffmpeg_decoder("h264_qsv"))
 class AVCEncoderBaseTest(EncoderTest):
@@ -197,6 +201,10 @@ class AVCEncoderLPTest(AVCEncoderBaseTest):
       lowpower  = 1,
     )
 
+############################
+## HEVC 8 Bit Encoders    ##
+############################
+
 @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
 @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
 class HEVC8EncoderBaseTest(EncoderTest):
@@ -226,5 +234,41 @@ class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
     super().before()
     vars(self).update(
       caps      = platform.get_caps("vdenc", "hevc_8"),
+      lowpower  = 1,
+    )
+
+############################
+## HEVC 10 Bit Encoders   ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+class HEVC10EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "hevc-10",
+      ffencoder = "hevc_qsv",
+      ffdecoder = "hevc_qsv",
+    )
+
+  def get_file_ext(self):
+    return "h265"
+
+@slash.requires(*platform.have_caps("encode", "hevc_10"))
+class HEVC10EncoderTest(HEVC10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_10"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_10"),
       lowpower  = 1,
     )
