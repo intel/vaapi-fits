@@ -154,6 +154,8 @@ class MediaPlugin(slash.plugins.PluginInterface):
         sc = "plat.{platform}"
       elif "gpu.gen" == sc:
         sc = "gpu.gen.{gpu[gen]}"
+      elif "disp_win" == sc:
+        sc = "disp_win.{display}"
       elif sc.startswith("key:"):
         continue
 
@@ -224,6 +226,9 @@ class MediaPlugin(slash.plugins.PluginInterface):
     from lib.platform import info
     return info()["os"]
 
+  def _get_component(self):
+    return sys.argv[2].split("/")[1]
+  
   def test_start(self):
     test = slash.context.test
     result = slash.context.result
