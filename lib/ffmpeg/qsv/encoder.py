@@ -272,3 +272,30 @@ class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "hevc_10"),
       lowpower  = 1,
     )
+
+############################
+## HEVC 12 Bit Encoders   ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
+@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
+class HEVC12EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "hevc-12",
+      ffencoder = "hevc_qsv",
+      ffdecoder = "hevc_qsv",
+    )
+
+  def get_file_ext(self):
+    return "h265"
+
+@slash.requires(*platform.have_caps("encode", "hevc_12"))
+class HEVC12EncoderTest(HEVC12EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_12"),
+      lowpower  = 0,
+    )

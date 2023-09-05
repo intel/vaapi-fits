@@ -6,32 +6,9 @@
 
 from .....lib import *
 from .....lib.ffmpeg.qsv.util import *
-from .....lib.ffmpeg.qsv.encoder import EncoderTest
+from .....lib.ffmpeg.qsv.encoder import HEVC12EncoderTest
 
 spec = load_test_spec("hevc", "encode", "12bit")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
-@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC12EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "hevc-12",
-      ffencoder = "hevc_qsv",
-      ffdecoder = "hevc_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-@slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVC12EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_12"),
-      lowpower  = 0,
-    )
 
 class cqp(HEVC12EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
