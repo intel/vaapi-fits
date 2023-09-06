@@ -38,7 +38,7 @@ class BaseVppTest(slash.Test, VppMetricMixin):
     raise NotImplementedError
 
   def gen_input_opts(self):
-    if self.vpp_op not in ["deinterlace"]:
+    if self.vpp_op not in ["deinterlace", "tonemap"]:
       opts = "filesrc location={ossource} num-buffers={frames}"
       opts += " ! rawvideoparse format={mformat} width={width} height={height}"
     else:
@@ -80,7 +80,7 @@ class BaseVppTest(slash.Test, VppMetricMixin):
     ifmts         = self.get_input_formats()
     ofmts         = self.get_output_formats()
     self.ifmt     = self.format
-    self.ofmt     = self.format if "csc" != self.vpp_op else self.csc
+    self.ofmt     = self.format if self.vpp_op not in {"csc", "tonemap"} else self.csc
     self.mformat  = self.map_format(self.format)
     self.mformatu = self.map_formatu(self.format)
 
