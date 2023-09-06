@@ -64,5 +64,7 @@ class VppTest(BaseVppTest):
     elif self.vpp_op in ["crop"]:
       opts += " crop-left={left} crop-right={right}"
       opts += " crop-top={top} crop-bottom={bottom}"
+    elif self.vpp_op in ["tonemap"]:
+      opts += " hdr-tone-mapping=true"
 
     return opts
