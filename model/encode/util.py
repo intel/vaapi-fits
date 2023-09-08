@@ -31,17 +31,17 @@ class TrendModelMixin:
     vars(self).update(
       rcmode  = "cqp",
       bframes = 2,
-      slices  = 1,
       quality = 4,
     )
     vars(self).setdefault("profile", default_profile)
+    vars(self).setdefault("modelqps", [1, 2, 4, 7, 10, 13, 16, 23, 31, 40, 42, 45, 48, 49, 51])
+    vars(self).setdefault("modelfns", ["cubic", "powernc", "powerc", "powern", "power"])
 
   def fit(self):
     self.initvars("main")
 
     platform = get_media()._get_platform_name()
     tolerance = vars(self).get("metric", dict()).get("tolerance", 5.0)
-    qps = [1, 2, 4, 7, 10, 13, 16, 23, 31, 40, 42, 45, 48, 49, 51]
 
     get_media().baseline.update_reference(
       driver = get_media()._get_driver_name(),
@@ -51,19 +51,19 @@ class TrendModelMixin:
       context = [f"key:model/encode/{self.codec}", "base.origin"],
     )
 
-    for gop, bf, tu in itertools.product([1, 30], [2], [4]):
-      get_media()._set_test_details(gop = gop, bframes = bf, tu = tu)
-      vars(self).update(gop = gop, bframes = bf, quality = tu)
+    for gop in [1, 30]:
+      get_media()._set_test_details(gop = gop)
+      vars(self).update(gop = gop)
 
       self.xdata = list()
       self.ydata = list()
 
-      for qp in qps:
+      for qp in self.modelqps:
         get_media()._set_test_details(qp = qp)
         vars(self).update(qp = qp)
         self.encode()
 
-      label = f"{platform}:{self.codec}:{self.rcmode}:{self.case}:gop={gop}:bf={bf}:tu={tu}"
+      label = f"{platform}:{self.codec}:{self.rcmode}:{self.case}:gop={gop}"
 
       plt.ylabel("PSNR")
       plt.xlabel("Compression Ratio (ln x)")
@@ -72,7 +72,7 @@ class TrendModelMixin:
 
 
       best_model = [0, None, None]
-      for fn in ["cubic", "powernc", "powerc", "powern", "power"]:
+      for fn in self.modelfns:
         try:
           popt, pcov = curve_fit(trend_models[fn], self.xdata, self.ydata)
         except:
@@ -99,7 +99,7 @@ class TrendModelMixin:
         context = [f"key:model/encode/{self.codec}", f"gop.{gop}"],
       )
 
-      power_x = np.linspace(min(self.xdata), max(self.xdata), 100)
+      power_x = np.linspace(min(self.xdata + [0]), max(self.xdata + [10]), 100)
       power_y = trend_models[fn](power_x, *popt)
       power_y = [max(20, p - tolerance) for p in power_y]
       sopt = tuple(float(f"{p:.2f}") for p in popt)
@@ -126,6 +126,11 @@ class TrendModelMixin:
       filetest  = self.decoder.decoded,
     )
     metric.actual = self.parse_psnr()
-    get_media()._set_test_details(psnr = metric.actual, apsnr = metric.average)
+    get_media()._set_test_details(**{
+      "compression:ratio" : metric.compratio,
+      "compression:log"   : metric.logratio,
+      "psnr:stats"        : metric.actual,
+      "psnr"              : metric.average,
+    })
     self.xdata.append(metric.logratio)
     self.ydata.append(metric.average)
