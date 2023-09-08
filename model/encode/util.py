@@ -32,6 +32,10 @@ class TrendModelMixin:
       rcmode  = "cqp",
       bframes = 2,
       quality = 4,
+      iqfactor = 1,
+      bqfactor = 1,
+      iqoffset = 0,
+      bqoffset = 0,
     )
     vars(self).setdefault("profile", default_profile)
     vars(self).setdefault("modelqps", [1, 2, 4, 7, 10, 13, 16, 23, 31, 40, 42, 45, 48, 49, 51])
