@@ -6,33 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
-from ....lib.ffmpeg.qsv.encoder import EncoderTest
+from ....lib.ffmpeg.qsv.encoder import AV1EncoderLPTest
 
 spec = load_test_spec("av1", "encode", "8bit")
 spec_r2r  = load_test_spec("av1", "encode", "8bit", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("av1_qsv"))
-@slash.requires(*have_ffmpeg_decoder("av1_qsv"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "av1-8",
-      ffencoder = "av1_qsv",
-      ffdecoder = "av1_qsv",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-@slash.requires(*platform.have_caps("vdenc", "av1_8"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_8"),
-      lowpower  = 1,
-    )
 
 class cqp_lp(AV1EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
