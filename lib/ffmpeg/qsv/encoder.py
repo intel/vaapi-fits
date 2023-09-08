@@ -19,6 +19,10 @@ class Encoder(FFEncoder):
   tilecols  = property(lambda s: s.ifprop("tilecols", " -tile_cols {tilecols}"))
   tilerows  = property(lambda s: s.ifprop("tilerows", " -tile_rows {tilerows}"))
   ldb       = property(lambda s: s.ifprop("ldb", " -low_delay_brc {ldb}"))
+  iqfactor  = property(lambda s: s.ifprop("iqfactor", " -i_qfactor {iqfactor}"))
+  bqfactor  = property(lambda s: s.ifprop("bqfactor", " -b_qfactor {bqfactor}"))
+  iqoffset  = property(lambda s: s.ifprop("iqoffset", " -i_qoffset {iqoffset}"))
+  bqoffset  = property(lambda s: s.ifprop("bqoffset", " -b_qoffset {bqoffset}"))
 
   @property
   def hwupload(self):
@@ -47,7 +51,11 @@ class Encoder(FFEncoder):
 
   @property
   def encparams(self):
-    return f"{super().encparams}{self.ldb}"
+    return (
+      f"{super().encparams}{self.ldb}"
+      f"{self.iqfactor}{self.bqfactor}"
+      f"{self.iqoffset}{self.bqoffset}"
+    )
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
