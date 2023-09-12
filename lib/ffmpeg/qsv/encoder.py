@@ -334,3 +334,30 @@ class AV1EncoderLPTest(AV1EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "av1_8"),
       lowpower  = 1,
     )
+
+############################
+## AV1 10 Bit Encoders    ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("av1_qsv"))
+@slash.requires(*have_ffmpeg_decoder("av1_qsv"))
+class AV110EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "av1-10",
+      ffencoder = "av1_qsv",
+      ffdecoder = "av1_qsv",
+    )
+
+  def get_file_ext(self):
+    return "ivf"
+
+@slash.requires(*platform.have_caps("vdenc", "av1_10"))
+class AV110EncoderLPTest(AV110EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "av1_10"),
+      lowpower  = 1,
+    )
