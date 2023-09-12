@@ -6,35 +6,14 @@
 
 from .....lib import *
 from .....lib.ffmpeg.qsv.util import *
-from .....lib.ffmpeg.qsv.encoder import EncoderTest
+from .....lib.ffmpeg.qsv.encoder import AV110EncoderLPTest
 
 spec      = load_test_spec("av1", "encode", "10bit")
 spec_r2r  = load_test_spec("av1", "encode", "10bit", "r2r")
 
-@slash.requires(*have_ffmpeg_encoder("av1_qsv"))
-@slash.requires(*have_ffmpeg_decoder("av1_qsv"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "av1-10",
-      ffencoder = "av1_qsv",
-      ffdecoder = "av1_qsv",
-    )
 
-  def get_file_ext(self):
-    return "ivf"
 
-@slash.requires(*platform.have_caps("vdenc", "av1_10"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_10"),
-      lowpower  = 1,
-    )
-
-class cqp_lp(AV1EncoderLPTest):
+class cqp_lp(AV110EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -60,7 +39,7 @@ class cqp_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class cbr_lp(AV1EncoderLPTest):
+class cbr_lp(AV110EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -89,7 +68,7 @@ class cbr_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class vbr_lp(AV1EncoderLPTest):
+class vbr_lp(AV110EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
