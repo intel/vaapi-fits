@@ -361,3 +361,31 @@ class AV110EncoderLPTest(AV110EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "av1_10"),
       lowpower  = 1,
     )
+
+
+############################
+## VP9 8 Bit Encoders    ##
+############################
+@slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
+@slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
+class VP9_8EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "vp9",
+      ffencoder = "vp9_qsv",
+      ffdecoder = "vp9_qsv",
+    )
+
+  def get_file_ext(self):
+    return "ivf"
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
+class VP9_8EncoderLPTest(VP9_8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "vp9_8"),
+      lowpower  = 1,
+    )
+
