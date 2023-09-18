@@ -5,15 +5,16 @@
 ###
 
 import slash
+import os
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import have_gst, have_gst_element, gst_discover
+from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, gst_discover
 
 from ...lib import metrics2
 
 @slash.requires(have_gst)
 @slash.requires(*have_gst_element("checksumsink2"))
-class BaseTranscoderTest(slash.Test):
+class BaseTranscoderTest(slash.Test, BaseFormatMapper):
   def before(self):
     self.refctx = []
     self.post_validate = lambda: None
@@ -39,7 +40,7 @@ class BaseTranscoderTest(slash.Test):
       return None
     _, _, scale = self.get_requirements_data("vpp", "scale", mode)
     assert scale is not None, "failed to find a suitable vpp scaler: {}".format(mode)
-    return scale.format(width = width or self.width, height = height or self.height, format = self.format)
+    return scale.format(width = width or self.width, height = height or self.height, format = self.mformat)
 
   def get_file_ext(self, codec):
     return {
@@ -59,6 +60,8 @@ class BaseTranscoderTest(slash.Test):
     if self.mode == "dma" and get_media()._get_driver_name() == "d3d11":
       slash.skip_test(
         "d3d11 does not support dma caps")
+
+    self.mformat = self.map_format(self.format)
 
     icaps, ireq, _ = self.get_requirements_data("decode", self.codec, self.mode)
     requires = [ireq,]
@@ -111,9 +114,11 @@ class BaseTranscoderTest(slash.Test):
   def gen_input_opts(self):
     self.ossource = filepath2os(self.source)
     opts =  "filesrc location={ossource}"
+    if (os.path.splitext(self.source)[1]) == ".ts":
+      opts += " ! tsdemux"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     if self.mode in ["hw", "sw"]:
-      opts += " ! video/x-raw,format={format}"
+      opts += " ! video/x-raw,format={mformat}"
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
@@ -147,9 +152,9 @@ class BaseTranscoderTest(slash.Test):
     self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
     if self.mode in ["va_hw", "dma"]:
-      opts += " ! vapostproc ! video/x-raw,format={format}"
+      opts += " ! vapostproc ! video/x-raw,format={mformat}"
     elif self.mode == "d3d11_hw":
-      opts += " ! d3d11download ! video/x-raw,format={format}"
+      opts += " ! d3d11download ! video/x-raw,format={mformat}"
     opts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
     opts += " frame-checksum=false plane-checksum=false dump-output=true"
     opts += " dump-location={ossrcyuv}"
