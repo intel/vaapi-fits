@@ -7,6 +7,7 @@
 import re
 
 from ...lib.common import memoize, try_call, call, exe2os
+from ...lib.formats import FormatMapper
 
 def parse_inline_md5(msglog):
   return parse_inline_md5.pattern.search(msglog).group("actual")
@@ -42,3 +43,24 @@ def get_elements(plugin):
     result = call(f"{exe2os('gst-inspect-1.0')} --print-plugin-auto-install-info {plugin}")
   finally:
     return pattern.findall(result)
+
+class BaseFormatMapper(FormatMapper):
+  def get_supported_format_map(self):
+    return {
+      "I420"  : "I420",
+      "NV12"  : "NV12",
+      "YV12"  : "YV12",
+      "AYUV"  : "VUYA", #we use microsoft's definition of AYUV,https://docs.microsoft.com/en-us/windows/win32/medfound/recommended-8-bit-yuv-formats-for-video-rendering#ayuv
+      "YUY2"  : "YUY2",
+      "ARGB"  : "ARGB",
+      "BGRA"  : "BGRA",
+      "422H"  : "Y42B",
+      "444P"  : "Y444",
+      "P010"  : "P010_10LE",
+      "P012"  : "P012_LE",
+      "I010"  : "I420_10LE",
+      "Y210"  : "Y210",
+      "Y212"  : "Y212_LE",
+      "Y410"  : "Y410",
+      "Y412"  : "Y412_LE",
+    }
