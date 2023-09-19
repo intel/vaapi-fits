@@ -362,10 +362,10 @@ class AV110EncoderLPTest(AV110EncoderBaseTest):
       lowpower  = 1,
     )
 
+############################
+## VP9 8 Bit Encoders     ##
+############################
 
-############################
-## VP9 8 Bit Encoders    ##
-############################
 @slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
 @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
 class VP9_8EncoderBaseTest(EncoderTest):
@@ -389,3 +389,22 @@ class VP9_8EncoderLPTest(VP9_8EncoderBaseTest):
       lowpower  = 1,
     )
 
+############################
+## MPEG2 Encoders         ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("mpeg2_qsv"))
+@slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
+@slash.requires(*platform.have_caps("encode", "mpeg2"))
+class MPEG2EncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "mpeg2"),
+      codec     = "mpeg2",
+      ffencoder = "mpeg2_qsv",
+      ffdecoder = "mpeg2_qsv",
+    )
+
+  def get_file_ext(self):
+    return "m2v"

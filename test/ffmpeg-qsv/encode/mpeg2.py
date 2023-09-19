@@ -6,26 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
-from ....lib.ffmpeg.qsv.encoder import EncoderTest
+from ....lib.ffmpeg.qsv.encoder import MPEG2EncoderTest
 
 spec      = load_test_spec("mpeg2", "encode")
 spec_r2r  = load_test_spec("mpeg2", "encode", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("mpeg2_qsv"))
-@slash.requires(*have_ffmpeg_decoder("mpeg2_qsv"))
-@slash.requires(*platform.have_caps("encode", "mpeg2"))
-class MPEG2EncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "mpeg2"),
-      codec     = "mpeg2",
-      ffencoder = "mpeg2_qsv",
-      ffdecoder = "mpeg2_qsv",
-    )
-
-  def get_file_ext(self):
-    return "m2v"
 
 class cqp(MPEG2EncoderTest):
   def init(self, tspec, case, gop, bframes, qp, quality):

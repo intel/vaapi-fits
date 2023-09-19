@@ -76,6 +76,11 @@ def mapprofile(codec, profile):
     "vp9-12" : {
       "profile3"  : "profile3",
     },
+    "mpeg2" : {
+      "simple"  : "simple",
+      "main"    : "main",
+      "high"    : "high",
+    },
   }.get(codec, {}).get(profile, None)
 
 def load_test_spec(*ctx):
