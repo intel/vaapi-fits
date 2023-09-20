@@ -18,7 +18,7 @@ class Encoder(GstEncoder):
   @property
   def hwformat(self):
     ifmts = self.props["caps"]["fmts"]
-    if self.codec not in ["hevc-8", "vp9"]:
+    if self.codec not in ["hevc-8", "vp9", "vp9-10"]:
       ifmts = list(set(ifmts) - set(["AYUV"]))
     return map_best_hw_format(super().format, ifmts)
 
