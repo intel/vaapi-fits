@@ -15,7 +15,7 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "vp9",
+      codec         = "vp9-10",
       gstdecoder    = "vavp9dec",
       gstmediatype  = "video/x-vp9",
       gstparser     = "vp9parse",

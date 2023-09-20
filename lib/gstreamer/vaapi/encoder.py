@@ -34,7 +34,7 @@ class Encoder(GstEncoder):
       if self.codec in ["mpeg2"]:
         mqp = mapRangeInt(qp, [0, 100], [2, 62])
         return f" quantizer={mqp}"
-      if self.codec in ["vp8", "vp9"]:
+      if self.codec in ["vp8", "vp9", "vp9-10"]:
         return f" yac-qi={qp}"
       return f" init-qp={qp}"
     return self.ifprop("qp", inner)
