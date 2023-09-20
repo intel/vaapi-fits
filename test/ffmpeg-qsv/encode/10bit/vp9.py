@@ -6,32 +6,9 @@
 
 from .....lib import *
 from .....lib.ffmpeg.qsv.util import *
-from .....lib.ffmpeg.qsv.encoder import EncoderTest
+from .....lib.ffmpeg.qsv.encoder import VP9_10EncoderLPTest
 
 spec = load_test_spec("vp9", "encode", "10bit")
-
-@slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
-@slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
-class VP9_10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = "vp9",
-      ffencoder = "vp9_qsv",
-      ffdecoder = "vp9_qsv",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_10"),
-      lowpower  = 1,
-    )
 
 class cqp_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices):
