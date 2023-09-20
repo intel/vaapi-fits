@@ -132,7 +132,7 @@ class EncoderTest(BaseEncoderTest):
       assert m is not None, "Possible incorrect FPS used"
 
     # slices
-    if vars(self).get("slices", None) is not None and self.codec not in ["vp9"]:
+    if vars(self).get("slices", None) is not None and self.codec not in ["vp9", "vp9-10"]:
       m = re.search(f"NumSlice: {self.slices};", self.output, re.MULTILINE)
       assert m is not None, "Possible incorrect slices used"
 
@@ -408,3 +408,28 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_file_ext(self):
     return "m2v"
+
+## VP9 10 Bit Encoders    ##
+############################
+@slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
+@slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
+class VP9_10EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec     = "vp9-10",
+      ffencoder = "vp9_qsv",
+      ffdecoder = "vp9_qsv",
+    )
+
+  def get_file_ext(self):
+    return "ivf"
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "vp9_10"),
+      lowpower  = 1,
+    )
