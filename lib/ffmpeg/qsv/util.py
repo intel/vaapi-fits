@@ -73,6 +73,10 @@ def mapprofile(codec, profile):
       "profile0"  : "profile0",
       "profile1"  : "profile1",
     },
+    "vp9-10" : {
+      "profile2"  : "profile2",
+      "profile3"  : "profile3",
+    },
     "vp9-12" : {
       "profile3"  : "profile3",
     },
