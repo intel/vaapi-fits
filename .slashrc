@@ -63,7 +63,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
   platform = None
   suite = os.path.basename(sys.argv[0])
   mypath = __SCRIPT_DIR__
-  blacklist = {}
+  speclist = {'black':{}, 'ignore':{}}
 
   RETENTION_NONE = 0;
   RETENTION_FAIL = 1;
@@ -278,6 +278,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
         if len(line):
           slash.logger.info(line)
 
+    self._ignore_in_ignorelisted(test, result)
     # Finally, calculate test execution time
     result.data.update(test_end = dt.now())
     time = (result.data["test_end"] - result.data["test_start"]).total_seconds()
@@ -364,14 +365,14 @@ class MediaPlugin(slash.plugins.PluginInterface):
       slash.context.session.results.global_result.get_log_dir(), "results.xml")
     tree.write(filename)
 
-  def _load_blacklist(self, file_path = None):
-    if file_path is None or len(file_path) == 0 or not os.path.exists(file_path):
+  def _load_speclist(self, list_type, file_path = None):
+    if file_path is None or len(file_path) == 0 or not os.path.exists(file_path) or list_type not in self.speclist:
       return
 
     import json, glob
     for file in glob.glob(os.path.join(str(file_path), "*.json")):
       with open(file, 'rb') as f:
-        self.blacklist.update(json.load(f))
+        self.speclist[list_type].update(json.load(f))
 
   def _assert_not_blacklisted(self, test):
     # Current platform and driver combine not in blacklist
@@ -382,8 +383,20 @@ class MediaPlugin(slash.plugins.PluginInterface):
       "platform=" + self._get_platform_name(),
     ]
 
-    for filter,message in self.blacklist.items():
+    for filter,message in self.speclist['black'].items():
       assert not Matcher(filter).matches(" ".join(search)), 'Blacklisted: ' + message
+
+  def _ignore_in_ignorelisted(self, test, result):
+    # Current platform and driver combine not in blacklist
+    from slash.utils.pattern_matching import Matcher
+    search= [
+      str(test.__slash__),
+      "driver=" + self._get_driver_name(),
+      "platform=" + self._get_platform_name(),
+    ]
+    for filter,message in self.speclist['ignore'].items():
+      if Matcher(filter).matches(" ".join(search)):
+        result.add_skip('case ignored: ' + message)
 
 media = MediaPlugin()
 slash.plugins.manager.install(media, activate = True, is_internal = True)
@@ -401,10 +414,11 @@ assert os.path.exists(config)
 with open(config, 'rb') as f:
   exec(f.read())
 
-blacklist = os.environ.get(
-  'VAAPI_FITS_BLACKLIST',
-  os.path.abspath(os.path.join(media.mypath, "blacklist")))
-media._load_blacklist(blacklist)
+for i in ['black', 'ignore']:
+  type_lst = os.environ.get(
+    f'VAAPI_FITS_{i.upper()}LIST',
+    os.path.abspath(os.path.join(media.mypath, f"{i}list")))
+  media._load_speclist(i, type_lst)
 
 from slash.core.variation import _PRINTABLE_CHARS
 import numbers
