@@ -409,8 +409,10 @@ class MPEG2EncoderTest(EncoderTest):
   def get_file_ext(self):
     return "m2v"
 
+############################
 ## VP9 10 Bit Encoders    ##
 ############################
+
 @slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
 @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
 class VP9_10EncoderBaseTest(EncoderTest):
