@@ -6,33 +6,9 @@
 
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
-from ....lib.ffmpeg.vaapi.encoder import EncoderTest
+from ....lib.ffmpeg.vaapi.encoder import VP8EncoderTest
 
 spec = load_test_spec("vp8", "encode")
-
-@slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
-class VP8EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = "vp8",
-      ffenc   = "vp8_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-  def get_vaapi_profile(self):
-    return "VAProfileVP8Version0_3"
-
-@slash.requires(*platform.have_caps("encode", "vp8"))
-class VP8EncoderTest(VP8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp8"),
-      lowpower  = 0,
-    )
 
 class cqp(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
