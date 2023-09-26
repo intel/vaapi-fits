@@ -27,6 +27,9 @@ caps = dict(
     av1_8   = dict(maxres = res8k , fmts = ["NV12"]),
     av1_10  = dict(maxres = res8k , fmts = ["P010"]),
   ),
+  encode  = dict(
+    vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
+  ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"]),
     jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
@@ -36,7 +39,6 @@ caps = dict(
       features  = dict(scc = True),
     ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
-    vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
     av1_8  = dict(
       maxres    = res8k,
