@@ -21,6 +21,9 @@ class MFXRuntimeTest(slash.Test):
     return None
 
   def check(self, command):
+    if get_media()._get_os() == 'wsl':
+      return
+
     proc = startproc(command)
 
     def readproc():
