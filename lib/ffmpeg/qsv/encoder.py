@@ -122,7 +122,10 @@ class EncoderTest(BaseEncoderTest):
 
     # lowpower
     if self.codec not in ["jpeg", "mpeg2"]:
-      vdenc = "ON" if vars(self).get("lowpower", 0) else "OFF"
+      if get_media()._get_gpu_gen() < 13:
+         vdenc = "ON" if vars(self).get("lowpower", 0) else "OFF"
+      else:
+         vdenc = "OFF" if vars(self).get("lowpower", 0) else "ON"
       m = re.search(f"VDENC: {vdenc}", self.output, re.MULTILINE)
       assert m is not None, "Possible incorrect VDENC/VME mode used"
 
@@ -379,6 +382,15 @@ class VP9_8EncoderBaseTest(EncoderTest):
 
   def get_file_ext(self):
     return "ivf"
+
+@slash.requires(*platform.have_caps("encode", "vp9_8"))
+class VP9_8EncoderTest(VP9_8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps = platform.get_caps("encode", "vp9_8"),
+      lowpower  = 0,
+    )
 
 @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
 class VP9_8EncoderLPTest(VP9_8EncoderBaseTest):
