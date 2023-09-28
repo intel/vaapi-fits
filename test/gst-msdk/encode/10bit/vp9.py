@@ -28,6 +28,14 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def get_file_ext(self):
     return "webm"
 
+@slash.requires(*platform.have_caps("encode", "vp9_10"))
+class VP9_10EncoderTest(VP9_10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("encode", "vp9_10"),
+    )
+
 @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
 class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
   def before(self):
@@ -37,6 +45,65 @@ class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
       # NOTE: msdkvp9enc does not have lowpower property.
       # msdkvp9enc lowpower is hardcoded internally
     )
+
+class cqp(VP9_10EncoderTest):
+  def init(self, tspec, case, ipmode, qp, quality, slices):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      gop       = 30 if ipmode != 0 else 1,
+      qp        = qp,
+      quality   = quality,
+      rcmode    = "cqp",
+      slices    = slices,
+    )
+
+  @parametrize_with_unused(*gen_vp9_cqp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, ipmode, qp, quality, slices)
+    self.encode()
+
+class cbr(VP9_10EncoderTest):
+  def init(self, tspec, case, gop, bitrate, fps, slices):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      maxrate   = bitrate,
+      minrate   = bitrate,
+      rcmode    = "cbr",
+      slices    = slices,
+    )
+
+  @parametrize_with_unused(*gen_vp9_cbr_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, gop, bitrate, fps, slices)
+    self.encode()
+
+class vbr(VP9_10EncoderTest):
+  def init(self, tspec, case, gop, bitrate, fps, quality, slices):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      # target percentage 50%
+      maxrate   = bitrate * 2,
+      minrate   = bitrate,
+      quality   = quality,
+      rcmode    = "vbr",
+      slices    = slices,
+    )
+
+  @parametrize_with_unused(*gen_vp9_vbr_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
+    self.init(spec, case, gop, bitrate, fps, quality, slices)
+    self.encode()
 
 class cqp_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices):
