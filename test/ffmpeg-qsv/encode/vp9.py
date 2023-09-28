@@ -79,7 +79,7 @@ class cqp(VP9_8EncoderTest):
       quality   = quality,
     )
 
-  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
+  @parametrize_with_unused(*gen_vp9_cqp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, ipmode, qp, quality, slices)
     self.encode()
@@ -99,7 +99,7 @@ class cbr(VP9_8EncoderTest):
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
+  @parametrize_with_unused(*gen_vp9_cbr_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices)
     self.encode()
@@ -120,7 +120,7 @@ class vbr(VP9_8EncoderTest):
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
+  @parametrize_with_unused(*gen_vp9_vbr_parameters(spec), ['refmode', 'loopshp', 'looplvl'])
   def test(self, case, gop, bitrate, fps, slices, refmode, quality, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices, quality)
     self.encode()
