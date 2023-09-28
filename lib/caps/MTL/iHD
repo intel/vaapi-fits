@@ -33,6 +33,10 @@ caps = dict(
       maxres    = res8k,
       fmts      = ["NV12"],
     ),
+    av1_10  = dict(
+      maxres    = res8k,
+      fmts      = ["P010"],
+    ),
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"]),
@@ -44,10 +48,6 @@ caps = dict(
     ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
-    av1_10  = dict(
-      maxres    = res8k,
-      fmts      = ["P010"],
-    ),
   ),
   vpp    = dict(
     # brightness, contrast, hue and saturation
