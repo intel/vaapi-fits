@@ -457,6 +457,15 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def get_file_ext(self):
     return "ivf"
 
+@slash.requires(*platform.have_caps("encode", "vp9_10"))
+class VP9_10EncoderTest(VP9_10EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp9_10"),
+      lowpower  = 0,
+    )
+
 @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
 class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
   def before(self):
