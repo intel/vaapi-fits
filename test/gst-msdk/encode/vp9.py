@@ -136,12 +136,12 @@ class cqp(VP9EncoderTest):
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_cqp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, ipmode, qp, quality, slices)
     self.encode()
 
-  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_cqp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
   def test_r2r(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec_r2r, case, ipmode, qp, quality, slices)
     vars(self).setdefault("r2r", 5)
@@ -162,12 +162,12 @@ class cbr(VP9EncoderTest):
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_cbr_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices)
     self.encode()
 
-  @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_cbr_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
   def test_r2r(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec_r2r, case, gop, bitrate, fps, slices)
     vars(self).setdefault("r2r", 5)
@@ -190,12 +190,12 @@ class vbr(VP9EncoderTest):
       slices    = slices,
     )
 
-  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_vbr_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, quality, slices)
     self.encode()
 
-  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
+  @parametrize_with_unused(*gen_vp9_vbr_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
   def test_r2r(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
     self.init(spec_r2r, case, gop, bitrate, fps, quality, slices)
     vars(self).setdefault("r2r", 5)
