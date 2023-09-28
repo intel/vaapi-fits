@@ -27,7 +27,6 @@ caps = dict(
     hevc_10 = dict(maxres = res4k, fmts = ["P010"]),
     vp8     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
     vp9_8   = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"]),
-    vp9_10  = dict(maxres = res4k, fmts = ["P010"]),
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k, fmts = ["NV12", "YV12", "I420", "YUY2"], multislice = False, cbr = False, vbr = False, bframes = False),
