@@ -612,17 +612,17 @@ def gen_vp9_cqp_variants(spec):
     variants = params.get("variants", dict()).get("cqp", None)
 
     if variants is None:
-      keys = ["ipmode", "qp", "quality", "refmode", "looplvl", "loopshp"]
-      product = itertools.product([0, 1], [14, 28], [1, 4, 7], [0, 1], [0, 16, 63], [0, 4, 7])
+      keys = ["ipmode", "qp", "quality", "slices", "refmode", "looplvl", "loopshp"]
+      product = itertools.product([0, 1], [14, 28], [1, 4, 7], [1, 3], [0, 1], [0, 16, 63], [0, 4, 7])
       variants = [dict(zip(keys, vals)) for vals in product]
 
     for variant in variants:
       yield [
-        case, variant["ipmode"], variant["qp"], variant["quality"],
+        case, variant["ipmode"], variant["qp"], variant["quality"], variant.get("slices", 1),
         variant["refmode"], variant["looplvl"], variant["loopshp"]]
 
 def gen_vp9_cqp_parameters(spec):
-  keys = ("case", "ipmode", "qp", "quality", "refmode", "looplvl", "loopshp")
+  keys = ("case", "ipmode", "qp", "quality", "slices", "refmode", "looplvl", "loopshp")
   params = gen_vp9_cqp_variants(spec)
   return keys, params
 
@@ -633,12 +633,12 @@ def gen_vp9_cbr_variants(spec):
         # Optional: gop, fps, refmode, looplvl, loopshp
         yield [
           case, variant.get("gop", 30), variant["bitrate"],
-          variant.get("fps", 30), variant.get("refmode", 0),
+          variant.get("fps", 30), variant.get("slices", 1), variant.get("refmode", 0),
           variant.get("looplvl", 0), variant.get("loopshp", 0),
         ]
 
 def gen_vp9_cbr_parameters(spec):
-  keys = ("case", "gop", "bitrate", "fps", "refmode", "looplvl", "loopshp")
+  keys = ("case", "gop", "bitrate", "fps", "slices", "refmode", "looplvl", "loopshp")
   params = gen_vp9_cbr_variants(spec)
   return keys, params
 
@@ -649,13 +649,13 @@ def gen_vp9_vbr_variants(spec):
         # Optional: gop, fps, refmode, quality, looplvl, loopshp
         yield [
           case, variant.get("gop", 30), variant["bitrate"],
-          variant.get("fps", 30), variant.get("refmode", 0),
+          variant.get("fps", 30), variant.get("slices", 1), variant.get("refmode", 0),
           variant.get("quality", 4), variant.get("looplvl", 0),
           variant.get("loopshp", 0),
         ]
 
 def gen_vp9_vbr_parameters(spec):
-  keys = ("case", "gop", "bitrate", "fps", "refmode", "quality", "looplvl", "loopshp")
+  keys = ("case", "gop", "bitrate", "fps", "slices", "refmode", "quality", "looplvl", "loopshp")
   params = gen_vp9_vbr_variants(spec)
   return keys, params
 
