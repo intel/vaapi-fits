@@ -38,8 +38,8 @@ media._get_test_spec("avc", "encode").update({
         dict(gop = 30, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
       ],
       cqp_lp = [
-        dict(gop = 1, slices = 1, qp = 28, quality = 4),
-        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+        dict(gop = 1, slices = 1, qp = 28, quality = 4, bframes = 0),
+        dict(gop = 30, slices = 1, qp = 14, quality = 4, bframes = 0),
       ],
       cbr = [
         dict(gop = 30, slices = 1, bframes = 0, bitrate = 250, fps = 30, profile = "main"),
@@ -56,8 +56,8 @@ media._get_test_spec("avc", "encode").update({
         dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
       ],
       cqp_lp = [
-        dict(gop = 1, slices = 1, qp = 28, quality = 4),
-        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+        dict(gop = 1, slices = 1, qp = 28, quality = 4, bframes = 0),
+        dict(gop = 30, slices = 1, qp = 14, quality = 4, bframes = 0),
       ],
       cbr = [
         dict(gop = 30, slices = 1, bframes = 0, bitrate = 500, fps = 25, profile = "main"),
@@ -73,7 +73,7 @@ media._get_test_spec("avc", "encode").update({
         dict(gop = 1, slices = 1, bframes = 0, qp = 28, quality = 4, profile = "high"),
       ],
       cqp_lp = [
-        dict(gop = 30, slices = 1, qp = 14, quality = 4),
+        dict(gop = 30, slices = 1, qp = 14, quality = 4, bframes = 0),
       ],
       cbr = [
         dict(gop = 30, slices = 4, bframes = 2, bitrate = 4000, fps = 30, profile = "main"),
@@ -94,7 +94,7 @@ media._get_test_spec("avc", "encode").update({
         dict(gop = 30, slices = 4, bframes = 2, qp = 28, quality = 4, profile = "main"),
       ],
       cqp_lp = [
-        dict(gop = 30, slices = 1, qp = 28, quality = 4),
+        dict(gop = 30, slices = 1, qp = 28, quality = 4, bframes = 0),
       ],
       cbr = [
         dict(gop = 30, slices = 1, bframes = 0, bitrate = 6000, fps = 30, profile = "high"),
@@ -109,7 +109,7 @@ media._get_test_spec("avc", "encode").update({
 
 if media._get_driver_name() == "iHD": # iHD driver supports LP with multi-slice
   for v in media._get_test_spec("avc", "encode").values():
-    v["variants"]["cqp_lp"].append(dict(gop = 30, slices = 4, qp = 14, quality = 4))
+    v["variants"]["cqp_lp"].append(dict(gop = 30, slices = 4, qp = 14, quality = 4, bframes = 0))
 
 media._get_test_spec("avc", "transcode").update({
   "H_H-AVC_QCIF" : dict(

@@ -1,361 +1,361 @@
 {
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.8848,
-        67.2001,
-        67.6808,
-        58.9770,
-        67.2932,
-        67.7858
+        58.8700,
+        67.1900,
+        67.6700,
+        58.9647,
+        67.2832,
+        67.7745
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        43.1905,
-        49.8754,
-        50.2729,
-        43.4704,
-        49.9359,
-        50.3621
+        43.1400,
+        49.8800,
+        50.2700,
+        43.4635,
+        49.9402,
+        50.3608
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.6385,
-        67.1637,
-        67.6402,
-        58.7553,
-        67.3003,
-        67.7937
+        58.6200,
+        67.2000,
+        67.6800,
+        58.7389,
+        67.2873,
+        67.7791
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=high,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=high,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        43.3288,
-        49.8772,
-        50.2708,
-        43.5920,
-        49.9377,
-        50.3494
+        43.2800,
+        49.8700,
+        50.2500,
+        43.5908,
+        49.9372,
+        50.3484
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.8848,
-        67.2001,
-        67.6808,
-        58.9770,
-        67.2932,
-        67.7858
+        58.8700,
+        67.1900,
+        67.6700,
+        58.9647,
+        67.2832,
+        67.7745
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=1080p,gop=30,profile=main,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=1080p,gop=30,profile=main,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        43.1905,
-        49.8754,
-        50.2729,
-        43.4704,
-        49.9359,
-        50.3621
+        43.1400,
+        49.8800,
+        50.2700,
+        43.4635,
+        49.9402,
+        50.3608
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        58.7638,
-        65.4861,
-        67.2408,
-        58.8844,
-        65.5651,
-        67.3592
+        58.7600,
+        65.5100,
+        67.2800,
+        58.8791,
+        65.5669,
+        67.3616
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.7369,
-        65.5046,
-        67.0515,
-        58.8585,
-        65.5668,
-        67.1393
+        58.7600,
+        65.5100,
+        67.0300,
+        58.8533,
+        65.5671,
+        67.1139
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=high,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        58.4270,
-        65.5149,
-        67.2840,
-        58.6133,
-        65.5668,
-        67.3617
+        58.4300,
+        65.5000,
+        67.2600,
+        58.5915,
+        65.5675,
+        67.3626
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=high,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.3970,
-        65.5097,
-        67.0589,
-        58.5688,
-        65.5656,
-        67.1376
+        58.3800,
+        65.4700,
+        67.0500,
+        58.5473,
+        65.5281,
+        67.1161
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=main,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        58.7638,
-        65.4861,
-        67.2408,
-        58.8844,
-        65.5651,
-        67.3592
+        58.7600,
+        65.5100,
+        67.2800,
+        58.8791,
+        65.5669,
+        67.3616
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=720p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=720p,gop=30,profile=main,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        58.7369,
-        65.5046,
-        67.0515,
-        58.8585,
-        65.5668,
-        67.1393
+        58.7600,
+        65.5100,
+        67.0300,
+        58.8533,
+        65.5671,
+        67.1139
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        42.6084,
-        45.0857,
-        44.1897,
+        42.6100,
+        45.0900,
+        44.1900,
         42.7456,
-        45.0857,
-        44.1897
+        45.0900,
+        44.1900
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=1,profile=high,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        42.4441,
-        45.0857,
-        44.1897,
-        42.7077,
-        45.0857,
-        44.1897
+        42.4400,
+        45.0900,
+        44.1900,
+        42.7078,
+        45.0900,
+        44.1900
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=1,profile=main,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        42.6084,
-        45.0857,
-        44.1897,
+        42.6100,
+        45.0900,
+        44.1900,
         42.7456,
-        45.0857,
-        44.1897
+        45.0900,
+        44.1900
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        57.5306,
-        58.9723,
-        57.8175,
-        58.1851,
-        59.5958,
-        58.6609
+        57.4600,
+        58.9600,
+        58.1300,
+        58.1757,
+        59.6122,
+        58.6078
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        57.5968,
-        59.2826,
-        58.7770,
-        58.2570,
-        59.8127,
-        59.2070
+        57.4700,
+        59.4400,
+        58.6400,
+        58.0838,
+        60.0587,
+        59.2427
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        56.7314,
-        58.9723,
-        58.0131,
-        57.5032,
-        59.6076,
-        58.6639
+        56.7000,
+        58.9500,
+        58.1300,
+        57.4618,
+        59.6268,
+        58.6330
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=high,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        56.6795,
-        59.0563,
-        58.4184,
-        57.4938,
-        59.8167,
-        59.1515
+        56.5700,
+        59.5600,
+        58.7200,
+        57.2739,
+        60.0730,
+        59.2688
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        57.5306,
-        58.9723,
-        57.8175,
-        58.1851,
-        59.5958,
-        58.6609
+        57.4600,
+        58.9600,
+        58.1300,
+        58.1757,
+        59.6122,
+        58.6078
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QCIF,gop=30,profile=main,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        57.5968,
-        59.2826,
-        58.7770,
-        58.2570,
-        59.8127,
-        59.2070
+        57.4700,
+        59.4400,
+        58.6400,
+        58.0838,
+        60.0587,
+        59.2427
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=1,profile=constrained-baseline,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        44.8331,
-        46.9013,
-        47.7980,
-        44.9629,
-        46.9013,
-        47.7980
+        44.8300,
+        46.9000,
+        47.8000,
+        44.9633,
+        46.9000,
+        47.8000
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=high,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=1,profile=high,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        44.7254,
-        46.9013,
-        47.7980,
+        44.7300,
+        46.9000,
+        47.8000,
         44.8905,
-        46.9013,
-        47.7980
+        46.9000,
+        47.8000
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=1,profile=main,qp=28,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=1,profile=main,qp=28,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        44.8331,
-        46.9013,
-        47.7980,
-        44.9629,
-        46.9013,
-        47.7980
+        44.8300,
+        46.9000,
+        47.8000,
+        44.9633,
+        46.9000,
+        47.8000
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        57.9259,
-        62.9292,
-        60.8102,
-        58.3267,
-        63.3504,
-        61.2895
-      ]
-    }
-  },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
-    "drv.iHD": {
-      "psnr": [
-        57.8953,
-        62.7552,
-        61.2279,
-        58.2633,
-        63.3331,
-        61.5125
-      ]
-    }
-  },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=1)": {
-    "drv.iHD": {
-      "psnr": [
-        57.3826,
-        62.9704,
-        60.9987,
-        57.9765,
+        57.9100,
+        62.8600,
+        60.9700,
+        58.3101,
         63.3487,
-        61.2896
+        61.2907
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=constrained-baseline,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        57.3366,
-        62.7552,
-        61.1592,
-        57.8827,
-        63.3342,
-        61.5137
+        57.8500,
+        62.7600,
+        61.3400,
+        58.2537,
+        63.3471,
+        61.5235
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=1)": {
     "drv.iHD": {
       "psnr": [
-        57.9259,
-        62.9292,
-        60.8102,
-        58.3267,
-        63.3504,
-        61.2895
+        57.3800,
+        62.8600,
+        60.9700,
+        57.9473,
+        63.3517,
+        61.2930
       ]
     }
   },
-  "test/gst-msdk/encode/avc.py:cqp_lp.test(case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=high,qp=14,quality=4,slices=4)": {
     "drv.iHD": {
       "psnr": [
-        57.8953,
-        62.7552,
-        61.2279,
-        58.2633,
-        63.3331,
-        61.5125
+        57.3300,
+        62.7600,
+        61.2500,
+        57.8464,
+        63.3413,
+        61.5195
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=1)": {
+    "drv.iHD": {
+      "psnr": [
+        57.9100,
+        62.8600,
+        60.9700,
+        58.3101,
+        63.3487,
+        61.2907
+      ]
+    }
+  },
+  "test/gst-msdk/encode/avc.py:cqp_lp.test(bframes=0,case=QVGA,gop=30,profile=main,qp=14,quality=4,slices=4)": {
+    "drv.iHD": {
+      "psnr": [
+        57.8500,
+        62.7600,
+        61.3400,
+        58.2537,
+        63.3471,
+        61.5235
       ]
     }
   }
