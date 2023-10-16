@@ -5,7 +5,7 @@
 ###
 
 from .....lib import *
-from .....lib.formats import subsampling
+from .....lib.formats import PixelFormat
 from .....lib.ffmpeg.vaapi.util import *
 from .....lib.ffmpeg.vaapi.encoder import EncoderTest
 
@@ -25,10 +25,10 @@ class VP9_10EncoderBaseTest(EncoderTest):
 
   def get_vaapi_profile(self):
     return {
-      ("YUV420", 10) : "VAProfileVP9Profile2",
-      ("YUV422", 10) : "VAProfileVP9Profile3",
-      ("YUV444", 10) : "VAProfileVP9Profile3",
-    }[subsampling[self.format]]
+      "YUV420" : "VAProfileVP9Profile2",
+      "YUV422" : "VAProfileVP9Profile3",
+      "YUV444" : "VAProfileVP9Profile3",
+    }[PixelFormat(self.format).subsampling]
 
 @slash.requires(*platform.have_caps("encode", "vp9_10"))
 class VP9_10EncoderTest(VP9_10EncoderBaseTest):
