@@ -11,14 +11,14 @@ except:
   from skimage.measure import compare_ssim as skimage_ssim
 
 from ..common import get_media, timefn
-from ..formats import get_bit_depth
+from ..formats import PixelFormat
 from .util import RawFileFrameReader, RawMetricAggregator, MetricWithDataRange
 from . import factory
 
 @timefn("ssim:calculate")
 def calculate(filetrue, filetest, width, height, frames, fmttrue, fmttest):
-  bitdepth = get_bit_depth(fmttrue)
-  assert get_bit_depth(fmttest) == bitdepth
+  bitdepth = PixelFormat(fmttrue).bitdepth
+  assert PixelFormat(fmttest).bitdepth == bitdepth
 
   return RawMetricAggregator(min).calculate(
     RawFileFrameReader(filetrue, width, height, frames, fmttrue),
