@@ -145,9 +145,9 @@ class RawMetricAggregator:
 
 class MetricWithDataRange:
   def __init__(self, func, fourcc):
-    from .formats import get_bit_depth
+    from .formats import PixelFormat
     self.func = func
-    self.data_range = pow(2, get_bit_depth(fourcc)) - 1
+    self.data_range = pow(2, PixelFormat(fourcc).bitdepth) - 1
 
   def __call__(self, planes):
     return self.func(planes, self.data_range)
