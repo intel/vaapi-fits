@@ -72,9 +72,6 @@ def match_best_format(fmt, choices):
     return None
   return list(matches)[0]
 
-def get_bit_depth(fmt):
-  return PixelFormat(fmt).bitdepth
-
 class FormatMapper:
   def get_supported_format_map(self):
     raise NotImplementedError
