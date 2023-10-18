@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
 from ....lib.ffmpeg.vaapi.encoder import EncoderTest
+from ....lib.codecs import Codec
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
@@ -16,7 +17,7 @@ class AVCEncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec   = "avc",
+      codec   = Codec.AVC,
       ffenc   = "h264_vaapi",
     )
 

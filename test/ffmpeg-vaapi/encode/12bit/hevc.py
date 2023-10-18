@@ -7,6 +7,7 @@
 from .....lib import *
 from .....lib.ffmpeg.vaapi.util import *
 from .....lib.ffmpeg.vaapi.encoder import EncoderTest
+from .....lib.codecs import Codec
 
 spec = load_test_spec("hevc", "encode", "12bit")
 
@@ -15,7 +16,7 @@ class HEVC12EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec   = "hevc-12",
+      codec   = Codec.HEVC,
       ffenc   = "hevc_vaapi",
     )
 

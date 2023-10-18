@@ -13,6 +13,7 @@ from ....lib.ffmpeg.util import have_ffmpeg_hwaccel, have_ffmpeg_encoder
 from ....lib.ffmpeg.vaapi.util import mapprofile
 from ....lib.ffmpeg.vaapi.decoder import Decoder
 from ....lib.common import mapRangeInt
+from ....lib.codecs import Codec
 
 class Encoder(FFEncoder):
   hwaccel = property(lambda s: "vaapi")
@@ -23,16 +24,16 @@ class Encoder(FFEncoder):
 
   @property
   def profile(self):
-    if self.codec in ["vp8"]:
+    if self.codec in [Codec.VP8]:
       return ""
     return super().profile
 
   @property
   def qp(self):
     def inner(qp):
-      if self.codec in ["vp8", "vp9", "vp9-10","av1-8","av1-10"]:
+      if self.codec in [Codec.VP8, Codec.VP9, Codec.AV1]:
         return f" -global_quality {qp}"
-      if self.codec in ["mpeg2"]:
+      if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [1, 31])
         return f" -global_quality {mqp}"
       return " -qp {qp}"
@@ -41,14 +42,14 @@ class Encoder(FFEncoder):
   @property
   def quality(self):
     def inner(quality):
-      if self.codec in ["jpeg"]:
+      if self.codec in [Codec.JPEG]:
         return " -global_quality {quality}"
       return " -compression_level {quality}"
     return self.ifprop("quality", inner)
 
   @property
   def encparams(self):
-    if self.codec not in ["jpeg"]:
+    if self.codec not in [Codec.JPEG]:
       return f"-rc_mode {self.rcmode}{super().encparams}"
     return super().encparams
 
@@ -77,7 +78,7 @@ class EncoderTest(BaseEncoderTest):
     # entrypoint
     entrypointmsgs = [
       "Using VAAPI entrypoint {} ([0-9]*)".format(
-        "VAEntrypointEncSlice" if "jpeg" != self.codec else "VAEntrypointEncPicture"),
+        "VAEntrypointEncSlice" if Codec.JPEG != self.codec else "VAEntrypointEncPicture"),
       "Using VAAPI entrypoint VAEntrypointEncSliceLP ([0-9]*)",
     ]
     m = re.search(
@@ -119,7 +120,7 @@ class VP8EncoderTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "vp8",
+      codec     = Codec.VP8,
       ffenc     = "vp8_vaapi",
       caps      = platform.get_caps("encode", "vp8"),
       lowpower  = 0,
