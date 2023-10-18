@@ -8,6 +8,7 @@ from .....lib import *
 from .....lib.formats import PixelFormat
 from .....lib.ffmpeg.vaapi.util import *
 from .....lib.ffmpeg.vaapi.encoder import EncoderTest
+from .....lib.codecs import Codec
 
 spec = load_test_spec("vp9", "encode", "10bit")
 
@@ -16,7 +17,7 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec    = "vp9-10",
+      codec    = Codec.VP9,
       ffenc    = "vp9_vaapi",
     )
 

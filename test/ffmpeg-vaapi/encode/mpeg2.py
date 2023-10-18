@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
 from ....lib.ffmpeg.vaapi.encoder import EncoderTest
+from ....lib.codecs import Codec
 
 spec      = load_test_spec("mpeg2", "encode")
 spec_r2r  = load_test_spec("mpeg2", "encode", "r2r")
@@ -18,7 +19,7 @@ class MPEG2EncoderTest(EncoderTest):
     super().before()
     vars(self).update(
       caps  = platform.get_caps("encode", "mpeg2"),
-      codec = "mpeg2",
+      codec = Codec.MPEG2,
       ffenc = "mpeg2_vaapi",
     )
 

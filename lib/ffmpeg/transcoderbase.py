@@ -12,6 +12,7 @@ from ...lib.ffmpeg.util import BaseFormatMapper, have_ffmpeg, ffmpeg_probe_resol
 
 from ...lib import metrics2
 from ...lib.parameters import format_value
+from ...lib.codecs import Codec
 
 @slash.requires(have_ffmpeg)
 class BaseTranscoderTest(slash.Test,BaseFormatMapper):
@@ -52,13 +53,12 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
   def get_file_ext(self, codec):
     return {
-      "avc"            : "h264",
-      "hevc"           : "h265",
-      "hevc-8"         : "h265",
-      "mpeg2"          : "m2v",
-      "mjpeg"          : "mjpeg",
-      "vp9"            : "ivf",
-      "av1"            : "ivf"
+      Codec.AVC   : "h264",
+      Codec.HEVC  : "h265",
+      Codec.MPEG2 : "m2v",
+      Codec.MJPEG : "mjpeg",
+      Codec.VP9   : "ivf",
+      Codec.AV1   : "ivf"
     }.get(codec, "???")
 
   def validate_caps(self):
@@ -148,7 +148,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       ext = self.get_file_ext(codec)
 
       # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
-      if codec.startswith("hevc") and get_media()._get_gpu_gen() > 10:
+      if Codec.HEVC == codec and get_media()._get_gpu_gen() > 10:
         encoder += " -b_strategy 1"
       if "lp" == mode:
         encoder += " -low_power 1"
@@ -232,7 +232,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         # WA: FFMpeg does not have an AV1 SW decoder
         ocodec = output["codec"]
-        if ocodec in ["av1"]:
+        if ocodec in [Codec.AV1]:
           format = vars(self).get("format", "NV12")
           iopts = (
             f"-hwaccel {self.hwaccel}"

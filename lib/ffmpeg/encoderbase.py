@@ -15,7 +15,7 @@ from ...lib.ffmpeg.decoderbase import Decoder
 from ...lib.parameters import format_value
 from ...lib.properties import PropertyHandler
 from ...lib.util import skip_test_if_missing_features
-
+from ...lib.codecs import Codec
 from ...lib import metrics2
 
 class Encoder(PropertyHandler, BaseFormatMapper):
@@ -167,7 +167,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       reference = self.source,
     )
 
-    if self.codec in ["jpeg"]:
+    if self.codec in [Codec.JPEG]:
       self.decoder.update(ffscale_range = "jpeg")
 
     if None in [self.encoder.hwformat, self.encoder.format, self.decoder.hwformat, self.decoder.format]:
@@ -294,7 +294,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     if vars(self).get("vforced_idr", None) is None:
       return
 
-    judge = {"hevc-8" : 19, "avc" : 5}.get(self.codec, None)
+    judge = {Codec.HEVC : 19, Codec.AVC : 5}.get(self.codec, None)
     assert judge is not None, f"{self.codec} codec not supported for forced_idr"
 
     output = call(

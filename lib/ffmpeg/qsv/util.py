@@ -6,6 +6,7 @@
 
 from ....lib.common import memoize, get_media
 from ....lib.ffmpeg.util import *
+from ....lib.codecs import Codec
 
 def using_compatible_driver():
   return get_media()._get_driver_name() in ["iHD", "d3d11", "dxva2"]
@@ -40,50 +41,38 @@ def map_transpose_direction(degrees, method):
 @memoize
 def mapprofile(codec, profile):
   return {
-    "avc"      : {
+    Codec.AVC     : {
       "high"      : "high",
       "main"      : "main",
       "baseline"  : "baseline",
-      "unknown"   : "unknown"
+      "unknown"   : "unknown",
     },
-    "hevc-8"   : {
+    Codec.HEVC    : {
       "main"      : "main",
       "main444"   : "rext",
       "scc"       : "scc",
       "scc-444"   : "scc",
       "mainsp"    : "mainsp",
-      "unknown"   : "unknown"
+      "main10"    : "main10",
+      "main10sp"  : "main10 -main10sp 1",
+      "main444-10": "rext",
+      "main12"    : "rext",
+      "main422-12": "rext",
+      "unknown"   : "unknown",
     },
-    "hevc-10"  : {
-      "main10"     : "main10",
-      "main10sp"   : "main10 -main10sp 1",
-      "main444-10" : "rext"
-    },
-    "hevc-12" : {
-      "main12"      : "rext",
-      "main422-12"  : "rext",
-    },
-    "av1-8"   : {
+    Codec.AV1     : {
       "profile0"  : "main",
     },
-    "av1-10"   : {
-      "profile0"  : "main",
-    },
-    "vp9"   : {
+    Codec.VP9     : {
       "profile0"  : "profile0",
       "profile1"  : "profile1",
-    },
-    "vp9-10" : {
       "profile2"  : "profile2",
       "profile3"  : "profile3",
     },
-    "vp9-12" : {
-      "profile3"  : "profile3",
-    },
-    "mpeg2" : {
-      "simple"  : "simple",
-      "main"    : "main",
-      "high"    : "high",
+    Codec.MPEG2   : {
+      "simple"    : "simple",
+      "main"      : "main",
+      "high"      : "high",
     },
   }.get(codec, {}).get(profile, None)
 

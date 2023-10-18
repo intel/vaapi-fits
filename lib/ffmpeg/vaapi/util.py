@@ -6,6 +6,7 @@
 
 from ....lib.common import memoize
 from ....lib.ffmpeg.util import *
+from ....lib.codecs import Codec
 
 @memoize
 def map_deinterlace_method(method):
@@ -41,53 +42,40 @@ def map_transpose_direction(degrees, method):
 @memoize
 def mapprofile(codec, profile):
   return {
-    "avc"      : {
+    Codec.AVC   : {
       "high"                  : "high",
       "main"                  : "main",
       "constrained-baseline"  : "constrained_baseline",
     },
-    "hevc-8"   : {
+    Codec.HEVC  : {
       "main"                  : "main",
       "main444"               : "rext",
       "scc"                   : "scc",
       "scc-444"               : "scc",
-    },
-    "hevc-10"  : {
       "main10"                : "main10",
       "main444-10"            : "rext",
-    },
-    "hevc-12" : {
       "main12"                : "rext",
       "main422-12"            : "rext",
     },
-    "jpeg"     : {
+    Codec.JPEG  : {
       "baseline"              : "baseline",
     },
-    "mpeg2"    : {
+    Codec.MPEG2 : {
       "main"                  : 4,
       "simple"                : 5,
     },
-    "vp8"      : {
+    Codec.VP8   : {
       "version0_3"            : "version0_3",
     },
-    "vp9"      : {
+    Codec.VP9   : {
       "profile0"              : "profile0",
       "profile1"              : "profile1",
-    },
-    "vp9-10" : {
-      "profile2"  : "profile2",
-      "profile3"  : "profile3",
-    },
-    "vp9-12"      : {
+      "profile2"              : "profile2",
       "profile3"              : "profile3",
     },
-    "av1-8"   : {
+    Codec.AV1   : {
       "main"                  : "main",
-      "profile0"              : "main"
-    },
-    "av1-10"   : {
-      "main"                  : "main",
-      "profile0"              : "main"
+      "profile0"              : "main",
     },
   }.get(codec, {}).get(profile, None)
 

@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
 from ....lib.ffmpeg.vaapi.encoder import EncoderTest
+from ....lib.codecs import Codec
 
 spec      = load_test_spec("av1", "encode", "8bit")
 spec_r2r  = load_test_spec("av1", "encode", "8bit", "r2r")
@@ -16,7 +17,7 @@ class AV1EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec = "av1-8",
+      codec = Codec.AV1,
       ffenc = "av1_vaapi",
     )
 

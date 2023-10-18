@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
 from ....lib.ffmpeg.qsv.transcoder import TranscoderTest
+from ....lib.codecs import Codec
 
 spec = load_test_spec("avc", "transcode")
 
@@ -16,7 +17,7 @@ class default(TranscoderTest):
     vars(self).update(spec[case].copy())
     vars(self).update(
       case  = case,
-      codec = "avc",
+      codec = Codec.AVC,
     )
     self.transcode()
 

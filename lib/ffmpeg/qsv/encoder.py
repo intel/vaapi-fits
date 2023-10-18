@@ -13,6 +13,7 @@ from ....lib.ffmpeg.util import have_ffmpeg_hwaccel, have_ffmpeg_encoder, have_f
 from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver, have_encode_main10sp
 from ....lib.ffmpeg.qsv.decoder import Decoder
 from ....lib.common import mapRangeInt, get_media, call, exe2os
+from ....lib.codecs import Codec
 
 class Encoder(FFEncoder):
   hwaccel   = property(lambda s: "qsv")
@@ -35,7 +36,7 @@ class Encoder(FFEncoder):
   @property
   def qp(self):
     def inner(qp):
-      if self.codec in ["mpeg2"]:
+      if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [1, 51])
         return f" -q {mqp}"
       return f" -q {qp}"
@@ -44,7 +45,7 @@ class Encoder(FFEncoder):
   @property
   def quality(self):
     def inner(quality):
-      if self.codec in ["jpeg"]:
+      if self.codec in [Codec.JPEG]:
         return f" -global_quality {quality}"
       return f" -preset {quality}"
     return self.ifprop("quality", inner)
@@ -115,13 +116,13 @@ class EncoderTest(BaseEncoderTest):
     assert m is not None, "It appears that the QSV plugin did not load"
 
     # rate control mode
-    if self.codec not in ["jpeg"]:
+    if self.codec not in [Codec.JPEG]:
       mode = "LA" if vars(self).get("ladepth", None) is not None else self.rcmode
       m = re.search(f"RateControlMethod: {mode.upper()}", self.output, re.MULTILINE)
       assert m is not None, "Possible incorrect RC mode used"
 
     # lowpower
-    if self.codec not in ["jpeg", "mpeg2"]:
+    if self.codec not in [Codec.JPEG, Codec.MPEG2]:
       if get_media()._get_gpu_gen() < 13:
          vdenc = "ON" if vars(self).get("lowpower", 0) else "OFF"
       else:
@@ -135,7 +136,7 @@ class EncoderTest(BaseEncoderTest):
       assert m is not None, "Possible incorrect FPS used"
 
     # slices
-    if vars(self).get("slices", None) is not None and self.codec not in ["vp9", "vp9-10"]:
+    if vars(self).get("slices", None) is not None and self.codec not in [Codec.VP9]:
       m = re.search(f"NumSlice: {self.slices};", self.output, re.MULTILINE)
       assert m is not None, "Possible incorrect slices used"
 
@@ -186,7 +187,7 @@ class AVCEncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "avc",
+      codec     = Codec.AVC,
       ffencoder = "h264_qsv",
       ffdecoder = "h264_qsv",
     )
@@ -222,7 +223,7 @@ class HEVC8EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "hevc-8",
+      codec     = Codec.HEVC,
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
     )
@@ -258,7 +259,7 @@ class HEVC10EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "hevc-10",
+      codec     = Codec.HEVC,
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
     )
@@ -294,7 +295,7 @@ class HEVC12EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "hevc-12",
+      codec     = Codec.HEVC,
       ffencoder = "hevc_qsv",
       ffdecoder = "hevc_qsv",
     )
@@ -321,7 +322,7 @@ class AV1EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "av1-8",
+      codec     = Codec.AV1,
       ffencoder = "av1_qsv",
       ffdecoder = "av1_qsv",
     )
@@ -357,7 +358,7 @@ class AV110EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "av1-10",
+      codec     = Codec.AV1,
       ffencoder = "av1_qsv",
       ffdecoder = "av1_qsv",
     )
@@ -393,7 +394,7 @@ class VP9_8EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "vp9",
+      codec     = Codec.VP9,
       ffencoder = "vp9_qsv",
       ffdecoder = "vp9_qsv",
     )
@@ -431,7 +432,7 @@ class MPEG2EncoderTest(EncoderTest):
     super().before()
     vars(self).update(
       caps      = platform.get_caps("encode", "mpeg2"),
-      codec     = "mpeg2",
+      codec     = Codec.MPEG2,
       ffencoder = "mpeg2_qsv",
       ffdecoder = "mpeg2_qsv",
     )
@@ -449,7 +450,7 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec     = "vp9-10",
+      codec     = Codec.VP9,
       ffencoder = "vp9_qsv",
       ffdecoder = "vp9_qsv",
     )
