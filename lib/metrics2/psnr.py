@@ -18,6 +18,8 @@ from ..common import get_media, timefn
 from ..formats import PixelFormat
 from .util import RawFileFrameReader, RawMetricAggregator, MetricWithDataRange
 from . import factory
+from ..codecs import Codec
+from ..formats import PixelFormat
 
 trend_models = dict(
   power   = lambda x, a, k: a*x**k,
@@ -89,8 +91,19 @@ class PSNR(factory.Metric):
 
   def check_trendline(self):
     gopkey = 30 if self.props.get("gop", 30) > 1 else 1
+
+    # FIXME(WA): temporary workaround during Codec enum refactor to maintain
+    # backwards compatibility for the legacy "<codec>-<bitrate>" lookup keys
+    codec = Codec(self.props['codec'])
+    bitdepth = PixelFormat(self.format).bitdepth
+    if not codec.endswith(f"-{bitdepth}"):
+      if self.props['codec'] in [Codec.HEVC, Codec.AV1]:
+        codec += f"-{bitdepth}"
+      elif self.props['codec'] in [Codec.VP9] and 8 != bitdepth:
+        codec += f"-{bitdepth}"
+
     model = get_media().baseline.lookup(
-      f"model/encode/{self.props['codec']}"
+      f"model/encode/{codec}"
       f":trend.test(case={self.props['case']})", f"gop.{gopkey}")
 
     assert model is not None, "Trendline model reference not found"
