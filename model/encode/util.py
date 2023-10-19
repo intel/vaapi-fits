@@ -7,6 +7,8 @@
 from ...lib import *
 from ...lib import metrics2
 from ...lib.metrics2.psnr import trend_models
+from ...lib.codecs import Codec
+from ...lib.formats import PixelFormat
 
 import itertools
 import matplotlib.pyplot as plt
@@ -47,12 +49,22 @@ class TrendModelMixin:
     platform = get_media()._get_platform_name()
     tolerance = vars(self).get("metric", dict()).get("tolerance", 5.0)
 
+    # FIXME(WA): temporary workaround during Codec enum refactor to maintain
+    # backwards compatibility for the legacy "<codec>-<bitrate>" lookup keys
+    codec = Codec(self.codec)
+    bitdepth = PixelFormat(self.format).bitdepth
+    if not codec.endswith(f"-{bitdepth}"):
+      if codec in [Codec.HEVC, Codec.AV1]:
+        codec += f"-{bitdepth}"
+      elif codec in [Codec.VP9] and 8 != bitdepth:
+        codec += f"-{bitdepth}"
+
     get_media().baseline.update_reference(
       driver = get_media()._get_driver_name(),
       platform = platform,
       encoder = self.ffencoder,
       profile = self.profile,
-      context = [f"key:model/encode/{self.codec}", "base.origin"],
+      context = [f"key:model/encode/{codec}", "base.origin"],
     )
 
     for gop in [1, 30]:
@@ -67,7 +79,7 @@ class TrendModelMixin:
         vars(self).update(qp = qp)
         self.encode()
 
-      label = f"{platform}:{self.codec}:{self.rcmode}:{self.case}:gop={gop}"
+      label = f"{platform}:{codec}:{self.rcmode}:{self.case}:gop={gop}"
 
       plt.ylabel("PSNR")
       plt.xlabel("Compression Ratio (ln x)")
@@ -100,7 +112,7 @@ class TrendModelMixin:
 
       get_media().baseline.update_reference(
         fx = fn, popt = list(popt), rsq = rsq,
-        context = [f"key:model/encode/{self.codec}", f"gop.{gop}"],
+        context = [f"key:model/encode/{codec}", f"gop.{gop}"],
       )
 
       power_x = np.linspace(min(self.xdata + [0]), max(self.xdata + [10]), 100)
