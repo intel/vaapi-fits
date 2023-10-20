@@ -5,6 +5,7 @@
 ###
 
 from ....lib import *
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
@@ -19,7 +20,7 @@ class JPEGEncoderTest(EncoderTest):
     super().before()
     vars(self).update(
       caps          = platform.get_caps("vdenc", "jpeg"),
-      codec         = "jpeg",
+      codec         = Codec.JPEG,
       gstencoder    = "vaapijpegenc",
       gstdecoder    = "vaapijpegdec",
       gstmediatype  = "image/jpeg",

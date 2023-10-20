@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+from ....lib.codecs import Codec
 from ....lib.common import memoize
 from ....lib.formats import match_best_format
 from ....lib.gstreamer.util import *
@@ -72,7 +73,7 @@ def map_transpose_direction(degrees, method):
 @memoize
 def mapprofile(codec, profile):
   return {
-    "avc"       : {
+    Codec.AVC   : {
       "high"                  : "high",
       "main"                  : "main",
       "baseline"              : "baseline",
@@ -80,25 +81,18 @@ def mapprofile(codec, profile):
       "multiview-high"        : "multiview-high",
       "stereo-high"           : "stereo-high",
     },
-    "hevc-8"    : {
+    Codec.HEVC  : {
       "main"                  : "main",
       "scc"                   : "screen-extended-main",
       "scc-444"               : "screen-extended-main-444",
       "main444"               : "main-444",
-    },
-    "hevc-10"   : {
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
-    },
-    "hevc-12"   : {
       "main12"                : "main-12",
       "main422-12"            : "main-422-12",
       "main444-12"            : "main-444-12",
     },
-    "av1-8"     : {
-      "profile0"              : "main",
-    },
-    "av1-10"    : {
+    Codec.AV1   : {
       "profile0"              : "main",
     },
   }.get(codec, {}).get(profile, None)

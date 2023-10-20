@@ -5,6 +5,7 @@
 ###
 
 from .....lib import *
+from .....lib.codecs import Codec
 from .....lib.gstreamer.msdk.util import *
 from .....lib.gstreamer.msdk.encoder import EncoderTest
 
@@ -16,7 +17,7 @@ class VP9_10EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "vp9-10",
+      codec         = Codec.VP9,
       gstencoder    = "msdkvp9enc",
       gstdecoder    = "msdkvp9dec",
       gstmediatype  = "video/x-vp9",

@@ -11,6 +11,7 @@ from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
 from ....lib.gstreamer.util import have_gst_element, get_elements
 from ....lib.gstreamer.va.util import mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.va.decoder import Decoder
+from ....lib.codecs import Codec
 from ....lib.common import get_media, mapRangeInt
 
 class Encoder(GstEncoder):
@@ -24,14 +25,14 @@ class Encoder(GstEncoder):
 
   @property
   def rcmode(self):
-    if self.codec in ["jpeg"]:
+    if self.codec in [Codec.JPEG]:
       return ""
     return f" rate-control={super().rcmode}"
 
   @property
   def bframes(self):
     def inner(bframes):
-      if self.codec in ["av1-8", "av1-10"]:
+      if self.codec in [Codec.AV1]:
         return " gf-group-size={bframes}"
       return f" b-frames={bframes}"
     return self.ifprop("bframes", inner)
@@ -39,10 +40,10 @@ class Encoder(GstEncoder):
   @property
   def qp(self):
     def inner(qp):
-      if self.codec in ["mpeg2"]:
+      if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [0, 51])
         return f" qpi={mqp} qpp={mqp} qpb={mqp}"
-      if self.codec in ["av1-8", "av1-10", "vp9", "vp9-10"]:
+      if self.codec in [Codec.AV1, Codec.VP9]:
         return f" max-qp={qp} min-qp={qp} qp={qp}"
       return f" qpi={qp} qpp={qp} qpb={qp}"
     return self.ifprop("qp", inner)
@@ -50,7 +51,7 @@ class Encoder(GstEncoder):
   @property
   def quality(self):
     def inner(quality):
-      if self.codec in ["jpeg"]:
+      if self.codec in [Codec.JPEG]:
         return f" quality={quality}"
       return f" target-usage={quality}"
     return self.ifprop("quality", inner)

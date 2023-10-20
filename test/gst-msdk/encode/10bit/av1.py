@@ -5,6 +5,7 @@
 ###
 
 from .....lib import *
+from .....lib.codecs import Codec
 from .....lib.gstreamer.msdk.util import *
 from .....lib.gstreamer.msdk.encoder import EncoderTest
 
@@ -17,7 +18,7 @@ class AV1EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "av1-10",
+      codec         = Codec.AV1,
       gstencoder    = "msdkav1enc",
       gstdecoder    = "msdkav1dec",
       gstmediatype  = "video/x-av1",

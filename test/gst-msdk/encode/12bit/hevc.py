@@ -5,6 +5,7 @@
 ###
 
 from .....lib import *
+from .....lib.codecs import Codec
 from .....lib.gstreamer.msdk.util import *
 from .....lib.gstreamer.msdk.encoder import EncoderTest
 
@@ -16,7 +17,7 @@ class HEVC12EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "hevc-12",
+      codec         = Codec.HEVC,
       gstdecoder    = "msdkh265dec",
       gstencoder    = "msdkh265enc",
       gstmediatype  = "video/x-h265",

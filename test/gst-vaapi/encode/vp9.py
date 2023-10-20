@@ -5,6 +5,7 @@
 ###
 
 from ....lib import *
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
@@ -16,7 +17,7 @@ class VP9EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "vp9",
+      codec         = Codec.VP9,
       gstencoder    = "vaapivp9enc",
       gstdecoder    = "vaapivp9dec",
       gstmediatype  = "video/x-vp9",
