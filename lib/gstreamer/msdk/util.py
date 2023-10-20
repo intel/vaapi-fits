@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+from ....lib.codecs import Codec
 from ....lib.common import memoize, get_media
 from ....lib.formats import match_best_format
 from ....lib.gstreamer.util import *
@@ -81,33 +82,26 @@ def map_deinterlace_method(method):
 @memoize
 def mapprofile(codec,profile):
   return {
-    "avc"     : {
+    Codec.AVC   : {
       "high"                  : "high",
       "main"                  : "main",
       "baseline"              : "baseline",
       "constrained-baseline"  : "constrained-baseline",
     },
-    "hevc-8"  : {
+    Codec.HEVC  : {
       "main"                  : "main",
       "scc"                   : "screen-extended-main",
       "scc-444"               : "screen-extended-main-444",
       "main444"               : "main-444",
       "mainsp"                : "main-still-picture",
-    },
-    "hevc-10" : {
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
-    },
-    "hevc-12" : {
       "main12"                : "main-12",
     },
-    "av1-8"  : {
+    Codec.AV1   : {
       "profile0"              : "main",
     },
-    "av1-10"  : {
-      "profile0"              : "main",
-    },    
-    "vp9-12" : {
+    Codec.VP9   : {
       "profile3"              : "profile3",
     },
   }.get(codec, {}).get(profile, None)

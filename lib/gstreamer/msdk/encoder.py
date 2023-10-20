@@ -12,13 +12,14 @@ from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
 from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.msdk.util import using_compatible_driver, mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.msdk.decoder import Decoder
+from ....lib.codecs import Codec
 from ....lib.common import get_media, mapRangeInt
 
 class Encoder(GstEncoder):
   @property
   def hwformat(self):
     ifmts = self.props["caps"]["fmts"]
-    if self.codec not in ["hevc-8", "vp9", "vp9-10"]:
+    if self.codec not in [Codec.HEVC, Codec.VP9]:
       ifmts = list(set(ifmts) - set(["AYUV"]))
     return map_best_hw_format(super().format, ifmts)
 
@@ -28,14 +29,14 @@ class Encoder(GstEncoder):
 
   @property
   def rcmode(self):
-    if self.codec in ["jpeg"]:
+    if self.codec in [Codec.JPEG]:
       return ""
     return f" rate-control={super().rcmode} hardware=true"
 
   @property
   def qp(self):
     def inner(qp):
-      if self.codec in ["mpeg2"]:
+      if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [0, 51])
         return f" qpi={mqp} qpp={mqp} qpb={mqp}"
       return f" qpi={qp} qpp={qp} qpb={qp}"
@@ -44,7 +45,7 @@ class Encoder(GstEncoder):
   @property
   def quality(self):
     def inner(quality):
-      if self.codec in ["jpeg"]:
+      if self.codec in [Codec.JPEG]:
         return f" quality={quality}"
       return f" target-usage={quality}"
     return self.ifprop("quality", inner)

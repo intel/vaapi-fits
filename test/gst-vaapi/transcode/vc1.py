@@ -5,6 +5,7 @@
 ###
 
 from ....lib import *
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.transcoder import TranscoderTest
 
@@ -16,6 +17,6 @@ class default(TranscoderTest):
     vars(self).update(spec[case].copy())
     vars(self).update(
       case  = case,
-      codec = "vc1",
+      codec = Codec.VC1,
     )
     self.transcode()

@@ -5,6 +5,7 @@
 ###
 
 from ....lib import *
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
@@ -19,7 +20,7 @@ class MPEG2EncoderTest(EncoderTest):
     super().before()
     vars(self).update(
       caps          = platform.get_caps("encode", "mpeg2"),
-      codec         = "mpeg2",
+      codec         = Codec.MPEG2,
       gstencoder    = "vaapimpeg2enc",
       gstdecoder    = "vaapimpeg2dec",
       gstmediatype  = "video/mpeg,mpegversion=2",

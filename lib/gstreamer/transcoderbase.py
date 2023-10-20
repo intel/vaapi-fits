@@ -7,6 +7,7 @@
 import slash
 import os
 
+from ...lib.codecs import Codec
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, gst_discover
 
@@ -44,13 +45,11 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
 
   def get_file_ext(self, codec):
     return {
-      "avc"            : "h264",
-      "hevc"           : "h265",
-      "hevc-8"         : "h265",
-      "av1"            : "webm",
-      "av1-8"          : "webm",
-      "mpeg2"          : "m2v",
-      "mjpeg"          : "mjpeg",
+      Codec.AVC   : "h264",
+      Codec.HEVC  : "h265",
+      Codec.AV1   : "webm",
+      Codec.MPEG2 : "m2v",
+      Codec.MJPEG : "mjpeg",
     }.get(codec, "???")
 
   def validate_caps(self):

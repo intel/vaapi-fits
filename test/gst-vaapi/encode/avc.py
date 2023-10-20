@@ -5,6 +5,7 @@
 ###
 
 from ....lib import *
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.encoder import EncoderTest
 
@@ -17,7 +18,7 @@ class AVCEncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
-      codec         = "avc",
+      codec         = Codec.AVC,
       gstencoder    = "vaapih264enc",
       gstdecoder    = "vaapih264dec",
       gstmediatype  = "video/x-h264",
