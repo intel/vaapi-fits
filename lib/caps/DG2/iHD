@@ -93,7 +93,7 @@ caps = dict(
     tonemap     = dict(
       h2s             = dict(
         ifmts = ["P010"],
-        ofmts = ["NV12", "P010"],
+        ofmts = ["NV12",               "P010", "YUY2",         "Y210", "AYUV", "Y410"],
       ),
     ),
     range     = dict(
