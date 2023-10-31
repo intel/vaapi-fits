@@ -6,49 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
-from ....lib.ffmpeg.vaapi.encoder import EncoderTest
-from ....lib.codecs import Codec
+from ....lib.ffmpeg.vaapi.encoder import HEVC8EncoderTest, HEVC8EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "8bit")
 spec_r2r  = load_test_spec("hevc", "encode", "8bit", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
-class HEVC8EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.HEVC,
-      ffenc   = "hevc_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-  def get_vaapi_profile(self):
-    return {
-      "main"     : "VAProfileHEVCMain",
-      "main444"  : "VAProfileHEVCMain444",
-      "scc"      : "VAProfileHEVCSccMain",
-      "scc-444"  : "VAProfileHEVCSccMain444",
-    }[self.profile]
-
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_8"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_8"),
-      lowpower  = 1,
-    )
 
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):

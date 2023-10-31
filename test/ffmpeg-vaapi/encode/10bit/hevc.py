@@ -6,47 +6,10 @@
 
 from .....lib import *
 from .....lib.ffmpeg.vaapi.util import *
-from .....lib.ffmpeg.vaapi.encoder import EncoderTest
-from .....lib.codecs import Codec
+from .....lib.ffmpeg.vaapi.encoder import HEVC10EncoderTest, HEVC10EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
-class HEVC10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.HEVC,
-      ffenc   = "hevc_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-  def get_vaapi_profile(self):
-    return {
-      "main10"      : "VAProfileHEVCMain10",
-      "main444-10"  : "VAProfileHEVCMain444_10",
-    }[self.profile]
-
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_10"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_10"),
-      lowpower  = 1,
-    )
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
