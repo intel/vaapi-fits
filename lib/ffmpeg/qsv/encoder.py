@@ -14,6 +14,7 @@ from ....lib.ffmpeg.qsv.util import mapprofile, using_compatible_driver, have_en
 from ....lib.ffmpeg.qsv.decoder import Decoder
 from ....lib.common import mapRangeInt, get_media, call, exe2os
 from ....lib.codecs import Codec
+from ....lib.formats import PixelFormat
 
 class Encoder(FFEncoder):
   hwaccel   = property(lambda s: "qsv")
@@ -247,6 +248,10 @@ class HEVC8EncoderTest(HEVCEncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
 class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
   def before(self):
@@ -255,6 +260,10 @@ class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
       caps      = platform.get_caps("vdenc", "hevc_8"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
 
 ############################
 ## HEVC 10 Bit Encoders   ##
@@ -269,6 +278,10 @@ class HEVC10EncoderTest(HEVCEncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
 class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
   def before(self):
@@ -277,6 +290,10 @@ class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
       caps      = platform.get_caps("vdenc", "hevc_10"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
 
 ############################
 ## HEVC 12 Bit Encoders   ##
@@ -290,6 +307,10 @@ class HEVC12EncoderTest(HEVCEncoderBaseTest):
       caps      = platform.get_caps("encode", "hevc_12"),
       lowpower  = 0,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 12
+    super().validate_caps()
 
 ############################
 ## AV1 Base Encoder       ##
@@ -322,6 +343,10 @@ class AV1EncoderTest(AV1EncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "av1_8"))
 class AV1EncoderLPTest(AV1EncoderBaseTest):
   def before(self):
@@ -330,6 +355,10 @@ class AV1EncoderLPTest(AV1EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "av1_8"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
 
 ############################
 ## AV1 10 Bit Encoders    ##
@@ -344,6 +373,10 @@ class AV110EncoderTest(AV1EncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "av1_10"))
 class AV110EncoderLPTest(AV1EncoderBaseTest):
   def before(self):
@@ -352,6 +385,10 @@ class AV110EncoderLPTest(AV1EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "av1_10"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
 
 ############################
 ## VP9 Base Encoder       ##
@@ -384,6 +421,10 @@ class VP9_8EncoderTest(VP9EncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
 class VP9_8EncoderLPTest(VP9EncoderBaseTest):
   def before(self):
@@ -392,6 +433,10 @@ class VP9_8EncoderLPTest(VP9EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "vp9_8"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
 
 ############################
 ## VP9 10 Bit Encoders    ##
@@ -406,6 +451,10 @@ class VP9_10EncoderTest(VP9EncoderBaseTest):
       lowpower  = 0,
     )
 
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
 @slash.requires(*platform.have_caps("vdenc", "vp9_10"))
 class VP9_10EncoderLPTest(VP9EncoderBaseTest):
   def before(self):
@@ -414,6 +463,10 @@ class VP9_10EncoderLPTest(VP9EncoderBaseTest):
       caps      = platform.get_caps("vdenc", "vp9_10"),
       lowpower  = 1,
     )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
 
 ############################
 ## MPEG2 Encoders         ##
