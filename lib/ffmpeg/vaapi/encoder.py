@@ -345,3 +345,74 @@ class VP9_10EncoderLPTest(VP9EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## AV1 Encoders           ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("av1_vaapi"))
+class AV1EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec = Codec.AV1,
+      ffenc = "av1_vaapi",
+    )
+
+  def get_file_ext(self):
+    return "ivf"
+
+  def get_vaapi_profile(self):
+    return "VAProfileAV1Profile0"
+
+@slash.requires(*platform.have_caps("encode", "av1_8"))
+class AV1EncoderTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "av1_8"),
+      lowpower  = 0,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "av1_8"))
+class AV1EncoderLPTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "av1_8"),
+      lowpower  = 1,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("encode", "av1_10"))
+class AV1_10EncoderTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "av1_10"),
+      lowpower  = 0,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "av1_10"))
+class AV1_10EncoderLPTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "av1_10"),
+      lowpower  = 1,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
