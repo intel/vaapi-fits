@@ -6,27 +6,11 @@
 
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
-from ....lib.ffmpeg.qsv.encoder import EncoderTest
+from ....lib.ffmpeg.qsv.encoder import JPEGEncoderTest
 from ....lib.codecs import Codec
 
 spec      = load_test_spec("jpeg", "encode")
 spec_r2r  = load_test_spec("jpeg", "encode", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("mjpeg_qsv"))
-@slash.requires(*have_ffmpeg_decoder("mjpeg_qsv"))
-@slash.requires(*platform.have_caps("vdenc", "jpeg"))
-class JPEGEncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "jpeg"),
-      codec     = Codec.JPEG,
-      ffencoder = "mjpeg_qsv",
-      ffdecoder = "mjpeg_qsv",
-    )
-
-  def get_file_ext(self):
-    return "mjpeg" if self.frames > 1 else "jpg"
 
 class cqp(JPEGEncoderTest):
   def init(self, tspec, case, quality):
