@@ -217,12 +217,12 @@ class AVCEncoderLPTest(AVCEncoderBaseTest):
     )
 
 ############################
-## HEVC 8 Bit Encoders    ##
+## HEVC Base Encoder      ##
 ############################
 
 @slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
 @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC8EncoderBaseTest(EncoderTest):
+class HEVCEncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -234,8 +234,12 @@ class HEVC8EncoderBaseTest(EncoderTest):
   def get_file_ext(self):
     return "h265"
 
+############################
+## HEVC 8 Bit Encoders    ##
+############################
+
 @slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVC8EncoderBaseTest):
+class HEVC8EncoderTest(HEVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -244,7 +248,7 @@ class HEVC8EncoderTest(HEVC8EncoderBaseTest):
     )
 
 @slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
+class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -256,22 +260,8 @@ class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
 ## HEVC 10 Bit Encoders   ##
 ############################
 
-@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
-@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = Codec.HEVC,
-      ffencoder = "hevc_qsv",
-      ffdecoder = "hevc_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
 @slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVC10EncoderBaseTest):
+class HEVC10EncoderTest(HEVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -280,7 +270,7 @@ class HEVC10EncoderTest(HEVC10EncoderBaseTest):
     )
 
 @slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
+class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -292,22 +282,8 @@ class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
 ## HEVC 12 Bit Encoders   ##
 ############################
 
-@slash.requires(*have_ffmpeg_encoder("hevc_qsv"))
-@slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
-class HEVC12EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = Codec.HEVC,
-      ffencoder = "hevc_qsv",
-      ffdecoder = "hevc_qsv",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
 @slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVC12EncoderBaseTest):
+class HEVC12EncoderTest(HEVCEncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -316,7 +292,7 @@ class HEVC12EncoderTest(HEVC12EncoderBaseTest):
     )
 
 ############################
-## AV1 8 Bit Encoders     ##
+## AV1 Base Encoder       ##
 ############################
 
 @slash.requires(*have_ffmpeg_encoder("av1_qsv"))
@@ -332,6 +308,10 @@ class AV1EncoderBaseTest(EncoderTest):
 
   def get_file_ext(self):
     return "ivf"
+
+############################
+## AV1 8 Bit Encoders     ##
+############################
 
 @slash.requires(*platform.have_caps("encode", "av1_8"))
 class AV1EncoderTest(AV1EncoderBaseTest):
@@ -355,22 +335,8 @@ class AV1EncoderLPTest(AV1EncoderBaseTest):
 ## AV1 10 Bit Encoders    ##
 ############################
 
-@slash.requires(*have_ffmpeg_encoder("av1_qsv"))
-@slash.requires(*have_ffmpeg_decoder("av1_qsv"))
-class AV110EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = Codec.AV1,
-      ffencoder = "av1_qsv",
-      ffdecoder = "av1_qsv",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
 @slash.requires(*platform.have_caps("encode", "av1_10"))
-class AV110EncoderTest(AV110EncoderBaseTest):
+class AV110EncoderTest(AV1EncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -379,7 +345,7 @@ class AV110EncoderTest(AV110EncoderBaseTest):
     )
 
 @slash.requires(*platform.have_caps("vdenc", "av1_10"))
-class AV110EncoderLPTest(AV110EncoderBaseTest):
+class AV110EncoderLPTest(AV1EncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -388,12 +354,12 @@ class AV110EncoderLPTest(AV110EncoderBaseTest):
     )
 
 ############################
-## VP9 8 Bit Encoders     ##
+## VP9 Base Encoder       ##
 ############################
 
 @slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
 @slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
-class VP9_8EncoderBaseTest(EncoderTest):
+class VP9EncoderBaseTest(EncoderTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -405,8 +371,12 @@ class VP9_8EncoderBaseTest(EncoderTest):
   def get_file_ext(self):
     return "ivf"
 
+############################
+## VP9 8 Bit Encoders     ##
+############################
+
 @slash.requires(*platform.have_caps("encode", "vp9_8"))
-class VP9_8EncoderTest(VP9_8EncoderBaseTest):
+class VP9_8EncoderTest(VP9EncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
@@ -415,11 +385,33 @@ class VP9_8EncoderTest(VP9_8EncoderBaseTest):
     )
 
 @slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class VP9_8EncoderLPTest(VP9_8EncoderBaseTest):
+class VP9_8EncoderLPTest(VP9EncoderBaseTest):
   def before(self):
     super().before()
     vars(self).update(
       caps      = platform.get_caps("vdenc", "vp9_8"),
+      lowpower  = 1,
+    )
+
+############################
+## VP9 10 Bit Encoders    ##
+############################
+
+@slash.requires(*platform.have_caps("encode", "vp9_10"))
+class VP9_10EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp9_10"),
+      lowpower  = 0,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+class VP9_10EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "vp9_10"),
       lowpower  = 1,
     )
 
@@ -442,39 +434,3 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_file_ext(self):
     return "m2v"
-
-############################
-## VP9 10 Bit Encoders    ##
-############################
-
-@slash.requires(*have_ffmpeg_encoder("vp9_qsv"))
-@slash.requires(*have_ffmpeg_decoder("vp9_qsv"))
-class VP9_10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = Codec.VP9,
-      ffencoder = "vp9_qsv",
-      ffdecoder = "vp9_qsv",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-@slash.requires(*platform.have_caps("encode", "vp9_10"))
-class VP9_10EncoderTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp9_10"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_10"),
-      lowpower  = 1,
-    )
