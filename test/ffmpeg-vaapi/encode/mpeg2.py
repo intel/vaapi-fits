@@ -6,28 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
-from ....lib.ffmpeg.vaapi.encoder import EncoderTest
-from ....lib.codecs import Codec
+from ....lib.ffmpeg.vaapi.encoder import MPEG2EncoderTest
 
 spec      = load_test_spec("mpeg2", "encode")
 spec_r2r  = load_test_spec("mpeg2", "encode", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
-@slash.requires(*platform.have_caps("encode", "mpeg2"))
-class MPEG2EncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps  = platform.get_caps("encode", "mpeg2"),
-      codec = Codec.MPEG2,
-      ffenc = "mpeg2_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "m2v"
-
-  def get_vaapi_profile(self):
-    return "VAProfileMPEG2.*"
 
 class cqp(MPEG2EncoderTest):
   def init(self, tspec, case, gop, bframes, qp, quality):

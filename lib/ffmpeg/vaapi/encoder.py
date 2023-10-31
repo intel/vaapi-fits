@@ -420,3 +420,24 @@ class AV1_10EncoderLPTest(AV1EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## MPEG2 Encoders         ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
+@slash.requires(*platform.have_caps("encode", "mpeg2"))
+class MPEG2EncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("encode", "mpeg2"),
+      codec = Codec.MPEG2,
+      ffenc = "mpeg2_vaapi",
+    )
+
+  def get_file_ext(self):
+    return "m2v"
+
+  def get_vaapi_profile(self):
+    return "VAProfileMPEG2.*"
