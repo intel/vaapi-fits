@@ -437,3 +437,24 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_vaapi_profile(self):
     return "VAProfileMPEG2.*"
+
+############################
+## JPEG/MJPEG Encoders    ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("mjpeg_vaapi"))
+@slash.requires(*platform.have_caps("vdenc", "jpeg"))
+class JPEGEncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("vdenc", "jpeg"),
+      codec = Codec.JPEG,
+      ffenc = "mjpeg_vaapi",
+    )
+
+  def get_file_ext(self):
+    return "mjpeg" if self.frames > 1 else "jpg"
+
+  def get_vaapi_profile(self):
+    return "VAProfileJPEGBaseline"
