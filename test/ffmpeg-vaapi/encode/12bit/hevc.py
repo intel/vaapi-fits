@@ -6,37 +6,9 @@
 
 from .....lib import *
 from .....lib.ffmpeg.vaapi.util import *
-from .....lib.ffmpeg.vaapi.encoder import EncoderTest
-from .....lib.codecs import Codec
+from .....lib.ffmpeg.vaapi.encoder import HEVC12EncoderTest
 
 spec = load_test_spec("hevc", "encode", "12bit")
-
-@slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
-class HEVC12EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.HEVC,
-      ffenc   = "hevc_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-  def get_vaapi_profile(self):
-    return {
-      "main12"      : "VAProfileHEVCMain12",
-      "main422-12"  : "VAProfileHEVCMain422_12",
-    }[self.profile]
-
-@slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVC12EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_12"),
-      lowpower  = 0,
-    )
 
 class cqp(HEVC12EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):

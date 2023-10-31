@@ -14,6 +14,7 @@ from ....lib.ffmpeg.vaapi.util import mapprofile
 from ....lib.ffmpeg.vaapi.decoder import Decoder
 from ....lib.common import mapRangeInt
 from ....lib.codecs import Codec
+from ....lib.formats import PixelFormat
 
 class Encoder(FFEncoder):
   hwaccel = property(lambda s: "vaapi")
@@ -176,3 +177,96 @@ class AVCEncoderLPTest(AVCEncoderBaseTest):
       caps      = platform.get_caps("vdenc", "avc"),
       lowpower  = 1,
     )
+
+############################
+## HEVC Encoders          ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
+class HEVCEncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec   = Codec.HEVC,
+      ffenc   = "hevc_vaapi",
+    )
+
+  def get_file_ext(self):
+    return "h265"
+
+  def get_vaapi_profile(self):
+    return {
+      "main"        : "VAProfileHEVCMain",
+      "main444"     : "VAProfileHEVCMain444",
+      "scc"         : "VAProfileHEVCSccMain",
+      "scc-444"     : "VAProfileHEVCSccMain444",
+      "main10"      : "VAProfileHEVCMain10",
+      "main444-10"  : "VAProfileHEVCMain444_10",
+      "main12"      : "VAProfileHEVCMain12",
+      "main422-12"  : "VAProfileHEVCMain422_12",
+    }[self.profile]
+
+@slash.requires(*platform.have_caps("encode", "hevc_8"))
+class HEVC8EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_8"),
+      lowpower  = 0,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
+class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_8"),
+      lowpower  = 1,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("encode", "hevc_10"))
+class HEVC10EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_10"),
+      lowpower  = 0,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_10"),
+      lowpower  = 1,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("encode", "hevc_12"))
+class HEVC12EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_12"),
+      lowpower  = 0,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 12
+    super().validate_caps()
