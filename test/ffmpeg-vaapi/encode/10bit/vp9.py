@@ -5,49 +5,10 @@
 ###
 
 from .....lib import *
-from .....lib.formats import PixelFormat
 from .....lib.ffmpeg.vaapi.util import *
-from .....lib.ffmpeg.vaapi.encoder import EncoderTest
-from .....lib.codecs import Codec
+from .....lib.ffmpeg.vaapi.encoder import VP9_10EncoderTest, VP9_10EncoderLPTest
 
 spec = load_test_spec("vp9", "encode", "10bit")
-
-@slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
-class VP9_10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec    = Codec.VP9,
-      ffenc    = "vp9_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-  def get_vaapi_profile(self):
-    return {
-      "YUV420" : "VAProfileVP9Profile2",
-      "YUV422" : "VAProfileVP9Profile3",
-      "YUV444" : "VAProfileVP9Profile3",
-    }[PixelFormat(self.format).subsampling]
-
-@slash.requires(*platform.have_caps("encode", "vp9_10"))
-class VP9_10EncoderTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp9_10"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_10"),
-      lowpower  = 1,
-    )
 
 class cqp(VP9_10EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, slices, looplvl, loopshp):
