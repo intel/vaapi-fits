@@ -434,3 +434,23 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_file_ext(self):
     return "m2v"
+
+############################
+## JPEG/MJPEG Encoders    ##
+############################
+
+@slash.requires(*have_ffmpeg_encoder("mjpeg_qsv"))
+@slash.requires(*have_ffmpeg_decoder("mjpeg_qsv"))
+@slash.requires(*platform.have_caps("vdenc", "jpeg"))
+class JPEGEncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "jpeg"),
+      codec     = Codec.JPEG,
+      ffencoder = "mjpeg_qsv",
+      ffdecoder = "mjpeg_qsv",
+    )
+
+  def get_file_ext(self):
+    return "mjpeg" if self.frames > 1 else "jpg"
