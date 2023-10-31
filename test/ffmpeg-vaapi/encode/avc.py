@@ -6,48 +6,10 @@
 
 from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
-from ....lib.ffmpeg.vaapi.encoder import EncoderTest
-from ....lib.codecs import Codec
+from ....lib.ffmpeg.vaapi.encoder import AVCEncoderTest, AVCEncoderLPTest
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
-
-@slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
-class AVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.AVC,
-      ffenc   = "h264_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "h264"
-
-  def get_vaapi_profile(self):
-    return {
-      "high"                  : "VAProfileH264High",
-      "main"                  : "VAProfileH264Main",
-      "constrained-baseline"  : "VAProfileH264ConstrainedBaseline",
-    }[self.profile]
-
-@slash.requires(*platform.have_caps("encode", "avc"))
-class AVCEncoderTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "avc"),
-      lowpower  = 0,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class AVCEncoderLPTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "avc"),
-      lowpower  = 1,
-    )
 
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
