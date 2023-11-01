@@ -5,50 +5,13 @@
 ###
 
 from .....lib import *
-from .....lib.codecs import Codec
 from .....lib.gstreamer.msdk.util import *
-from .....lib.gstreamer.msdk.encoder import EncoderTest
+from .....lib.gstreamer.msdk.encoder import AV1_10EncoderTest, AV1_10EncoderLPTest
 
 spec      = load_test_spec("av1", "encode", "10bit")
 spec_r2r  = load_test_spec("av1", "encode", "10bit", "r2r")
 
-@slash.requires(*have_gst_element("msdkav1enc"))
-@slash.requires(*have_gst_element("msdkav1dec"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.AV1,
-      gstencoder    = "msdkav1enc",
-      gstdecoder    = "msdkav1dec",
-      gstmediatype  = "video/x-av1",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-      gstparser     = "av1parse",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*platform.have_caps("encode", "av1_10"))
-class AV1EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "av1_10"),
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "av1_10"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_10"),
-      # NOTE: msdkav1enc does not have lowpower property.
-      # msdkav1enc lowpower is hardcoded internally
-    )
-
-class cqp(AV1EncoderTest):
+class cqp(AV1_10EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -74,7 +37,7 @@ class cqp(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class cbr(AV1EncoderTest):
+class cbr(AV1_10EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -103,7 +66,7 @@ class cbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class vbr(AV1EncoderTest):
+class vbr(AV1_10EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -133,7 +96,7 @@ class vbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class cqp_lp(AV1EncoderLPTest):
+class cqp_lp(AV1_10EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -159,7 +122,7 @@ class cqp_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class cbr_lp(AV1EncoderLPTest):
+class cbr_lp(AV1_10EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
@@ -188,7 +151,7 @@ class cbr_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-class vbr_lp(AV1EncoderLPTest):
+class vbr_lp(AV1_10EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
     vars(self).update(
