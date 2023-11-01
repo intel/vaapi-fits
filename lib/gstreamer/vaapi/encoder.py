@@ -328,3 +328,25 @@ class VP8EncoderTest(VP8EncoderBaseTest):
       caps      = platform.get_caps("encode", "vp8"),
       lowpower  = False,
     )
+
+############################
+## MPEG2 Encoders         ##
+############################
+
+@slash.requires(*have_gst_element("vaapimpeg2enc"))
+@slash.requires(*have_gst_element("vaapimpeg2dec"))
+@slash.requires(*platform.have_caps("encode", "mpeg2"))
+class MPEG2EncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("encode", "mpeg2"),
+      codec         = Codec.MPEG2,
+      gstencoder    = "vaapimpeg2enc",
+      gstdecoder    = "vaapimpeg2dec",
+      gstmediatype  = "video/mpeg,mpegversion=2",
+      gstparser     = "mpegvideoparse",
+    )
+
+  def get_file_ext(self):
+    return "m2v"
