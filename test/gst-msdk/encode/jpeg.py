@@ -5,30 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.msdk.util import *
-from ....lib.gstreamer.msdk.encoder import EncoderTest
+from ....lib.gstreamer.msdk.encoder import JPEGEncoderTest
 
 spec      = load_test_spec("jpeg", "encode")
 spec_r2r  = load_test_spec("jpeg", "encode", "r2r")
-
-@slash.requires(*have_gst_element("msdkmjpegenc"))
-@slash.requires(*have_gst_element("msdkmjpegdec"))
-@slash.requires(*platform.have_caps("vdenc", "jpeg"))
-class JPEGEncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps          = platform.get_caps("vdenc", "jpeg"),
-      codec         = Codec.JPEG,
-      gstencoder    = "msdkmjpegenc",
-      gstdecoder    = "msdkmjpegdec",
-      gstmediatype  = "image/jpeg",
-      gstparser     = "jpegparse",
-    )
-
-  def get_file_ext(self):
-    return "jpg"
 
 class cqp(JPEGEncoderTest):
   def init(self, tspec, case, quality):
