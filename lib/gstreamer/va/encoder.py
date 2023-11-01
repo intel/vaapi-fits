@@ -343,3 +343,83 @@ class AV1_10EncoderLPTest(AV1EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## VP9 Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("vavp9dec"))
+class VP9EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.VP9,
+      gstdecoder    = "vavp9dec",
+      gstmediatype  = "video/x-vp9",
+      gstparser     = "vp9parse",
+      gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
+    )
+
+  def get_file_ext(self):
+    return "webm"
+
+@slash.requires(*platform.have_caps("encode", "vp9_8"))
+@slash.requires(*have_gst_element("vavp9enc"))
+class VP9EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("encode", "vp9_8"),
+      lowpower      = False,
+      gstencoder    = "vavp9enc",
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
+@slash.requires(*have_gst_element("vavp9lpenc"))
+class VP9EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("vdenc", "vp9_8"),
+      lowpower      = True,
+      gstencoder    = "vavp9lpenc",
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vavp9enc"))
+@slash.requires(*platform.have_caps("encode", "vp9_10"))
+class VP9_10EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps        = platform.get_caps("encode", "vp9_10"),
+      gstencoder  = "vavp9enc",
+      lowpower    = False,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vavp9lpenc"))
+@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+class VP9_10EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps        = platform.get_caps("vdenc", "vp9_10"),
+      gstencoder  = "vavp9lpenc",
+      lowpower    = True,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
