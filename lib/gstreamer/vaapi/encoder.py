@@ -11,8 +11,10 @@ from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
 from ....lib.gstreamer.util import have_gst_element, get_elements
 from ....lib.gstreamer.vaapi.util import mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.vaapi.decoder import Decoder
+from ....lib import platform
 from ....lib.codecs import Codec
 from ....lib.common import get_media, mapRangeInt
+from ....lib.formats import PixelFormat
 
 class Encoder(GstEncoder):
   @property
@@ -99,3 +101,41 @@ class EncoderTest(BaseEncoderTest):
 
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
+
+############################
+## AVC Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("vaapih264enc"))
+@slash.requires(*have_gst_element("vaapih264dec"))
+class AVCEncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.AVC,
+      gstencoder    = "vaapih264enc",
+      gstdecoder    = "vaapih264dec",
+      gstmediatype  = "video/x-h264",
+      gstparser     = "h264parse",
+    )
+
+  def get_file_ext(self):
+    return "h264"
+
+@slash.requires(*platform.have_caps("encode", "avc"))
+class AVCEncoderTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "avc"),
+      lowpower  = False,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "avc"))
+class AVCEncoderLPTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "avc"),
+      lowpower  = True,
+    )
