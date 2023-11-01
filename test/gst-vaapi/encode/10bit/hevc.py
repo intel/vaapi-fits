@@ -5,46 +5,11 @@
 ###
 
 from .....lib import *
-from .....lib.codecs import Codec
 from .....lib.gstreamer.vaapi.util import *
-from .....lib.gstreamer.vaapi.encoder import EncoderTest
+from .....lib.gstreamer.vaapi.encoder import HEVC10EncoderTest, HEVC10EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "10bit")
 spec_r2r  = load_test_spec("hevc", "encode", "10bit", "r2r")
-
-@slash.requires(*have_gst_element("vaapih265enc"))
-@slash.requires(*have_gst_element("vaapih265dec"))
-class HEVC10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.HEVC,
-      gstencoder    = "vaapih265enc",
-      gstdecoder    = "vaapih265dec",
-      gstmediatype  = "video/x-h265",
-      gstparser     = "h265parse",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_10"),
-      lowpower  = False,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVC10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_10"),
-      lowpower  = True,
-    )
 
 class cqp(HEVC10EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
