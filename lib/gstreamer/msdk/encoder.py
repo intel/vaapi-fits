@@ -417,3 +417,25 @@ class VP9_10EncoderLPTest(VP9EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## MPEG2 Encoders         ##
+############################
+
+@slash.requires(*have_gst_element("msdkmpeg2enc"))
+@slash.requires(*have_gst_element("msdkmpeg2dec"))
+@slash.requires(*platform.have_caps("encode", "mpeg2"))
+class MPEG2EncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("encode", "mpeg2"),
+      codec         = Codec.MPEG2,
+      gstencoder    = "msdkmpeg2enc",
+      gstdecoder    = "msdkmpeg2dec",
+      gstmediatype  = "video/mpeg,mpegversion=2",
+      gstparser     = "mpegvideoparse",
+    )
+
+  def get_file_ext(self):
+    return "mpg"
