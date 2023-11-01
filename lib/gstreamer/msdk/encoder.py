@@ -269,3 +269,77 @@ class HEVC12EncoderTest(HEVCEncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 12
     super().validate_caps()
+
+############################
+## AV1 Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("msdkav1enc"))
+@slash.requires(*have_gst_element("msdkav1dec"))
+class AV1EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.AV1,
+      gstencoder    = "msdkav1enc",
+      gstdecoder    = "msdkav1dec",
+      gstmediatype  = "video/x-av1",
+      gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
+      gstparser     = "av1parse",
+    )
+
+  def get_file_ext(self):
+    return "webm"
+
+@slash.requires(*platform.have_caps("encode", "av1_8"))
+class AV1EncoderTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "av1_8"),
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "av1_8"))
+class AV1EncoderLPTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "av1_8"),
+      # NOTE: msdkav1enc does not have lowpower property.
+      # msdkav1enc lowpower is hardcoded internally
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("encode", "av1_10"))
+class AV1_10EncoderTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "av1_10"),
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "av1_10"))
+class AV1_10EncoderLPTest(AV1EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "av1_10"),
+      # NOTE: msdkav1enc does not have lowpower property.
+      # msdkav1enc lowpower is hardcoded internally
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
