@@ -5,50 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.encoder import EncoderTest
+from ....lib.gstreamer.va.encoder import AV1EncoderTest, AV1EncoderLPTest
 
 spec = load_test_spec("av1", "encode", "8bit")
 spec_r2r  = load_test_spec("av1", "encode", "8bit", "r2r")
-
-@slash.requires(*have_gst_element("vaav1dec"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.AV1,
-      gstdecoder    = "vaav1dec",
-      gstmediatype  = "video/x-av1",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-      gstparser     = "av1parse",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*have_gst_element("vaav1enc"))
-@slash.requires(*platform.have_caps("encode", "av1_8"))
-class AV1EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "av1_8"),
-      gstencoder    = "vaav1enc",
-      lowpower  = False,
-    )
-
-@slash.requires(*have_gst_element("vaav1lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "av1_8"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_8"),
-      gstencoder    = "vaav1lpenc",
-      lowpower  = True,
-    )
 
 class cqp(AV1EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
