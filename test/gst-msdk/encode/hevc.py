@@ -5,46 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.msdk.util import *
-from ....lib.gstreamer.msdk.encoder import EncoderTest
+from ....lib.gstreamer.msdk.encoder import HEVC8EncoderTest, HEVC8EncoderLPTest
 
 spec      = load_test_spec("hevc", "encode", "8bit")
 spec_r2r  = load_test_spec("hevc", "encode", "8bit", "r2r")
-
-@slash.requires(*have_gst_element("msdkh265enc"))
-@slash.requires(*have_gst_element("msdkh265dec"))
-class HEVC8EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.HEVC,
-      gstencoder    = "msdkh265enc",
-      gstdecoder    = "msdkh265dec",
-      gstmediatype  = "video/x-h265",
-      gstparser     = "h265parse",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_8"),
-      lowpower  = False,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVC8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_8"),
-      lowpower  = True,
-    )
 
 class cqp(HEVC8EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
