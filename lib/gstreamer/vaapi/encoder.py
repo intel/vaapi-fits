@@ -298,3 +298,33 @@ class VP9_10EncoderLPTest(VP9EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## VP8 Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("vaapivp8enc"))
+@slash.requires(*have_gst_element("vaapivp8dec"))
+class VP8EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.VP8,
+      gstencoder    = "vaapivp8enc",
+      gstdecoder    = "vaapivp8dec",
+      gstmediatype  = "video/x-vp8",
+      gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
+    )
+
+  def get_file_ext(self):
+    return "webm"
+
+@slash.requires(*platform.have_caps("encode", "vp8"))
+class VP8EncoderTest(VP8EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "vp8"),
+      lowpower  = False,
+    )

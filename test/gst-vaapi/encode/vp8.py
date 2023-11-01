@@ -5,37 +5,10 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
-from ....lib.gstreamer.vaapi.encoder import EncoderTest
+from ....lib.gstreamer.vaapi.encoder import VP8EncoderTest
 
 spec = load_test_spec("vp8", "encode")
-
-@slash.requires(*have_gst_element("vaapivp8enc"))
-@slash.requires(*have_gst_element("vaapivp8dec"))
-class VP8EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.VP8,
-      gstencoder    = "vaapivp8enc",
-      gstdecoder    = "vaapivp8dec",
-      gstmediatype  = "video/x-vp8",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*platform.have_caps("encode", "vp8"))
-class VP8EncoderTest(VP8EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp8"),
-      lowpower  = False,
-    )
 
 class cqp(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
