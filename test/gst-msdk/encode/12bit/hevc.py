@@ -5,37 +5,10 @@
 ###
 
 from .....lib import *
-from .....lib.codecs import Codec
 from .....lib.gstreamer.msdk.util import *
-from .....lib.gstreamer.msdk.encoder import EncoderTest
+from .....lib.gstreamer.msdk.encoder import HEVC12EncoderTest
 
 spec = load_test_spec("hevc", "encode", "12bit")
-
-@slash.requires(*have_gst_element("msdkh265dec"))
-@slash.requires(*have_gst_element("msdkh265enc"))
-class HEVC12EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.HEVC,
-      gstdecoder    = "msdkh265dec",
-      gstencoder    = "msdkh265enc",
-      gstmediatype  = "video/x-h265",
-      gstparser     = "h265parse",
-    )
-
-  def get_file_ext(self):
-    return "h265"
-
-
-@slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVC12EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_12"),
-      lowpower  = False,
-    )
 
 class cqp(HEVC12EncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
