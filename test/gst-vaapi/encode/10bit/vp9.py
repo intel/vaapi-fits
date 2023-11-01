@@ -5,47 +5,10 @@
 ###
 
 from .....lib import *
-from .....lib.codecs import Codec
 from .....lib.gstreamer.vaapi.util import *
-from .....lib.gstreamer.vaapi.encoder import EncoderTest
+from .....lib.gstreamer.vaapi.encoder import VP9_10EncoderTest, VP9_10EncoderLPTest
 
 spec = load_test_spec("vp9", "encode", "10bit")
-
-@slash.requires(*have_gst_element("vaapivp9enc"))
-@slash.requires(*have_gst_element("vaapivp9dec"))
-class VP9_10EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.VP9,
-      gstencoder    = "vaapivp9enc",
-      gstdecoder    = "vaapivp9dec",
-      gstmediatype  = "video/x-vp9",
-      gstparser     = "vp9parse",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*platform.have_caps("encode", "vp9_10"))
-class VP9_10EncoderTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp9_10"),
-      lowpower  = False,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9_10EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_10"),
-      lowpower  = True,
-    )
 
 class cqp(VP9_10EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, refmode, looplvl, loopshp):
