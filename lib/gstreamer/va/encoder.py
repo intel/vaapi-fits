@@ -423,3 +423,25 @@ class VP9_10EncoderLPTest(VP9EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## JPEG/MJPEG Encoders    ##
+############################
+
+@slash.requires(*have_gst_element("vajpegenc"))
+@slash.requires(*have_gst_element("vajpegdec"))
+@slash.requires(*platform.have_caps("vdenc", "jpeg"))
+class JPEGEncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("vdenc", "jpeg"),
+      codec         = Codec.JPEG,
+      gstencoder    = "vajpegenc",
+      gstdecoder    = "vajpegdec",
+      gstmediatype  = "image/jpeg",
+      gstparser     = "jpegparse",
+    )
+
+  def get_file_ext(self):
+    return "mjpeg" if self.frames > 1 else "jpg"
