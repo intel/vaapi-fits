@@ -5,48 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.msdk.util import *
-from ....lib.gstreamer.msdk.encoder import EncoderTest
+from ....lib.gstreamer.msdk.encoder import VP9EncoderTest, VP9EncoderLPTest
 
 spec = load_test_spec("vp9", "encode", "8bit")
 spec_r2r  = load_test_spec("vp9", "encode", "8bit", "r2r")
-
-@slash.requires(*have_gst_element("msdkvp9enc"))
-@slash.requires(*have_gst_element("msdkvp9dec"))
-class VP9EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.VP9,
-      gstencoder    = "msdkvp9enc",
-      gstdecoder    = "msdkvp9dec",
-      gstmediatype  = "video/x-vp9",
-      gstparser     = "vp9parse",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*platform.have_caps("encode", "vp9_8"))
-class VP9EncoderTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps  = platform.get_caps("encode", "vp9_8"),
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class VP9EncoderLPTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps  = platform.get_caps("vdenc", "vp9_8"),
-      # NOTE: msdkvp9enc does not have lowpower property.
-      # msdkvp9enc lowpower is hardcoded internally
-    )
 
 class cqp_lp(VP9EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices):
