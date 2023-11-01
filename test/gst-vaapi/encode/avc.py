@@ -5,46 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
-from ....lib.gstreamer.vaapi.encoder import EncoderTest
+from ....lib.gstreamer.vaapi.encoder import AVCEncoderTest, AVCEncoderLPTest
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
-
-@slash.requires(*have_gst_element("vaapih264enc"))
-@slash.requires(*have_gst_element("vaapih264dec"))
-class AVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.AVC,
-      gstencoder    = "vaapih264enc",
-      gstdecoder    = "vaapih264dec",
-      gstmediatype  = "video/x-h264",
-      gstparser     = "h264parse",
-    )
-
-  def get_file_ext(self):
-    return "h264"
-
-@slash.requires(*platform.have_caps("encode", "avc"))
-class AVCEncoderTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "avc"),
-      lowpower  = False,
-    )
-
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class AVCEncoderLPTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "avc"),
-      lowpower  = True,
-    )
 
 class cqp(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
