@@ -5,31 +5,11 @@
 ###
 
 from ....lib import *
-from ....lib.codecs import Codec
 from ....lib.gstreamer.vaapi.util import *
-from ....lib.gstreamer.vaapi.encoder import EncoderTest
+from ....lib.gstreamer.vaapi.encoder import JPEGEncoderTest
 
 spec      = load_test_spec("jpeg", "encode")
 spec_r2r  = load_test_spec("jpeg", "encode", "r2r")
-
-@slash.requires(*have_gst_element("vaapijpegenc"))
-@slash.requires(*have_gst_element("vaapijpegdec"))
-@slash.requires(*platform.have_caps("vdenc", "jpeg"))
-class JPEGEncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps          = platform.get_caps("vdenc", "jpeg"),
-      codec         = Codec.JPEG,
-      gstencoder    = "vaapijpegenc",
-      gstdecoder    = "vaapijpegdec",
-      gstmediatype  = "image/jpeg",
-      gstparser     = "jpegparse",
-    )
-    super(JPEGEncoderTest, self).before()
-
-  def get_file_ext(self):
-    return "mjpeg" if self.frames > 1 else "jpg"
 
 class cqp(JPEGEncoderTest):
   def init(self, tspec, case, quality):
