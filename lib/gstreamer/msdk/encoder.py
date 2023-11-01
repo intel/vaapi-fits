@@ -343,3 +343,77 @@ class AV1_10EncoderLPTest(AV1EncoderBaseTest):
   def validate_caps(self):
     assert PixelFormat(self.format).bitdepth == 10
     super().validate_caps()
+
+############################
+## VP9 Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("msdkvp9enc"))
+@slash.requires(*have_gst_element("msdkvp9dec"))
+class VP9EncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.VP9,
+      gstencoder    = "msdkvp9enc",
+      gstdecoder    = "msdkvp9dec",
+      gstmediatype  = "video/x-vp9",
+      gstparser     = "vp9parse",
+      gstmuxer      = "matroskamux",
+      gstdemuxer    = "matroskademux",
+    )
+
+  def get_file_ext(self):
+    return "webm"
+
+@slash.requires(*platform.have_caps("encode", "vp9_8"))
+class VP9EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("encode", "vp9_8"),
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
+class VP9EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("vdenc", "vp9_8"),
+      # NOTE: msdkvp9enc does not have lowpower property.
+      # msdkvp9enc lowpower is hardcoded internally
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("encode", "vp9_10"))
+class VP9_10EncoderTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("encode", "vp9_10"),
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
+class VP9_10EncoderLPTest(VP9EncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps  = platform.get_caps("vdenc", "vp9_10"),
+      # NOTE: msdkvp9enc does not have lowpower property.
+      # msdkvp9enc lowpower is hardcoded internally
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
