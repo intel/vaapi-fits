@@ -439,3 +439,25 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_file_ext(self):
     return "mpg"
+
+############################
+## JPEG/MJPEG Encoders    ##
+############################
+
+@slash.requires(*have_gst_element("msdkmjpegenc"))
+@slash.requires(*have_gst_element("msdkmjpegdec"))
+@slash.requires(*platform.have_caps("vdenc", "jpeg"))
+class JPEGEncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("vdenc", "jpeg"),
+      codec         = Codec.JPEG,
+      gstencoder    = "msdkmjpegenc",
+      gstdecoder    = "msdkmjpegdec",
+      gstmediatype  = "image/jpeg",
+      gstparser     = "jpegparse",
+    )
+
+  def get_file_ext(self):
+    return "jpg"
