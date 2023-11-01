@@ -350,3 +350,25 @@ class MPEG2EncoderTest(EncoderTest):
 
   def get_file_ext(self):
     return "m2v"
+
+############################
+## JPEG/MJPEG Encoders    ##
+############################
+
+@slash.requires(*have_gst_element("vaapijpegenc"))
+@slash.requires(*have_gst_element("vaapijpegdec"))
+@slash.requires(*platform.have_caps("vdenc", "jpeg"))
+class JPEGEncoderTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps          = platform.get_caps("vdenc", "jpeg"),
+      codec         = Codec.JPEG,
+      gstencoder    = "vaapijpegenc",
+      gstdecoder    = "vaapijpegdec",
+      gstmediatype  = "image/jpeg",
+      gstparser     = "jpegparse",
+    )
+
+  def get_file_ext(self):
+    return "mjpeg" if self.frames > 1 else "jpg"
