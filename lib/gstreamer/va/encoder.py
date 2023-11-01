@@ -170,3 +170,96 @@ class AVCEncoderLPTest(AVCEncoderBaseTest):
       gstencoder= "vah264lpenc",
       lowpower  = True,
     )
+
+############################
+## HEVC Encoders          ##
+############################
+
+@slash.requires(*have_gst_element("vah265dec"))
+class HEVCEncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.HEVC,
+      gstdecoder    = "vah265dec",
+      gstmediatype  = "video/x-h265",
+      gstparser     = "h265parse",
+    )
+
+  def get_file_ext(self):
+    return "h265"
+
+@slash.requires(*have_gst_element("vah265enc"))
+@slash.requires(*platform.have_caps("encode", "hevc_8"))
+class HEVC8EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_8"),
+      gstencoder= "vah265enc",
+      lowpower  = False,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vah265lpenc"))
+@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
+class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_8"),
+      gstencoder= "vah265lpenc",
+      lowpower  = True,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 8
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vah265enc"))
+@slash.requires(*platform.have_caps("encode", "hevc_10"))
+class HEVC10EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_10"),
+      gstencoder= "vah265enc",
+      lowpower  = False,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vah265lpenc"))
+@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
+class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "hevc_10"),
+      gstencoder= "vah265lpenc",
+      lowpower  = True,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 10
+    super().validate_caps()
+
+@slash.requires(*have_gst_element("vah265enc"))
+@slash.requires(*platform.have_caps("encode", "hevc_12"))
+class HEVC12EncoderTest(HEVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "hevc_12"),
+      gstencoder= "vah265enc",
+      lowpower  = False,
+    )
+
+  def validate_caps(self):
+    assert PixelFormat(self.format).bitdepth == 12
+    super().validate_caps()
