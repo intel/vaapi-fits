@@ -12,8 +12,10 @@ from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
 from ....lib.gstreamer.util import have_gst_element
 from ....lib.gstreamer.msdk.util import using_compatible_driver, mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.msdk.decoder import Decoder
+from ....lib import platform
 from ....lib.codecs import Codec
 from ....lib.common import get_media, mapRangeInt
+from ....lib.formats import PixelFormat
 
 class Encoder(GstEncoder):
   @property
@@ -144,3 +146,41 @@ class EncoderTest(BaseEncoderTest):
     # "brframes", if specified, overrides "frames" for bitrate control modes
       self.frames = vars(self).get("brframes", self.frames)
     super().validate_caps()
+
+############################
+## AVC Encoders           ##
+############################
+
+@slash.requires(*have_gst_element("msdkh264enc"))
+@slash.requires(*have_gst_element("msdkh264dec"))
+class AVCEncoderBaseTest(EncoderTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      codec         = Codec.AVC,
+      gstencoder    = "msdkh264enc",
+      gstdecoder    = "msdkh264dec",
+      gstmediatype  = "video/x-h264",
+      gstparser     = "h264parse",
+    )
+
+  def get_file_ext(self):
+    return "h264"
+
+@slash.requires(*platform.have_caps("encode", "avc"))
+class AVCEncoderTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("encode", "avc"),
+      lowpower  = False,
+    )
+
+@slash.requires(*platform.have_caps("vdenc", "avc"))
+class AVCEncoderLPTest(AVCEncoderBaseTest):
+  def before(self):
+    super().before()
+    vars(self).update(
+      caps      = platform.get_caps("vdenc", "avc"),
+      lowpower  = True,
+    )
