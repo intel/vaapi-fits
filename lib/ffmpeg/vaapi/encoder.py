@@ -115,350 +115,116 @@ class EncoderTest(BaseEncoderTest):
     m = re.search(ipbmsgs[ipbmode], self.output, re.MULTILINE)
     assert m is not None, "Possible incorrect IPB mode used"
 
-############################
-## VP8 Encoders           ##
-############################
+def codec_test_class(codec, engine, bitdepth, **kwargs):
+  # lowpower setting for codecs that support it
+  if codec not in [Codec.JPEG, Codec.MPEG2]:
+    kwargs.update(lowpower = 1 if engine == "vdenc" else 0)
 
-@slash.requires(*have_ffmpeg_encoder("vp8_vaapi"))
-@slash.requires(*platform.have_caps("encode", "vp8"))
-class VP8EncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec     = Codec.VP8,
-      ffenc     = "vp8_vaapi",
-      caps      = platform.get_caps("encode", "vp8"),
-      lowpower  = 0,
-    )
+  # caps lookup translation
+  capcodec = codec
+  if codec in [Codec.HEVC, Codec.VP9, Codec.AV1]:
+    capcodec = f"{codec}_{bitdepth}"
 
-  def get_file_ext(self):
-    return "ivf"
+  # ffmpeg plugin codec translation
+  ffcodec = {
+    Codec.AVC   : "h264",
+    Codec.JPEG  : "mjpeg",
+  }.get(codec, codec)
 
-  def get_vaapi_profile(self):
-    return "VAProfileVP8Version0_3"
+  @slash.requires(*have_ffmpeg_encoder(f"{ffcodec}_vaapi"))
+  @slash.requires(*platform.have_caps(engine, capcodec))
+  class CodecEncoderTest(EncoderTest):
+    def before(self):
+      super().before()
+      vars(self).update(
+        caps = platform.get_caps(engine, capcodec),
+        codec = codec,
+        ffenc = f"{ffcodec}_vaapi",
+        **kwargs,
+      )
 
-############################
-## AVC Encoders           ##
-############################
+    def validate_caps(self):
+      assert PixelFormat(self.format).bitdepth == bitdepth
+      super().validate_caps()
 
-@slash.requires(*have_ffmpeg_encoder("h264_vaapi"))
-class AVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.AVC,
-      ffenc   = "h264_vaapi",
-    )
+    def get_file_ext(self):
+      return {
+        Codec.AVC   : "h264",
+        Codec.HEVC  : "h265",
+        Codec.JPEG  : "mjpeg" if self.frames > 1 else "jpg",
+        Codec.MPEG2 : "m2v",
+        Codec.VP8   : "ivf",
+        Codec.VP9   : "ivf",
+        Codec.AV1   : "ivf",
+      }[codec]
 
-  def get_file_ext(self):
-    return "h264"
+    def get_vaapi_profile(self):
+      if Codec.AVC == codec:
+        return {
+          "high"                  : "VAProfileH264High",
+          "main"                  : "VAProfileH264Main",
+          "constrained-baseline"  : "VAProfileH264ConstrainedBaseline",
+        }[self.profile]
+      elif Codec.HEVC == codec:
+        return {
+          "main"                  : "VAProfileHEVCMain",
+          "main444"               : "VAProfileHEVCMain444",
+          "scc"                   : "VAProfileHEVCSccMain",
+          "scc-444"               : "VAProfileHEVCSccMain444",
+          "main10"                : "VAProfileHEVCMain10",
+          "main444-10"            : "VAProfileHEVCMain444_10",
+          "main12"                : "VAProfileHEVCMain12",
+          "main422-12"            : "VAProfileHEVCMain422_12",
+        }[self.profile]
+      elif Codec.VP8 == codec:
+        return "VAProfileVP8Version0_3"
+      elif Codec.VP9 == codec:
+        pf = PixelFormat(self.format)
+        return {
+          ("YUV420",  8) : "VAProfileVP9Profile0",
+          ("YUV422",  8) : "VAProfileVP9Profile1",
+          ("YUV444",  8) : "VAProfileVP9Profile1",
+          ("YUV420", 10) : "VAProfileVP9Profile2",
+          ("YUV422", 10) : "VAProfileVP9Profile3",
+          ("YUV444", 10) : "VAProfileVP9Profile3",
+        }[(pf.subsampling, pf.bitdepth)]
+      elif Codec.AV1 == codec:
+        return "VAProfileAV1Profile0"
+      elif Codec.JPEG == codec:
+        return "VAProfileJPEGBaseline"
+      elif Codec.MPEG2 == codec:
+        return "VAProfileMPEG2.*"
 
-  def get_vaapi_profile(self):
-    return {
-      "high"                  : "VAProfileH264High",
-      "main"                  : "VAProfileH264Main",
-      "constrained-baseline"  : "VAProfileH264ConstrainedBaseline",
-    }[self.profile]
+  return CodecEncoderTest
 
-@slash.requires(*platform.have_caps("encode", "avc"))
-class AVCEncoderTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "avc"),
-      lowpower  = 0,
-    )
+##### AVC #####
+AVCEncoderTest      = codec_test_class(Codec.AVC, "encode", 8)
+AVCEncoderLPTest    = codec_test_class(Codec.AVC,  "vdenc", 8)
 
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class AVCEncoderLPTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "avc"),
-      lowpower  = 1,
-    )
+##### HEVC #####
+HEVC8EncoderTest    = codec_test_class(Codec.HEVC, "encode",  8)
+HEVC8EncoderLPTest  = codec_test_class(Codec.HEVC,  "vdenc",  8)
+HEVC10EncoderTest   = codec_test_class(Codec.HEVC, "encode", 10)
+HEVC10EncoderLPTest = codec_test_class(Codec.HEVC,  "vdenc", 10)
+HEVC12EncoderTest   = codec_test_class(Codec.HEVC, "encode", 12)
 
-############################
-## HEVC Encoders          ##
-############################
+##### AV1 #####
+AV1EncoderTest      = codec_test_class(Codec.AV1, "encode",  8)
+AV1EncoderLPTest    = codec_test_class(Codec.AV1,  "vdenc",  8)
+AV1_10EncoderTest   = codec_test_class(Codec.AV1, "encode", 10)
+AV1_10EncoderLPTest = codec_test_class(Codec.AV1,  "vdenc", 10)
 
-@slash.requires(*have_ffmpeg_encoder("hevc_vaapi"))
-class HEVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.HEVC,
-      ffenc   = "hevc_vaapi",
-    )
+##### VP9 #####
+VP9EncoderTest      = codec_test_class(Codec.VP9, "encode",  8)
+VP9EncoderLPTest    = codec_test_class(Codec.VP9,  "vdenc",  8)
+VP9_10EncoderTest   = codec_test_class(Codec.VP9, "encode", 10)
+VP9_10EncoderLPTest = codec_test_class(Codec.VP9,  "vdenc", 10)
 
-  def get_file_ext(self):
-    return "h265"
+##### VP8 #####
+VP8EncoderTest      = codec_test_class(Codec.VP8, "encode", 8)
 
-  def get_vaapi_profile(self):
-    return {
-      "main"        : "VAProfileHEVCMain",
-      "main444"     : "VAProfileHEVCMain444",
-      "scc"         : "VAProfileHEVCSccMain",
-      "scc-444"     : "VAProfileHEVCSccMain444",
-      "main10"      : "VAProfileHEVCMain10",
-      "main444-10"  : "VAProfileHEVCMain444_10",
-      "main12"      : "VAProfileHEVCMain12",
-      "main422-12"  : "VAProfileHEVCMain422_12",
-    }[self.profile]
+##### JPEG/MJPEG #####
+JPEGEncoderTest     = codec_test_class(Codec.JPEG, "vdenc", 8)
 
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_8"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_8"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_10"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_10"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_12"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 12
-    super().validate_caps()
-
-############################
-## VP9 Encoders           ##
-############################
-
-@slash.requires(*have_ffmpeg_encoder("vp9_vaapi"))
-class VP9EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec   = Codec.VP9,
-      ffenc   = "vp9_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-  def get_vaapi_profile(self):
-    pf = PixelFormat(self.format)
-    return {
-      ("YUV420",  8) : "VAProfileVP9Profile0",
-      ("YUV422",  8) : "VAProfileVP9Profile1",
-      ("YUV444",  8) : "VAProfileVP9Profile1",
-      ("YUV420", 10) : "VAProfileVP9Profile2",
-      ("YUV422", 10) : "VAProfileVP9Profile3",
-      ("YUV444", 10) : "VAProfileVP9Profile3",
-    }[(pf.subsampling, pf.bitdepth)]
-
-@slash.requires(*platform.have_caps("encode", "vp9_8"))
-class VP9EncoderTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp9_8"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-class VP9EncoderLPTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_8"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("encode", "vp9_10"))
-class VP9_10EncoderTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "vp9_10"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "vp9_10"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-############################
-## AV1 Encoders           ##
-############################
-
-@slash.requires(*have_ffmpeg_encoder("av1_vaapi"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec = Codec.AV1,
-      ffenc = "av1_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "ivf"
-
-  def get_vaapi_profile(self):
-    return "VAProfileAV1Profile0"
-
-@slash.requires(*platform.have_caps("encode", "av1_8"))
-class AV1EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "av1_8"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "av1_8"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_8"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("encode", "av1_10"))
-class AV1_10EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "av1_10"),
-      lowpower  = 0,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "av1_10"))
-class AV1_10EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_10"),
-      lowpower  = 1,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-############################
-## MPEG2 Encoders         ##
-############################
-
-@slash.requires(*have_ffmpeg_encoder("mpeg2_vaapi"))
-@slash.requires(*platform.have_caps("encode", "mpeg2"))
-class MPEG2EncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps  = platform.get_caps("encode", "mpeg2"),
-      codec = Codec.MPEG2,
-      ffenc = "mpeg2_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "m2v"
-
-  def get_vaapi_profile(self):
-    return "VAProfileMPEG2.*"
-
-############################
-## JPEG/MJPEG Encoders    ##
-############################
-
-@slash.requires(*have_ffmpeg_encoder("mjpeg_vaapi"))
-@slash.requires(*platform.have_caps("vdenc", "jpeg"))
-class JPEGEncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps  = platform.get_caps("vdenc", "jpeg"),
-      codec = Codec.JPEG,
-      ffenc = "mjpeg_vaapi",
-    )
-
-  def get_file_ext(self):
-    return "mjpeg" if self.frames > 1 else "jpg"
-
-  def get_vaapi_profile(self):
-    return "VAProfileJPEGBaseline"
+##### MPEG2 #####
+MPEG2EncoderTest    = codec_test_class(Codec.MPEG2, "encode", 8)
