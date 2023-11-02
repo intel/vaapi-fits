@@ -92,14 +92,10 @@ class Encoder(GstEncoder):
   tilerows = property(lambda s: s.ifprop("tilerows", " num-tile-rows={tilerows}"))
 
   @property
-  def hwdevice(self):
-    return get_media().render_device.split('/')[-1]
-
-  @property
   def gstencoder(self):
     #TODO: windows hwdevice >0 is not test
     return (
-      f"{super().gstencoder if self.hwdevice in ['renderD128', '0'] else super().gstencoder.replace('va', f'va{self.hwdevice}')}"
+      f"{super().gstencoder}"
       f"{self.rcmode}{self.gop}{self.qp}{self.tilecols}{self.tilerows}"
       f"{self.quality}{self.slices}{self.bframes}"
       f"{self.minrate}{self.maxrate}{self.refmode}{self.refs}"
@@ -131,317 +127,119 @@ class EncoderTest(BaseEncoderTest):
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
 
-############################
-## AVC Encoders           ##
-############################
+def codec_test_class(codec, engine, bitdepth, **kwargs):
+  # lowpower setting for codecs that support it
+  lp = ""
+  if codec not in [Codec.JPEG, Codec.MPEG2]:
+    kwargs.update(lowpower = engine == "vdenc")
+    lp = "lp" if engine == "vdenc" else ""
 
-@slash.requires(*have_gst_element("vah264dec"))
-class AVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.AVC,
-      gstdecoder    = "vah264dec",
-      gstmediatype  = "video/x-h264",
-      gstparser     = "h264parse",
-    )
+  # caps lookup translation
+  capcodec = codec
+  if codec in [Codec.HEVC, Codec.VP9, Codec.AV1]:
+    capcodec = f"{codec}_{bitdepth}"
 
-  def get_file_ext(self):
-    return "h264"
+  # gst element codec translation
+  gstcodec = {
+    Codec.AVC   : "h264",
+    Codec.HEVC  : "h265",
+  }.get(codec, codec)
 
-@slash.requires(*have_gst_element("vah264enc"))
-@slash.requires(*platform.have_caps("encode", "avc"))
-class AVCEncoderTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "avc"),
-      gstencoder= "vah264enc",
-      lowpower  = False,
-    )
+  hwdevice = get_media().render_device.split('/')[-1]
+  hw = hwdevice if hwdevice not in ['renderD128', '0'] else ""
 
-@slash.requires(*have_gst_element("vah264lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "avc"))
-class AVCEncoderLPTest(AVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "avc"),
-      gstencoder= "vah264lpenc",
-      lowpower  = True,
-    )
+  @slash.requires(*have_gst_element(f"va{hw}{gstcodec}{lp}enc"))
+  @slash.requires(*have_gst_element(f"va{gstcodec}dec"))
+  @slash.requires(*platform.have_caps(engine, capcodec))
+  class CodecEncoderTest(EncoderTest):
+    def before(self):
+      super().before()
+      vars(self).update(
+        caps = platform.get_caps(engine, capcodec),
+        codec = codec,
+        gstencoder = f"va{hw}{gstcodec}{lp}enc",
+        gstdecoder = f"va{gstcodec}dec",
+        **kwargs,
+      )
 
-############################
-## HEVC Encoders          ##
-############################
+    def validate_caps(self):
+      assert PixelFormat(self.format).bitdepth == bitdepth
+      super().validate_caps()
 
-@slash.requires(*have_gst_element("vah265dec"))
-class HEVCEncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.HEVC,
-      gstdecoder    = "vah265dec",
-      gstmediatype  = "video/x-h265",
-      gstparser     = "h265parse",
-    )
+    def get_file_ext(self):
+      return {
+        Codec.AVC   : "h264",
+        Codec.HEVC  : "h265",
+        Codec.JPEG  : "mjpeg" if self.frames > 1 else "jpg",
+        Codec.MPEG2 : "m2v",
+        Codec.VP9   : "webm",
+        Codec.AV1   : "webm",
+      }[codec]
 
-  def get_file_ext(self):
-    return "h265"
+  return CodecEncoderTest
 
-@slash.requires(*have_gst_element("vah265enc"))
-@slash.requires(*platform.have_caps("encode", "hevc_8"))
-class HEVC8EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_8"),
-      gstencoder= "vah265enc",
-      lowpower  = False,
-    )
+##### AVC #####
+AVCCommonArgs = dict(
+  codec         = Codec.AVC,
+  gstmediatype  = "video/x-h264",
+  gstparser     = "h264parse",
+)
+AVCEncoderTest    = codec_test_class(bitdepth = 8, engine = "encode", **AVCCommonArgs)
+AVCEncoderLPTest  = codec_test_class(bitdepth = 8, engine =  "vdenc", **AVCCommonArgs)
 
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
+##### HEVC #####
+HEVCCommonArgs = dict(
+  codec         = Codec.HEVC,
+  gstmediatype  = "video/x-h265",
+  gstparser     = "h265parse",
+)
+HEVC8EncoderTest    = codec_test_class(bitdepth =  8, engine = "encode", **HEVCCommonArgs)
+HEVC8EncoderLPTest  = codec_test_class(bitdepth =  8, engine =  "vdenc", **HEVCCommonArgs)
+HEVC10EncoderTest   = codec_test_class(bitdepth = 10, engine = "encode", **HEVCCommonArgs)
+HEVC10EncoderLPTest = codec_test_class(bitdepth = 10, engine =  "vdenc", **HEVCCommonArgs)
+HEVC12EncoderTest   = codec_test_class(bitdepth = 12, engine = "encode", **HEVCCommonArgs)
 
-@slash.requires(*have_gst_element("vah265lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "hevc_8"))
-class HEVC8EncoderLPTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_8"),
-      gstencoder= "vah265lpenc",
-      lowpower  = True,
-    )
+##### AV1 #####
+AV1CommonArgs = dict(
+  codec         = Codec.AV1,
+  gstmediatype  = "video/x-av1",
+  gstmuxer      = "matroskamux",
+  gstdemuxer    = "matroskademux",
+  gstparser     = "av1parse",
+)
+AV1EncoderTest      = codec_test_class(bitdepth =  8, engine = "encode", **AV1CommonArgs)
+AV1EncoderLPTest    = codec_test_class(bitdepth =  8, engine =  "vdenc", **AV1CommonArgs)
+AV1_10EncoderTest   = codec_test_class(bitdepth = 10, engine = "encode", **AV1CommonArgs)
+AV1_10EncoderLPTest = codec_test_class(bitdepth = 10, engine =  "vdenc", **AV1CommonArgs)
 
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
+##### VP9 #####
+VP9CommonArgs = dict(
+  codec         = Codec.VP9,
+  gstmediatype  = "video/x-vp9",
+  gstparser     = "vp9parse",
+  gstmuxer      = "matroskamux",
+  gstdemuxer    = "matroskademux",
+)
+VP9EncoderTest      = codec_test_class(bitdepth =  8, engine = "encode", **VP9CommonArgs)
+VP9EncoderLPTest    = codec_test_class(bitdepth =  8, engine =  "vdenc", **VP9CommonArgs)
+VP9_10EncoderTest   = codec_test_class(bitdepth = 10, engine = "encode", **VP9CommonArgs)
+VP9_10EncoderLPTest = codec_test_class(bitdepth = 10, engine =  "vdenc", **VP9CommonArgs)
 
-@slash.requires(*have_gst_element("vah265enc"))
-@slash.requires(*platform.have_caps("encode", "hevc_10"))
-class HEVC10EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_10"),
-      gstencoder= "vah265enc",
-      lowpower  = False,
-    )
+##### VP8 #####
+VP8EncoderTest  = codec_test_class(
+  codec         = Codec.VP8,
+  engine        = "encode",
+  bitdepth      = 8,
+  gstmediatype  = "video/x-vp8",
+  gstmuxer      = "matroskamux",
+  gstdemuxer    = "matroskademux",
+)
 
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vah265lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "hevc_10"))
-class HEVC10EncoderLPTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "hevc_10"),
-      gstencoder= "vah265lpenc",
-      lowpower  = True,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vah265enc"))
-@slash.requires(*platform.have_caps("encode", "hevc_12"))
-class HEVC12EncoderTest(HEVCEncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "hevc_12"),
-      gstencoder= "vah265enc",
-      lowpower  = False,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 12
-    super().validate_caps()
-
-############################
-## AV1 Encoders           ##
-############################
-
-@slash.requires(*have_gst_element("vaav1dec"))
-class AV1EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.AV1,
-      gstdecoder    = "vaav1dec",
-      gstmediatype  = "video/x-av1",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-      gstparser     = "av1parse",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*have_gst_element("vaav1enc"))
-@slash.requires(*platform.have_caps("encode", "av1_8"))
-class AV1EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("encode", "av1_8"),
-      gstencoder= "vaav1enc",
-      lowpower  = False,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vaav1lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "av1_8"))
-class AV1EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps      = platform.get_caps("vdenc", "av1_8"),
-      gstencoder= "vaav1lpenc",
-      lowpower  = True,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vaav1enc"))
-@slash.requires(*platform.have_caps("encode", "av1_10"))
-class AV1_10EncoderTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps        = platform.get_caps("encode", "av1_10"),
-      gstencoder  = "vaav1enc",
-      lowpower    = False,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vaav1lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "av1_10"))
-class AV1_10EncoderLPTest(AV1EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps        = platform.get_caps("vdenc", "av1_10"),
-      gstencoder  = "vaav1lpenc",
-      lowpower    = True,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-############################
-## VP9 Encoders           ##
-############################
-
-@slash.requires(*have_gst_element("vavp9dec"))
-class VP9EncoderBaseTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      codec         = Codec.VP9,
-      gstdecoder    = "vavp9dec",
-      gstmediatype  = "video/x-vp9",
-      gstparser     = "vp9parse",
-      gstmuxer      = "matroskamux",
-      gstdemuxer    = "matroskademux",
-    )
-
-  def get_file_ext(self):
-    return "webm"
-
-@slash.requires(*platform.have_caps("encode", "vp9_8"))
-@slash.requires(*have_gst_element("vavp9enc"))
-class VP9EncoderTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps          = platform.get_caps("encode", "vp9_8"),
-      lowpower      = False,
-      gstencoder    = "vavp9enc",
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*platform.have_caps("vdenc", "vp9_8"))
-@slash.requires(*have_gst_element("vavp9lpenc"))
-class VP9EncoderLPTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps          = platform.get_caps("vdenc", "vp9_8"),
-      lowpower      = True,
-      gstencoder    = "vavp9lpenc",
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 8
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vavp9enc"))
-@slash.requires(*platform.have_caps("encode", "vp9_10"))
-class VP9_10EncoderTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps        = platform.get_caps("encode", "vp9_10"),
-      gstencoder  = "vavp9enc",
-      lowpower    = False,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-@slash.requires(*have_gst_element("vavp9lpenc"))
-@slash.requires(*platform.have_caps("vdenc", "vp9_10"))
-class VP9_10EncoderLPTest(VP9EncoderBaseTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps        = platform.get_caps("vdenc", "vp9_10"),
-      gstencoder  = "vavp9lpenc",
-      lowpower    = True,
-    )
-
-  def validate_caps(self):
-    assert PixelFormat(self.format).bitdepth == 10
-    super().validate_caps()
-
-############################
-## JPEG/MJPEG Encoders    ##
-############################
-
-@slash.requires(*have_gst_element("vajpegenc"))
-@slash.requires(*have_gst_element("vajpegdec"))
-@slash.requires(*platform.have_caps("vdenc", "jpeg"))
-class JPEGEncoderTest(EncoderTest):
-  def before(self):
-    super().before()
-    vars(self).update(
-      caps          = platform.get_caps("vdenc", "jpeg"),
-      codec         = Codec.JPEG,
-      gstencoder    = "vajpegenc",
-      gstdecoder    = "vajpegdec",
-      gstmediatype  = "image/jpeg",
-      gstparser     = "jpegparse",
-    )
-
-  def get_file_ext(self):
-    return "mjpeg" if self.frames > 1 else "jpg"
+##### JPEG/MJPEG #####
+JPEGEncoderTest = codec_test_class(
+  codec         = Codec.JPEG,
+  engine        = "vdenc",
+  bitdepth      = 8,
+  gstmediatype  = "image/jpeg",
+  gstparser     = "jpegparse",
+)
