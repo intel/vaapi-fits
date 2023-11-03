@@ -44,7 +44,7 @@ caps = dict(
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"], bframes = False),
-    jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
+    jpeg    = dict(maxres = res16k, fmts = ["NV12"]),
     hevc_8  = dict(
       maxres    = res8k,
       fmts      = ["NV12", "AYUV"],

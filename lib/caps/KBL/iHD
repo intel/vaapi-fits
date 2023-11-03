@@ -32,7 +32,7 @@ caps = dict(
   ),
   vdenc   = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12", "YUY2", "YUYV", "YVYU", "UYVY", "AYUV"], cbr = False, vbr = False, bframes = False),
-    jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
+    jpeg    = dict(maxres = res16k, fmts = ["NV12"]),
   ),
   vpp    = dict(
     # brightness, contrast, hue and saturation

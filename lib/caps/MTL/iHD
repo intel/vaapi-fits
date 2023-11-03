@@ -47,7 +47,7 @@ caps = dict(
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
   ),
   vdenc   = dict(
-    jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
+    jpeg    = dict(maxres = res16k, fmts = ["NV12"]),
   ),
   vpp    = dict(
     # brightness, contrast, hue and saturation
