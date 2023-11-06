@@ -717,6 +717,32 @@ def gen_av1_cqp_parameters(spec):
   params = gen_av1_cqp_variants(spec)
   return keys, params
 
+def gen_av1_icq_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("icq", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
+
+def gen_av1_icq_parameters(spec):
+  keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
+  params = gen_av1_icq_variants(spec)
+  return keys, params
+
+def gen_av1_icq_lp_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("icq_lp", [])
+    for variant in variants:
+      yield [
+        case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
+        variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
+
+def gen_av1_icq_lp_parameters(spec):
+  keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
+  params = gen_av1_icq_lp_variants(spec)
+  return keys, params
+
 def gen_av1_cbr_variants(spec):
   for case, params in spec.items():
     variants = params.get("variants", dict()).get("cbr", [])
