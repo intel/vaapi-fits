@@ -39,6 +39,9 @@ class Encoder(FFEncoder):
       if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [1, 51])
         return f" -q {mqp}"
+      if self.codec in [Codec.AV1]:
+        if "ICQ" == self.rcmode:
+          return f" -global_quality {qp}"
       return f" -q {qp}"
     return self.ifprop("qp", inner)
 
