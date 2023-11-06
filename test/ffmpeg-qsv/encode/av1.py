@@ -37,6 +37,31 @@ class cqp(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class icq(AV1EncoderTest):
+  def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      gop       = gop,
+      bframes   = bframes,
+      qp        = qp,
+      rcmode    = "icq",
+      quality   = quality,
+      profile   = profile,
+      tilerows  = tilerows,
+      tilecols  = tilecols,
+    )
+
+  @slash.parametrize(*gen_av1_icq_parameters(spec))
+  def test(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
+    self.encode()
+
+  @slash.parametrize(*gen_av1_icq_parameters(spec_r2r))
+  def test_r2r(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.init(spec_r2r, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
+    vars(self).setdefault("r2r", 5)
+    self.encode()
 
 class cbr(AV1EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
@@ -123,6 +148,31 @@ class cqp_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class icq_lp(AV1EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      gop       = gop,
+      bframes   = bframes,
+      qp        = qp,
+      rcmode    = "icq",
+      quality   = quality,
+      profile   = profile,
+      tilerows  = tilerows,
+      tilecols  = tilecols,
+    )
+
+  @slash.parametrize(*gen_av1_icq_lp_parameters(spec))
+  def test(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
+    self.encode()
+
+  @slash.parametrize(*gen_av1_icq_lp_parameters(spec_r2r))
+  def test_r2r(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.init(spec_r2r, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
+    vars(self).setdefault("r2r", 5)
+    self.encode()
 
 class cbr_lp(AV1EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
