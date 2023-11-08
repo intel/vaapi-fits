@@ -43,12 +43,12 @@ class Decoder(PropertyHandler):
     mtype = self.props.get("metric", dict()).get("type", None)
 
     if vars(self).get("_decoded", None) is not None:
-      get_media()._purge_test_artifact(self._decoded)
-    self._decoded = get_media()._test_artifact2("yuv")
+      get_media().artifacts.purge(self._decoded)
+    self._decoded = get_media().artifacts.reserve("yuv")
 
     if vars(self).get("_statsfile", None) is not None:
-      get_media()._purge_test_artifact(self._statsfile)
-    self._statsfile = get_media()._test_artifact2(mtype)
+      get_media().artifacts.purge(self._statsfile)
+    self._statsfile = get_media().artifacts.reserve(mtype)
 
     # WA: avvideocompare has some current limitations
     def can_inline_libav():

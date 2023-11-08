@@ -127,7 +127,7 @@ class TrendModelMixin:
 
     plt.ylim([15, 100])
     plt.legend()
-    plt.savefig(get_media()._test_artifact2("svg"))
+    plt.savefig(get_media().artifacts.reserve("svg"))
     # plt.show()
     plt.clf()
 

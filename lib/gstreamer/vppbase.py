@@ -67,8 +67,8 @@ class BaseVppTest(slash.Test, VppMetricMixin):
   @timefn("gst:vpp")
   def call_gst(self, iopts, oopts):
     if vars(self).get("decoded", None) is not None:
-      get_media()._purge_test_artifact(self.decoded)
-    self.decoded = get_media()._test_artifact2("yuv")
+      get_media().artifacts.purge(self.decoded)
+    self.decoded = get_media().artifacts.reserve("yuv")
     self.osdecoded = filepath2os(self.decoded)
 
     iopts = iopts.format(**vars(self))

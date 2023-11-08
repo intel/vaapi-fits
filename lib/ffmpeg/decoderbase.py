@@ -64,16 +64,16 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   @timefn("ffmpeg:decode")
   def decode(self):
     if vars(self).get("_decoded", None) is not None:
-      get_media()._purge_test_artifact(self._decoded)
-    self._decoded = get_media()._test_artifact2("yuv")
+      get_media().artifacts.purge(self._decoded)
+    self._decoded = get_media().artifacts.reserve("yuv")
 
     mtype = self.props.get("metric", dict()).get("type", None)
     if mtype in ["ssim", "psnr"]:
       fps = ffmpeg_probe_fps(self.ossource)
 
       if vars(self).get("_statsfile", None) is not None:
-        get_media()._purge_test_artifact(self._statsfile)
-      self._statsfile = get_media()._test_artifact2(mtype)
+        get_media().artifacts.purge(self._statsfile)
+      self._statsfile = get_media().artifacts.reserve(mtype)
 
       return call(
         f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
