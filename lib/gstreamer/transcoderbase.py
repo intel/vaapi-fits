@@ -134,8 +134,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
         output.get("width", None), output.get("height", None), mode)
 
       for channel in range(output.get("channels", 1)):
-        ofile = get_media()._test_artifact(
-          "{}_{}_{}.{}".format(self.case, n, channel, ext))
+        ofile = get_media().artifacts.reserve(ext)
         self.goutputs.setdefault(n, list()).append(ofile)
         osofile = filepath2os(ofile)
 
@@ -146,8 +145,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
         opts += " ! filesink location={} transcoder.".format(osofile)
 
     # dump decoded source to yuv for reference comparison
-    self.srcyuv = get_media()._test_artifact(
-      "src_{case}.yuv".format(**vars(self)))
+    self.srcyuv = get_media().artifacts.reserve("yuv")
     self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
     if self.mode in ["va_hw", "dma"]:
@@ -180,8 +178,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
         osencoded = filepath2os(encoded)
-        yuv = get_media()._test_artifact(
-          "{}_{}_{}.yuv".format(self.case, n, channel))
+        yuv = get_media().artifacts.reserve("yuv")
         osyuv = filepath2os(yuv)
         iopts = "filesrc location={} ! {}"
         oopts = self.get_vpp_scale(self.width, self.height, "hw")
@@ -193,7 +190,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
           oopts.format(osyuv, frames = self.frames))
         self.check_resolution(output, osencoded)
         self.check_metrics(yuv, refctx = [(n, channel)])
-        get_media()._purge_test_artifact(yuv)
+        get_media().artifacts.purge(yuv)
 
   def check_resolution(self, output, encoded):
     props = [l.strip() for l in gst_discover(encoded).split('\n')]

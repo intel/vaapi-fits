@@ -16,6 +16,7 @@ from ...lib.parameters import format_value
 from ...lib.properties import PropertyHandler
 from ...lib.util import skip_test_if_missing_features
 from ...lib.codecs import Codec
+
 from ...lib import metrics2
 
 class Encoder(PropertyHandler, BaseFormatMapper):
@@ -119,8 +120,8 @@ class Encoder(PropertyHandler, BaseFormatMapper):
   @timefn("ffmpeg:encode")
   def encode(self):
     if vars(self).get("_encoded", None) is not None:
-      get_media()._purge_test_artifact(self._encoded)
-    self._encoded = get_media()._test_artifact2(f"{self.encoded_ext}")
+      get_media().artifacts.purge(self._encoded)
+    self._encoded = get_media().artifacts.reserve(self.encoded_ext)
 
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"

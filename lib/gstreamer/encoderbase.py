@@ -59,8 +59,8 @@ class Encoder(PropertyHandler):
   @timefn("gst:encode")
   def encode(self):
     if vars(self).get("_encoded", None) is not None:
-      get_media()._purge_test_artifact(self._encoded)
-    self._encoded = get_media()._test_artifact2(f"{self.encoded_ext}")
+      get_media().artifacts.purge(self._encoded)
+    self._encoded = get_media().artifacts.reserve(self.encoded_ext)
 
     return call(
       f"{exe2os('gst-launch-1.0')} -vf filesrc location={self.ossource} num-buffers={self.frames}"

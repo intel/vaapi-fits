@@ -6,6 +6,7 @@
 
 from datetime import datetime as dt
 import itertools
+from lib import artifacts
 from lib.baseline import Baseline
 import lib.system
 import os
@@ -72,10 +73,12 @@ class MediaPlugin(slash.plugins.PluginInterface):
     parser.add_argument("--rebase", action = "store_true")
     parser.add_argument("--baseline-file",
       default = os.path.abspath(os.path.join(self.mypath, "baseline", "default")))
-    parser.add_argument("--artifact-retention", default = self.RETENTION_NONE,
-      type = int,
-      help = "{} = Keep None; {} = Keep Failed; {} = Keep All".format(
-        self.RETENTION_NONE, self.RETENTION_FAIL, self.RETENTION_ALL))
+    parser.add_argument("--artifact-retention", default = artifacts.Retention.NONE,
+      type = int, help = (
+        f"{int(artifacts.Retention.NONE)} = Keep None; "
+        f"{int(artifacts.Retention.FAIL)} = Keep Failed; "
+        f"{int(artifacts.Retention.ALL)} = Keep All"
+        " (default: %(default)i)"))
     parser.add_argument("--call-timeout", default = 300, type = int,
       help = "call timeout in seconds")
     parser.add_argument("--ctapt", default = -1, type = int,
@@ -88,7 +91,7 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
   def configure_from_parsed_args(self, args):
     self.baseline = Baseline(args.baseline_file, args.rebase)
-    self.retention = args.artifact_retention
+    self.artifacts = artifacts.Artifacts(args.artifact_retention)
     self.call_timeout = args.call_timeout
     self.parallel_metrics = args.parallel_metrics
     self.ctapt = args.ctapt
@@ -169,30 +172,6 @@ class MediaPlugin(slash.plugins.PluginInterface):
       slash.context.result.details.set(k, v)
       slash.logger.info("DETAIL: {} = {}".format(k, v))
 
-  def _test_artifact(self, filename):
-    tstfile = os.path.join(slash.context.result.get_log_dir(), filename)
-    slash.context.result.data.setdefault("artifacts", list()).append(tstfile)
-    if os.path.exists(tstfile):
-      os.remove(tstfile)
-    return tstfile
-
-  def _test_artifact2(self, ext):
-    count = self._test_state_value((self._test_artifact2, ext), 0)
-    count.value += 1
-    filename = f"{slash.context.test.id}_{count.value}.{ext}"
-    return self._test_artifact(filename)
-
-  def _purge_test_artifact(self, filename):
-    result = slash.context.result
-
-    if self.retention != self.RETENTION_ALL:
-      if self.retention == self.RETENTION_FAIL and not result.is_success():
-        pass # Keep failed test artifacts
-      else:
-        if filename in result.data.get("artifacts", list()):
-          if os.path.exists(filename):
-            os.remove(filename)
-
   def _get_test_spec(self, *args):
     spec = self.testspec
     for key in args:
@@ -244,15 +223,6 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
     test = slash.context.test
     result = slash.context.result
-
-    # Cleanup test artifacts?
-    if self.retention != self.RETENTION_ALL:
-      if self.retention == self.RETENTION_FAIL and not result.is_success():
-        pass # Keep failed test artifacts
-      else:
-        for tstfile in result.data.get("artifacts", list()):
-          if os.path.exists(tstfile):
-            os.remove(tstfile)
 
     # Process system capture result (i.e. dmesg)
     # NOTE: syscapture is not accurate for parallel runs

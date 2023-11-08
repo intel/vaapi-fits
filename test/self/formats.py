@@ -14,7 +14,7 @@ __MYPARMS__ = list(
 )
 
 def gen_multiframe_from(infile, count):
-  outfile = get_media()._test_artifact(os.path.basename(infile))
+  outfile = get_media().artifacts.reserve(os.path.splitext(infile)[-1])
   with open(infile, "rb") as fd:
     data = fd.read()
   with open(outfile, "wb") as fd:
@@ -52,8 +52,7 @@ def test_frame_reader(width, height, fmt):
 
 @slash.parametrize(("width", "height"), itertools.product([175, 176, 177], [143, 144, 145]))
 def test_frame_reader_Y410(width, height):
-  testfile = get_media()._test_artifact(
-    "test_frame_reader_Y410_{}x{}.Y410".format(width, height))
+  testfile = get_media().artifacts.reserve("Y410")
   a = 3; oy = 512; ou = 256; ov = 128;
   dword = (a << 30) | (ov << 20) | (oy << 10) | ou
   b = dword.to_bytes(4, "little")
@@ -76,8 +75,7 @@ def test_frame_reader_Y410(width, height):
 
 @slash.parametrize(("width", "height"), itertools.product([175, 176, 177], [143, 144, 145]))
 def test_frame_reader_Y210(width, height):
-  testfile = get_media()._test_artifact(
-    "test_frame_reader_Y210_{}x{}.Y210".format(width, height))
+  testfile = get_media().artifacts.reserve("Y210")
   #0xffc0 0xf0c0 0xdbc0 0x1dc0
   oy0 = 65472; ou = 61632; oy1 = 56256; ov = 7616
   dword1 = (ou << 16) | oy0

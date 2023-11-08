@@ -174,8 +174,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         filters.append(vppscale)
 
       for channel in range(output.get("channels", 1)):
-        ofile = get_media()._test_artifact(
-          "{}_{}_{}.{}".format(self.case, n, channel, ext))
+        ofile = get_media().artifacts.reserve(ext)
         self.goutputs.setdefault(n, list()).append(ofile)
         osofile = filepath2os(ofile)
 
@@ -189,8 +188,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       self.srcyuv = format_value(self.reference, **vars(self))
     else:
       # dump decoded source to yuv for reference comparison
-      self.srcyuv = get_media()._test_artifact(
-        "src_{case}.yuv".format(**vars(self)))
+      self.srcyuv = get_media().artifacts.reserve("yuv")
       self.ossrcyuv = filepath2os(self.srcyuv)
       if self.mode in ["hw", "va_hw", "d3d11_hw"]:
         opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
@@ -243,8 +241,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         iopts += f" -i {osencoded}"
 
-        yuv = get_media()._test_artifact(
-          "{}_{}_{}.yuv".format(self.case, n, channel))
+        yuv = get_media().artifacts.reserve("yuv")
         osyuv = filepath2os(yuv)
         vppscale = self.get_vpp_scale(self.width, self.height, "sw")
         oopts = (
@@ -271,7 +268,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
             (len(input_cll_info) == 0 or (len(input_cll_info) == len(output_cll_info) and input_cll_info[0] == output_cll_info[0])), "HDR info is different between input and output"
 
         # delete yuv file after each iteration
-        get_media()._purge_test_artifact(yuv)
+        get_media().artifacts.purge(yuv)
 
   def check_resolution(self, output, encoded):
     actual = ffmpeg_probe_resolution(encoded)
