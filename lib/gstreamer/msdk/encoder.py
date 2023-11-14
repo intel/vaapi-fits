@@ -41,6 +41,9 @@ class Encoder(GstEncoder):
       if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [0, 51])
         return f" qpi={mqp} qpp={mqp} qpb={mqp}"
+      if self.codec in [Codec.AV1]:
+        if "ICQ" == self.rcmode:
+          return f" qpi={qp}"
       return f" qpi={qp} qpp={qp} qpb={qp}"
     return self.ifprop("qp", inner)
 
