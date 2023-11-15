@@ -6,21 +6,16 @@
 
 from .....lib import *
 from .....lib.gstreamer.va.util import *
-from .....lib.gstreamer.va.decoder import DecoderTest
+from .....lib.gstreamer.va.decoder import AV1_10DecoderTest as DecoderTest
 
 spec = load_test_spec("av1", "decode", "10bit")
 
-@slash.requires(*platform.have_caps("decode", "av1_10"))
-@slash.requires(*have_gst_element("vaav1dec"))
 class default(DecoderTest):
   def before(self):
     super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
-      caps        = platform.get_caps("decode", "av1_10"),
-      gstdecoder  = "vaav1dec",
-      gstparser   = "av1parse",
     )
 
   @slash.parametrize(("case"), sorted(spec.keys()))

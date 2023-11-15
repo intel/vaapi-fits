@@ -6,20 +6,16 @@
 
 from ....lib import *
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.decoder import DecoderTest
+from ....lib.gstreamer.va.decoder import VP8DecoderTest as DecoderTest
 
 spec = load_test_spec("vp8", "decode")
 
-@slash.requires(*platform.have_caps("decode", "vp8"))
-@slash.requires(*have_gst_element("vavp8dec"))
 class default(DecoderTest):
   def before(self):
     super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0),
-      caps        = platform.get_caps("decode", "vp8"),
-      gstdecoder  = "vavp8dec",
     )
 
   @slash.parametrize(("case"), sorted(spec.keys()))
