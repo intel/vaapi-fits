@@ -22,6 +22,8 @@ class Decoder(GstDecoder):
 
   @property
   def gstdecoder(self):
+    #FIXME: use class template (e.g. similar to encoder) to resolve element
+    # name sooner so that it can be used in slash.requires.
     #TODO: windows hwdevice > 0 is not test
     return super().gstdecoder if self.hwdevice in [ "renderD128", "0" ] else super().gstdecoder.replace("va", f"va{self.hwdevice}")
 
