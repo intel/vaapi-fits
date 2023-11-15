@@ -149,7 +149,7 @@ def codec_test_class(codec, engine, bitdepth, **kwargs):
   hw = hwdevice if hwdevice not in ['renderD128', '0'] else ""
 
   @slash.requires(*have_gst_element(f"va{hw}{gstcodec}{lp}enc"))
-  @slash.requires(*have_gst_element(f"va{gstcodec}dec"))
+  @slash.requires(*have_gst_element(f"va{hw}{gstcodec}dec"))
   @slash.requires(*platform.have_caps(engine, capcodec))
   class CodecEncoderTest(EncoderTest):
     def before(self):
@@ -158,7 +158,7 @@ def codec_test_class(codec, engine, bitdepth, **kwargs):
         caps = platform.get_caps(engine, capcodec),
         codec = codec,
         gstencoder = f"va{hw}{gstcodec}{lp}enc",
-        gstdecoder = f"va{gstcodec}dec",
+        gstdecoder = f"va{hw}{gstcodec}dec",
         **kwargs,
       )
 
