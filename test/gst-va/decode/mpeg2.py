@@ -6,22 +6,17 @@
 
 from ....lib import *
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.decoder import DecoderTest
+from ....lib.gstreamer.va.decoder import MPEG2DecoderTest as DecoderTest
 
 spec = load_test_spec("mpeg2", "decode")
 spec_r2r = load_test_spec("mpeg2", "decode", "r2r")
 
-@slash.requires(*platform.have_caps("decode", "mpeg2"))
-@slash.requires(*have_gst_element("vampeg2dec"))
 class default(DecoderTest):
   def before(self):
     super().before()
     vars(self).update(
       # default metric
       metric      = dict(type = "ssim", miny = 0.99, minu = 0.99, minv = 0.99),
-      caps        = platform.get_caps("decode", "mpeg2"),
-      gstdecoder  = "vampeg2dec",
-      gstparser   = "mpegvideoparse",
     )
 
   @slash.parametrize(("case"), sorted(spec.keys()))
