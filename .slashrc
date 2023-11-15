@@ -106,6 +106,16 @@ class MediaPlugin(slash.plugins.PluginInterface):
     if self._get_os() == 'linux' and "NONE" != self.platform.upper():
       assert os.path.exists(args.device), "Target Device {} not exist".format(args.device)
 
+    # Gstreamer msdk/vaapi plugins will register elements based on the
+    # device.  In a multi-gpu system, this device is arbitrary by default.
+    # The default may not represent the actual device we are targeting for
+    # testing.  Therefore, we must set the target device env variable for the
+    # msdk/vaapi plugins before any of the slash.requires are evaluated so
+    # that test cases are not inadvertently skipped due to missing feature
+    # on one device vs. the other.
+    os.environ["GST_MSDK_DRM_DEVICE"] = self.render_device
+    os.environ["GST_VAAPI_DRM_DEVICE"] = self.render_device
+
   def _calls_allowed(self):
     # only enabled during test function execution (see test_start/test_end)
     if not self.cta_enabled:
