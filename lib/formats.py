@@ -70,7 +70,7 @@ def match_best_format(fmt, choices):
   matches &= set(choices)
   if len(matches) == 0:
     return None
-  return list(matches)[0]
+  return sorted(matches, key = list(PixelFormat).index)[0]
 
 class FormatMapper:
   def get_supported_format_map(self):
