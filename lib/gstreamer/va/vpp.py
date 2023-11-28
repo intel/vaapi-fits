@@ -7,23 +7,15 @@
 import os
 import slash
 
+from ....lib import platform, format_value
+from ....lib.codecs import Codec
 from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
-from ....lib.gstreamer.va.util import map_best_hw_format, mapformat, mapformatu
+from ....lib.gstreamer.va.util import map_best_hw_format, mapformat, mapformatu, map_deinterlace_method
 from ....lib.common import get_media, mapRange, mapRangeWithDefault
 
 @slash.requires(*have_gst_element("va"))
-@slash.requires(*have_gst_element("vapostproc"))
 class VppTest(BaseVppTest):
-  @property
-  def hwdevice(self):
-    return get_media().render_device.split('/')[-1]
-
-  def before(self):
-    super().before()
-    #TODO: windows hwdevice > 0 is not test
-    vars(self).update(gstvpp = 'vapostproc' if self.hwdevice in ['renderD128' , '0'] else f"va{self.hwdevice}postproc")
-
   def map_best_hw_format(self, format, hwformats):
     return map_best_hw_format(format, hwformats)
 
@@ -64,9 +56,7 @@ class VppTest(BaseVppTest):
     elif self.vpp_op in ["crop"]:
       opts += " disable-passthrough=true"
     elif self.vpp_op in ["composite"]:
-      #TODO: windows hwdevice > 0 is not test
-      vacompositor = 'vacompositor' if self.hwdevice in ['renderD128' , '0'] else f"va{self.hwdevice}compositor"
-      opts += f" ! tee name=source {vacompositor} name=composite"
+      opts += " name=composite"
       for n, comp in enumerate(self.comps):
         opts += (
           " sink_{n}::xpos={x}"
@@ -74,17 +64,120 @@ class VppTest(BaseVppTest):
           " sink_{n}::alpha={a}"
           "".format(n = n, **comp)
         )
+    elif self.vpp_op in ["deinterlace"]:
+      opts += " method={mmethod}"
+    return opts
 
+  def gen_input_opts(self):
+    opts = super().gen_input_opts()
+    if self.vpp_op in ["composite"]:
+      opts += " ! tee name=source ! queue"
+    elif self.vpp_op in ["crop"]:
+      opts += " ! videocrop left={left} right={right} top={top} bottom={bottom}"
     return opts
 
   def gen_output_opts(self):
-    vpp_crop_filter = " videocrop left={left} right={right} top={top} bottom={bottom} ! "
-    vpp_di_filter   = ' vadeinterlace method={mmethod} ! ' if self.hwdevice in ['renderD128' , '0'] else f" va{self.hwdevice}deinterlace"" method={mmethod} ! "
     opts = super().gen_output_opts()
-    if self.vpp_op in ["crop"]:
-      opts = vpp_crop_filter + opts
-    if self.vpp_op in ["deinterlace"]:
-      opts = vpp_di_filter + opts
     if self.vpp_op in ["composite"]:
-      opts += " source. ! queue ! composite. " * len(self.comps)
+      # The first composition is piped directly to vacompositor.
+      # Pipe the rest of them here.
+      opts += " source. ! queue ! composite. " * int(len(self.comps) - 1)
     return opts
+
+def vpp_test_class(op):
+  hwdevice = get_media().render_device.split('/')[-1]
+  hw = hwdevice if hwdevice not in ['renderD128', '0'] else ""
+
+  gstvpp = {
+    "composite"   : f"va{hw}compositor",
+    "deinterlace" : f"va{hw}deinterlace",
+  }.get(op, f"va{hw}postproc")
+
+  @slash.requires(*have_gst_element(gstvpp))
+  @slash.requires(*platform.have_caps("vpp", op))
+  class VppTestClass(VppTest):
+    def before(self):
+      super().before()
+      vars(self).update(
+        caps    = platform.get_caps("vpp", op),
+        gstvpp  = gstvpp,
+        vpp_op  = op,
+      )
+
+  return VppTestClass
+
+def deinterlace_test_class(codec):
+  # gst element codec translation
+  gstcodec = {
+    Codec.AVC   : "h264",
+  }.get(codec, codec)
+
+  gstparser = {
+    Codec.MPEG2 : "mpegvideoparse",
+  }.get(codec, f"{gstcodec}parse")
+
+  hwdevice = get_media().render_device.split('/')[-1]
+  hw = hwdevice if hwdevice not in ['renderD128', '0'] else ""
+
+  @slash.requires(*have_gst_element(f"va{hw}{gstcodec}dec"))
+  @slash.requires(*platform.have_caps("decode", codec))
+  class DeinterlaceTestClass(vpp_test_class("deinterlace")):
+    _default_methods_ = [
+      "bob",
+      "motion-adaptive",
+      "motion-compensated",
+    ]
+
+    _default_modes_ = [
+      dict(method = m, rate = "field") for m in _default_methods_
+    ]
+
+    def before(self):
+      super().before()
+      vars(self).update(
+        metric      = dict(type = "md5"),
+        gstdecoder  = f"{gstparser} ! va{hw}{gstcodec}dec",
+      )
+
+    def init(self, tspec, case, method, rate):
+      vars(self).update(tspec[case].copy())
+      vars(self).update(case = case, method = method, rate = rate)
+
+      self.frames *= 2 # field rate produces double number of frames
+
+    def validate_caps(self):
+      self.caps = platform.get_caps(
+        "vpp", "deinterlace", self.method.replace('-', '_'))
+
+      if self.caps is None:
+        slash.skip_test(
+          format_value(
+            "{platform}.{driver}.{method} not supported", **vars(self)))
+
+      # The rate is fixed in vadeinterlace.  It always outputs at
+      # field rate (one frame of output for each field).
+      if "field" != self.rate:
+        slash.skip_test("{rate} rate not supported".format(**vars(self)))
+
+      self.mmethod = map_deinterlace_method(self.method)
+      if self.mmethod is None:
+        slash.skip_test("{method} not supported".format(**vars(self)))
+
+      super().validate_caps()
+
+  return DeinterlaceTestClass
+
+VppBrightnessTest   = vpp_test_class("brightness")
+VppContrastTest     = vpp_test_class("contrast")
+VppHueTest          = vpp_test_class("hue")
+VppSaturationTest   = vpp_test_class("saturation")
+VppCompositeTest    = vpp_test_class("composite")
+VppCropTest         = vpp_test_class("crop")
+VppCscTest          = vpp_test_class("csc")
+VppDenoiseTest      = vpp_test_class("denoise")
+VppTransposeTest    = vpp_test_class("transpose")
+VppScaleTest        = vpp_test_class("scale")
+VppSharpenTest      = vpp_test_class("sharpen")
+
+VppAVCDeinterlaceTest   = deinterlace_test_class(Codec.AVC)
+VppMPEG2DeinterlaceTest = deinterlace_test_class(Codec.MPEG2)

@@ -6,20 +6,12 @@
 
 from ....lib import *
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.vpp import VppTest
+from ....lib.gstreamer.va.vpp import VppHueTest as VppTest
 
 spec      = load_test_spec("vpp", "hue")
 spec_r2r  = load_test_spec("vpp", "hue", "r2r")
 
-@slash.requires(*platform.have_caps("vpp", "hue"))
 class default(VppTest):
-  def before(self):
-    vars(self).update(
-      caps    = platform.get_caps("vpp", "hue"),
-      vpp_op  = "hue",
-    )
-    super(default, self).before()
-
   def init(self, tspec, case, level):
     vars(self).update(tspec[case].copy())
     vars(self).update(
