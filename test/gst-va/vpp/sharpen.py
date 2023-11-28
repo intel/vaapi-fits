@@ -6,20 +6,12 @@
 
 from ....lib import *
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.vpp import VppTest
+from ....lib.gstreamer.va.vpp import VppSharpenTest as VppTest
 
 spec      = load_test_spec("vpp", "sharpen")
 spec_r2r  = load_test_spec("vpp", "sharpen", "r2r")
 
-@slash.requires(*platform.have_caps("vpp", "sharpen"))
 class default(VppTest):
-  def before(self):
-    vars(self).update(
-      caps    = platform.get_caps("vpp", "sharpen"),
-      vpp_op  = "sharpen",
-    )
-    super(default, self).before()
-
   @slash.parametrize(*gen_vpp_sharpen_parameters(spec))
   def test(self, case, level):
     vars(self).update(spec[case].copy())

@@ -6,19 +6,14 @@
 
 from ....lib import *
 from ....lib.gstreamer.va.util import *
-from ....lib.gstreamer.va.vpp import VppTest
+from ....lib.gstreamer.va.vpp import VppTransposeTest as VppTest
 
 spec = load_test_spec("vpp", "rotation")
 
-@slash.requires(*platform.have_caps("vpp", "rotation"))
 class default(VppTest):
   def before(self):
-    vars(self).update(
-      caps    = platform.get_caps("vpp", "rotation"),
-      metric  = dict(type = "md5"),
-      vpp_op  = "transpose",
-    )
-    super(default, self).before()
+    super().before()
+    vars(self).update(metric = dict(type = "md5"))
 
   @slash.parametrize(*gen_vpp_rotation_parameters(spec))
   def test(self, case, degrees):
