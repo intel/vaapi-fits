@@ -34,7 +34,8 @@ def load_caps_file(capsfile):
     di = caps.get("vpp", dict()).get("deinterlace", dict())
     if di.get("motion_adaptive", None) is not None:
       di.setdefault("advanced", di["motion_adaptive"])
-
+    if caps.get("vpp", dict()).get("blend", None) is not None:
+      caps["vpp"].setdefault("composite", caps["vpp"]["blend"])
   return caps
 
 @memoize
