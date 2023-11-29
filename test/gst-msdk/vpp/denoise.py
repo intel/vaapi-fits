@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.gstreamer.msdk.util import *
 from ....lib.gstreamer.msdk.vpp import VppTest
 
-spec = load_test_spec("vpp", "denoise")
+spec      = load_test_spec("vpp", "denoise")
+spec_r2r  = load_test_spec("vpp", "denoise", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "denoise"))
 class default(VppTest):
@@ -23,4 +24,11 @@ class default(VppTest):
   def test(self, case, level):
     vars(self).update(spec[case].copy())
     vars(self).update(case = case, level = level)
+    self.vpp()
+
+  @slash.parametrize(*gen_vpp_denoise_parameters(spec_r2r))
+  def test_r2r(self, case, level):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(case = case, level = level)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
