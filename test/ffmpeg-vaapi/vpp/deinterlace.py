@@ -53,7 +53,8 @@ class DeinterlaceTest(VppTest):
 
     super().validate_caps()
 
-spec_avc = load_test_spec("vpp", "deinterlace", "avc")
+spec_avc      = load_test_spec("vpp", "deinterlace", "avc")
+spec_avc_r2r  = load_test_spec("vpp", "deinterlace", "avc", "r2r")
 @slash.requires(*platform.have_caps("decode", "avc"))
 @slash.requires(*have_ffmpeg_decoder("h264"))
 class avc(DeinterlaceTest):
@@ -68,7 +69,16 @@ class avc(DeinterlaceTest):
     self.init(spec_avc, case, method, rate)
     self.vpp()
 
-spec_mpeg2 = load_test_spec("vpp", "deinterlace", "mpeg2")
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_avc_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_avc_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
+    self.vpp()
+
+spec_mpeg2      = load_test_spec("vpp", "deinterlace", "mpeg2")
+spec_mpeg2_r2r  = load_test_spec("vpp", "deinterlace", "mpeg2", "r2r")
 @slash.requires(*platform.have_caps("decode", "mpeg2"))
 @slash.requires(*have_ffmpeg_decoder("mpeg2video"))
 class mpeg2(DeinterlaceTest):
@@ -83,7 +93,16 @@ class mpeg2(DeinterlaceTest):
     self.init(spec_mpeg2, case, method, rate)
     self.vpp()
 
-spec_vc1 = load_test_spec("vpp", "deinterlace", "vc1")
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_mpeg2_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_mpeg2_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
+    self.vpp()
+
+spec_vc1      = load_test_spec("vpp", "deinterlace", "vc1")
+spec_vc1_r2r  = load_test_spec("vpp", "deinterlace", "vc1", "r2r")
 @slash.requires(*platform.have_caps("decode", "vc1"))
 @slash.requires(*have_ffmpeg_decoder("vc1"))
 class vc1(DeinterlaceTest):
@@ -96,4 +115,12 @@ class vc1(DeinterlaceTest):
       spec_vc1, DeinterlaceTest._default_modes_))
   def test(self, case, method, rate):
     self.init(spec_vc1, case, method, rate)
+    self.vpp()
+
+  @slash.parametrize(
+    *gen_vpp_deinterlace_parameters(
+      spec_vc1_r2r, DeinterlaceTest._default_modes_))
+  def test_r2r(self, case, method, rate):
+    self.init(spec_vc1_r2r, case, method, rate)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
