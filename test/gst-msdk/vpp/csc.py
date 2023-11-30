@@ -28,7 +28,7 @@ class default(VppTest):
 
   @slash.parametrize(*gen_vpp_csc_parameters(spec_r2r))
   def test_r2r(self, case, csc):
-    vars(self).update(spec[case].copy())
+    vars(self).update(spec_r2r[case].copy())
     vars(self).update(case = case, csc = csc)
     vars(self).setdefault("r2r", 5)
     self.vpp()
