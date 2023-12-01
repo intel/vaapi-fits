@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.vpp import VppTest
 
-spec = load_test_spec("vpp", "composite")
+spec      = load_test_spec("vpp", "composite")
+spec_r2r  = load_test_spec("vpp", "composite", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "blend"))
 @slash.requires(*have_gst_element("vaapioverlay"))
@@ -25,4 +26,11 @@ class default(VppTest):
   def test(self, case):
     vars(self).update(spec[case].copy())
     vars(self).update(case = case)
+    self.vpp()
+
+  @slash.parametrize(("case"), sorted(spec_r2r.keys()))
+  def test_r2r(self, case):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(case = case)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
