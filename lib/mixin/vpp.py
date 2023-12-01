@@ -78,7 +78,7 @@ class VppMetricMixin:
       # if user specified reference, then assume it's format is the same as csc output format.
       # Otherwise, the format is the source format
       format = self.format if vars(self).get("reference", None) is None else self.csc,
-      format2 = self.csc,
+      format2 = self.csc, refctx = self.refctx,
       width = self.width, height = self.height, frames = self.frames)
 
   def check_deinterlace(self):
