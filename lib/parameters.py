@@ -879,6 +879,17 @@ def gen_vpp_csc_parameters(spec):
   params = gen_vpp_csc_variants(spec)
   return keys, params
 
+def gen_vpp_10bit_csc_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("colorspaces", None) or ["P010"]
+    for variant in set(variants):
+      yield [case, variant]
+
+def gen_vpp_10bit_csc_parameters(spec):
+  keys = ("case", "csc")
+  params = gen_vpp_10bit_csc_variants(spec)
+  return keys, params
+
 def gen_vpp_scale_variants(spec):
   for case, params in spec.items():
     variants = params.get("scale_resolutions", None) or []
