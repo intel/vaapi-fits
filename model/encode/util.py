@@ -132,13 +132,17 @@ class TrendModelMixin:
     plt.clf()
 
   def check_metrics(self):
-    self.decoder.update(source = self.encoder.encoded, metric = self.metric)
+    self.decoder.update(
+      reference = self.encoder.source,
+      source    = self.encoder.encoded,
+      metric    = self.metric
+    )
     self.decoder.decode()
 
     metric = metrics2.factory.create(**vars(self))
     metric.update(
+      filetrue  = self.encoder.source,
       filecoded = self.encoder.encoded,
-      filetrue  = self.source,
       filetest  = self.decoder.decoded,
     )
     metric.actual = self.parse_psnr()
