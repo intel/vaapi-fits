@@ -7,6 +7,7 @@
 import os
 import slash
 
+from ...lib.artifacts import Scope
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.formats import match_best_format
 from ...lib.gstreamer.util import have_gst, have_gst_element
@@ -55,13 +56,17 @@ class Decoder(PropertyHandler):
   reference   = property(lambda s: s.props["reference"])
   osreference = property(lambda s: filepath2os(s.reference))
 
+  def __init__(self, scope = Scope.TEST, **properties):
+    super().__init__(**properties)
+    self._scope = scope
+
   @property
   def gstoutput(self):
     mtype = self.props.get("metric", dict()).get("type", None)
 
     if vars(self).get("_decoded", None) is not None:
-      get_media().artifacts.purge(self._decoded)
-    self._decoded = get_media().artifacts.reserve("yuv")
+      get_media().artifacts.purge(self._decoded, self._scope)
+    self._decoded = get_media().artifacts.reserve("yuv", self._scope)
 
     if vars(self).get("_statsfile", None) is not None:
       get_media().artifacts.purge(self._statsfile)
