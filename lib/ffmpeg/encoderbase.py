@@ -8,6 +8,7 @@ import os
 import re
 import slash
 
+from ...lib.artifacts import MediaAssets
 from ...lib.common import get_media, timefn, call, exe2os, filepath2os
 from ...lib.ffmpeg.util import have_ffmpeg, BaseFormatMapper
 from ...lib.ffmpeg.util import parse_inline_md5, parse_psnr_stats
@@ -165,7 +166,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       format    = self.format,
       width     = self.width,
       height    = self.height,
-      reference = self.source,
     )
 
     if self.codec in [Codec.JPEG]:
@@ -223,6 +223,9 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
+    # Decode the input file to raw format if necessary
+    self.encoder.update(source = MediaAssets.raw(self, caps = self.caps))
+
     if vars(self).get("r2r", None) is not None:
       return self._encode_r2r()
 
@@ -267,14 +270,18 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
   def check_metrics(self):
     vars(self).setdefault("metric", dict(type = "psnr"))
 
-    self.decoder.update(source = self.encoder.encoded, metric = self.metric)
+    self.decoder.update(
+      reference = self.encoder.source,
+      source    = self.encoder.encoded,
+      metric    = self.metric
+    )
     self.decoder.decode()
 
     metric = metrics2.factory.create(**vars(self))
     metric.update(
+      filetrue  = self.encoder.source,
       filecoded = self.encoder.encoded,
       filetest  = self.decoder.decoded,
-      filetrue  = self.source,
     )
     metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
 
