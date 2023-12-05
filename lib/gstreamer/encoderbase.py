@@ -8,6 +8,7 @@ import os
 import re
 import slash
 
+from ...lib.artifacts import MediaAssets
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.util import parse_inline_md5, parse_psnr_stats
@@ -99,7 +100,6 @@ class BaseEncoderTest(slash.Test):
       format      = self.format,
       width       = self.width,
       height      = self.height,
-      reference   = self.source,
     )
 
     if None in [self.encoder.hwformat, self.encoder.format, self.decoder.format]:
@@ -154,6 +154,9 @@ class BaseEncoderTest(slash.Test):
 
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
+    # Decode the input file to raw format if necessary
+    self.encoder.update(source = MediaAssets.raw(self, gstdecoder = "decodebin"))
+
     if vars(self).get("r2r", None) is not None:
       return self._encode_r2r()
 
@@ -166,14 +169,18 @@ class BaseEncoderTest(slash.Test):
   def check_metrics(self):
     vars(self).setdefault("metric", dict(type = "psnr"))
 
-    self.decoder.update(source = self.encoder.encoded, metric = self.metric)
+    self.decoder.update(
+      reference = self.encoder.source,
+      source    = self.encoder.encoded,
+      metric    = self.metric
+    )
     self.decoder.decode()
 
     metric = metrics2.factory.create(**vars(self))
     metric.update(
+      filetrue  = self.encoder.source,
       filecoded = self.encoder.encoded,
       filetest  = self.decoder.decoded,
-      filetrue  = self.source,
     )
     if os.path.exists(self.decoder.statsfile):
       metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
