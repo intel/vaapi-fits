@@ -4,6 +4,7 @@
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
 
+import os
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
@@ -28,7 +29,23 @@ class Decoder(PropertyHandler):
 
   #optional properties
   gstparser   = property(lambda s: s.ifprop("gstparser", " ! {gstparser}"))
-  gstdemuxer  = property(lambda s: s.ifprop("gstdemuxer", " ! {gstdemuxer}"))
+
+  @property
+  def gstdemuxer(self):
+    v = self.ifprop("gstdemuxer", " ! {gstdemuxer}")
+    if len(v):
+      return v
+
+    ext = os.path.splitext(self.source)[1]
+    return {
+      ".mp4"  : " ! qtdemux",
+      ".mov"  : " ! qtdemux",
+      ".mkv"  : " ! matroskademux",
+      ".flv"  : " ! flvdemux",
+      ".m2ts" : " ! tsdemux",
+      ".ts"   : " ! tsdemux",
+      ".avi"  : " ! avidemux",
+    }.get(ext, "")
 
   #additional properties needed for some inline metrics
   width       = property(lambda s: s.props["width"])
