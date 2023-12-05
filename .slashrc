@@ -374,6 +374,10 @@ config = os.environ.get(
   "VAAPI_FITS_CONFIG_FILE",
   os.path.abspath(os.path.join(media.mypath, "config", "default")))
 assert os.path.exists(config)
+
+# extra imports for user config
+from lib.codecs import Codec
+
 with open(config, 'rb') as f:
   exec(f.read())
 
