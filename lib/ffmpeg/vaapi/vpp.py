@@ -12,9 +12,12 @@ import slash
 from ....lib.common import get_media, mapRange, mapRangeInt, mapRangeWithDefault
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel
 from ....lib.ffmpeg.vppbase import BaseVppTest
+from ....lib.ffmpeg.vaapi.decoder import Decoder
 
 @slash.requires(*have_ffmpeg_hwaccel("vaapi"))
 class VppTest(BaseVppTest):
+  DecoderClass = Decoder
+
   def before(self):
     super().before()
     self.hwaccel = "vaapi"
