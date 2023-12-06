@@ -10,12 +10,15 @@ import slash
 
 from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
+from ....lib.gstreamer.vaapi.decoder import Decoder
 from ....lib.gstreamer.vaapi.util import map_best_hw_format, mapformat, mapformatu
 from ....lib.common import get_media, mapRange, mapRangeWithDefault
 
 @slash.requires(*have_gst_element("vaapi"))
 @slash.requires(*have_gst_element("vaapipostproc"))
 class VppTest(BaseVppTest):
+  DecoderClass = Decoder
+
   def before(self):
     super().before()
     os.environ["GST_VAAPI_DRM_DEVICE"] = get_media().render_device

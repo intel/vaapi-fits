@@ -9,6 +9,7 @@ import slash
 
 from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
+from ....lib.gstreamer.msdk.decoder import Decoder
 from ....lib.gstreamer.msdk.util import using_compatible_driver
 from ....lib.gstreamer.msdk.util import map_best_hw_format, mapformat, mapformatu
 from ....lib.common import get_media, mapRange, mapRangeWithDefault
@@ -18,6 +19,8 @@ from ....lib.mfx.util import mapsharp
 @slash.requires(*have_gst_element("msdkvpp"))
 @slash.requires(using_compatible_driver)
 class VppTest(BaseVppTest):
+  DecoderClass = Decoder
+
   def before(self):
     super().before()
     os.environ["GST_MSDK_DRM_DEVICE"] = get_media().render_device
