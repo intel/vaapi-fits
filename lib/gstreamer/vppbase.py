@@ -104,6 +104,10 @@ class BaseVppTest(slash.Test, VppMetricMixin):
   def vpp(self):
     self.validate_caps()
 
+    if self.vpp_op not in ["deinterlace", "tonemap"]:
+      from ...lib.artifacts import MediaAssets
+      self.source = MediaAssets.raw(self, gstdecoder = "decodebin")
+
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()
     self.ossource = filepath2os(self.source)

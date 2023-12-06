@@ -11,11 +11,14 @@ from ....lib import platform, format_value
 from ....lib.codecs import Codec
 from ....lib.gstreamer.vppbase import BaseVppTest
 from ....lib.gstreamer.util import have_gst_element
+from ....lib.gstreamer.va.decoder import Decoder
 from ....lib.gstreamer.va.util import map_best_hw_format, mapformat, mapformatu, map_deinterlace_method
 from ....lib.common import get_media, mapRange, mapRangeWithDefault
 
 @slash.requires(*have_gst_element("va"))
 class VppTest(BaseVppTest):
+  DecoderClass = Decoder
+
   def map_best_hw_format(self, format, hwformats):
     return map_best_hw_format(format, hwformats)
 
