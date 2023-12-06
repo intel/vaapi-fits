@@ -7,6 +7,7 @@
 import slash
 
 from ....lib.common import get_media, mapRangeInt, mapRangeWithDefault
+from ....lib.ffmpeg.qsv.decoder import Decoder
 from ....lib.ffmpeg.qsv.util import using_compatible_driver
 from ....lib.ffmpeg.util import have_ffmpeg_hwaccel, have_ffmpeg_filter
 from ....lib.ffmpeg.vppbase import BaseVppTest
@@ -16,6 +17,8 @@ from ....lib.mfx.util import mapsharp
 @slash.requires(*have_ffmpeg_filter("vpp_qsv"))
 @slash.requires(using_compatible_driver)
 class VppTest(BaseVppTest):
+  DecoderClass = Decoder
+
   def before(self):
     super().before()
     self.hwaccel = "qsv"
