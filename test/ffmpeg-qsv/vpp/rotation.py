@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
 from ....lib.ffmpeg.qsv.vpp import VppTest
 
-spec = load_test_spec("vpp", "rotation")
+spec      = load_test_spec("vpp", "rotation")
+spec_r2r  = load_test_spec("vpp", "rotation", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "rotation"))
 class default(VppTest):
@@ -33,4 +34,20 @@ class default(VppTest):
     if self.direction is None:
       slash.skip_test(f"{degrees} rotation unsupported")
 
+    self.vpp()
+
+  @slash.parametrize(*gen_vpp_rotation_parameters(spec_r2r))
+  def test_r2r(self, case, degrees):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case      = case,
+      degrees   = degrees,
+      direction = map_transpose_direction(degrees, None),
+      method    = None,
+    )
+
+    if self.direction is None:
+      slash.skip_test(f"{degrees} rotation unsupported")
+
+    vars(self).setdefault("r2r", 5)
     self.vpp()
