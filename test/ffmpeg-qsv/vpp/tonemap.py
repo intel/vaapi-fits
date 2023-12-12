@@ -21,7 +21,8 @@ class TonemapTest(VppTest):
     vars(self).update(case = case, mode = mode, csc = csc)
     self.caps = platform.get_caps("vpp", "tonemap", mode)
 
-spec_hevc = load_test_spec("vpp", "tonemap", "hevc_10")
+spec_hevc     = load_test_spec("vpp", "tonemap", "hevc_10")
+spec_hevc_r2r = load_test_spec("vpp", "tonemap", "hevc_10", "r2r")
 @slash.requires(*platform.have_caps("decode", "hevc_10"))
 @slash.requires(*have_ffmpeg_filter_options("vpp_qsv", "tonemap", "format"))
 @slash.requires(*have_ffmpeg_decoder("hevc_qsv"))
@@ -34,4 +35,11 @@ class hevc(TonemapTest):
   @slash.parametrize(*gen_vpp_h2s_parameters(spec_hevc))
   def test_h2s(self, case, csc):
     self.init(spec_hevc, case, "h2s", csc)
+    self.vpp()
+
+  @slash.requires(*platform.have_caps("vpp", "tonemap", "h2s"))
+  @slash.parametrize(*gen_vpp_h2s_parameters(spec_hevc_r2r))
+  def test_h2s_r2r(self, case, csc):
+    self.init(spec_hevc_r2r, case, "h2s", csc)
+    vars(self).setdefault("r2r", 5)
     self.vpp()
