@@ -99,6 +99,7 @@ class EncoderTest(BaseEncoderTest):
       icq = "RC mode: ICQ",
       cbr = "RC mode: CBR",
       vbr = "RC mode: VBR",
+      qvbr = "RC mode: QVBR",
     )
     m = re.search(rcmsgs[self.rcmode], self.output, re.MULTILINE)
     assert m is not None, "Possible incorrect RC mode used"
