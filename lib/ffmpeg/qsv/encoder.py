@@ -43,6 +43,9 @@ class Encoder(FFEncoder):
       if self.codec in [Codec.AV1] and "ICQ" == self.rcmode:
         mqp = mapRangeInt(qp, [0, 255], [1, 51])
         return f" -global_quality {mqp}"
+      if self.codec in [Codec.HEVC] and "QVBR" == self.rcmode:
+        mqp = mapRangeInt(qp, [0, 255], [1, 51])
+        return f" -global_quality {mqp}"
       return f" -q {qp}"
     return self.ifprop("qp", inner)
 
