@@ -439,6 +439,23 @@ def gen_hevc_vbr_lp_parameters(spec, profiles):
   params = gen_hevc_vbr_lp_variants(spec, profiles)
   return keys, params
 
+def gen_hevc_qvbr_lp_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("qvbr_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      for profile in cprofiles:
+        yield [
+          case, variant["gop"], variant["slices"],
+          variant["bitrate"], variant.get("qp", 28), variant.get("fps", 30), variant.get("quality", 4),
+          variant.get("refs", 1), profile
+        ]
+
+def gen_hevc_qvbr_lp_parameters(spec, profiles):
+  keys = ("case", "gop", "slices", "bitrate", "qp", "fps", "quality", "refs", "profile")
+  params = gen_hevc_qvbr_lp_variants(spec, profiles)
+  return keys, params
+
 def gen_hevc_pict_variants(spec, profiles):
   for case, params in spec.items():
     for variant in copy.deepcopy(params.get("variants", dict()).get("pict", [])):
