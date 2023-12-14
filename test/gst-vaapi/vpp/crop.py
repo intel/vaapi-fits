@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.vpp import VppTest
 
-spec = load_test_spec("vpp", "crop")
+spec      = load_test_spec("vpp", "crop")
+spec_r2r  = load_test_spec("vpp", "crop", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "crop"))
 class default(VppTest):
@@ -32,4 +33,20 @@ class default(VppTest):
       right       = right,
       top         = top,
     )
+    self.vpp()
+
+  @slash.parametrize(*gen_vpp_crop_parameters(spec_r2r))
+  def test_r2r(self, case, left, right, top, bottom):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      bottom      = bottom,
+      case        = case,
+      crop_height = self.height - top - bottom,
+      crop_width  = self.width - left - right,
+      left        = left,
+      right       = right,
+      top         = top,
+    )
+
+    vars(self).setdefault("r2r", 5)
     self.vpp()
