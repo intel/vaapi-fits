@@ -139,7 +139,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
   def gen_output_opts(self):
     self.goutputs = dict()
 
-    opts = "-an -vsync passthrough"
+    opts = "-an"
 
     for n, output in enumerate(self.outputs):
       codec = output["codec"]
@@ -180,6 +180,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         if len(filters):
           opts += " -vf '{}'".format(','.join(filters))
+        opts += " -fps_mode passthrough"
         opts += " -c:v {}".format(encoder)
         opts += " -vframes {frames}"
         opts += " -y {}".format(osofile)
@@ -192,6 +193,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       self.ossrcyuv = filepath2os(self.srcyuv)
       if self.mode in ["hw", "va_hw", "d3d11_hw"]:
         opts += f" -vf 'hwdownload,format={self.map_format(format)}'"
+      opts += " -fps_mode passthrough"
       opts += " -pix_fmt yuv420p -f rawvideo"
       opts += " -vframes {frames} -y {ossrcyuv}"
 
