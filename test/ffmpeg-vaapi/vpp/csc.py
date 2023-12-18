@@ -8,8 +8,9 @@ from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
 from ....lib.ffmpeg.vaapi.vpp import VppTest
 
-spec      = load_test_spec("vpp", "csc")
-spec_r2r  = load_test_spec("vpp", "csc", "r2r")
+spec          = load_test_spec("vpp", "csc")
+spec_r2r      = load_test_spec("vpp", "csc", "r2r")
+spec_10b_r2r  = load_test_spec("vpp", "csc", "10bit", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "csc"))
 @slash.requires(*have_ffmpeg_filter("scale_vaapi"))
@@ -33,4 +34,10 @@ class default(VppTest):
     vars(self).update(case = case, csc = csc)
     vars(self).setdefault("r2r", 5)
     self.vpp()
-    
+
+  @slash.parametrize(*gen_vpp_10b_csc_parameters(spec_10b_r2r))
+  def test_10b_r2r(self, case, csc):
+    vars(self).update(spec_10b_r2r[case].copy())
+    vars(self).update(case = case, csc = csc)
+    vars(self).setdefault("r2r", 5)
+    self.vpp()
