@@ -244,6 +244,9 @@ class MediaPlugin(slash.plugins.PluginInterface):
         r"\[.*\] i915 .*: \[drm\] .*GPU HANG",
         r"\[.*\] i915 .*: \[drm\] .*GPU hang",
         r"\[.*\] i915 .*: \[drm\] Resetting .* time out",
+        r"\[.*\] xe .*: \[drm\] .* suspended",
+        r"\[.*\] xe .*: \[drm\] Timedout job:",
+        r"\[.*\] xe .*: \[drm\] Engine reset:",
       ]
       for msg in hangmsgs:
         if re.search(msg, capture, re.MULTILINE) is not None:
