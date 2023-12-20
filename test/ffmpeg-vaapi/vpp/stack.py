@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.ffmpeg.vaapi.util import *
 from ....lib.ffmpeg.vaapi.vpp import VppTest
 
-spec = load_test_spec("vpp", "stack")
+spec      = load_test_spec("vpp", "stack")
+spec_r2r  = load_test_spec("vpp", "stack", "r2r")
 
 @slash.requires(*platform.have_caps("vpp", "blend"))
 class default(VppTest):
@@ -31,6 +32,19 @@ class default(VppTest):
     )
     self.vpp()
 
+  @slash.requires(*have_ffmpeg_filter("hstack_vaapi"))
+  @slash.parametrize(*gen_vpp_hstack_parameters(spec_r2r))
+  def test_r2r_hstack(self, case, inputs):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case    = case,
+      inputs  = inputs,
+      stack   = "hstack",
+    )
+
+    vars(self).setdefault("r2r", 5)
+    self.vpp()
+
   @slash.requires(*have_ffmpeg_filter("vstack_vaapi"))
   @slash.parametrize(*gen_vpp_vstack_parameters(spec))
   def test_vstack(self, case, inputs):
@@ -40,6 +54,19 @@ class default(VppTest):
       inputs  = inputs,
       stack   = "vstack",
     )
+    self.vpp()
+
+  @slash.requires(*have_ffmpeg_filter("vstack_vaapi"))
+  @slash.parametrize(*gen_vpp_vstack_parameters(spec_r2r))
+  def test_r2r_vstack(self, case, inputs):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case    = case,
+      inputs  = inputs,
+      stack   = "vstack",
+    )
+
+    vars(self).setdefault("r2r", 5)
     self.vpp()
 
   @slash.requires(*have_ffmpeg_filter("xstack_vaapi"))
@@ -55,4 +82,21 @@ class default(VppTest):
       tileh   = tileh,
       stack   = "xstack",
     )
+    self.vpp()
+
+  @slash.requires(*have_ffmpeg_filter("xstack_vaapi"))
+  @slash.parametrize(*gen_vpp_xstack_parameters(spec_r2r))
+  def test_r2r_xstack(self, case, rows, cols, tilew, tileh):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case    = case,
+      rows    = rows,
+      cols    = cols,
+      inputs  = rows * cols,
+      tilew   = tilew,
+      tileh   = tileh,
+      stack   = "xstack",
+    )
+
+    vars(self).setdefault("r2r", 5)
     self.vpp()
