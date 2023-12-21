@@ -53,6 +53,9 @@ class TranscoderTest(BaseTranscoderTest):
           ",width={width},height={height},framerate=14/1 ! msdkvc1dec"
         ),
       ),
+      Codec.VP9 : dict(
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"msdkvp9dec"), f"matroskademux ! vp9parse !  msdkvp9dec"),
+      ),
     },
     encode = {
       Codec.AVC : dict(
@@ -72,6 +75,9 @@ class TranscoderTest(BaseTranscoderTest):
       Codec.MJPEG : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("jpegenc"), "jpegenc ! jpegparse"),
         hw = (platform.get_caps("vdenc", "jpeg"), have_gst_element("msdkmjpegenc"), "msdkmjpegenc ! jpegparse"),
+      ),
+      Codec.VP9 : dict(
+        lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element("msdkvp9enc"), "msdkvp9enc ! vp9parse ! matroskamux"),
       ),
     },
     vpp = {
