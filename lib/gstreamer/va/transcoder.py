@@ -38,6 +38,9 @@ def make_requirements():
         sw = (dict(maxres = (16384, 16384)), have_gst_element("jpegdec"), "jpegparse ! jpegdec"),
         hw = (platform.get_caps("decode", "jpeg"), have_gst_element(f"va{hw}jpegdec"), f"jpegparse ! va{hw}jpegdec"),
       ),
+      Codec.VP9 : dict(
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"va{hw}vp9dec"), f"matroskademux ! vp9parse ! va{hw}vp9dec"),
+      ),
     },
     encode = {
       Codec.AVC : dict(
@@ -60,6 +63,9 @@ def make_requirements():
       Codec.MJPEG : dict(
         sw = (dict(maxres = (16384, 16384)), have_gst_element("jpegenc"), "jpegenc ! jpegparse"),
         hw = (platform.get_caps("vdenc", "jpeg"), have_gst_element(f"va{hw}jpegenc"), f"va{hw}jpegenc ! jpegparse"),
+      ),
+      Codec.VP9 : dict(
+        lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element(f"va{hw}vp9lpenc"), f"va{hw}vp9lpenc ! vp9parse ! matroskamux"),
       ),
     },
     vpp = {
