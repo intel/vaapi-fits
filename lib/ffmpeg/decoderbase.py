@@ -86,14 +86,14 @@ class Decoder(PropertyHandler, BaseFormatMapper):
         f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
         f" -r:v {fps} -i {self.osreference}"
         f" -lavfi \"{self.scale_range},{mtype}=f=\\'{self.osstatsfile}\\':shortest=1\""
-        f" -fps_mode passthrough -autoscale 0 -vframes {self.frames} -f null -"
+        f" -fps_mode passthrough -noautoscale -vframes {self.frames} -f null -"
       )
 
     return call(
       f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
       f" {self.ffdecoder} -i {self.ossource} -lavfi '{self.scale_range}'"
       f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
-      f" -autoscale 0 -vframes {self.frames} -y {self.ffoutput}"
+      f" -noautoscale -vframes {self.frames} -y {self.ffoutput}"
     )
 
 @slash.requires(have_ffmpeg)
