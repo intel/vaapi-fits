@@ -131,6 +131,8 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       opts += " -hwaccel_output_format {hwaccel}"
     if "hw" == self.mode:
       opts += " -hwaccel {hwaccel}"
+      if vars(self).get("ihwframes", None) is not None:
+        opts += " -extra_hw_frames {ihwframes}"
     opts += " -c:v {}".format(self.get_decoder(self.codec, self.mode))
     opts += f" -i {filepath2os(self.source)}"
 
@@ -165,8 +167,8 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         filters.extend(["hwdownload", f"format={self.map_format(format)}"])
       elif ("sw", "hw") == tmode: # SW to HW transcode
         filters.extend([f"format={self.map_format(format)}", "hwupload"])
-        if vars(self).get("hwframes", None) is not None:
-          filters[-1] += "=extra_hw_frames={hwframes}"
+        if vars(self).get("ohwframes", None) is not None:
+          filters[-1] += "=extra_hw_frames={ohwframes}"
 
       vppscale = self.get_vpp_scale(
         output.get("width", None), output.get("height", None), mode)
