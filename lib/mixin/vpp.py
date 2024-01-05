@@ -160,17 +160,20 @@ class VppMetricMixin:
     params = vars(self).copy()
 
     if self.stack in ["xstack"]:
-      params.update(metric = dict(type = "ssim", miny = 0.97, minu = 0.97, minv = 0.97))
+      params.setdefault("metric", dict(type = "ssim", miny = 0.97, minu = 0.97, minv = 0.97))
       params.update(width = self.cols * self.tilew, height = self.rows * self.tileh)
-      params.update(reference = format_value(self.reference, **params))
     elif self.stack in ["hstack"]:
-      params.update(metric = dict(type = "md5"))
+      params.setdefault("metric", dict(type = "md5"))
       params.update(width = self.inputs * self.width, height = self.height)
     elif self.stack in ["vstack"]:
-      params.update(metric = dict(type = "md5"))
+      params.setdefault("metric", dict(type = "md5"))
       params.update(width = self.width, height = self.height * self.inputs)
     else:
       assert False, f"unknown stack operation: '{self.stack}'"
+
+    # a reference is needed by some metrics
+    if vars(self).get("reference", None) is not None:
+      params.update(reference = format_value(self.reference, **params))
 
     metrics2.check(
       metric = dict(type = "filesize"),
