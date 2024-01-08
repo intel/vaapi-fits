@@ -24,7 +24,7 @@ class default(DecoderTest):
     # needed.  This ensures the correct output is produced.  Alternative
     # proposal was to use yuvj* formats... however, hwaccel doesn't support them
     # and they may be removed in the future (deprecated).
-    self.ffscale_range = "jpeg"
+    self.ffscale_range = "tv"
 
     super(default, self).before()
 
