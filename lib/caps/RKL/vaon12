@@ -14,7 +14,7 @@ caps = dict(
     hevc_8  = dict(
       maxres    = res8k,
       fmts      = ["NV12"],
-      features  = dict(scc = True, msp = True),
+      features  = dict(scc = False, msp = True),
     ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010"]),
     vp9_8   = dict(maxres = res8k , fmts = ["NV12"]),
@@ -27,7 +27,7 @@ caps = dict(
     hevc_8  = dict(
       maxres    = res8k,
       fmts      = ["NV12"],
-      features  = dict(scc = True, msp = True),
+      features  = dict(scc = False, msp = True),
     ),
     hevc_10 = dict(
       maxres = res8k,
