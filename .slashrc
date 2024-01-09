@@ -209,6 +209,10 @@ class MediaPlugin(slash.plugins.PluginInterface):
     from lib.platform import info
     return info()["os"]
 
+  def _get_physical_mem_gb(self):
+    from lib.platform import info
+    return info()["mem"]
+
   def test_start(self):
     test = slash.context.test
     result = slash.context.result

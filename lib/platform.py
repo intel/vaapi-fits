@@ -139,9 +139,11 @@ def info():
   # python load from WSL2: 'linux-{kernel_version}-microsoft-standard-{architecture}-with-{glibc_version}'
   # python load from OS native: 'windows-{os_family}_{os_version}-{patch_version}'
   if 'microsoft' in platform.platform().lower():
-    os='wsl'
+    cur_os='wsl'
   else:
-    os='linux'
+    cur_os='linux'
+
+  memory = int(os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')/(1024.**3) + 0.5)
 
   from .common import get_media
 
@@ -152,8 +154,9 @@ def info():
     kernel = str(platform.release()),
     dist = str(linux_dist()),
     cpu = cpu,
+    mem = str(memory),
     driver = str(get_media()._get_driver_name()),
     platform = str(get_media()._get_platform_name()),
-    os = os,
+    os = cur_os,
     **capsinfo,
   )
