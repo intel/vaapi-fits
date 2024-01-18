@@ -20,3 +20,7 @@ class default(TranscoderTest):
       codec = Codec.MPEG2,
     )
     self.transcode()
+
+  def before(self):
+    super().before()
+    self.ihwframes = 64
