@@ -72,7 +72,7 @@ class VppTest(BaseVppTest):
           hue         = "procamp_vaapi=h={mlevel}",
           saturation  = "procamp_vaapi=s={mlevel}",
           denoise     = "denoise_vaapi=denoise={mlevel}",
-          scale       = "scale_vaapi=w={scale_width}:h={scale_height}",
+          scale       = "scale_vaapi=w={scale_width}:h={scale_height}:mode=hq",
           sharpen     = "sharpness_vaapi=sharpness={mlevel}",
           deinterlace = "deinterlace_vaapi=mode={mmethod}:rate={rate}",
           csc         = "scale_vaapi=format={ohwformat}",
