@@ -69,6 +69,8 @@ class VppTest(BaseVppTest):
         )
     elif self.vpp_op in ["deinterlace"]:
       opts += " method={mmethod}"
+    elif self.vpp_op in ["scale"]:
+      opts += " scale-method=hq"
     return opts
 
   def gen_input_opts(self):
