@@ -33,7 +33,7 @@ caps = dict(
     mpeg2   = dict(maxres = res2k , fmts = ["NV12"]),
     hevc_8  = dict(
       maxres    = res8k,
-      fmts      = ["NV12", "AYUV"],
+      fmts      = ["NV12", "YUY2", "AYUV"],
       features  = dict(scc = True, msp = True),
     ),
     hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
