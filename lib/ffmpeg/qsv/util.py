@@ -50,6 +50,7 @@ def mapprofile(codec, profile):
     Codec.HEVC    : {
       "main"      : "main",
       "main444"   : "rext",
+      "main422"   : "rext",
       "scc"       : "scc",
       "scc-444"   : "scc",
       "mainsp"    : "mainsp",
