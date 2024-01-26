@@ -25,6 +25,8 @@ class trend(HEVC8EncoderTest, TrendModelMixin):
     profile = "main"
     if "AYUV" == self.format:
       profile = "main444"
+    if "YUY2" == self.format:
+      profile = "main422"
     if "scc" in vars(self).get("features", []):
       profile = "scc"
       if "AYUV" == self.format:
