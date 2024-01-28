@@ -169,6 +169,9 @@ def codec_test_class(codec, engine, bitdepth, **kwargs):
         return {
           "main"                  : "VAProfileHEVCMain",
           "main444"               : "VAProfileHEVCMain444",
+          #profile of "hevc-8bit 422" is mapped to main-422-10 based on
+          #https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding#Profiles
+          "main422"               : "VAProfileHEVCMain422_10",
           "scc"                   : "VAProfileHEVCSccMain",
           "scc-444"               : "VAProfileHEVCSccMain444",
           "main10"                : "VAProfileHEVCMain10",
