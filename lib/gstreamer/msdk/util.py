@@ -93,6 +93,9 @@ def mapprofile(codec,profile):
       "scc"                   : "screen-extended-main",
       "scc-444"               : "screen-extended-main-444",
       "main444"               : "main-444",
+      #profile of "hevc-8bit 422" is mapped to main-422-10 based on
+      #https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding#Profiles
+      "main422"               : "main-422-10",
       "mainsp"                : "main-still-picture",
       "main10"                : "main-10",
       "main444-10"            : "main-444-10",
