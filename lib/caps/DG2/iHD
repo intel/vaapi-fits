@@ -32,7 +32,7 @@ caps = dict(
     jpeg    = dict(maxres = res16k, fmts = ["NV12", "YUY2", "UYVY",         "Y800"]),
     hevc_8  = dict(
       maxres    = res16k,
-      fmts      = ["NV12", "AYUV"],
+      fmts      = ["NV12", "YUY2", "AYUV"],
       features  = dict(scc = True),
     ),
     hevc_10 = dict(maxres = res16k , fmts = ["P010", "Y410"]),
