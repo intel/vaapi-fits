@@ -23,4 +23,3 @@ class default(TranscoderTest):
 
   def before(self):
     super().before()
-    self.ihwframes = 64

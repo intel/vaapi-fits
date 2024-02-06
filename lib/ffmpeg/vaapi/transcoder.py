@@ -84,3 +84,4 @@ class TranscoderTest(BaseTranscoderTest):
     super().before()
     self.hwaccel = "vaapi"
     self.ohwframes = 64
+    self.ihwframes = 64
