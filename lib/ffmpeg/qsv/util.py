@@ -57,6 +57,7 @@ def mapprofile(codec, profile):
       "main10"    : "main10",
       "main10sp"  : "main10 -main10sp 1",
       "main444-10": "rext",
+      "main422-10": "rext",
       "main12"    : "rext",
       "main422-12": "rext",
       "unknown"   : "unknown",
