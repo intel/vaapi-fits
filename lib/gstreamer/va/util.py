@@ -90,6 +90,7 @@ def mapprofile(codec, profile):
       #https://en.wikipedia.org/wiki/High_Efficiency_Video_Coding#Profiles
       "main422"               : "main-422-10",
       "main10"                : "main-10",
+      "main422-10"            : "main-422-10",
       "main444-10"            : "main-444-10",
       "main12"                : "main-12",
       "main422-12"            : "main-422-12",
