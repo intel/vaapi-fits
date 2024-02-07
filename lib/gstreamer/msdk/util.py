@@ -98,6 +98,7 @@ def mapprofile(codec,profile):
       "main422"               : "main-422-10",
       "mainsp"                : "main-still-picture",
       "main10"                : "main-10",
+      "main422-10"            : "main-422-10",
       "main444-10"            : "main-444-10",
       "main12"                : "main-12",
     },
