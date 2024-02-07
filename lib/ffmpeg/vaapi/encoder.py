@@ -176,6 +176,7 @@ def codec_test_class(codec, engine, bitdepth, **kwargs):
           "scc-444"               : "VAProfileHEVCSccMain444",
           "main10"                : "VAProfileHEVCMain10",
           "main444-10"            : "VAProfileHEVCMain444_10",
+          "main422-10"            : "VAProfileHEVCMain422_10",
           "main12"                : "VAProfileHEVCMain12",
           "main422-12"            : "VAProfileHEVCMain422_12",
         }[self.profile]
