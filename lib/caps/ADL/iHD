@@ -36,7 +36,7 @@ caps = dict(
       fmts      = ["NV12", "YUY2", "AYUV"],
       features  = dict(scc = True, msp = True),
     ),
-    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y210", "Y410"]),
     hevc_12 = dict(maxres = res8k , fmts = ["P012", "Y212"]),
   ),
   vdenc   = dict(
