@@ -40,7 +40,7 @@ caps = dict(
     ),
     hevc_10 = dict(
       maxres = res8k,
-      fmts = ["P010", "Y410"],
+      fmts = ["P010", "Y210", "Y410"],
       features  = dict(msp = True)
     ),
     hevc_12 = dict(maxres = res8k, fmts = ["P012", "Y212"]),
@@ -53,7 +53,7 @@ caps = dict(
       fmts      = ["NV12", "AYUV"],
       features  = dict(scc = True),
     ),
-    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y410"]),
+    hevc_10 = dict(maxres = res8k , fmts = ["P010", "Y210", "Y410"]),
     vp9_8   = dict(maxres = res8k , fmts = ["NV12", "AYUV"]),
     vp9_10  = dict(maxres = res8k , fmts = ["P010", "Y410"]),
   ),
