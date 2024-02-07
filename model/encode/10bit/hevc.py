@@ -25,6 +25,8 @@ class trend(HEVC10EncoderTest, TrendModelMixin):
     profile = "main10"
     if "Y410" == self.format:
       profile = "main444-10"
+    if "Y210" == self.format:
+      profile = "main422-10"
     if "msp" in vars(self).get("features", []):
       profile = "main10sp"
 
