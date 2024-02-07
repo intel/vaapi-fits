@@ -55,6 +55,7 @@ def mapprofile(codec, profile):
       "scc-444"               : "scc",
       "main10"                : "main10",
       "main444-10"            : "rext",
+      "main422-10"            : "rext",
       "main12"                : "rext",
       "main422-12"            : "rext",
     },
