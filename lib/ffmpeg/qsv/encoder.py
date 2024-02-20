@@ -63,6 +63,7 @@ class Encoder(FFEncoder):
       f"{super().encparams}{self.ldb}"
       f"{self.iqfactor}{self.bqfactor}"
       f"{self.iqoffset}{self.bqoffset}"
+      f"{self.seek}"
     )
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
