@@ -363,3 +363,46 @@ class roi_lp(HEVC8EncoderLPTest):
     self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
     self.encode()
 
+class seek(HEVC8EncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      seek       = seek,
+      fps        = fps,
+    )
+
+  @slash.parametrize(*gen_hevc_seek_parameters(spec, ['main']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps)
+    self.encode()
+
+class seek_lp(HEVC8EncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode     = rcmode,
+      bframes    = bframes,
+      bitrate    = bitrate,
+      case       = case,
+      maxrate    = maxrate,
+      minrate    = bitrate,
+      profile    = profile,
+      qp         = qp,
+      gop        = gop,
+      seek       = seek,
+      fps        = fps,
+    )
+
+  @slash.parametrize(*gen_hevc_seek_lp_parameters(spec, ['main']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, seek, fps)
+    self.encode()

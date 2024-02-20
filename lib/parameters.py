@@ -516,6 +516,70 @@ def gen_hevc_pict_lp_parameters(spec, profiles):
   params = gen_hevc_pict_lp_variants(spec, profiles)
   return keys, params
 
+def gen_hevc_seek_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("seek", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      fps     = variant.get("fps", 25)
+      rcmode  = variant["rcmode"]
+      seek    = variant["seek"]
+      if "cqp" == rcmode:
+        assert bitrate == None, "We shouldn't set a value to bitrate for CQP."
+        variant.update(maxrate = None)
+      else:
+        assert qp == None, "We shouldn't set a value to qp for CBR/VBR."
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode, seek, fps,
+        ]
+
+def gen_hevc_seek_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode", "seek", "fps")
+  params = gen_hevc_seek_variants(spec, profiles)
+  return keys, params
+
+def gen_hevc_seek_lp_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("seek_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      fps     = variant.get("fps", 25)
+      rcmode  = variant["rcmode"]
+      seek    = variant["seek"]
+      if "cqp" == rcmode:
+        assert bitrate == None, "We shouldn't set a value to bitrate for CQP."
+        variant.update(maxrate = None)
+      else:
+        assert qp == None, "We shouldn't set a value to qp for CBR/VBR."
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode, seek, fps,
+        ]
+
+def gen_hevc_seek_lp_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode", "seek", "fps")
+  params = gen_hevc_seek_lp_variants(spec, profiles)
+  return keys, params
+
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
