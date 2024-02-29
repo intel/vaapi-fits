@@ -117,6 +117,12 @@ class BaseDecoderTest(slash.Test, BaseFormatMapper):
         format_value(
           "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
 
+    minw, minh = self.caps.get("minres", (0, 0))
+    if self.width < minw or self.height < minh:
+      slash.skip_test(
+        format_value(
+          "{platform}.{driver}.{width}x{height} not supported", **vars(self)))
+
     skip_test_if_missing_features(self)
 
     self.post_validate()

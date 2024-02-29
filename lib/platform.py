@@ -11,6 +11,7 @@ import os
 @memoize
 def load_caps_file(capsfile):
   namespace = dict(
+    res64   = (   64,    64),
     res2k   = ( 2048,  2048),
     res4k   = ( 4096,  4096),
     res8k   = ( 8192,  8192),

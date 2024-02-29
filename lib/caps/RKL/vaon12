@@ -10,17 +10,18 @@
 
 caps = dict(
   decode  = dict(
-    avc     = dict(maxres = res4k , fmts = ["NV12"]),
+    avc     = dict(minres = res64, maxres = res4k, fmts = ["NV12"]),
     hevc_8  = dict(
+      minres    = res64,
       maxres    = res8k,
       fmts      = ["NV12"],
       features  = dict(scc = False, msp = True),
     ),
-    hevc_10 = dict(maxres = res8k , fmts = ["P010"]),
-    vp9_8   = dict(maxres = res8k , fmts = ["NV12"]),
-    vp9_10  = dict(maxres = res8k , fmts = ["P010"]),
-    av1_8   = dict(maxres = res8k , fmts = ["NV12"]),
-    av1_10  = dict(maxres = res8k , fmts = ["P010"]),
+    hevc_10 = dict(minres = res64, maxres = res8k , fmts = ["P010"]),
+    vp9_8   = dict(minres = res64, maxres = res8k , fmts = ["NV12"]),
+    vp9_10  = dict(minres = res64, maxres = res8k , fmts = ["P010"]),
+    av1_8   = dict(minres = res64, maxres = res8k , fmts = ["NV12"]),
+    av1_10  = dict(minres = res64, maxres = res8k , fmts = ["P010"]),
   ),
   encode  = dict(
     avc     = dict(maxres = res4k , fmts = ["NV12"]),
