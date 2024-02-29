@@ -37,21 +37,7 @@ caps = dict(
     ),
   ),
   vpp    = dict(
-    # brightness, contrast, hue and saturation
-    procamp     = dict(
-      ifmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410"],
-      ofmts = ["NV12", "P010", "YUY2", "Y210", "AYUV", "Y410", "BGRA"],
-    ),
-    # mirroring and rotation
-    transpose   = dict(
-      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
-    ),
     crop        = dict(
-      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
-      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
-    ),
-    sharpen     = dict(
       ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
       ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
     ),
@@ -64,11 +50,6 @@ caps = dict(
         ifmts = ["NV12", "P010", "YUY2"],
         ofmts = ["NV12", "P010", "YUY2"],
       ),
-    ),
-    denoise     = dict(
-      ifmts = ["NV12", "P010", "YUY2"],
-      ofmts = ["NV12", "P010", "YUY2"],
-      chroma = True,
     ),
     scale       = dict(
       ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
