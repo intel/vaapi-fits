@@ -24,7 +24,7 @@ caps = dict(
     av1_10  = dict(minres = res64, maxres = res8k , fmts = ["P010"]),
   ),
   encode  = dict(
-    avc     = dict(maxres = res4k , fmts = ["NV12"]),
+    avc     = dict(maxres = res4k , fmts = ["NV12"], bframes = False),
     hevc_8  = dict(
       maxres    = res8k,
       fmts      = ["NV12"],
