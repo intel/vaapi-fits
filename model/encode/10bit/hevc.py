@@ -35,6 +35,9 @@ class trend(HEVC10EncoderTest, TrendModelMixin):
   @slash.parametrize(*TrendModelMixin.filter_spec(spec))
   def test(self, case):
     vars(self).update(case = case)
+    vars(self).update(
+      modelqps = [12, 13, 16, 18, 23, 31, 40, 42, 45, 48, 49, 51, 54, 57, 60, 61, 63]
+    )
     vars(self).update(spec[case].copy())
 
     # Some features/formats are only supported by VDENC (lowpower = 1).
