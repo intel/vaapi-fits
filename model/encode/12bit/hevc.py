@@ -30,6 +30,9 @@ class trend(HEVC12EncoderTest, TrendModelMixin):
   @slash.parametrize(*TrendModelMixin.filter_spec(spec))
   def test(self, case):
     vars(self).update(case = case)
+    vars(self).update(
+      modelqps = [24, 25, 28, 30, 35, 43, 52, 54, 57, 60, 61, 63, 66, 69, 72, 73, 75]
+    )
     vars(self).update(spec[case].copy())
 
     self.fit()
