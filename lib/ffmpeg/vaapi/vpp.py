@@ -42,6 +42,21 @@ class VppTest(BaseVppTest):
     elif self.vpp_op in ["overlay"]:
       vpfilter.append("[1:v]hwupload[v1];")
       vpfilter[-1] += "[0:v][v1]overlay_vaapi=alpha={a}".format(a = mapRange(self.alpha, [0.0, 255.0], [0.0, 1.0]))
+    elif self.vpp_op in ["pad"]:
+      vpopts = []
+      vpfilter.append("pad_vaapi")
+      if hasattr(self, "padw"):
+        vpopts.append(f"width={self.padw}")
+      if hasattr(self, "padh"):
+        vpopts.append(f"height={self.padh}")
+      if hasattr(self, "x"):
+        vpopts.append(f"x={self.x}")
+      if hasattr(self, "y"):
+        vpopts.append(f"y={self.y}")
+      if hasattr(self, "color"):
+        vpopts.append(f"color={self.color}")
+      if len(vpopts):
+        vpfilter[-1] += f"={':'.join(vpopts)}"
     else:
       procamp = dict(
         brightness  = [-100.0,   0.0, 100.0],
