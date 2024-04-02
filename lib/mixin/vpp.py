@@ -224,3 +224,23 @@ class VppMetricMixin:
     metrics2.check(**params)
 
   check_range  = check_color_props
+
+  def check_pad(self):
+    if hasattr(self, "padw"):
+      owidth = self.padw
+    else:
+      owidth = self.width
+
+    if hasattr(self, "padh"):
+      oheight = self.padh
+    else:
+      oheight = self.height
+
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded, width = owidth, height = oheight,
+      frames = self.frames, format = self.format)
+
+    params = vars(self).copy()
+    params.update(width = owidth, height = oheight)
+    metrics2.check(**params)
