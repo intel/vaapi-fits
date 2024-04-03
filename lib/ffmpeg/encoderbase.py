@@ -243,8 +243,14 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     pass
 
   def check_bitrate(self):
+    # ffmpeg default framerate is 25 fps
+    fps = vars(self).get("fps", 25)
+
+    # calculate frame offset to compensate for seek
+    offset = vars(self).get("seek", 0) * fps
+
     encsize = os.path.getsize(self.encoder.encoded)
-    bitrate_actual = encsize * 8 * vars(self).get("fps", 25) / 1024.0 / self.frames
+    bitrate_actual = encsize * 8 * fps / 1024.0 / (self.frames - offset)
     get_media()._set_test_details(
       size_encoded = encsize,
       bitrate_actual = "{:-.2f}".format(bitrate_actual))
@@ -271,20 +277,38 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
   def check_metrics(self):
     vars(self).setdefault("metric", dict(type = "psnr"))
 
+    # The decoder reference file (i.e. the encoder source file) includes all of
+    # the frames without the seek.  The encoder output file includes only the
+    # frames after the seek.  Therefore, the decoder should seek/advance the
+    # reference frames before applying any frame comparison metrics
+    # (e.g. PSNR, SSIM) on the decoder source file (i.e. encoder output file).
     self.decoder.update(
       reference = self.encoder.source,
       source    = self.encoder.encoded,
-      metric    = self.metric
+      metric    = self.metric,
+      refseek   = vars(self).get("seek", 0),
     )
     self.decoder.decode()
 
+    # ffmpeg default framerate is 25 fps
+    fps = vars(self).get("fps", 25)
+
+    # calculate frame offset to compensate for seek
+    offset = vars(self).get("seek", 0) * fps
+
+    # NOTE: Ref/filetrue seek compensation is not currently captured in this
+    # metric.  The metric would need this information for its internal
+    # comparision functions.  However, since we are exploiting the "inline"
+    # metric feature (i.e. setting metric.actual directly), the internal
+    # comparison functions will be bypassed.
     metric = metrics2.factory.create(**vars(self))
     metric.update(
       filetrue  = self.encoder.source,
       filecoded = self.encoder.encoded,
       filetest  = self.decoder.decoded,
+      frames    = self.frames - offset,
     )
-    metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
+    metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames - offset)
 
     metric.check()
 
@@ -311,6 +335,7 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       f" -v verbose -i {self.encoder.osencoded} -c:v copy -bsf:v trace_headers"
       f" -f null - 2>&1 | grep 'nal_unit_type.*{judge}' | wc -l"
     )
+    assert vars(self).get("seek", 0) == 0, "Seek is not currently supported with forced_idr"
     assert str(self.frames) == output.strip(), "It appears that the forced_idr did not work"
 
   def check_max_frame_size(self):

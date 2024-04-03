@@ -28,15 +28,16 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   osdecoded = property(lambda s: filepath2os(s.decoded))
   hwaccel   = property(lambda s: s.props["hwaccel"])
 
-  # optional properties
-  ffdecoder   = property(lambda s: s.ifprop("ffdecoder", "-c:v {ffdecoder}"))
-
   width       = property(lambda s: s.props["width"])
   height      = property(lambda s: s.props["height"])
   statsfile   = property(lambda s: s._statsfile)
   osstatsfile = property(lambda s: filepath2os(s.statsfile))
   reference   = property(lambda s: s.props["reference"])
   osreference = property(lambda s: filepath2os(s.reference))
+
+  # optional properties
+  ffdecoder   = property(lambda s: s.ifprop("ffdecoder", "-c:v {ffdecoder}"))
+  refseek     = property(lambda s: s.ifprop("refseek", "-ss {refseek}"))
 
   def __init__(self, scope = Scope.TEST, **properties):
     super().__init__(**properties)
@@ -84,7 +85,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
         f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
         f" {self.ffdecoder} -r:v {fps} -i {self.ossource}"
         f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
-        f" -r:v {fps} -i {self.osreference}"
+        f" -r:v {fps} {self.refseek} -i {self.osreference}"
         f" -lavfi \"{self.scale_range},{mtype}=f=\\'{self.osstatsfile}\\':shortest=1\""
         f" -fps_mode passthrough -noautoscale -vframes {self.frames} -f null -"
       )
