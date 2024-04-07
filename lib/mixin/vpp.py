@@ -244,3 +244,11 @@ class VppMetricMixin:
     params = vars(self).copy()
     params.update(width = owidth, height = oheight)
     metrics2.check(**params)
+
+  def check_drawbox(self):
+    metrics2.check(
+      metric = dict(type = "filesize"),
+      filetest = self.decoded, width = self.width, height = self.height,
+      frames = self.frames, format = self.format)
+
+    self.check_default()

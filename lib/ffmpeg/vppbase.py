@@ -31,7 +31,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def gen_input_opts(self):
     if self.vpp_op in ["deinterlace", "tonemap"]:
       opts = "-c:v {ffdecoder}"
-    elif self.vpp_op in ["stack", "overlay", "range", "pad"]:
+    elif self.vpp_op in ["stack", "overlay", "range", "pad", "drawbox"]:
       opts = ""
     else:
       opts = "-f rawvideo -pix_fmt {mformat} -s:v {width}x{height}"
@@ -105,7 +105,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
   def vpp(self):
     self.validate_caps()
 
-    if self.vpp_op not in ["deinterlace", "tonemap", "stack", "overlay", "range", "pad"]:
+    if self.vpp_op not in ["deinterlace", "tonemap", "stack", "overlay", "range", "pad", "drawbox"]:
       from ...lib.artifacts import MediaAssets
       self.source = MediaAssets.raw(self, caps = dict(fmts = self.get_output_formats()))
 
