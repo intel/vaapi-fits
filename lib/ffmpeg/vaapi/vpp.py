@@ -57,6 +57,25 @@ class VppTest(BaseVppTest):
         vpopts.append(f"color={self.color}")
       if len(vpopts):
         vpfilter[-1] += f"={':'.join(vpopts)}"
+    elif self.vpp_op in ["drawbox"]:
+      vpopts = []
+      vpfilter.append("drawbox_vaapi")
+      if hasattr(self, "boxw"):
+        vpopts.append(f"width={self.boxw}")
+      if hasattr(self, "boxh"):
+        vpopts.append(f"height={self.boxh}")
+      if hasattr(self, "x"):
+        vpopts.append(f"x={self.x}")
+      if hasattr(self, "y"):
+        vpopts.append(f"y={self.y}")
+      if hasattr(self, "color"):
+        vpopts.append(f"color={self.color}")
+      if hasattr(self, "t"):
+        vpopts.append(f"t={self.t}")
+      if hasattr(self, "replace"):
+        vpopts.append(f"replace={self.replace}")
+      if len(vpopts):
+        vpfilter[-1] += f"={':'.join(vpopts)}"
     else:
       procamp = dict(
         brightness  = [-100.0,   0.0, 100.0],
