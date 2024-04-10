@@ -31,6 +31,10 @@ caps = dict(
       features  = dict(scc = False),
     ),
     hevc_10 = dict(maxres = res16k , fmts = ["P010"]),
+    av1_8   = dict(
+      maxres    = res8k,
+      fmts      = ["NV12"],
+    ),
   ),
   vpp    = dict(
     crop        = dict(
