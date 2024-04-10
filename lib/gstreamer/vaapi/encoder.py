@@ -89,7 +89,10 @@ class EncoderTest(BaseEncoderTest):
     # Maximize all gst-vaapi plugin elements rank
     self.__rank_before = os.environ.get("GST_PLUGIN_FEATURE_RANK", None)
     ranks = [] if self.__rank_before is None else self.__rank_before.split(',')
-    ranks += [f"{e}:MAX" for e in get_elements("vaapi")]
+
+    # don't include vaapidecodebin since it forces a vaapipostproc insertion
+    # that does not properly select passthrough when it's possible.
+    ranks += [f"{e}:MAX" for e in set(get_elements("vaapi")) - set(["vaapidecodebin"])]
     os.environ["GST_PLUGIN_FEATURE_RANK"] = ','.join(ranks)
 
   def after(self):
