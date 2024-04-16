@@ -128,6 +128,12 @@ class TrendModelMixin:
     plt.ylim([15, 100])
     plt.legend()
     plt.savefig(get_media().artifacts.reserve("svg"))
+
+    if get_media().baseline.rebase:
+      svgdir = os.path.join(get_media().baseline.filename, "model", "encode", f"{codec}")
+      makepath(svgdir)
+      plt.savefig(os.path.join(svgdir, f"{self.case}.svg"))
+
     # plt.show()
     plt.clf()
 
