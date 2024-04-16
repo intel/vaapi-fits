@@ -34,6 +34,8 @@ class Baseline:
       if os.path.isdir(self.filename): # expanded reference files
         for root, dirs, files in os.walk(self.filename):
           for name in files:
+            # ignore trendline model plots
+            if name.endswith(".svg"): continue
             with open(os.path.join(root, name), "r") as fd:
               self.references.update(json.load(fd))
       else: # flat reference file for backwards compatibility
