@@ -101,6 +101,7 @@ def mapprofile(codec,profile):
       "main422-10"            : "main-422-10",
       "main444-10"            : "main-444-10",
       "main12"                : "main-12",
+      "main422-12"            : "main-422-12",
     },
     Codec.AV1   : {
       "profile0"              : "main",
