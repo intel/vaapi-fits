@@ -279,6 +279,8 @@ class MediaPlugin(slash.plugins.PluginInterface):
 
   def before_session_start(self):
     self.assets = artifacts.MediaAssets()
+    for _, _, params in self._iter_test_spec():
+      self.assets.register(params)
 
   def session_start(self):
     self.session_start = dt.now()
