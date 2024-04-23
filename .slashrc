@@ -188,6 +188,16 @@ class MediaPlugin(slash.plugins.PluginInterface):
       spec = spec.setdefault(key, dict())
     return spec.setdefault("--spec--", dict())
 
+  def _iter_test_spec(self):
+    def inner(spec, *context):
+      for k, v in spec.items():
+        if "--spec--" == k:
+          for name, params in v.items():
+            yield context, name, params
+        else:
+          yield from inner(v, *context, k)
+    yield from inner(self.testspec)
+
   def _get_driver_name(self):
     # TODO: query vaapi for driver name (i.e. use ctypes to call vaapi)
     return os.environ.get("LIBVA_DRIVER_NAME", None) or "i965"
@@ -393,24 +403,23 @@ blacklist = os.environ.get(
   os.path.abspath(os.path.join(media.mypath, "blacklist")))
 media._load_blacklist(blacklist)
 
-from slash.core.variation import _PRINTABLE_CHARS
-import numbers
-def validate_spec(spec, context = list()):
-  for k, v in spec.items():
-    if "--spec--" == k:
-      for case in v.keys():
-        _VALID_TYPES = (numbers.Integral, str)
-        assert isinstance(case, _VALID_TYPES), (
-          "{}: {}"
-          "\n\tIllegal type for test case name"
-          "\n\tLegal types: {}".format(context, case, _VALID_TYPES))
-        assert _PRINTABLE_CHARS.issuperset(str(case)), (
-          "{}: {}"
-          "\n\tIllegal character in test case name"
-          "\n\tLegal characters: '{}'".format(context, case, ''.join(_PRINTABLE_CHARS)))
-    else:
-      validate_spec(v, context + [k,])
-validate_spec(media.testspec)
+def validate_case_name(name, context):
+  from slash.core.variation import _PRINTABLE_CHARS
+  import numbers
+  _VALID_TYPES = (numbers.Integral, str)
+
+  assert isinstance(name, _VALID_TYPES), f"""
+    Illegal type for test case name: name = {name}, type = {type(name)}, context = {context}
+    Legal types: {_VALID_TYPES}
+  """
+
+  assert _PRINTABLE_CHARS.issuperset(str(name)), f"""
+    Illegal character(s) in test case name: name = {name}, context = {context}
+    Legal characters: {''.join(sorted(_PRINTABLE_CHARS))}
+  """
+
+for context, name, params in media._iter_test_spec():
+  validate_case_name(name, context)
 
 ###
 ### kate: syntax python;
