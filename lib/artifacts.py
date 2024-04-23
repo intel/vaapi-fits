@@ -54,23 +54,37 @@ class MediaAssets:
     # cache files that have already been decoded during the test session
     self._decoded = dict()
 
+  def register(self, params):
+    from .codecs import Codec
+
+    # ignore RAW or unspecified codec assets
+    if params.get("scodec", Codec.RAW) is Codec.RAW:
+      return
+
+    source  = params["source"]
+    format  = params["format"]
+    frames  = params.get("brframes", params["frames"])
+
+    entry = self._decoded.setdefault(
+      (source, format), dict(frames = frames, decoded = None))
+
+    if frames > entry["frames"]:
+      entry["frames"] = frames
+
   def raw(self, test, **kwargs):
     from .codecs import Codec
     if vars(test).get("scodec", Codec.RAW) is Codec.RAW:
-      decoded = test.source
-    else:
-      decoded = self._decoded.get(test.source, dict()).get(
-        (test.format, test.frames), None)
+      return test.source
 
-    if decoded is None:
+    entry = self._decoded[(test.source, test.format)]
+    if entry["decoded"] is None:
       decoder = test.DecoderClass(
         scope = Scope.SESSION,
-        frames = test.frames,
+        frames = entry["frames"],
         format = test.format,
         source = test.source,
         **kwargs,
       )
       decoder.decode()
-      decoded = decoder.decoded
-      self._decoded.setdefault(test.source, dict())[(test.format, test.frames)] = decoded
-    return decoded
+      entry["decoded"] = decoder.decoded
+    return entry["decoded"]
