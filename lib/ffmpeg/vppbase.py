@@ -106,8 +106,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     self.validate_caps()
 
     if self.vpp_op not in ["deinterlace", "tonemap", "stack", "overlay", "range", "pad", "drawbox"]:
-      from ...lib.artifacts import MediaAssets
-      self.source = MediaAssets.raw(self, caps = dict(fmts = self.get_output_formats()))
+      self.source = get_media().assets.raw(self, caps = dict(fmts = self.get_output_formats()))
 
     iopts = self.gen_input_opts()
     oopts = self.gen_output_opts()

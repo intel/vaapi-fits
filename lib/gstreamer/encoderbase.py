@@ -8,7 +8,6 @@ import os
 import re
 import slash
 
-from ...lib.artifacts import MediaAssets
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
 from ...lib.gstreamer.util import have_gst, have_gst_element
 from ...lib.gstreamer.util import parse_inline_md5, parse_psnr_stats
@@ -155,7 +154,7 @@ class BaseEncoderTest(slash.Test):
     get_media().test_call_timeout = vars(self).get("call_timeout", 0)
 
     # Decode the input file to raw format if necessary
-    self.encoder.update(source = MediaAssets.raw(self, gstdecoder = "decodebin"))
+    self.encoder.update(source = get_media().assets.raw(self, gstdecoder = "decodebin"))
 
     if vars(self).get("r2r", None) is not None:
       return self._encode_r2r()
