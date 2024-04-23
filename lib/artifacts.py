@@ -50,16 +50,16 @@ class Artifacts():
     return absfile
 
 class MediaAssets:
-  # cache files that have already been decoded during the test session
-  _decoded = dict()
+  def __init__(self):
+    # cache files that have already been decoded during the test session
+    self._decoded = dict()
 
-  @classmethod
-  def raw(cls, test, **kwargs):
+  def raw(self, test, **kwargs):
     from .codecs import Codec
     if vars(test).get("scodec", Codec.RAW) is Codec.RAW:
       decoded = test.source
     else:
-      decoded = cls._decoded.get(test.source, dict()).get(
+      decoded = self._decoded.get(test.source, dict()).get(
         (test.format, test.frames), None)
 
     if decoded is None:
@@ -72,5 +72,5 @@ class MediaAssets:
       )
       decoder.decode()
       decoded = decoder.decoded
-      cls._decoded.setdefault(test.source, dict())[(test.format, test.frames)] = decoded
+      self._decoded.setdefault(test.source, dict())[(test.format, test.frames)] = decoded
     return decoded
