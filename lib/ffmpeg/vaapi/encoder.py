@@ -32,14 +32,10 @@ class Encoder(FFEncoder):
   @property
   def qp(self):
     def inner(qp):
-      if self.codec in [Codec.VP8, Codec.VP9, Codec.AV1]:
-        return f" -global_quality {qp}"
-
-      elif self.codec == Codec.MPEG2:
+      if self.codec in [Codec.MPEG2]:
         mqp = mapRangeInt(qp, [0, 100], [1, 31])
-        return f" -global_quality {mqp}"
-
-      return " -qp {qp}"
+        return f" -q {mqp}"
+      return " -q {qp}"
     return self.ifprop("qp", inner)
 
   @property
