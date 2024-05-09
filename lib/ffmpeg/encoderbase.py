@@ -158,6 +158,17 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     # FIXME: handle brframes for bitrate rcmodes (see ffmpeg/qsv/encoder.py)
     # May require rebaseline for other components/elements
 
+    # ffmpeg default framerate is 25 fps
+    fps = vars(self).get("fps", 25)
+
+    # calculate frame offset to compensate for seek
+    offset = vars(self).get("seek", 0) * fps
+
+    # only encode remaining requested frames after seek
+    self.frames -= offset
+
+    assert self.frames > 0, "No more frames after applying seek... invalid test configuration"
+
     self.encoder = self.EncoderClass(encoded_ext = self.get_file_ext(), **vars(self))
     self.decoder = self.DecoderClass(
       caps      = self.caps,
@@ -245,11 +256,8 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     # ffmpeg default framerate is 25 fps
     fps = vars(self).get("fps", 25)
 
-    # calculate frame offset to compensate for seek
-    offset = vars(self).get("seek", 0) * fps
-
     encsize = os.path.getsize(self.encoder.encoded)
-    bitrate_actual = encsize * 8 * fps / 1024.0 / (self.frames - offset)
+    bitrate_actual = encsize * 8 * fps / 1024.0 / self.frames
     get_media()._set_test_details(
       size_encoded = encsize,
       bitrate_actual = "{:-.2f}".format(bitrate_actual))
@@ -289,12 +297,6 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
     )
     self.decoder.decode()
 
-    # ffmpeg default framerate is 25 fps
-    fps = vars(self).get("fps", 25)
-
-    # calculate frame offset to compensate for seek
-    offset = vars(self).get("seek", 0) * fps
-
     # NOTE: Ref/filetrue seek compensation is not currently captured in this
     # metric.  The metric would need this information for its internal
     # comparision functions.  However, since we are exploiting the "inline"
@@ -305,9 +307,9 @@ class BaseEncoderTest(slash.Test, BaseFormatMapper):
       filetrue  = self.encoder.source,
       filecoded = self.encoder.encoded,
       filetest  = self.decoder.decoded,
-      frames    = self.frames - offset,
+      frames    = self.frames,
     )
-    metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames - offset)
+    metric.actual = parse_psnr_stats(self.decoder.statsfile, self.frames)
 
     metric.check()
 
