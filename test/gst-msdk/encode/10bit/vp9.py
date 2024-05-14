@@ -8,8 +8,7 @@ from .....lib import *
 from .....lib.gstreamer.msdk.util import *
 from .....lib.gstreamer.msdk.encoder import VP9_10EncoderTest, VP9_10EncoderLPTest
 
-spec     = load_test_spec("vp9", "encode", "10bit")
-spec_r2r = load_test_spec("vp9", "encode", "10bit", "r2r")
+spec = load_test_spec("vp9", "encode", "10bit")
 
 class cqp(VP9_10EncoderTest):
   def init(self, tspec, case, ipmode, qp, quality, slices):
@@ -26,12 +25,6 @@ class cqp(VP9_10EncoderTest):
   @parametrize_with_unused(*gen_vp9_cqp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, ipmode, qp, quality, slices)
-    self.encode()
-
-  @parametrize_with_unused(*gen_vp9_cqp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, ipmode, qp, quality, slices)
-    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class cbr(VP9_10EncoderTest):
@@ -52,12 +45,6 @@ class cbr(VP9_10EncoderTest):
   @parametrize_with_unused(*gen_vp9_cbr_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, slices)
-    self.encode()
-
-  @parametrize_with_unused(*gen_vp9_cbr_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, gop, bitrate, fps, slices)
-    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class vbr(VP9_10EncoderTest):
@@ -82,12 +69,6 @@ class vbr(VP9_10EncoderTest):
     self.init(spec, case, gop, bitrate, fps, quality, slices)
     self.encode()
 
-  @parametrize_with_unused(*gen_vp9_vbr_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, gop, bitrate, fps, quality, slices)
-    vars(self).setdefault("r2r", 5)
-    self.encode()
-
 class cqp_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, ipmode, qp, quality, slices):
     vars(self).update(tspec[case].copy())
@@ -103,12 +84,6 @@ class cqp_lp(VP9_10EncoderLPTest):
   @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, ipmode, qp, quality, slices)
-    self.encode()
-
-  @parametrize_with_unused(*gen_vp9_cqp_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, ipmode, qp, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, ipmode, qp, quality, slices)
-    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class cbr_lp(VP9_10EncoderLPTest):
@@ -131,12 +106,6 @@ class cbr_lp(VP9_10EncoderLPTest):
     self.init(spec, case, gop, bitrate, fps, slices)
     self.encode()
 
-  @parametrize_with_unused(*gen_vp9_cbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, gop, bitrate, fps, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, gop, bitrate, fps, slices)
-    vars(self).setdefault("r2r", 5)
-    self.encode()
-
 class vbr_lp(VP9_10EncoderLPTest):
   def init(self, tspec, case, gop, bitrate, fps, quality, slices):
     vars(self).update(tspec[case].copy())
@@ -157,10 +126,4 @@ class vbr_lp(VP9_10EncoderLPTest):
   @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec), ['refmode', 'looplvl', 'loopshp'])
   def test(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
     self.init(spec, case, gop, bitrate, fps, quality, slices)
-    self.encode()
-
-  @parametrize_with_unused(*gen_vp9_vbr_lp_parameters(spec_r2r), ['refmode', 'looplvl', 'loopshp'])
-  def test_r2r(self, case, gop, bitrate, fps, quality, slices, refmode, looplvl, loopshp):
-    self.init(spec_r2r, case, gop, bitrate, fps, quality, slices)
-    vars(self).setdefault("r2r", 5)
     self.encode()
