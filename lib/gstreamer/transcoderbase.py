@@ -149,8 +149,10 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
     self.srcyuv = get_media().artifacts.reserve("yuv")
     self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
-    if self.mode in ["va_hw", "dma"]:
+    if self.mode in ["va_hw"]:
       opts += " ! vapostproc ! video/x-raw,format={mformat}"
+    elif self.mode in ["dma"]:
+      opts += " ! " + self.get_vpp_scale(self.width, self.height, "hw")
     elif self.mode == "d3d11_hw":
       opts += " ! d3d11download ! video/x-raw,format={mformat}"
     opts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
