@@ -8,7 +8,8 @@ from ....lib import *
 from ....lib.gstreamer.vaapi.util import *
 from ....lib.gstreamer.vaapi.encoder import VP8EncoderTest
 
-spec = load_test_spec("vp8", "encode")
+spec     = load_test_spec("vp8", "encode")
+spec_r2r = load_test_spec("vp8", "encode", "r2r")
 
 class cqp(VP8EncoderTest):
   @slash.parametrize(*gen_vp8_cqp_parameters(spec))
@@ -23,6 +24,21 @@ class cqp(VP8EncoderTest):
       quality   = quality,
       rcmode    = "cqp",
     )
+    self.encode()
+
+  @slash.parametrize(*gen_vp8_cqp_parameters(spec_r2r))
+  def test_r2r(self, case, ipmode, qp, quality, looplvl, loopshp):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      case      = case,
+      gop       = 30 if ipmode != 0 else 1,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      qp        = qp,
+      quality   = quality,
+      rcmode    = "cqp",
+    )
+    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class cbr(VP8EncoderTest):
@@ -41,6 +57,24 @@ class cbr(VP8EncoderTest):
       minrate   = bitrate,
       rcmode    = "cbr",
     )
+    self.encode()
+
+  @slash.parametrize(*gen_vp8_cbr_parameters(spec_r2r))
+  def test_r2r(self, case, gop, bitrate, fps, looplvl, loopshp):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      maxrate   = bitrate,
+      minrate   = bitrate,
+      rcmode    = "cbr",
+    )
+    vars(self).setdefault("r2r", 5)
     self.encode()
 
 class vbr(VP8EncoderTest):
@@ -62,4 +96,25 @@ class vbr(VP8EncoderTest):
       quality   = quality,
       rcmode    = "vbr",
     )
+    self.encode()
+
+  @slash.parametrize(*gen_vp8_vbr_parameters(spec_r2r))
+  def test_r2r(self, case, gop, bitrate, fps, quality, looplvl, loopshp):
+    vars(self).update(spec_r2r[case].copy())
+    vars(self).update(
+      bitrate   = bitrate,
+      case      = case,
+      fps       = fps,
+      frames    = vars(self).get("brframes", self.frames),
+      gop       = gop,
+      looplvl   = looplvl,
+      loopshp   = loopshp,
+      ## target percentage 70% (hard-coded in gst-vaapi)
+      ## gst-vaapi sets max-bitrate = bitrate and min-bitrate = bitrate * 0.70
+      maxrate   = int(bitrate / 0.7),
+      minrate   = bitrate,
+      quality   = quality,
+      rcmode    = "vbr",
+    )
+    vars(self).setdefault("r2r", 5)
     self.encode()
