@@ -9,7 +9,7 @@ import os
 
 from ...lib.codecs import Codec
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, gst_discover, gst_discover_fps
+from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, gst_discover
 
 from ...lib import metrics2
 
@@ -118,8 +118,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       opts += " ! tsdemux"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     if self.mode in ["hw", "sw"]:
-      fps = int(gst_discover_fps(self.source)) or 30
-      opts += f" ! videorate ! video/x-raw,format={self.mformat},framerate={fps}/1"
+      opts += " ! video/x-raw,format={mformat}"
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
