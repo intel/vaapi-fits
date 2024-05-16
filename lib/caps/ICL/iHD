@@ -84,12 +84,12 @@ caps = dict(
       ofmts = ["NV12", "YV12", "I420", "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
     ),
     pad         = dict(
-      ifmts = ["NV12"],
-      ofmts = ["NV12"],
+      ifmts = ["NV12", "P010"],
+      ofmts = ["NV12", "P010"],
     ),
     drawbox     = dict(
-      ifmts = ["NV12"],
-      ofmts = ["NV12"],
+      ifmts = ["NV12", "P010"],
+      ofmts = ["NV12", "P010"],
     ),
   ),
 )
