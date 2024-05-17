@@ -9,8 +9,8 @@ import os
 
 from ...lib.codecs import Codec
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, gst_discover
-
+from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element
+from ...lib.gstreamer.util import gst_discover, gst_discover_fps
 from ...lib import metrics2
 
 @slash.requires(have_gst)
@@ -119,6 +119,11 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     if self.mode in ["hw", "sw"]:
       opts += " ! video/x-raw,format={mformat}"
+
+    # if input framerate is unknown, then set it explicitly (VIZ-20689)
+    if gst_discover_fps(self.ossource).startswith("0"):
+      opts += " ! videorate ! 'video/x-raw(ANY),framerate=30/1'"
+
     return opts.format(**vars(self))
 
   def gen_output_opts(self):
