@@ -33,7 +33,7 @@ def gst_discover(filename):
 
 def gst_discover_fps(filename):
   return gst_discover_fps.pattern.findall(gst_discover(filename))[-1]
-gst_discover_fps.pattern = re.compile("Frame rate: (?P<fps>[0-9]+)", re.MULTILINE)
+gst_discover_fps.pattern = re.compile("Frame rate: (?P<fps>[0-9]+/[0-9]+)", re.MULTILINE)
 
 @memoize
 def get_elements(plugin):
