@@ -54,7 +54,10 @@ class TranscoderTest(BaseTranscoderTest):
         ),
       ),
       Codec.VP9 : dict(
-        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"msdkvp9dec"), f"matroskademux ! vp9parse !  msdkvp9dec"),
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"msdkvp9dec"), f"matroskademux ! vp9parse ! msdkvp9dec"),
+      ),
+      Codec.AV1 : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element(f"msdkav1dec"), f"matroskademux ! av1parse ! msdkav1dec"),
       ),
     },
     encode = {
@@ -78,6 +81,9 @@ class TranscoderTest(BaseTranscoderTest):
       ),
       Codec.VP9 : dict(
         lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element("msdkvp9enc"), "msdkvp9enc ! vp9parse ! matroskamux"),
+      ),
+      Codec.AV1 : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element("msdkav1enc"), "msdkav1enc ! av1parse ! matroskamux"),
       ),
     },
     vpp = {
