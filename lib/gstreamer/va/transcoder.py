@@ -41,6 +41,9 @@ def make_requirements():
       Codec.VP9 : dict(
         hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"va{hw}vp9dec"), f"matroskademux ! vp9parse ! va{hw}vp9dec"),
       ),
+      Codec.AV1 : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element(f"va{hw}av1dec"), f"matroskademux ! av1parse ! va{hw}av1dec"),
+      ),
     },
     encode = {
       Codec.AVC : dict(
@@ -66,6 +69,9 @@ def make_requirements():
       ),
       Codec.VP9 : dict(
         lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element(f"va{hw}vp9lpenc"), f"va{hw}vp9lpenc ! vp9parse ! matroskamux"),
+      ),
+      Codec.AV1 : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element(f"va{hw}av1lpenc"), f"va{hw}av1lpenc ! av1parse ! matroskamux"),
       ),
     },
     vpp = {
