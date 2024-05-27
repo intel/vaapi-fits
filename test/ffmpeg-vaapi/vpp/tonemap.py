@@ -1,5 +1,5 @@
 ###
-### Copyright (C) 2018-2023 Intel Corporation
+### Copyright (C) 2018-2024 Intel Corporation
 ###
 ### SPDX-License-Identifier: BSD-3-Clause
 ###
@@ -43,4 +43,21 @@ class hevc(TonemapTest):
   def test_h2s_r2r(self, case, csc):
     self.init(spec_hevc_r2r, case, "h2s", csc)
     vars(self).setdefault("r2r", 5)
+    self.vpp()
+
+
+spec_av1     = load_test_spec("vpp", "tonemap", "av1_10")
+
+@slash.requires(*platform.have_caps("decode", "av1_10"))
+@slash.requires(*have_ffmpeg_filter_options("tonemap_vaapi", "format"))
+@slash.requires(*have_ffmpeg_decoder("av1"))
+class av1(TonemapTest):
+  def before(self):
+    self.ffdecoder = "av1"
+    super().before()
+
+  @slash.requires(*platform.have_caps("vpp", "tonemap", "h2s"))
+  @slash.parametrize(*gen_vpp_h2s_parameters(spec_av1))
+  def test_h2s(self, case, csc):
+    self.init(spec_av1, case, "h2s", csc)
     self.vpp()
