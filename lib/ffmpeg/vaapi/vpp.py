@@ -92,6 +92,9 @@ class VppTest(BaseVppTest):
       elif self.vpp_op in ["sharpen"]:
         self.mlevel = int(mapRangeWithDefault(
           self.level, [0, 50, 100], [0, 44, 64]))
+      elif self.vpp_op in ["crop"]:
+        vpfilter.append("crop-left={left} crop-right={right}")
+        vpfilter.append("crop-top={top} crop-bottom={bottom}")
 
       if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|vaapi")
@@ -113,6 +116,7 @@ class VppTest(BaseVppTest):
           transpose   = "transpose_vaapi=dir={direction}",
           tonemap     = "tonemap_vaapi=format={ohwformat}",
           range       = "scale_vaapi=out_range={rng}",
+          crop        = "vpp_qsv=crop-left={left} crop-right={right} crop-top={top} crop-bottom={bottom}",
         )[self.vpp_op]
       )
 
