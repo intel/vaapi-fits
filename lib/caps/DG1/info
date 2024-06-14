@@ -10,4 +10,5 @@
 
 info = dict(
   gpu = dict(gen = 12),
+  stringapi = dict(enable = True),
 )
