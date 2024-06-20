@@ -26,6 +26,13 @@ class DecoderTest(BaseDecoderTest):
   def before(self):
     super().before()
 
+  def get_supported_format_map(self):
+    return {
+      "I420"  : "yuv420p",
+      "NV12"  : "nv12",
+      "P010"  : "p010le",
+    }
+
 def decode_test_class(codec, bitdepth, **kwargs):
   # caps lookup translation
   capcodec = codec
@@ -71,7 +78,6 @@ AVCDecoderTest      = decode_test_class(codec = Codec.AVC, bitdepth = 8)
 ## HEVC ##
 HEVC_8DecoderTest   = decode_test_class(codec = Codec.HEVC, bitdepth = 8)
 HEVC_10DecoderTest  = decode_test_class(codec = Codec.HEVC, bitdepth = 10)
-HEVC_12DecoderTest  = decode_test_class(codec = Codec.HEVC, bitdepth = 12)
 
 ## AV1 ##
 AV1_8DecoderTest    = decode_test_class(codec = Codec.AV1, bitdepth = 8)
@@ -80,7 +86,6 @@ AV1_10DecoderTest   = decode_test_class(codec = Codec.AV1, bitdepth = 10)
 ## VP9 ##
 VP9_8DecoderTest    = decode_test_class(codec = Codec.VP9, bitdepth = 8)
 VP9_10DecoderTest   = decode_test_class(codec = Codec.VP9, bitdepth = 10)
-VP9_12DecoderTest   = decode_test_class(codec = Codec.VP9, bitdepth = 12)
 
 ## VP8 ##
 VP8DecoderTest      = decode_test_class(codec = Codec.VP8, bitdepth = 8)
