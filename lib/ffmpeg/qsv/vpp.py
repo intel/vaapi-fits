@@ -63,6 +63,9 @@ class VppTest(BaseVppTest):
           self.level, [0.0, 50.0, 100.0], procamp[self.vpp_op])
       elif self.vpp_op in ["sharpen"]:
         self.mlevel = mapsharp(self.level)
+      elif self.vpp_op in ["crop"]:
+        vpfilter.append("crop-left={left} crop-right={right}")
+        vpfilter.append("crop-top={top} crop-bottom={bottom}")
 
       if self.vpp_op not in ["csc", "tonemap", "range"]:
         vpfilter.append("format={ihwformat}|qsv")
@@ -85,6 +88,7 @@ class VppTest(BaseVppTest):
           transpose   = "vpp_qsv=transpose={direction}",
           tonemap     = "vpp_qsv=tonemap=1:format={ohwformat}",
           range       = "vpp_qsv=out_range={rng}",
+          crop        = "vpp_qsv=crop-left={left} crop-right={right} crop-top={top} crop-bottom={bottom}",
         )[self.vpp_op]
       )
 
