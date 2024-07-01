@@ -38,7 +38,7 @@ class cqp(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_cqp_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.EncoderClass = StringAPIEncoder
@@ -100,7 +100,7 @@ class cbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_cbr_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -137,7 +137,7 @@ class vbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_vbr_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     self.EncoderClass = StringAPIEncoder
@@ -170,7 +170,7 @@ class cqp_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_cqp_lp_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.EncoderClass = StringAPIEncoder
@@ -232,7 +232,7 @@ class cbr_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_cbr_lp_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -269,7 +269,7 @@ class vbr_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("av1_qsv"))
   @slash.parametrize(*gen_av1_vbr_lp_parameters(spec))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     self.EncoderClass = StringAPIEncoder

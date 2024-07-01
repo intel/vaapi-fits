@@ -37,7 +37,7 @@ class cqp(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, bframes, qp, quality, profile):
      self.EncoderClass = StringAPIEncoder
@@ -69,7 +69,7 @@ class cqp_lp(HEVC8EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cqp_lp_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, qp, quality, profile):
     self.EncoderClass = StringAPIEncoder
@@ -103,7 +103,7 @@ class cbr(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -136,7 +136,7 @@ class cbr_lp(HEVC8EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_cbr_lp_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, bitrate, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -172,7 +172,7 @@ class vbr(HEVC8EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.EncoderClass = StringAPIEncoder
@@ -210,7 +210,7 @@ class vbr_lp(HEVC8EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("hevc_qsv"))
   @slash.parametrize(*gen_hevc_vbr_lp_parameters(spec, ['main']))
   def test_strapi(self, case, gop, slices, bitrate, fps, quality, refs, profile):
     self.EncoderClass = StringAPIEncoder
