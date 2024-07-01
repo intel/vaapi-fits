@@ -86,13 +86,6 @@ def have_caps(*args):
   return get_caps(*args) is not None, failmsg
 
 @memoize
-def have_string_api():
-  from .common import get_media
-  has_strapi = False
-  has_strapi = get_media()._get_platform_stringapi_enable()
-  return has_strapi is not None, False
-
-@memoize
 def load_capsinfo_file(infofile):
   namespace = dict()
 

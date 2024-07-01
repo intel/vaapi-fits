@@ -86,6 +86,11 @@ def have_ffmpeg_encoder(encoder):
   return result, encoder
 
 @memoize
+def have_string_api(encoder):
+  result = try_call(f"{exe2os('ffmpeg')} -hide_banner -h encoder={encoder} | grep qsv_params")
+  return result, encoder
+
+@memoize
 def have_ffmpeg_decoder(decoder):
   result = try_call(f"{exe2os('ffmpeg')} -hide_banner -decoders | awk '{{print $2}}' | grep -w {decoder}")
   return result, decoder

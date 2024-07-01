@@ -37,7 +37,7 @@ class cqp(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main', 'baseline']))
   def test_strapi(self, case, gop, slices, bframes, qp, quality, profile):
      self.EncoderClass = StringAPIEncoder
@@ -69,7 +69,7 @@ class cqp_lp(AVCEncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['high', 'main']))
   def test_strapi(self, case, gop, slices, bframes, qp, quality, profile):
      self.EncoderClass = StringAPIEncoder
@@ -103,7 +103,7 @@ class cbr(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main', 'baseline']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -137,7 +137,7 @@ class cbr_lp(AVCEncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_cbr_lp_parameters(spec, ['high', 'main']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.EncoderClass = StringAPIEncoder
@@ -173,7 +173,7 @@ class vbr(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_parameters(spec_r2r, ['high', 'main', 'baseline']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.EncoderClass = StringAPIEncoder
@@ -227,7 +227,7 @@ class vbr_lp(AVCEncoderLPTest):
     )
     self.encode()
 
-  @slash.requires(have_string_api)
+  @slash.requires(*have_string_api("h264_qsv"))
   @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main']))
   def test_strapi(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.EncoderClass = StringAPIEncoder
