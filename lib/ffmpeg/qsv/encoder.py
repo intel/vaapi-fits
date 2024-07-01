@@ -15,6 +15,7 @@ from ....lib.ffmpeg.qsv.decoder import Decoder
 from ....lib.common import mapRangeInt, get_media, call, exe2os
 from ....lib.codecs import Codec
 from ....lib.formats import PixelFormat
+from ....lib.mfx.api import StringAPI
 
 class Encoder(FFEncoder):
   hwaccel   = property(lambda s: "qsv")
@@ -64,6 +65,13 @@ class Encoder(FFEncoder):
       f"{self.iqfactor}{self.bqfactor}"
       f"{self.iqoffset}{self.bqoffset}"
     )
+
+# NOTE: Inherit from the StringAPI class first so that it overrides the
+# Encoder class
+class StringAPIEncoder(StringAPI, Encoder):
+   @property
+   def encparams(self):
+     return f" -qsv_params '{super().encparams}'"
 
 @slash.requires(*have_ffmpeg_hwaccel("qsv"))
 @slash.requires(using_compatible_driver)
