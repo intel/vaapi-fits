@@ -75,7 +75,7 @@ class TranscoderTest(BaseTranscoderTest):
     },
     tonemap = {
       "h2s" : dict(
-        hw = (platform.get_caps("tonemap", "h2s"), have_ffmpeg_filter_options("tonemap_vaapi", "format"), "tonemap_vaapi=format={format}"),
+        hw = (platform.get_caps("vpp", "tonemap", "h2s"), have_ffmpeg_filter_options("tonemap_vaapi", "format"), "tonemap_vaapi=format={format}"),
       ),
     },
   )
