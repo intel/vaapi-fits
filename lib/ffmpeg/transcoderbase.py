@@ -285,17 +285,17 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
   def check_hdr(self, output, encoded):
     if output.get("tonemap", None) is not None:
-      get_media()._set_test_details(**{"hdr:info:expect" : "no"})
+      get_media()._set_test_details(**{"hdr.info:expect" : "no"})
       # make sure the output is a SDR file
       output_mdm_info, output_cll_info = self.get_hdr_info(encoded)
       assert len(output_mdm_info) == 0 and len(output_cll_info) == 0, "Found HDR information in output video, h2s failed"
     elif vars(self).get("hdr", False):
-      get_media()._set_test_details(**{"hdr:info:expect" : "yes"})
+      get_media()._set_test_details(**{"hdr.info:expect" : "yes"})
       input_mdm_info, input_cll_info = self.get_hdr_info(filepath2os(self.source))
-      assert len(input_mdm_info) + len(input_cll_info) > 0, "Find no HDR information in input video"
+      assert len(input_mdm_info) + len(input_cll_info) > 0, "Found no HDR information in input video"
 
       output_mdm_info, output_cll_info = self.get_hdr_info(encoded)
-      assert len(output_mdm_info) + len(output_cll_info) > 0, "Find no HDR information in output video"
+      assert len(output_mdm_info) + len(output_cll_info) > 0, "Found no HDR information in output video"
 
       assert (len(input_mdm_info) == 0 or (len(input_mdm_info) == len(output_mdm_info) and input_mdm_info[0] == output_mdm_info[0])) and \
         (len(input_cll_info) == 0 or (len(input_cll_info) == len(output_cll_info) and input_cll_info[0] == output_cll_info[0])), "HDR info is different between input and output"
