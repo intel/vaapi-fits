@@ -81,7 +81,7 @@ class TranscoderTest(BaseTranscoderTest):
     },
     tonemap = {
       "h2s" : dict(
-        hw = (platform.get_caps("tonemap", "h2s"), have_ffmpeg_filter_options("vpp_qsv", "tonemap"), "vpp_qsv=tonemap=1:format={format}"),
+        hw = (platform.get_caps("vpp", "tonemap", "h2s"), have_ffmpeg_filter_options("vpp_qsv", "tonemap", "format"), "vpp_qsv=tonemap=1:format={format}"),
       ),
     },
   )
