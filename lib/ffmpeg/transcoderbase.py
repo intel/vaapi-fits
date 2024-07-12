@@ -239,43 +239,13 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
     for n, output in enumerate(self.outputs):
       get_media()._set_test_details(**{"output.{}".format(n) : output})
 
-      ufmt = output.get("format", self.format) # unmapped output format
-      oformat = self.map_format(ufmt) # mapped output format
-
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
         osencoded = filepath2os(encoded)
-        iopts = ""
 
-        self.srcyuv = self.goutputs[f"{n}_ref"]
-
-        # WA: FFMpeg does not have an AV1 SW decoder
-        ocodec = output["codec"]
-        if ocodec in [Codec.AV1]:
-          iopts = (
-            f"-hwaccel {self.hwaccel}"
-            f" -init_hw_device {self.hwaccel}={self.hwdevice}"
-            f" -hwaccel_output_format {oformat}"
-            f" -c:v {self.get_decoder(ocodec, 'hw')}"
-          )
-
-        iopts += f" -i {osencoded}"
-
-        yuv = get_media().artifacts.reserve("yuv")
-        osyuv = filepath2os(yuv)
-        vppscale = self.get_vpp_scale(self.width, self.height, "sw")
-        oopts = (
-          f"-vf '{vppscale}' -pix_fmt {oformat} -f rawvideo"
-          f" -vframes {self.frames} -y {osyuv}"
-        )
-
-        self.call_ffmpeg(iopts, oopts)
         self.check_resolution(output, osencoded)
         self.check_hdr(output, osencoded)
-        self.check_metrics(yuv, ufmt, refctx = [(n, channel)])
-
-        # delete yuv file after each iteration
-        get_media().artifacts.purge(yuv)
+        self.check_metrics(output, osencoded, self.goutputs[f"{n}_ref"], refctx = [(n, channel)])
 
   def check_resolution(self, output, encoded):
     actual = ffmpeg_probe_resolution(encoded)
@@ -300,13 +270,42 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       assert (len(input_mdm_info) == 0 or (len(input_mdm_info) == len(output_mdm_info) and input_mdm_info[0] == output_mdm_info[0])) and \
         (len(input_cll_info) == 0 or (len(input_cll_info) == len(output_cll_info) and input_cll_info[0] == output_cll_info[0])), "HDR info is different between input and output"
 
-  def check_metrics(self, yuv, fmt, refctx):
+  def check_metrics(self, output, encoded, reference, refctx):
+    iopts   = ""
+    uformat = output.get("format", self.format) # unmapped output format
+    oformat = self.map_format(uformat) # mapped output format
+    ocodec  = output["codec"]
+
+    # WA: FFMpeg does not have an AV1 SW decoder
+    if ocodec in [Codec.AV1]:
+      iopts = (
+        f"-hwaccel {self.hwaccel}"
+        f" -init_hw_device {self.hwaccel}={self.hwdevice}"
+        f" -hwaccel_output_format {oformat}"
+        f" -c:v {self.get_decoder(ocodec, 'hw')}"
+      )
+
+    iopts += f" -i {encoded}"
+
+    yuv = get_media().artifacts.reserve("yuv")
+    osyuv = filepath2os(yuv)
+    vppscale = self.get_vpp_scale(self.width, self.height, "sw")
+    oopts = (
+      f"-vf '{vppscale}' -pix_fmt {oformat} -f rawvideo"
+      f" -vframes {self.frames} -y {osyuv}"
+    )
+
+    self.call_ffmpeg(iopts, oopts)
+
     metrics2.check(
       metric = dict(type = "psnr"),
-      filetrue = self.srcyuv, filetest = yuv,
+      filetrue = reference, filetest = yuv,
       width = self.width, height = self.height,
-      frames = self.frames, format = fmt,
+      frames = self.frames, format = uformat,
       refctx = self.refctx + refctx)
+
+    # delete yuv file after each iteration
+    get_media().artifacts.purge(yuv)
 
   def get_hdr_info(self, osfile):
     output = call(
