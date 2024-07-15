@@ -8,7 +8,7 @@ import re
 import slash
 
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.ffmpeg.util import BaseFormatMapper, have_ffmpeg, ffmpeg_probe_resolution
+from ...lib.ffmpeg.util import BaseFormatMapper, have_ffmpeg, ffmpeg_probe_resolution, parse_psnr_stats
 
 from ...lib import metrics2
 from ...lib.parameters import format_value
@@ -149,7 +149,6 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
   def gen_output_opts(self):
     self.goutputs = dict()
     iformat = self.map_format(self.format)
-    ref = get_media().artifacts.reserve("yuv") # default reference decoded from input/source
     opts = "-an"
 
     for n, output in enumerate(self.outputs):
@@ -159,11 +158,6 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       ext = self.get_file_ext(codec)
       filters = []
       tmode = (self.mode, mode)
-      ufmt = output.get("format", self.format) # unmapped output format
-      oformat = self.map_format(ufmt) # mapped output format
-
-      # default reference
-      self.goutputs[f"{n}_ref"] = ref
 
       # WA: LDB is not enabled by default for HEVCe on gen11+, yet.
       if Codec.HEVC == codec and get_media()._get_gpu_gen() > 10:
@@ -173,10 +167,9 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
       tmap = output.get("tonemap", None)
       if tmap is not None:
+        oformat = self.map_format(output.get("format", self.format))
         tonemap = self.get_tonemap(tmap, oformat, mode)
         filters.append(tonemap)
-        # tonemap requires user supplied reference file (overrides default)
-        self.goutputs[f"{n}_ref"] = format_value(self.reference, case = self.case, tonemap = tmap, format = ufmt)
       elif ("hw", "sw") == tmode:   # HW to SW transcode
         filters.extend(["hwdownload", f"format={iformat}"])
       elif ("sw", "hw") == tmode: # SW to HW transcode
@@ -201,14 +194,6 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
         opts += " -c:v {}".format(encoder)
         opts += " -vframes {frames}"
         opts += " -y {}".format(osofile)
-
-    # dump decoded source to yuv for default reference comparison
-    osref = filepath2os(ref)
-    if self.mode in ["hw", "va_hw", "d3d11_hw"]:
-      opts += f" -vf 'hwdownload,format={iformat}'"
-    opts += " -fps_mode passthrough"
-    opts += f" -pix_fmt {iformat} -f rawvideo"
-    opts += f" -vframes {self.frames} -y {osref}"
 
     return opts.format(**vars(self))
 
@@ -245,7 +230,7 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
 
         self.check_resolution(output, osencoded)
         self.check_hdr(output, osencoded)
-        self.check_metrics(output, osencoded, self.goutputs[f"{n}_ref"], refctx = [(n, channel)])
+        self.check_metrics(output, osencoded, refctx = [(n, channel)])
 
   def check_resolution(self, output, encoded):
     actual = ffmpeg_probe_resolution(encoded)
@@ -270,42 +255,53 @@ class BaseTranscoderTest(slash.Test,BaseFormatMapper):
       assert (len(input_mdm_info) == 0 or (len(input_mdm_info) == len(output_mdm_info) and input_mdm_info[0] == output_mdm_info[0])) and \
         (len(input_cll_info) == 0 or (len(input_cll_info) == len(output_cll_info) and input_cll_info[0] == output_cll_info[0])), "HDR info is different between input and output"
 
-  def check_metrics(self, output, encoded, reference, refctx):
-    iopts   = ""
-    uformat = output.get("format", self.format) # unmapped output format
-    oformat = self.map_format(uformat) # mapped output format
-    ocodec  = output["codec"]
+  def check_metrics(self, output, encoded, refctx):
+    tfilters  = []
+    rfilters  = []
+    iopts     = ""
+    oformat   = self.map_format(output.get("format", self.format))
+    ocodec    = output["codec"]
 
     # WA: FFMpeg does not have an AV1 SW decoder
     if ocodec in [Codec.AV1]:
-      iopts = (
-        f"-hwaccel {self.hwaccel}"
-        f" -init_hw_device {self.hwaccel}={self.hwdevice}"
-        f" -hwaccel_output_format {oformat}"
-        f" -c:v {self.get_decoder(ocodec, 'hw')}"
-      )
+      # NOTE: init_hw_device will already be added by gen_input_opts, called later (assuming no user reference is defined).
+      iopts = f"-hwaccel {self.hwaccel} -hwaccel_output_format {self.hwaccel} -c:v {self.get_decoder(ocodec, 'hw')}"
+      tfilters.extend(["hwdownload", f"format={oformat}"])
 
-    iopts += f" -i {encoded}"
+    # Decode the encoded result and use fps=1 so the psnr filter does not try to guess different rates for each input.
+    iopts += f" -r:v 1 -i {encoded} "
 
-    yuv = get_media().artifacts.reserve("yuv")
-    osyuv = filepath2os(yuv)
+    if vars(self).get("reference", None) is not None:
+      ref = format_value(self.reference, case = self.case, **output)
+      osref = filepath2os(ref)
+      # Decode the user-supplied reference and use fps=1 so the psnr filter does not try to guess different rates for each input.
+      iopts += f" -r:v 1 -f rawvideo -pix_fmt {oformat} -s:v {self.width}x{self.height} -i {osref}"
+      rfilters.append(f"format={oformat}")
+      tfilters.append(f"format={oformat}")
+    else:
+      # Decode the original source and use fps=1 so the psnr filter does not try to guess different rates for each input.
+      iopts += f" -r:v 1 {self.gen_input_opts()}"
+      if self.mode in ["va_hw", "d3d11_hw", "hw"]:
+        rfilters.extend(["hwdownload", f"format={oformat}"])
+
+    # scale the encoded result back to the original source resolution
     vppscale = self.get_vpp_scale(self.width, self.height, "sw")
-    oopts = (
-      f"-vf '{vppscale}' -pix_fmt {oformat} -f rawvideo"
-      f" -vframes {self.frames} -y {osyuv}"
-    )
+    if ocodec in [Codec.JPEG, Codec.MJPEG]:
+      vppscale += ":in_range=pc:out_range=pc"
+    tfilters.append(vppscale)
+    rfilters.append(vppscale)
+
+    statsfile = get_media().artifacts.reserve("psnr")
+
+    # generate the inline psnr filter
+    oopts = f" -lavfi '[0:v]{','.join(tfilters)}[test];[1:v]{','.join(rfilters)}[ref];[test][ref]psnr=f={statsfile}:shortest=1'"
+    oopts += f" -fps_mode passthrough -noautoscale -vframes {self.frames} -f null -"
 
     self.call_ffmpeg(iopts, oopts)
 
-    metrics2.check(
-      metric = dict(type = "psnr"),
-      filetrue = reference, filetest = yuv,
-      width = self.width, height = self.height,
-      frames = self.frames, format = uformat,
-      refctx = self.refctx + refctx)
-
-    # delete yuv file after each iteration
-    get_media().artifacts.purge(yuv)
+    metric = metrics2.factory.create(metric = dict(type = "psnr"), refctx = self.refctx + refctx)
+    metric.actual = parse_psnr_stats(statsfile, self.frames)
+    metric.check()
 
   def get_hdr_info(self, osfile):
     output = call(
