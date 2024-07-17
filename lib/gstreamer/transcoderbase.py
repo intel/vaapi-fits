@@ -9,6 +9,7 @@ import os
 
 from ...lib.codecs import Codec
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
+from ...lib.formats import PixelFormat
 from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, parse_psnr_stats
 from ...lib.gstreamer.util import gst_discover, gst_discover_fps
 from ...lib import metrics2
@@ -60,6 +61,11 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
     if self.mode == "dma" and get_media()._get_driver_name() == "d3d11":
       slash.skip_test(
         "d3d11 does not support dma caps")
+
+    # FIXME: subclasses always assume 8 bit profiles and caps.  Need to add support for other bitdepths.
+    self.format = PixelFormat(self.format)
+    if self.format.bitdepth != 8:
+      slash.skip_test(f"{self.format} ({self.format.bitdepth} bits) unsupported")
 
     self.mformat = self.map_format(self.format)
 
