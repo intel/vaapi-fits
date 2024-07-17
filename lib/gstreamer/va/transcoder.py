@@ -71,8 +71,8 @@ def make_requirements():
     vpp = {
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
-        hw = (platform.get_caps("vpp", "scale"), have_gst_element(f"va{hw}postproc"), f"va{hw}postproc" + " ! video/x-raw,width={width},height={height}"),
-        lp = (platform.get_caps("vpp", "scale"), have_gst_element(f"va{hw}postproc"), f"va{hw}postproc" + " ! video/x-raw,width={width},height={height}"),
+        hw = (platform.get_caps("vpp", "scale"), have_gst_element(f"va{hw}postproc"), f"va{hw}postproc" + " ! 'video/x-raw(ANY),width={width},height={height}'"),
+        lp = (platform.get_caps("vpp", "scale"), have_gst_element(f"va{hw}postproc"), f"va{hw}postproc" + " ! 'video/x-raw(ANY),width={width},height={height}'"),
       ),
     },
   )
