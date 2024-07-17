@@ -124,7 +124,7 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       opts += " ! tsdemux"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     if self.mode in ["hw", "sw"]:
-      opts += " ! video/x-raw,format={mformat}"
+      opts += " ! 'video/x-raw(ANY),format={mformat}'"
 
     # if input framerate is unknown, then set it explicitly (VIZ-20689)
     self.gstfps = gst_discover_fps(self.ossource)
