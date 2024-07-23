@@ -9,7 +9,7 @@ import os
 import slash
 
 from ....lib.gstreamer.encoderbase import BaseEncoderTest, Encoder as GstEncoder
-from ....lib.gstreamer.util import have_gst_element
+from ....lib.gstreamer.util import have_gst_element, get_elements
 from ....lib.gstreamer.msdk.util import using_compatible_driver, mapprofile, map_best_hw_format, mapformat
 from ....lib.gstreamer.msdk.decoder import Decoder
 from ....lib import platform
@@ -141,6 +141,22 @@ class EncoderTest(BaseEncoderTest):
   def before(self):
     super().before()
     os.environ["GST_MSDK_DRM_DEVICE"] = get_media().render_device
+
+    self.__rank_before = os.environ.get("GST_PLUGIN_FEATURE_RANK", None)
+    # WA: Fix the gst-discoverer-1.0.exe report Missing plugins problem on Windows OS
+    if platform.info()['os'] == 'wsl':
+      ranks = [] if self.__rank_before is None else self.__rank_before.split(',')
+      ranks += [f"{e}:MAX" for e in get_elements("msdk")]
+      os.environ["GST_PLUGIN_FEATURE_RANK"] = ','.join(ranks)
+
+  def after(self):
+    super().after()
+
+    if None == self.__rank_before:
+      if 'GST_PLUGIN_FEATURE_RANK' in os.environ:
+        del os.environ["GST_PLUGIN_FEATURE_RANK"]
+    else:
+       os.environ["GST_PLUGIN_FEATURE_RANK"] = self.__rank_before
 
   def map_profile(self):
     return mapprofile(self.codec, self.profile)
