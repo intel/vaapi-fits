@@ -69,7 +69,7 @@ class TranscoderTest(BaseTranscoderTest):
         lp = (platform.get_caps("vdenc", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc tune=low-power ! h265parse"),
       ),
       Codec.MPEG2 : dict(
-        sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
+        sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! avenc_mpeg2video ! mpegvideoparse"),
         hw = (platform.get_caps("encode", "mpeg2"), have_gst_element("msdkmpeg2enc"), "msdkmpeg2enc ! mpegvideoparse"),
       ),
       Codec.MJPEG : dict(
@@ -83,8 +83,8 @@ class TranscoderTest(BaseTranscoderTest):
     vpp = {
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
-        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format={format},width={width},height={height}"),
-        lp = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format={format},width={width},height={height}"),
+        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! 'video/x-raw(ANY),format={format},width={width},height={height}'"),
+        lp = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! 'video/x-raw(ANY),format={format},width={width},height={height}'"),
       ),
     },
   )

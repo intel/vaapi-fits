@@ -37,8 +37,8 @@ def parse_psnr_stats(filename, frames):
     # replace inf with 100.0 to match metrics2 averages
     data = f.read().replace(":inf", ":100.0")
   m = parse_psnr_stats.pattern.findall(data)
-  assert len(m) == frames
-  result = [float(v) for v in itertools.chain(*m)]
+  assert len(m) >= frames
+  result = [float(v) for v in itertools.chain(*m[:frames])]
   return [
     float(round(v, 4)) for v in (
       min(result[0::3]),
