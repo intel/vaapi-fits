@@ -69,14 +69,14 @@ class TranscoderTest(BaseTranscoderTest):
         hw = (platform.get_caps("vdenc", "jpeg"), have_gst_element("vaapijpegenc"), "vaapijpegenc ! jpegparse"),
       ),
       Codec.VP9 : dict(
-        lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element("vaapivp9enc"), "videorate ! 'video/x-raw(ANY)',framerate=30/1 ! vaapivp9enc tune=low-power ! vp9parse ! matroskamux"),
+        lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element("vaapivp9enc"), "vaapivp9enc tune=low-power ! vp9parse ! matroskamux"),
       ),
     },
     vpp = {
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
-        hw = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! video/x-raw,width={width},height={height}"),
-        lp = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! video/x-raw,width={width},height={height}"),
+        hw = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! 'video/x-raw(ANY),width={width},height={height}'"),
+        lp = (platform.get_caps("vpp", "scale"), have_gst_element("vaapipostproc"), "vaapipostproc ! 'video/x-raw(ANY),width={width},height={height}'"),
       ),
     },
   )

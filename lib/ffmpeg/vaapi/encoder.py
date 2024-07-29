@@ -65,6 +65,15 @@ class EncoderTest(BaseEncoderTest):
 
   def validate_caps(self):
     self.ffencoder = self.ffenc
+
+    if self.codec in [Codec.AV1]:
+      # ffmpeg-vaapi tilecols and tilerows can't be < 1.
+      if self.tilecols < 1 or self.tilerows < 1:
+        slash.skip_test(
+          f"tilecols and tilerows must be > 0"
+          f" : got {self.tilecols} and {self.tilerows}"
+        )
+
     super().validate_caps()
 
   def check_output(self):
