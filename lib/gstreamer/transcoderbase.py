@@ -9,7 +9,8 @@ import os
 
 from ...lib.codecs import Codec
 from ...lib.common import timefn, get_media, call, exe2os, filepath2os
-from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element
+from ...lib.formats import PixelFormat
+from ...lib.gstreamer.util import BaseFormatMapper, have_gst, have_gst_element, parse_psnr_stats
 from ...lib.gstreamer.util import gst_discover, gst_discover_fps
 from ...lib import metrics2
 
@@ -60,6 +61,11 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
     if self.mode == "dma" and get_media()._get_driver_name() == "d3d11":
       slash.skip_test(
         "d3d11 does not support dma caps")
+
+    # FIXME: subclasses always assume 8 bit profiles and caps.  Need to add support for other bitdepths.
+    self.format = PixelFormat(self.format)
+    if self.format.bitdepth != 8:
+      slash.skip_test(f"{self.format} ({self.format.bitdepth} bits) unsupported")
 
     self.mformat = self.map_format(self.format)
 
@@ -118,11 +124,13 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       opts += " ! tsdemux"
     opts += " ! " + self.get_decoder(self.codec, self.mode)
     if self.mode in ["hw", "sw"]:
-      opts += " ! video/x-raw,format={mformat}"
+      opts += " ! 'video/x-raw(ANY),format={mformat}'"
 
     # if input framerate is unknown, then set it explicitly (VIZ-20689)
-    if gst_discover_fps(self.ossource).startswith("0"):
-      opts += " ! videorate ! 'video/x-raw(ANY),framerate=30/1'"
+    self.gstfps = gst_discover_fps(self.ossource)
+    if self.gstfps.startswith("0"):
+      self.gstfps = "30/1"
+    opts += f" ! videorate ! 'video/x-raw(ANY),framerate={self.gstfps}'"
 
     return opts.format(**vars(self))
 
@@ -150,19 +158,8 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
         opts += " ! {}".format(encoder)
         opts += " ! filesink location={} transcoder.".format(osofile)
 
-    # dump decoded source to yuv for reference comparison
-    self.srcyuv = get_media().artifacts.reserve("yuv")
-    self.ossrcyuv = filepath2os(self.srcyuv)
     opts += " ! queue max-size-buffers=0 max-size-bytes=0 max-size-time=0"
-    if self.mode in ["va_hw"]:
-      opts += " ! vapostproc ! video/x-raw,format={mformat}"
-    elif self.mode in ["dma"]:
-      opts += " ! " + self.get_vpp_scale(self.width, self.height, "hw")
-    elif self.mode == "d3d11_hw":
-      opts += " ! d3d11download ! video/x-raw,format={mformat}"
-    opts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
-    opts += " frame-checksum=false plane-checksum=false dump-output=true"
-    opts += " dump-location={ossrcyuv}"
+    opts += f" ! fakevideosink qos=false num-buffers={self.frames} sync=0"
 
     return opts.format(**vars(self))
 
@@ -186,19 +183,8 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
         osencoded = filepath2os(encoded)
-        yuv = get_media().artifacts.reserve("yuv")
-        osyuv = filepath2os(yuv)
-        iopts = "filesrc location={} ! {}"
-        oopts = self.get_vpp_scale(self.width, self.height, "hw")
-        oopts += " ! checksumsink2 file-checksum=false qos=false eos-after={frames}"
-        oopts += " frame-checksum=false plane-checksum=false dump-output=true"
-        oopts += " dump-location={}"
-        self.call_gst(
-          iopts.format(osencoded, self.get_decoder(output["codec"], "hw")),
-          oopts.format(osyuv, frames = self.frames))
         self.check_resolution(output, osencoded)
-        self.check_metrics(yuv, refctx = [(n, channel)])
-        get_media().artifacts.purge(yuv)
+        self.check_metrics(output, osencoded, refctx = [(n, channel)])
 
   def check_resolution(self, output, encoded):
     props = [l.strip() for l in gst_discover(encoded).split('\n')]
@@ -208,10 +194,24 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
     assert "Width: {}".format(width) in props
     assert "Height: {}".format(height) in props
 
-  def check_metrics(self, yuv, refctx):
-    metrics2.check(
-      metric = dict(type = "psnr"),
-      filetrue = self.srcyuv, filetest = yuv,
-      width = self.width, height = self.height,
-      frames = self.frames, format = self.format,
-      refctx = self.refctx + refctx)
+  def check_metrics(self, output, encoded, refctx):
+    ocodec    = output["codec"]
+    odecoder  = self.get_decoder(ocodec, "hw")
+
+    vppscale = self.get_vpp_scale(self.width, self.height, "hw")
+    statsfile = get_media().artifacts.reserve("psnr")
+    osstatsfile = filepath2os(statsfile)
+
+    iopts = (
+      f"filesrc location={encoded} ! {odecoder} ! {vppscale}"
+      f" ! videorate ! 'video/x-raw(ANY),framerate={self.gstfps}' ! cmp."
+      f" {self.gen_input_opts()} ! {vppscale} ! cmp."
+      f" avvideocompare method=psnr stats-file={osstatsfile} name=cmp"
+    )
+    oopts = f"fakevideosink qos=false num-buffers={self.frames} sync=0"
+
+    self.call_gst(iopts, oopts)
+
+    metric = metrics2.factory.create(metric = dict(type = "psnr"), refctx = self.refctx + refctx)
+    metric.actual = parse_psnr_stats(statsfile, self.frames)
+    metric.check()

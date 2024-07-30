@@ -54,7 +54,10 @@ class TranscoderTest(BaseTranscoderTest):
         ),
       ),
       Codec.VP9 : dict(
-        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"msdkvp9dec"), f"matroskademux ! vp9parse !  msdkvp9dec"),
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"msdkvp9dec"), f"matroskademux ! vp9parse ! msdkvp9dec"),
+      ),
+      Codec.AV1 : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element(f"msdkav1dec"), f"matroskademux ! av1parse ! msdkav1dec"),
       ),
     },
     encode = {
@@ -69,7 +72,7 @@ class TranscoderTest(BaseTranscoderTest):
         lp = (platform.get_caps("vdenc", "hevc_8"), have_gst_element("msdkh265enc"), "msdkh265enc tune=low-power ! h265parse"),
       ),
       Codec.MPEG2 : dict(
-        sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
+        sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "videoconvert chroma-mode=none dither=0 ! video/x-raw,format=I420 ! avenc_mpeg2video ! mpegvideoparse"),
         hw = (platform.get_caps("encode", "mpeg2"), have_gst_element("msdkmpeg2enc"), "msdkmpeg2enc ! mpegvideoparse"),
       ),
       Codec.MJPEG : dict(
@@ -79,12 +82,15 @@ class TranscoderTest(BaseTranscoderTest):
       Codec.VP9 : dict(
         lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element("msdkvp9enc"), "msdkvp9enc ! vp9parse ! matroskamux"),
       ),
+      Codec.AV1 : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element("msdkav1enc"), "msdkav1enc ! av1parse ! matroskamux"),
+      ),
     },
     vpp = {
       "scale" : dict(
         sw = (True, have_gst_element("videoscale"), "videoscale ! video/x-raw,width={width},height={height}"),
-        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format={format},width={width},height={height}"),
-        lp = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! video/x-raw,format={format},width={width},height={height}"),
+        hw = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! 'video/x-raw(ANY),format={format},width={width},height={height}'"),
+        lp = (platform.get_caps("vpp", "scale"), have_gst_element("msdkvpp"), "msdkvpp hardware=true scaling-mode=1 ! 'video/x-raw(ANY),format={format},width={width},height={height}'"),
       ),
     },
   )
