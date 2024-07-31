@@ -117,12 +117,21 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
 
     self.post_validate()
 
+  def get_demuxer(self, fname):
+    ext = os.path.splitext(fname)[1]
+    return {
+      ".ivf"  : " ! ivfparse",
+      ".webm" : " ! matroskademux",
+      ".ts"   : " ! tsdemux"
+    }.get(ext, "")
+
   def gen_input_opts(self):
     self.ossource = filepath2os(self.source)
+
     opts =  "filesrc location={ossource}"
-    if (os.path.splitext(self.source)[1]) == ".ts":
-      opts += " ! tsdemux"
+    opts += self.get_demuxer(self.source)
     opts += " ! " + self.get_decoder(self.codec, self.mode)
+
     if self.mode in ["hw", "sw"]:
       opts += " ! 'video/x-raw(ANY),format={mformat}'"
 
@@ -182,12 +191,12 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
       get_media()._set_test_details(**{"output.{}".format(n) : output})
       for channel in range(output.get("channels", 1)):
         encoded = self.goutputs[n][channel]
-        osencoded = filepath2os(encoded)
-        self.check_resolution(output, osencoded)
-        self.check_metrics(output, osencoded, refctx = [(n, channel)])
+        self.check_resolution(output, encoded)
+        self.check_metrics(output, encoded, refctx = [(n, channel)])
 
   def check_resolution(self, output, encoded):
-    props = [l.strip() for l in gst_discover(encoded).split('\n')]
+    osencoded = filepath2os(encoded)
+    props = [l.strip() for l in gst_discover(osencoded).split('\n')]
     width = output.get("width", self.width)
     height = output.get("height", self.height)
 
@@ -197,13 +206,14 @@ class BaseTranscoderTest(slash.Test, BaseFormatMapper):
   def check_metrics(self, output, encoded, refctx):
     ocodec    = output["codec"]
     odecoder  = self.get_decoder(ocodec, "hw")
+    osencoded = filepath2os(encoded)
 
     vppscale = self.get_vpp_scale(self.width, self.height, "hw")
     statsfile = get_media().artifacts.reserve("psnr")
     osstatsfile = filepath2os(statsfile)
 
     iopts = (
-      f"filesrc location={encoded} ! {odecoder} ! {vppscale}"
+      f"filesrc location={osencoded} {self.get_demuxer(encoded)} ! {odecoder} ! {vppscale}"
       f" ! videorate ! 'video/x-raw(ANY),framerate={self.gstfps}' ! cmp."
       f" {self.gen_input_opts()} ! {vppscale} ! cmp."
       f" avvideocompare method=psnr stats-file={osstatsfile} name=cmp"
