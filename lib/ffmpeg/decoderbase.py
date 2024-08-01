@@ -73,6 +73,9 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       get_media().artifacts.purge(self._decoded, self._scope)
     self._decoded = get_media().artifacts.reserve("yuv", self._scope)
 
+    # Conditionally apply -strict -2 if ffdecoder is experimental
+    strict_option = "-strict -2" if "-c:v vvc" == self.ffdecoder else ""
+
     mtype = self.props.get("metric", dict()).get("type", None)
     if mtype in ["ssim", "psnr"]:
       fps = ffmpeg_probe_fps(self.ossource)
@@ -82,7 +85,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       self._statsfile = get_media().artifacts.reserve(mtype)
 
       return call(
-        f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
+        f"{exe2os('ffmpeg')} -v verbose {strict_option} {self.hwinit}"
         f" {self.ffdecoder} -r:v {fps} -i {self.ossource}"
         f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
         f" -r:v {fps} {self.refseek} -i {self.osreference}"
@@ -91,7 +94,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       )
 
     return call(
-      f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
+      f"{exe2os('ffmpeg')} -v verbose {strict_option} {self.hwinit}"
       f" {self.ffdecoder} -i {self.ossource} -lavfi '{self.scale_range}'"
       f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
       f" -noautoscale -vframes {self.frames} -y {self.ffoutput}"
