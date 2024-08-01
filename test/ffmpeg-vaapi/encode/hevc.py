@@ -176,6 +176,35 @@ class vbr_lp(HEVC8EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+class qvbr(HEVC8EncoderTest):
+  def init(self, tspec, case, gop, slices, bitrate, qp, fps, quality, refs, profile):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      bitrate = bitrate,
+      case    = case,
+      fps     = fps,
+      gop     = gop,
+      maxrate = bitrate * 2, # target percentage 50%
+      minrate = bitrate,
+      qp      = qp,
+      profile = profile,
+      quality = quality,
+      rcmode  = "qvbr",
+      refs    = refs,
+      slices  = slices,
+    )
+
+  @slash.parametrize(*gen_hevc_qvbr_parameters(spec, ['main']))
+  def test(self, case, gop, slices, bitrate, qp, fps, quality, refs, profile):
+    self.init(spec, case, gop, slices, bitrate, qp, fps, quality, refs, profile)
+    self.encode()
+
+  @slash.parametrize(*gen_hevc_qvbr_parameters(spec_r2r, ['main']))
+  def test_r2r(self, case, gop, slices, bitrate, qp, fps, quality, refs, profile):
+    self.init(spec_r2r, case, gop, slices, bitrate, qp, fps, quality, refs, profile)
+    vars(self).setdefault("r2r", 5)
+    self.encode()
+
 class qvbr_lp(HEVC8EncoderLPTest):
   def init(self, tspec, case, gop, slices, bitrate, qp, fps, quality, refs, profile):
     vars(self).update(tspec[case].copy())
