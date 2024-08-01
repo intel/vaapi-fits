@@ -209,10 +209,6 @@ class MediaPlugin(slash.plugins.PluginInterface):
     from lib.platform import info
     return info()["gpu"]["gen"]
 
-  def _get_platform_stringapi_enable(self):
-    from lib.platform import info
-    return info()["stringapi"]["enable"]
-
   def _get_call_timeout(self):
     if self.test_call_timeout > 0:
        return self.test_call_timeout
