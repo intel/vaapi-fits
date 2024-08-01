@@ -27,9 +27,6 @@ def make_requirements():
         sw = (dict(maxres = (16384, 16384)), have_gst_element("libde265dec"), "h265parse ! libde265dec ! videoconvert"),
         hw = (platform.get_caps("decode", "hevc_8"), have_gst_element(f"va{hw}h265dec"), f"h265parse ! va{hw}h265dec"),
       ),
-      Codec.AV1 : dict(
-        hw = (platform.get_caps("decode", "av1_8"), have_gst_element(f"va{hw}av1dec"), f"matroskademux ! av1parse ! va{hw}av1dec"),
-      ),
       Codec.MPEG2 : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("mpeg2dec"), "mpegvideoparse ! mpeg2dec ! videoconvert"),
         hw = (platform.get_caps("decode", "mpeg2"), have_gst_element(f"va{hw}mpeg2dec"), f"mpegvideoparse ! va{hw}mpeg2dec"),
@@ -39,7 +36,10 @@ def make_requirements():
         hw = (platform.get_caps("decode", "jpeg"), have_gst_element(f"va{hw}jpegdec"), f"jpegparse ! va{hw}jpegdec"),
       ),
       Codec.VP9 : dict(
-        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"va{hw}vp9dec"), f"matroskademux ! vp9parse ! va{hw}vp9dec"),
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"va{hw}vp9dec"), f"vp9parse ! va{hw}vp9dec"),
+      ),
+      Codec.AV1 : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element(f"va{hw}av1dec"), f"av1parse ! va{hw}av1dec"),
       ),
     },
     encode = {
@@ -53,9 +53,6 @@ def make_requirements():
         hw = (platform.get_caps("encode", "hevc_8"), have_gst_element(f"va{hw}h265enc"), f"va{hw}h265enc ! video/x-h265,profile=main ! h265parse"),
         lp = (platform.get_caps("vdenc", "hevc_8"), have_gst_element(f"va{hw}h265lpenc"), f"va{hw}h265lpenc ! video/x-h265,profile=main ! h265parse"),
       ),
-      Codec.AV1 : dict(
-        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element(f"va{hw}av1lpenc"), f"va{hw}av1lpenc ! video/x-av1,profile=main ! av1parse ! matroskamux"),
-      ),
       Codec.MPEG2 : dict(
         sw = (dict(maxres = (2048, 2048)), have_gst_element("avenc_mpeg2video"), "avenc_mpeg2video ! mpegvideoparse"),
         hw = (platform.get_caps("encode", "mpeg2"), have_gst_element(f"va{hw}mpeg2enc"), f"va{hw}mpeg2enc ! mpegvideoparse"),
@@ -66,6 +63,9 @@ def make_requirements():
       ),
       Codec.VP9 : dict(
         lp = (platform.get_caps("vdenc", "vp9_8"), have_gst_element(f"va{hw}vp9lpenc"), f"va{hw}vp9lpenc ! vp9parse ! matroskamux"),
+      ),
+      Codec.AV1 : dict(
+        lp = (platform.get_caps("vdenc", "av1_8"), have_gst_element(f"va{hw}av1lpenc"), f"va{hw}av1lpenc ! video/x-av1,profile=main ! av1parse ! matroskamux"),
       ),
     },
     vpp = {
