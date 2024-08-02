@@ -36,6 +36,8 @@ def decode_test_class(codec, bitdepth, **kwargs):
   gstcodec = {
     Codec.AVC   : "h264",
     Codec.HEVC  : "h265",
+    Codec.VVC_8   : "h266",
+    Codec.VVC_10   : "h266",
   }.get(codec, codec)
 
   gstparser = {
@@ -90,3 +92,7 @@ JPEGDecoderTest     = decode_test_class(codec = Codec.JPEG, bitdepth = 8)
 
 ## MPEG2 ##
 MPEG2DecoderTest    = decode_test_class(codec = Codec.MPEG2, bitdepth = 8)
+
+## VVC ##
+VVC_8DecoderTest    = decode_test_class(codec = Codec.VVC_8, bitdepth = 8)
+VVC_10DecoderTest   = decode_test_class(codec = Codec.VVC_10, bitdepth = 10)
