@@ -19,6 +19,6 @@ class Codec(str, enum.Enum):
   MJPEG = "mjpeg"
   MPEG2 = "mpeg2"
   VC1   = "vc1"
-
+  VVC   = "vvc"
   def __str__(self):
     return self.value
