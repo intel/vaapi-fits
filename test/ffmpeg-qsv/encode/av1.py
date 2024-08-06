@@ -5,7 +5,6 @@
 ###
 
 from ....lib import *
-from ....lib.parameters_strapi import *
 from ....lib.ffmpeg.qsv.util import *
 from ....lib.ffmpeg.qsv.encoder import AV1EncoderLPTest, AV1EncoderTest
 from ....lib.ffmpeg.qsv.encoder import StringAPIEncoder
@@ -40,7 +39,7 @@ class cqp(AV1EncoderTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_cqp_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_cqp_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
@@ -102,7 +101,7 @@ class cbr(AV1EncoderTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_cbr_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_cbr_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
@@ -139,7 +138,7 @@ class vbr(AV1EncoderTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_vbr_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_vbr_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
@@ -172,7 +171,7 @@ class cqp_lp(AV1EncoderLPTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_cqp_lp_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_cqp_lp_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
@@ -234,7 +233,7 @@ class cbr_lp(AV1EncoderLPTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_cbr_lp_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_cbr_lp_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
@@ -271,7 +270,7 @@ class vbr_lp(AV1EncoderLPTest):
     self.encode()
 
   @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
-  @slash.parametrize(*gen_av1_vbr_lp_strapi_parameters(spec))
+  @slash.parametrize(*gen_av1_vbr_lp_strapi_parameters(spec, strapi=True))
   def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     self.EncoderClass = StringAPIEncoder
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
