@@ -89,12 +89,9 @@ def have_ffmpeg_encoder(encoder):
 def have_ffmpeg_encoder_options(name, *args):
   failmsg = "{0}.{1}".format(name, '.'.join(args))
   result = try_call(f"{exe2os('ffmpeg')} -hide_banner -encoders | awk '{{print $2}}' | grep -w {name}")
-  print("Hello Focus: name, failmsg, result=", name, failmsg, result)
-  print("Hello Focus: args=", args)
   if result is True:
     for key in args:
       result = try_call(f"{exe2os('ffmpeg')} -hide_banner -h encoder={name} | grep -e {key}")
-      print("Hello Focus: key, result=", key, result)
       if result is False:
         break
   return result, failmsg
