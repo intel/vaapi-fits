@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
 from ....lib.ffmpeg.qsv.encoder import AVCEncoderTest, AVCEncoderLPTest
+from ....lib.ffmpeg.qsv.encoder import StringAPIEncoder
 
 spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
@@ -36,6 +37,13 @@ class cqp(AVCEncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main', 'baseline'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, qp, quality, profile):
+     self.EncoderClass = StringAPIEncoder
+     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
+     self.encode()
+
 class cqp_lp(AVCEncoderLPTest):
   def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
     vars(self).update(tspec[case].copy())
@@ -60,6 +68,13 @@ class cqp_lp(AVCEncoderLPTest):
     self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_cqp_lp_parameters(spec, ['high', 'main'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, qp, quality, profile):
+     self.EncoderClass = StringAPIEncoder
+     self.init(spec, case, gop, slices, bframes, qp, quality, profile)
+     self.encode()
 
 class cbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, profile):
@@ -86,6 +101,13 @@ class cbr(AVCEncoderTest):
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_cbr_parameters(spec, ['high', 'main', 'baseline'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, bitrate, fps, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
     self.encode()
 
 class cbr_lp(AVCEncoderLPTest):
@@ -115,6 +137,13 @@ class cbr_lp(AVCEncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_cbr_lp_parameters(spec, ['high', 'main'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, bitrate, fps, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, profile)
+    self.encode()
+
 class vbr(AVCEncoderTest):
   def init(self, tspec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     vars(self).update(tspec[case].copy())
@@ -142,6 +171,13 @@ class vbr(AVCEncoderTest):
   def test_r2r(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
     self.init(spec_r2r, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_vbr_parameters(spec, ['high', 'main', 'baseline'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
 class vbr_lp(AVCEncoderLPTest):
@@ -189,6 +225,13 @@ class vbr_lp(AVCEncoderLPTest):
       strict  = -1, # required
       bframes = 0,
     )
+    self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("h264_qsv", "qsv_params"))
+  @slash.parametrize(*gen_avc_vbr_lp_parameters(spec, ['high', 'main'], strapi=True))
+  def test_strapi(self, case, gop, slices, bframes, bitrate, fps, quality, refs, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, slices, bframes, bitrate, fps, quality, refs, profile)
     self.encode()
 
 # TODO: This can be moved into the vbr test class in a test_la method
