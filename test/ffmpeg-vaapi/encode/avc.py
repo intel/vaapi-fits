@@ -12,7 +12,7 @@ spec      = load_test_spec("avc", "encode")
 spec_r2r  = load_test_spec("avc", "encode", "r2r")
 
 class cqp(AVCEncoderTest):
-  def init(self, tspec, case, gop, slices, bframes, qp, quality, profile):
+  def init(self, tspec, case, gop, slices, bframes, qp, quality, profile, bdepth):
     vars(self).update(tspec[case].copy())
     vars(self).update(
       bframes   = bframes,
@@ -23,16 +23,17 @@ class cqp(AVCEncoderTest):
       quality   = quality,
       rcmode    = "cqp",
       slices    = slices,
+      bdepth    = bdepth,
     )
 
   @slash.parametrize(*gen_avc_cqp_parameters(spec, ['high', 'main']))
-  def test(self, case, gop, slices, bframes, qp, quality, profile):
-    self.init(spec, case, gop, slices, bframes, qp, quality, profile)
+  def test(self, case, gop, slices, bframes, qp, quality, profile, bdepth):
+    self.init(spec, case, gop, slices, bframes, qp, quality, profile, bdepth)
     self.encode()
 
   @slash.parametrize(*gen_avc_cqp_parameters(spec_r2r, ['high', 'main']))
-  def test_r2r(self, case, gop, slices, bframes, qp, quality, profile):
-    self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile)
+  def test_r2r(self, case, gop, slices, bframes, qp, quality, profile, bdepth):
+    self.init(spec_r2r, case, gop, slices, bframes, qp, quality, profile, bdepth)
     vars(self).setdefault("r2r", 5)
     self.encode()
 

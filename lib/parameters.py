@@ -26,7 +26,7 @@ def gen_avc_cqp_variants(spec, profiles):
   for case, params in spec.items():
     variants = copy.deepcopy(params.get("variants", dict()).get("cqp", None))
     if variants is None:
-      keys = ["gop", "slices", "bframes", "qp", "quality", "profile"]
+      keys = ["gop", "slices", "bframes", "qp", "quality", "profile", "bdepth"]
       product  = list(itertools.product([1], [1], [0], [14, 28], [1, 4, 7], profiles))  # I, single-slice
       product += list(itertools.product([30], [1], [0], [14, 28], [1, 4, 7], profiles)) # IP, single-slice
       product += list(itertools.product([30], [4], [2], [14, 28], [1, 4, 7], profiles)) # IPB, multi-slice
@@ -48,15 +48,19 @@ def gen_avc_cqp_variants(spec, profiles):
           bframes = 2 if ipbmode == 2 else 0)
 
       for profile in cprofiles:
+        if "bdepth" not in variant:
+          print(f"Warning: 'bdepth' key is missing in variant: {variant}")
+
         yield [
           case, variant["gop"], variant["slices"], variant["bframes"],
-          variant["qp"], variant["quality"], profile
+          variant["qp"], variant["quality"], profile, variant.get("bdepth", 0)
         ]
 
 def gen_avc_cqp_parameters(spec, profiles):
-  keys = ("case", "gop", "slices", "bframes", "qp", "quality", "profile")
+  keys = ("case", "gop", "slices", "bframes", "qp", "quality", "profile", "bdepth")
   params = gen_avc_cqp_variants(spec, profiles)
   return keys, params
+
 
 def gen_avc_cbr_variants(spec, profiles):
   for case, params in spec.items():
