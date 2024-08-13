@@ -46,7 +46,10 @@ class TranscoderTest(BaseTranscoderTest):
         ),
       ),
       Codec.VP9 : dict(
-        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"vaapivp9dec"), f"matroskademux ! vp9parse !  vaapivp9dec"),
+        hw = (platform.get_caps("decode", "vp9_8"), have_gst_element(f"vaapivp9dec"), f"vp9parse !  vaapivp9dec"),
+      ),
+      Codec.AV1 : dict(
+        hw = (platform.get_caps("decode", "av1_8"), have_gst_element("vaapiav1dec"), "av1parse ! vaapiav1dec"),
       ),
     },
     encode = {

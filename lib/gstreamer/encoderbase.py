@@ -204,7 +204,7 @@ class BaseEncoderTest(slash.Test):
       # acceptable bitrate within 10% of bitrate
       assert(bitrate_gap <= 0.10)
 
-    elif self.rcmode in ["vbr", "la_vbr"] and vars(self).get("maxframesize", None) is None:
+    elif "vbr" in self.rcmode and vars(self).get("maxframesize", None) is None:
       # acceptable bitrate within 25% of minrate and 10% of maxrate
       assert(self.minrate * 0.75 <= bitrate_actual <= self.maxrate * 1.10)
 
