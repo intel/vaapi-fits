@@ -22,15 +22,19 @@ def format_value(value, **params):
 
   return value.format(**augmented)
 
-def gen_avc_cqp_variants(spec, profiles):
+def gen_avc_cqp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    variants = copy.deepcopy(params.get("variants", dict()).get("cqp", None))
-    if variants is None:
-      keys = ["gop", "slices", "bframes", "qp", "quality", "profile"]
-      product  = list(itertools.product([1], [1], [0], [14, 28], [1, 4, 7], profiles))  # I, single-slice
-      product += list(itertools.product([30], [1], [0], [14, 28], [1, 4, 7], profiles)) # IP, single-slice
-      product += list(itertools.product([30], [4], [2], [14, 28], [1, 4, 7], profiles)) # IPB, multi-slice
-      variants = [dict(zip(keys, vals)) for vals in product]
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp", None))
+    
+      if variants is None:
+        keys = ["gop", "slices", "bframes", "qp", "quality", "profile"]
+        product  = list(itertools.product([1], [1], [0], [14, 28], [1, 4, 7], profiles))  # I, single-slice
+        product += list(itertools.product([30], [1], [0], [14, 28], [1, 4, 7], profiles)) # IP, single-slice
+        product += list(itertools.product([30], [4], [2], [14, 28], [1, 4, 7], profiles)) # IPB, multi-slice
+        variants = [dict(zip(keys, vals)) for vals in product]
 
     for variant in variants:
       uprofile = variant.get("profile", None)
@@ -53,14 +57,19 @@ def gen_avc_cqp_variants(spec, profiles):
           variant["qp"], variant["quality"], profile
         ]
 
-def gen_avc_cqp_parameters(spec, profiles):
+def gen_avc_cqp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "qp", "quality", "profile")
-  params = gen_avc_cqp_variants(spec, profiles)
+  params = gen_avc_cqp_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_avc_cbr_variants(spec, profiles):
+def gen_avc_cbr_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr", []))
+   
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
 
@@ -81,12 +90,12 @@ def gen_avc_cbr_variants(spec, profiles):
           variant["bitrate"], variant.get("fps", 30), profile
         ]
 
-def gen_avc_cbr_parameters(spec, profiles):
+def gen_avc_cbr_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "profile")
-  params = gen_avc_cbr_variants(spec, profiles)
+  params = gen_avc_cbr_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_hevc_cbr_level_variants(spec, profiles):
+def gen_hevc_cbr_level_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
     for variant in copy.deepcopy(params.get("variants", dict()).get("cbr_level", [])):
       uprofile = variant.get("profile", None)
@@ -102,9 +111,14 @@ def gen_hevc_cbr_level_parameters( spec, profiles):
   params = gen_hevc_cbr_level_variants(spec, profiles)
   return keys, params
 
-def gen_avc_vbr_variants(spec, profiles):
+def gen_avc_vbr_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -114,14 +128,19 @@ def gen_avc_vbr_variants(spec, profiles):
           variant.get("refs", 1), profile
         ]
 
-def gen_avc_vbr_parameters(spec, profiles):
+def gen_avc_vbr_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "quality", "refs", "profile")
-  params = gen_avc_vbr_variants(spec, profiles)
+  params = gen_avc_vbr_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_avc_cqp_lp_variants(spec, profiles):
+def gen_avc_cqp_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("cqp_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -130,14 +149,19 @@ def gen_avc_cqp_lp_variants(spec, profiles):
           variant["quality"], profile
         ]
 
-def gen_avc_cqp_lp_parameters(spec, profiles):
+def gen_avc_cqp_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "qp", "quality", "profile")
-  params = gen_avc_cqp_lp_variants(spec, profiles)
+  params = gen_avc_cqp_lp_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_avc_cbr_lp_variants(spec, profiles):
+def gen_avc_cbr_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -146,14 +170,19 @@ def gen_avc_cbr_lp_variants(spec, profiles):
           variant["bitrate"], variant.get("fps", 30), profile
         ]
 
-def gen_avc_cbr_lp_parameters(spec, profiles):
+def gen_avc_cbr_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "profile")
-  params = gen_avc_cbr_lp_variants(spec, profiles)
+  params = gen_avc_cbr_lp_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_avc_vbr_lp_variants(spec, profiles):
+def gen_avc_vbr_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -163,9 +192,9 @@ def gen_avc_vbr_lp_variants(spec, profiles):
           variant.get("refs", 1), profile
         ]
 
-def gen_avc_vbr_lp_parameters(spec, profiles):
+def gen_avc_vbr_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bframes", "bitrate", "fps", "quality", "refs", "profile")
-  params = gen_avc_vbr_lp_variants(spec, profiles)
+  params = gen_avc_vbr_lp_variants(spec, profiles, strapi)
   return keys, params
 
 def gen_avc_tcbrc_variants(spec, profiles):
@@ -390,9 +419,14 @@ def gen_avc_rqp_parameters(spec, profiles):
   params = gen_avc_rqp_variants(spec, profiles)
   return keys, params
 
-def gen_hevc_cqp_lp_variants(spec, profiles):
+def gen_hevc_cqp_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("cqp_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cqp_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -401,14 +435,19 @@ def gen_hevc_cqp_lp_variants(spec, profiles):
           variant["quality"], profile
         ]
 
-def gen_hevc_cqp_lp_parameters(spec, profiles):
+def gen_hevc_cqp_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "qp", "quality", "profile")
-  params = gen_hevc_cqp_lp_variants(spec, profiles)
+  params = gen_hevc_cqp_lp_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_hevc_cbr_lp_variants(spec, profiles):
+def gen_hevc_cbr_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("cbr_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("cbr_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -417,14 +456,19 @@ def gen_hevc_cbr_lp_variants(spec, profiles):
           variant["bitrate"], variant.get("fps", 30), profile
         ]
 
-def gen_hevc_cbr_lp_parameters(spec, profiles):
+def gen_hevc_cbr_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bitrate", "fps", "profile")
-  params = gen_hevc_cbr_lp_variants(spec, profiles)
+  params = gen_hevc_cbr_lp_variants(spec, profiles, strapi)
   return keys, params
 
-def gen_hevc_vbr_lp_variants(spec, profiles):
+def gen_hevc_vbr_lp_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
-    for variant in copy.deepcopy(params.get("variants", dict()).get("vbr_lp", [])):
+    if strapi:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr_lp_strapi", []))
+    else:
+      variants = copy.deepcopy(params.get("variants", dict()).get("vbr_lp", []))
+
+    for variant in variants:
       uprofile = variant.get("profile", None)
       cprofiles = [uprofile] if uprofile else profiles
       for profile in cprofiles:
@@ -434,9 +478,9 @@ def gen_hevc_vbr_lp_variants(spec, profiles):
           variant.get("refs", 1), profile
         ]
 
-def gen_hevc_vbr_lp_parameters(spec, profiles):
+def gen_hevc_vbr_lp_parameters(spec, profiles, strapi=False):
   keys = ("case", "gop", "slices", "bitrate", "fps", "quality", "refs", "profile")
-  params = gen_hevc_vbr_lp_variants(spec, profiles)
+  params = gen_hevc_vbr_lp_variants(spec, profiles, strapi)
   return keys, params
 
 def gen_hevc_qvbr_variants(spec, profiles):
@@ -802,17 +846,21 @@ def gen_vp9_vbr_lp_parameters(spec):
   params = gen_vp9_vbr_lp_variants(spec)
   return keys, params
 
-def gen_av1_cqp_variants(spec):
+def gen_av1_cqp_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("cqp", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("cqp_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("cqp", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
 
-def gen_av1_cqp_parameters(spec):
+def gen_av1_cqp_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
-  params = gen_av1_cqp_variants(spec)
+  params = gen_av1_cqp_variants(spec, strapi)
   return keys, params
 
 def gen_av1_icq_variants(spec):
@@ -841,73 +889,93 @@ def gen_av1_icq_lp_parameters(spec):
   params = gen_av1_icq_lp_variants(spec)
   return keys, params
 
-def gen_av1_cbr_variants(spec):
+def gen_av1_cbr_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("cbr", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("cbr_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("cbr", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
         variant.get("profile", "profile0")]
 
-def gen_av1_cbr_parameters(spec):
+def gen_av1_cbr_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
-  params = gen_av1_cbr_variants(spec)
+  params = gen_av1_cbr_variants(spec, strapi)
   return keys, params
 
-def gen_av1_vbr_variants(spec):
+def gen_av1_vbr_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("vbr", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("vbr_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("vbr", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
         variant.get("profile", "profile0")]
 
-def gen_av1_vbr_parameters(spec):
+def gen_av1_vbr_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
-  params = gen_av1_vbr_variants(spec)
+  params = gen_av1_vbr_variants(spec, strapi)
   return keys, params
 
-def gen_av1_cqp_lp_variants(spec):
+def gen_av1_cqp_lp_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("cqp_lp", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("cqp_lp_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("cqp_lp", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["qp"], variant["quality"],
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("profile", "profile0")]
 
-def gen_av1_cqp_lp_parameters(spec):
+def gen_av1_cqp_lp_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "qp", "quality", "tilecols", "tilerows", "profile")
-  params = gen_av1_cqp_lp_variants(spec)
+  params = gen_av1_cqp_lp_variants(spec, strapi)
   return keys, params
 
-def gen_av1_cbr_lp_variants(spec):
+def gen_av1_cbr_lp_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("cbr_lp", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("cbr_lp_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("cbr_lp", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
         variant.get("profile", "profile0")]
 
-def gen_av1_cbr_lp_parameters(spec):
+def gen_av1_cbr_lp_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
-  params = gen_av1_cbr_lp_variants(spec)
+  params = gen_av1_cbr_lp_variants(spec, strapi)
   return keys, params
 
-def gen_av1_vbr_lp_variants(spec):
+def gen_av1_vbr_lp_variants(spec, strapi=False):
   for case, params in spec.items():
-    variants = params.get("variants", dict()).get("vbr_lp", [])
+    if strapi:
+      variants = params.get("variants", dict()).get("vbr_lp_strapi", [])
+    else:
+      variants = params.get("variants", dict()).get("vbr_lp", [])
+
     for variant in variants:
       yield [
         case, variant["gop"], variant["bframes"], variant["bitrate"], variant.get("quality", 4),
         variant.get("tilecols", 0), variant.get("tilerows", 0), variant.get("fps", 30),
         variant.get("profile", "profile0")]
 
-def gen_av1_vbr_lp_parameters(spec):
+def gen_av1_vbr_lp_parameters(spec, strapi=False):
   keys = ("case", "gop", "bframes", "bitrate", "quality", "tilecols", "tilerows", "fps", "profile")
-  params = gen_av1_vbr_lp_variants(spec)
+  params = gen_av1_vbr_lp_variants(spec, strapi)
   return keys, params
 
 def gen_vpp_sharpen_variants(spec):
