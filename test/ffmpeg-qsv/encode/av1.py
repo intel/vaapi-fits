@@ -7,6 +7,7 @@
 from ....lib import *
 from ....lib.ffmpeg.qsv.util import *
 from ....lib.ffmpeg.qsv.encoder import AV1EncoderLPTest, AV1EncoderTest
+from ....lib.ffmpeg.qsv.encoder import StringAPIEncoder
 
 spec = load_test_spec("av1", "encode", "8bit")
 spec_r2r  = load_test_spec("av1", "encode", "8bit", "r2r")
@@ -35,6 +36,13 @@ class cqp(AV1EncoderTest):
   def test_r2r(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.init(spec_r2r, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_cqp_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
     self.encode()
 
 class icq(AV1EncoderTest):
@@ -92,6 +100,13 @@ class cbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_cbr_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
+    self.encode()
+
 class vbr(AV1EncoderTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
@@ -122,6 +137,13 @@ class vbr(AV1EncoderTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_vbr_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
+    self.encode()
+
 class cqp_lp(AV1EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
     vars(self).update(tspec[case].copy())
@@ -146,6 +168,13 @@ class cqp_lp(AV1EncoderLPTest):
   def test_r2r(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
     self.init(spec_r2r, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
     vars(self).setdefault("r2r", 5)
+    self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_cqp_lp_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, qp, quality, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, qp, quality, profile)
     self.encode()
 
 class icq_lp(AV1EncoderLPTest):
@@ -203,6 +232,13 @@ class cbr_lp(AV1EncoderLPTest):
     vars(self).setdefault("r2r", 5)
     self.encode()
 
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_cbr_lp_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, quality, fps, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
+    self.encode()
+
 class vbr_lp(AV1EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
     vars(self).update(tspec[case].copy())
@@ -232,3 +268,11 @@ class vbr_lp(AV1EncoderLPTest):
     self.init(spec_r2r, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+  @slash.requires(*have_ffmpeg_encoder_options("av1_qsv", "qsv_params"))
+  @slash.parametrize(*gen_av1_vbr_lp_parameters(spec, strapi=True))
+  def test_strapi(self, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile):
+    self.EncoderClass = StringAPIEncoder
+    self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
+    self.encode()
+
