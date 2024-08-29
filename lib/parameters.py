@@ -851,6 +851,31 @@ def gen_vp9_vbr_parameters(spec):
   params = gen_vp9_vbr_variants(spec)
   return keys, params
 
+def gen_vp9_seek_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("seek", [])
+    for variant in variants:
+        rcmode = variant["rcmode"]
+        bitrate = variant["bitrate"]
+
+        # Update maxrate according to rcmode
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+        else:
+          variant.update(maxrate = None)
+
+        yield [
+            case, rcmode, bitrate, variant.get("maxrate", None),
+            variant.get("fps", 25), variant.get("seek", 1)
+            ]
+
+def gen_vp9_seek_parameters(spec):
+  keys = ("case", "rcmode", "bitrate", "maxrate", "fps", "seek")
+  params = gen_vp9_seek_variants(spec)
+  return keys, params
+
 def gen_vp9_cqp_lp_variants(spec):
   for case, params in spec.items():
     variants = params.get("variants", dict()).get("cqp_lp", [])
@@ -894,6 +919,31 @@ def gen_vp9_vbr_lp_variants(spec):
 def gen_vp9_vbr_lp_parameters(spec):
   keys = ("case", "gop", "bitrate", "fps", "slices", "quality", "refmode", "looplvl", "loopshp")
   params = gen_vp9_vbr_lp_variants(spec)
+  return keys, params
+
+def gen_vp9_seek_lp_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("seek_lp", [])
+    for variant in variants:
+        rcmode = variant["rcmode"]
+        bitrate = variant["bitrate"]
+
+        # Update maxrate according to rcmode
+        if "cbr" == rcmode:
+          variant.update(maxrate = bitrate)
+        elif "vbr" == rcmode:
+          variant.update(maxrate = bitrate * 2)
+        else:
+          variant.update(maxrate = None)
+
+        yield [
+            case, rcmode, bitrate, variant.get("maxrate", None),
+            variant.get("fps", 25), variant.get("seek", 1)
+            ]
+
+def gen_vp9_seek_lp_parameters(spec):
+  keys = ("case", "rcmode", "bitrate", "maxrate", "fps", "seek")
+  params = gen_vp9_seek_lp_variants(spec)
   return keys, params
 
 def gen_av1_cqp_variants(spec, strapi=False):

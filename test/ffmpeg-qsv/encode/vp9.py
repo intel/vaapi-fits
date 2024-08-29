@@ -125,3 +125,38 @@ class vbr(VP9_8EncoderTest):
     self.init(spec, case, gop, bitrate, fps, slices, quality)
     self.encode()
 
+class seek(VP9_8EncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_vp9_seek_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
+
+class seek_lp(VP9_8EncoderLPTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_vp9_seek_lp_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
