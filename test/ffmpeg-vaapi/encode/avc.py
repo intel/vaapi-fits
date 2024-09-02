@@ -212,3 +212,45 @@ class roi_lp(AVCEncoderLPTest):
   def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode):
     self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode)
     self.encode()
+
+class bdepth(AVCEncoderTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode    = rcmode,
+      bframes   = bframes,
+      bitrate   = bitrate,
+      qp        = qp,
+      case      = case,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      gop       = gop,
+      profile   = profile,
+      bdepth    = bdepth,
+    )
+
+  @slash.parametrize(*gen_avc_bdepth_parameters(spec, ['high', 'main']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth)
+    self.encode()
+
+class bdepth_lp(AVCEncoderLPTest):
+  def init(self, tspec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      rcmode    = rcmode,
+      bframes   = bframes,
+      bitrate   = bitrate,
+      qp        = qp,
+      case      = case,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      gop       = gop,
+      profile   = profile,
+      bdepth    = bdepth,
+    )
+
+  @slash.parametrize(*gen_avc_bdepth_lp_parameters(spec, ['high', 'main']))
+  def test(self, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth):
+    self.init(spec, case, gop, bframes, bitrate, qp, maxrate, profile, rcmode, bdepth)
+    self.encode()
