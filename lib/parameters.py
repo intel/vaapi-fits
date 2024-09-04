@@ -694,6 +694,8 @@ def gen_hevc_seek_lp_parameters(spec, profiles):
 gen_hevc_cqp_parameters = gen_avc_cqp_parameters
 gen_hevc_cbr_parameters = gen_avc_cbr_parameters
 gen_hevc_vbr_parameters = gen_avc_vbr_parameters
+gen_hevc_bdepth_parameters = gen_avc_bdepth_parameters
+gen_hevc_bdepth_lp_parameters = gen_avc_bdepth_lp_parameters
 gen_hevc_roi_parameters = gen_avc_roi_parameters
 gen_hevc_roi_lp_parameters = gen_avc_roi_lp_parameters
 gen_hevc_forced_idr_parameters = gen_avc_forced_idr_parameters
