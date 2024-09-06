@@ -62,6 +62,56 @@ def gen_avc_cqp_parameters(spec, profiles, strapi=False):
   params = gen_avc_cqp_variants(spec, profiles, strapi)
   return keys, params
 
+def gen_avc_bdepth_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("bdepth", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      rcmode  = variant["rcmode"]
+      if "cbr" == rcmode:
+        variant.update(maxrate = bitrate)
+      elif "vbr" == rcmode:
+        variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode, variant.get("bdepth", 1)
+        ]
+
+def gen_avc_bdepth_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode", "bdepth")
+  params = gen_avc_bdepth_variants(spec, profiles)
+  return keys, params
+
+def gen_avc_bdepth_lp_variants(spec, profiles):
+  for case, params in spec.items():
+    for variant in copy.deepcopy(params.get("variants", dict()).get("bdepth_lp", [])):
+      uprofile = variant.get("profile", None)
+      cprofiles = [uprofile] if uprofile else profiles
+      gop     = variant.get("gop", None)
+      bframes = variant.get("bframes", None)
+      bitrate = variant.get("bitrate", None)
+      qp      = variant.get("qp", None)
+      rcmode  = variant["rcmode"]
+      if "cbr" == rcmode:
+        variant.update(maxrate = bitrate)
+      elif "vbr" == rcmode:
+        variant.update(maxrate = bitrate * 2)
+      for profile in cprofiles:
+        yield [
+          case, gop, bframes, bitrate, qp, variant["maxrate"],
+          profile, rcmode, variant.get("bdepth", 1)
+        ]
+
+def gen_avc_bdepth_lp_parameters(spec, profiles):
+  keys = ("case", "gop", "bframes", "bitrate", "qp", "maxrate", "profile", "rcmode", "bdepth")
+  params = gen_avc_bdepth_lp_variants(spec, profiles)
+  return keys, params
+
 def gen_avc_cbr_variants(spec, profiles, strapi=False):
   for case, params in spec.items():
     if strapi:

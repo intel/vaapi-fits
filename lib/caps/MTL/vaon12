@@ -1,0 +1,64 @@
+###
+### Copyright (C) 2024 Intel Corporation
+###
+### SPDX-License-Identifier: BSD-3-Clause
+###
+
+###
+### kate: syntax python;
+###
+
+caps = dict(
+  decode  = dict(
+    avc     = dict(minres = res64, maxres = res4k, fmts = ["NV12"]),
+    hevc_8  = dict(
+      minres    = res64,
+      maxres    = res16k,
+      fmts      = ["NV12"],
+      features  = dict(scc = False, msp = True),
+    ),
+    hevc_10 = dict(minres = res64, maxres = res16k , fmts = ["P010"]),
+    vp9_8   = dict(minres = res64, maxres = res16k , fmts = ["NV12"]),
+    vp9_10  = dict(minres = res64, maxres = res16k , fmts = ["P010"]),
+    av1_8   = dict(minres = res64, maxres = res16k , fmts = ["NV12"]),
+    av1_10  = dict(minres = res64, maxres = res16k , fmts = ["P010"]),
+  ),
+  encode   = dict(
+    avc     = dict(maxres = res4k , fmts = ["NV12"], bframes = False),
+    hevc_8  = dict(
+      maxres    = res16k,
+      fmts      = ["NV12"],
+      features  = dict(scc = False),
+    ),
+    hevc_10 = dict(maxres = res16k , fmts = ["P010"]),
+    av1_8   = dict(
+      maxres    = res8k,
+      fmts      = ["NV12"],
+    ),
+  ),
+  vpp    = dict(
+    crop        = dict(
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "AYUV", "Y410", "BGRA"],
+    ),
+    deinterlace = dict(
+      bob             = dict(
+        ifmts = ["NV12", "YV12", "P010", "YUY2"],
+        ofmts = ["NV12", "YV12", "P010", "YUY2"],
+      ),
+      motion_adaptive = dict(
+        ifmts = ["NV12", "P010", "YUY2"],
+        ofmts = ["NV12", "P010", "YUY2"],
+      ),
+    ),
+    scale       = dict(
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+    ),
+    # colorspace conversion
+    csc         = dict(
+      ifmts = ["NV12",                 "P010", "YUY2", "UYVY", "Y210", "AYUV", "Y410", "BGRA"],
+      ofmts = ["NV12",                 "P010", "YUY2",         "Y210", "AYUV", "Y410", "BGRA"],
+    ),
+  ),
+)
