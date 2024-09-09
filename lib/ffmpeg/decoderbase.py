@@ -27,7 +27,6 @@ class Decoder(PropertyHandler, BaseFormatMapper):
   decoded   = property(lambda s: s._decoded)
   osdecoded = property(lambda s: filepath2os(s.decoded))
   hwaccel   = property(lambda s: s.props["hwaccel"])
-  strict    = property(lambda s: s.ifprop("strict", "-strict {strict}"))
 
   width       = property(lambda s: s.props["width"])
   height      = property(lambda s: s.props["height"])
@@ -83,7 +82,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       self._statsfile = get_media().artifacts.reserve(mtype)
 
       return call(
-        f"{exe2os('ffmpeg')} -v verbose {self.strict} {self.hwinit}"
+        f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
         f" {self.ffdecoder} -r:v {fps} -i {self.ossource}"
         f" -f rawvideo -pix_fmt {self.format} -s:v {self.width}x{self.height}"
         f" -r:v {fps} {self.refseek} -i {self.osreference}"
@@ -92,7 +91,7 @@ class Decoder(PropertyHandler, BaseFormatMapper):
       )
 
     return call(
-      f"{exe2os('ffmpeg')} -v verbose {self.strict} {self.hwinit}"
+      f"{exe2os('ffmpeg')} -v verbose {self.hwinit}"
       f" {self.ffdecoder} -i {self.ossource} -lavfi '{self.scale_range}'"
       f" -c:v rawvideo -pix_fmt {self.format} -fps_mode passthrough"
       f" -noautoscale -vframes {self.frames} -y {self.ffoutput}"
