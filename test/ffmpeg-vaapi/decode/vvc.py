@@ -18,7 +18,6 @@ class default(DecoderTest):
       caps        = platform.get_caps("decode", "vvc_8"),
       ffdecoder   = "vvc",
       metric      = dict(type = "ssim", miny = 1.0, minu = 1.0, minv = 1.0), # default metric
-      strict      = -2, # Currently, VVC decoder is experimental. Enable it with strict.
     )
     super().before()
 
