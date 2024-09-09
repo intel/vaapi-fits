@@ -394,3 +394,39 @@ class rqp(AVCEncoderTest):
   def test(self, case, gop, bframes, bitrate, maxrate, profile, rcmode, maxi, mini, maxp, minp, maxb, minb):
     self.init(spec, case, gop, bframes, bitrate, maxrate, profile, rcmode, maxi, mini, maxp, minp, maxb, minb)
     self.encode()
+
+class seek(AVCEncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_avc_seek_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
+
+class seek_lp(AVCEncoderLPTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_avc_seek_lp_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
