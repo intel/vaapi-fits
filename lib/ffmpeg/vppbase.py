@@ -51,7 +51,7 @@ class BaseVppTest(slash.Test, BaseFormatMapper, VppMetricMixin):
     opts = "-filter_complex" if self.vpp_op in fcomplex else "-vf"
     opts += f" '{','.join(vpfilter)}'"
     opts += " -pix_fmt {mformat}" if self.vpp_op not in ["csc", "tonemap", "overlay"] else ""
-    opts += " -f rawvideo -fps_mode passthrough -an -vframes {frames} -y {osdecoded}"
+    opts += " -f rawvideo -fps_mode cfr -an -vframes {frames} -y {osdecoded}"
 
     return opts
 
