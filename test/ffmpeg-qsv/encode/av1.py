@@ -144,6 +144,24 @@ class vbr(AV1EncoderTest):
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
     self.encode()
 
+class seek(AV1EncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_av1_seek_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
+
 class cqp_lp(AV1EncoderLPTest):
   def init(self, tspec, case, gop, bframes, tilecols, tilerows,qp, quality, profile):
     vars(self).update(tspec[case].copy())
@@ -276,3 +294,20 @@ class vbr_lp(AV1EncoderLPTest):
     self.init(spec, case, gop, bframes, tilecols, tilerows, bitrate, fps, quality, profile)
     self.encode()
 
+class seek_lp(AV1EncoderLPTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_av1_seek_lp_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
