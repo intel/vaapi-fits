@@ -31,3 +31,18 @@ class cqp(JPEGEncoderTest):
     self.init(spec_r2r, case, quality)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class seek(JPEGEncoderTest):
+  def init(self, tspec, case, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      rcmode    = "cqp",
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_jpeg_seek_parameters(spec))
+  def test(self, case, fps, seek):
+    self.init(spec, case, fps, seek)
+    self.encode()
