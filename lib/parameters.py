@@ -952,6 +952,7 @@ gen_avc_seek_parameters = gen_vp9_seek_parameters
 gen_avc_seek_lp_parameters = gen_vp9_seek_lp_parameters
 gen_av1_seek_parameters = gen_vp9_seek_parameters
 gen_av1_seek_lp_parameters = gen_vp9_seek_lp_parameters
+gen_mpeg2_seek_parameters = gen_vp9_seek_parameters
 
 def gen_av1_cqp_variants(spec, strapi=False):
   for case, params in spec.items():

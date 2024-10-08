@@ -33,3 +33,21 @@ class cqp(MPEG2EncoderTest):
     self.init(spec_r2r, case, gop, bframes, qp, quality)
     vars(self).setdefault("r2r", 5)
     self.encode()
+
+class seek(MPEG2EncoderTest):
+  def init(self, tspec, case, rcmode, bitrate, maxrate, fps, seek):
+    vars(self).update(tspec[case].copy())
+    vars(self).update(
+      case      = case,
+      bitrate   = bitrate,
+      maxrate   = maxrate,
+      minrate   = bitrate,
+      rcmode    = rcmode,
+      fps       = fps,
+      seek      = seek,
+    )
+
+  @slash.parametrize(*gen_mpeg2_seek_parameters(spec))
+  def test(self, case, rcmode, bitrate, maxrate, fps, seek):
+    self.init(spec, case, rcmode, bitrate, maxrate, fps, seek)
+    self.encode()
