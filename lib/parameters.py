@@ -750,6 +750,19 @@ def gen_jpeg_cqp_parameters(spec):
   params = gen_jpeg_cqp_variants(spec)
   return keys, params
 
+def gen_jpeg_seek_variants(spec):
+  for case, params in spec.items():
+    variants = params.get("variants", dict()).get("seek", [])
+    for variant in variants:
+      yield [
+        case, variant.get("fps", 25), variant.get("seek", 1)
+      ]
+
+def gen_jpeg_seek_parameters(spec):
+  keys = ("case", "fps", "seek")
+  params = gen_jpeg_seek_variants(spec)
+  return keys, params
+
 def gen_vp8_cqp_variants(spec):
   for case, params in spec.items():
     variants = params.get("variants", dict()).get("cqp", None)
@@ -950,6 +963,8 @@ def gen_vp9_seek_lp_parameters(spec):
 
 gen_avc_seek_parameters = gen_vp9_seek_parameters
 gen_avc_seek_lp_parameters = gen_vp9_seek_lp_parameters
+gen_av1_seek_parameters = gen_vp9_seek_parameters
+gen_av1_seek_lp_parameters = gen_vp9_seek_lp_parameters
 
 def gen_av1_cqp_variants(spec, strapi=False):
   for case, params in spec.items():
