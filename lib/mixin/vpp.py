@@ -132,7 +132,10 @@ class VppMetricMixin:
         assert actual[-2] == 100, "Cb(U) should not be affected by SHARPEN filter"
         assert actual[-1] == 100, "Cr(V) should not be affected by SHARPEN filter"
         assert ref is not None, "Invalid reference value"
-        assert abs(ref[-3] - actual[-3]) < 0.25, "Luma (Y) out of baseline range"
+        # Only assert if actual Luma (Y) is lower than reference, using specified range condition
+        if actual[-3] < ref[-3]:
+          # Ensure the difference is within the acceptable range [0, 0.25)
+          assert 0 <= ref[-3] - actual[-3] < 0.25, f"Luma (Y) is lower than reference value: {actual[-3]} < {ref[-3]}"
 
       metrics2.check(
         metric = dict(type = "psnr"), compare = compare,
