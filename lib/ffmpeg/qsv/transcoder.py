@@ -89,6 +89,5 @@ class TranscoderTest(BaseTranscoderTest):
   def before(self):
     super().before()
     self.hwaccel = "qsv"
-    self.ohwframes = 64
-    self.ihwframes = 64
+    self.hwframes = 64
     self.hwdevice = f'qsv,child_device={get_media().render_device}'

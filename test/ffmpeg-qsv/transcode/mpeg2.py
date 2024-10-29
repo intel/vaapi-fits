@@ -21,5 +21,3 @@ class default(TranscoderTest):
     )
     self.transcode()
 
-  def before(self):
-    super().before()
