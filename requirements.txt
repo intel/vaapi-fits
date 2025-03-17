@@ -5,3 +5,4 @@ distro
 psutil
 py-cpuinfo
 matplotlib
+scipy == 1.14.0
