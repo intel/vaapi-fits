@@ -44,7 +44,7 @@ def decode_test_class(codec, bitdepth, **kwargs):
   }.get(codec, f"{gstcodec}parse")
 
   hwdevice = get_media().render_device.split('/')[-1]
-  hw = hwdevice if hwdevice not in ['renderD128', '0'] else ""
+  hw = hwdevice if hwdevice not in ['renderD128', 'renderD129','0'] else ""
 
   @slash.requires(*have_gst_element(f"d3d11{hw}{gstcodec}dec"))
   @slash.requires(*platform.have_caps("decode", capcodec))
