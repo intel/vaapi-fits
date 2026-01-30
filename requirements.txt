@@ -5,3 +5,4 @@ distro
 psutil
 py-cpuinfo
 matplotlib
+setuptools < 81
