@@ -3,3 +3,4 @@ __pycache_/*
 results/*
 slash-logs/*
 assets/*
+.venv/*
