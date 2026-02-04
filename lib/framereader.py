@@ -96,9 +96,9 @@ def read_frame_I010(fd, width, height):
   size    = width * height
   size2   = width2 * height2
 
-  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width)) >> 6
-  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) >> 6
-  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) >> 6
+  y = numpy.fromfile(fd, dtype=numpy.uint16, count=size).reshape((height, width)) & 0x03ff
+  v = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) & 0x03ff
+  u = numpy.fromfile(fd, dtype=numpy.uint16, count=size2).reshape((height2, width2)) & 0x03ff
 
   return y, u, v
 
