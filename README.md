@@ -4,6 +4,7 @@
 
 The VA-API Functional Integration Test Suite is a configurable test suite for VA-API-based media software/middleware.  It is written in Python and currently provides tests for VA-API hardware accelerated encode, decode and vpp video pipelines for gstreamer and ffmpeg.  It can be easily extended to support additional VA-API-based software/middleware.  The tests execute the video pipelines and validate their outputs using common image and video metrics such as checksum, SSIM and PSNR.
 
+
 ## License
 
 See [LICENSE.md](LICENSE.md) file
